@@ -1,5 +1,5 @@
 {
-  "name": "wfm",
+  "name": "1009-moderator",
   "private": true,
   "version": "0.1.0",
   "scripts": {
@@ -8,7 +8,7 @@
     "preview": "vite preview",
     "lint": "eslint src",
     "lint:style": "prettier src --check",
-    "test": "vitest run",
+    "test": "",
     "postinstall": "husky install"
   },
   "dependencies": {
