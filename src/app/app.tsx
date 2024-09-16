@@ -1,15 +1,20 @@
-// src/app/App.tsx;
+import { useTranslation, Trans } from "react-i18next";
 import { Provider } from "react-redux";
 
+import "./i18n/config";
 import { store } from "./store";
-import SideBar from "./ui/sidebar";
+import MainLayout from "./ui/layout";
 
 import "./main.css";
 
-const App = () => (
-  <Provider store={store}>
-    <SideBar />
-  </Provider>
-);
+const App = () => {
+  // const { t } = useTranslation();
+
+  return (
+    <Provider store={store}>
+      <MainLayout />
+    </Provider>
+  );
+};
 
 export default App;

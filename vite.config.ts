@@ -6,6 +6,7 @@ import z from "zod";
 
 const envSchema = z.object({
   VITE_APP_VERSION: z.string(),
+  VITE_APP_BASE_URL: z.string().url(),
   VITE_APP_GITHUB_LINK: z.string().url(),
   VITE_APP_RELEASES_LINK: z.string().url(),
 });

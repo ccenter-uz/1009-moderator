@@ -1,24 +1,27 @@
-// src/app/store.ts
+import { configureStore, ConfigureStoreOptions } from "@reduxjs/toolkit";
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
-import { configureStore } from "@reduxjs/toolkit";
+// eslint-disable-next-line no-restricted-imports
+import { pollingSlice } from "@features/polling";
 
-import type { RootState } from "@shared/types/store";
+import { baseApi } from "@shared/api";
 
-import { apiReducers, apiMiddleware } from "./api/apiSlices";
-import { rootReducer } from "./reducers/rootReducer";
+export const createStore = (
+  options?: ConfigureStoreOptions["preloadedState"] | undefined,
+) =>
+  configureStore({
+    reducer: {
+      [baseApi.reducerPath]: baseApi.reducer,
+      polling: pollingSlice.default,
+    },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(baseApi.middleware),
+    ...options,
+  });
 
-export const store = configureStore({
-  reducer: {
-    ...rootReducer,
-    ...apiReducers,
-  },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(apiMiddleware),
-});
+export const store = createStore();
 
-// This line will cause a TypeScript error if the store state doesn't match the RootState type,
-// without creating any runtime code
-const _: RootState = store.getState();
-
-// Creating Redux slices for each feature and adding them to the configureStore's
-// reducer is a great approach that aligns well with FSD principles.
+export type AppDispatch = typeof store.dispatch;
+export const useAppDispatch: () => AppDispatch = useDispatch;
+export type RootState = ReturnType<typeof store.getState>;
+export const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
