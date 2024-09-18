@@ -1,12 +1,50 @@
-import { Counter } from "@features/counter";
-import { PollingToggles } from "@features/polling";
+import { Layout } from "antd";
+import { Content, Header } from "antd/es/layout/layout";
+import Sider from "antd/es/layout/Sider";
+import { Suspense } from "react";
+import { Outlet } from "react-router-dom";
+
+import { HeaderUI, SiderUI } from "@widgets/index";
+
+import { LoadingSpinner } from "@shared/ui";
 
 const MainLayout = () => {
   return (
-    <div>
-      <Counter />
-      <PollingToggles />
-    </div>
+    <Layout style={{ height: "100dvh" }}>
+      {/* HEADER */}
+      <Header style={{ height: "fit-content", padding: 0 }}>
+        <HeaderUI />
+      </Header>
+      <Layout>
+        {/* SIDER */}
+        <Sider
+          width={"auto"}
+          style={{
+            background: "var(--sider-bg-color)",
+            padding: "8px 16px",
+            overflowY: "auto",
+          }}
+        >
+          <SiderUI />
+        </Sider>
+        <Layout style={{ overflowY: "auto" }}>
+          {/* CONTENT */}
+          <Content style={{ margin: "24px 16px 0" }}>
+            <div
+              style={{
+                padding: 24,
+                minHeight: "100%",
+                background: "#fff",
+              }}
+            >
+              <Suspense fallback={<LoadingSpinner />}>
+                <Outlet />
+              </Suspense>
+            </div>
+          </Content>
+        </Layout>
+      </Layout>
+    </Layout>
   );
 };
 
