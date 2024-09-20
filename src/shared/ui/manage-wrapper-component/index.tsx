@@ -2,6 +2,7 @@ import { Button, Table } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { FC } from "react";
 import "./style.css";
+import { useTranslation } from "react-i18next";
 import { FaPlus } from "react-icons/fa";
 
 import { usePaginate } from "@shared/hooks/usePaginate";
@@ -28,6 +29,7 @@ export const ManageWrapperBox: FC<Props> = (props) => {
   } = props;
   const { page, pageSize, pageSizeOptions, setPage, setPageSize } =
     usePaginate();
+  const { t } = useTranslation();
 
   return (
     <div className="manage-wrapper-box">
@@ -35,7 +37,7 @@ export const ManageWrapperBox: FC<Props> = (props) => {
       <div className="manage-wrapper-box__search">{searchPart}</div>
       <div className="manage-wrapper-box__add">
         <Button type="primary" icon={<FaPlus />} onClick={add}>
-          Добавить
+          {t("add")}
         </Button>
       </div>
       <div className="manage-wrapper-box__table">
@@ -47,7 +49,7 @@ export const ManageWrapperBox: FC<Props> = (props) => {
             current: page,
             pageSize: pageSize,
             total: totalItems,
-            showTotal: (total) => `Total ${total} items`,
+            showTotal: (total) => `${total} ${t("piece")}`,
             showSizeChanger: true,
             pageSizeOptions: pageSizeOptions,
             onShowSizeChange: (current, size) => {

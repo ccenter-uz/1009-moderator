@@ -1,5 +1,6 @@
 import { Popconfirm } from "antd";
 import { FC } from "react";
+import { useTranslation } from "react-i18next";
 import { FaTrashAlt } from "react-icons/fa";
 
 type Props = {
@@ -9,6 +10,7 @@ type Props = {
 
 export const DeleteTableItemUI: FC<Props> = (props) => {
   const { id, href } = props;
+  const { t } = useTranslation();
 
   const onDelete = async () => {
     console.log(href, id, "deleted");
@@ -16,7 +18,7 @@ export const DeleteTableItemUI: FC<Props> = (props) => {
 
   return (
     <Popconfirm
-      title="Удалить?"
+      title={t("delete")}
       onConfirm={onDelete}
       okText="Да"
       cancelText="Нет"
@@ -25,7 +27,7 @@ export const DeleteTableItemUI: FC<Props> = (props) => {
         color="crimson"
         fontSize={16}
         cursor={"pointer"}
-        title="Удалить"
+        title={t("delete")}
       />
     </Popconfirm>
   );

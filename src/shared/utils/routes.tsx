@@ -38,6 +38,7 @@ import {
   OrgMineAsync,
   OrgUnconfirmedAsync,
 } from "@pages/index";
+import i18next from "i18next";
 
 function BubbleError() {
   const error = useRouteError();
@@ -55,7 +56,7 @@ export const routesPath = [
       {
         key: "1",
         name: "/dashboard",
-        label: <Link to="/dashboard">Главная</Link>,
+        label: <Link to="/dashboard">{i18next.t("main")}</Link>,
         icon: <FaRegNewspaper />,
         path: "dashboard",
         element: <DashboardAsync />,
@@ -63,7 +64,7 @@ export const routesPath = [
       {
         key: "2",
         name: "/statistics",
-        label: <Link to="/statistics">Статистика</Link>,
+        label: <Link to="/statistics">{i18next.t("statistics")}</Link>,
         icon: <IoStatsChart />,
         path: "statistics",
         element: "Hello statistics",
@@ -71,21 +72,21 @@ export const routesPath = [
       {
         key: "3",
         name: "/additional",
-        label: <Link to="/additional">Дополнительно</Link>,
+        label: <Link to="/additional">{i18next.t("additional")}</Link>,
         icon: <MdOutlineMenu />,
         path: "additional",
         element: "Hello additional",
       },
       {
         key: "4",
-        label: "Организации",
+        label: i18next.t("orgs"),
         icon: <GoOrganization />,
         path: "orgs",
         children: [
           {
             key: "4.1",
             name: "/orgs/all",
-            label: <Link to="/orgs/all">Все</Link>,
+            label: <Link to="/orgs/all">{i18next.t("all")}</Link>,
             icon: <MdListAlt />,
             path: "all",
             element: <OrgAllAsync />,
@@ -93,7 +94,7 @@ export const routesPath = [
           {
             key: "4.2",
             name: "/orgs/mine",
-            label: <Link to="/orgs/mine">Мои</Link>,
+            label: <Link to="/orgs/mine">{i18next.t("mine")}</Link>,
             icon: <FaRegUser />,
             path: "mine",
             element: <OrgMineAsync />,
@@ -101,7 +102,9 @@ export const routesPath = [
           {
             key: "4.3",
             name: "/orgs/unconfirmed",
-            label: <Link to="/orgs/unconfirmed">Не подтвержденные</Link>,
+            label: (
+              <Link to="/orgs/unconfirmed">{i18next.t("unconfirmed")}</Link>
+            ),
             icon: <MdOutlinePending />,
             path: "unconfirmed",
             element: <OrgUnconfirmedAsync />,
@@ -109,7 +112,7 @@ export const routesPath = [
           {
             key: "4.4",
             name: "/orgs/add",
-            label: <Link to="/orgs/add">Добавить</Link>,
+            label: <Link to="/orgs/add">{i18next.t("add")}</Link>,
             icon: <MdAdd />,
             path: "add",
             element: <OrgAddAsync />,
@@ -118,14 +121,14 @@ export const routesPath = [
       },
       {
         key: "5",
-        label: "Управление",
+        label: i18next.t("manage"),
         icon: <MdSettings />,
         path: "manage",
         children: [
           {
             key: "5.1",
             name: "/manage/users",
-            label: <Link to="/manage/users">Пользователи</Link>,
+            label: <Link to="/manage/users">{i18next.t("users")}</Link>,
             icon: <MdOutlineManageAccounts />,
             path: "users",
             element: <ManageUsersAsync />,
@@ -133,7 +136,11 @@ export const routesPath = [
           {
             key: "5.2",
             name: "/manage/product-services",
-            label: <Link to="/manage/product-services">Товары и Услуги</Link>,
+            label: (
+              <Link to="/manage/product-services">
+                {i18next.t("product-services")}
+              </Link>
+            ),
             icon: <MdOutlineShoppingCart />,
             path: "product-services",
             element: <ManageProductServicesAsync />,
@@ -141,7 +148,7 @@ export const routesPath = [
           {
             key: "5.3",
             name: "/manage/category",
-            label: <Link to="/manage/category">Раздел</Link>,
+            label: <Link to="/manage/category">{i18next.t("category")}</Link>,
             icon: <LuCircleDot />,
             path: "category",
             element: <ManageCategoryAsync />,
@@ -149,7 +156,7 @@ export const routesPath = [
           {
             key: "5.4",
             name: "/manage/main-org",
-            label: <Link to="/manage/main-org">Головая организация</Link>,
+            label: <Link to="/manage/main-org">{i18next.t("main-org")}</Link>,
             icon: <LuCircleDot />,
             path: "main-org",
             element: <ManageMainOrgAsync />,
@@ -157,7 +164,9 @@ export const routesPath = [
           {
             key: "5.5",
             name: "/manage/phone-types",
-            label: <Link to="/manage/phone-types">Виды телефонов</Link>,
+            label: (
+              <Link to="/manage/phone-types">{i18next.t("phone-types")}</Link>
+            ),
             icon: <LuCircleDot />,
             path: "phone-types",
             element: <ManagePhoneTypesAsync />,
@@ -166,7 +175,9 @@ export const routesPath = [
             key: "5.6",
             name: "/manage/nearby-category",
             label: (
-              <Link to="/manage/nearby-category">Категории Ориентира</Link>
+              <Link to="/manage/nearby-category">
+                {i18next.t("nearby-category")}
+              </Link>
             ),
             icon: <LuCircleDot />,
             path: "nearby-category",
@@ -175,7 +186,7 @@ export const routesPath = [
           {
             key: "5.7",
             name: "/manage/nearby",
-            label: <Link to="/manage/nearby">Ориентир</Link>,
+            label: <Link to="/manage/nearby">{i18next.t("nearby")}</Link>,
             icon: <LuCircleDot />,
             path: "nearby",
             element: <ManageNearbyAsync />,
@@ -183,7 +194,7 @@ export const routesPath = [
           {
             key: "5.8",
             name: "/manage/street",
-            label: <Link to="/manage/street">Улица</Link>,
+            label: <Link to="/manage/street">{i18next.t("street")}</Link>,
             icon: <LuCircleDot />,
             path: "street",
             element: <ManageStreetAsync />,
@@ -191,7 +202,7 @@ export const routesPath = [
           {
             key: "5.9",
             name: "/manage/area",
-            label: <Link to="/manage/area">Плошадь</Link>,
+            label: <Link to="/manage/area">{i18next.t("area")}</Link>,
             icon: <LuCircleDot />,
             path: "area",
             element: <ManageAreaAsync />,
@@ -199,7 +210,7 @@ export const routesPath = [
           {
             key: "5.10",
             name: "/manage/lane",
-            label: <Link to="/manage/lane">Переулок</Link>,
+            label: <Link to="/manage/lane">{i18next.t("lane")}</Link>,
             icon: <LuCircleDot />,
             path: "lane",
             element: <ManageLaneAsync />,
@@ -207,7 +218,11 @@ export const routesPath = [
           {
             key: "5.11",
             name: "/manage/residential-area",
-            label: <Link to="/manage/residential-area">Массив/Махалля</Link>,
+            label: (
+              <Link to="/manage/residential-area">
+                {i18next.t("residential-area")}
+              </Link>
+            ),
             icon: <LuCircleDot />,
             path: "residential-area",
             element: <ManageResidentialAreaAsync />,
@@ -215,7 +230,7 @@ export const routesPath = [
           {
             key: "5.12",
             name: "/manage/impasse",
-            label: <Link to="/manage/impasse">Тупик</Link>,
+            label: <Link to="/manage/impasse">{i18next.t("impasse")}</Link>,
             icon: <LuCircleDot />,
             path: "impasse",
             element: <ManageImpasseAsync />,
@@ -223,7 +238,7 @@ export const routesPath = [
           {
             key: "5.13",
             name: "/manage/avenue",
-            label: <Link to="/manage/avenue">Проспект</Link>,
+            label: <Link to="/manage/avenue">{i18next.t("avenue")}</Link>,
             icon: <LuCircleDot />,
             path: "avenue",
             element: <ManageAvenueAsync />,
@@ -231,7 +246,7 @@ export const routesPath = [
           {
             key: "5.14",
             name: "/manage/passage",
-            label: <Link to="/manage/passage">Проезд</Link>,
+            label: <Link to="/manage/passage">{i18next.t("passage")}</Link>,
             icon: <LuCircleDot />,
             path: "passage",
             element: <ManagePassageAsync />,
@@ -239,7 +254,7 @@ export const routesPath = [
           {
             key: "5.15",
             name: "/manage/district",
-            label: <Link to="/manage/district">Район</Link>,
+            label: <Link to="/manage/district">{i18next.t("district")}</Link>,
             icon: <LuCircleDot />,
             path: "district",
             element: <ManageDistrictAsync />,
@@ -247,7 +262,7 @@ export const routesPath = [
           {
             key: "5.16",
             name: "/manage/village",
-            label: <Link to="/manage/village">Поселок</Link>,
+            label: <Link to="/manage/village">{i18next.t("village")}</Link>,
             icon: <LuCircleDot />,
             path: "village",
             element: <ManageVillageAsync />,

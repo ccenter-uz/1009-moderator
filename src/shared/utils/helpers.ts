@@ -1,3 +1,4 @@
+import i18n from "i18next";
 import { useLocation } from "react-router-dom";
 
 import { routesPath } from "./routes";
@@ -30,47 +31,47 @@ export const columnsForAddress: {
   render?: (t: string, record: { id: number | string }) => JSX.Element;
 }[] = [
   {
-    title: "Название",
+    title: i18n.t("name"),
     dataIndex: "name",
     key: "name",
   },
   {
-    title: "Cтарое название",
+    title: i18n.t("old_name"),
     dataIndex: "old_name",
     key: "old_name",
   },
   {
-    title: "Новое название",
+    title: i18n.t("new_name"),
     dataIndex: "new_name",
     key: "new_name",
   },
   {
-    title: "Регион",
+    title: i18n.t("region"),
     dataIndex: "region",
     key: "region",
   },
   {
-    title: "Город",
+    title: i18n.t("city"),
     dataIndex: "city",
     key: "city",
   },
   {
-    title: "Район",
+    title: i18n.t("district"),
     dataIndex: "district",
     key: "district",
   },
   {
-    title: "Индекс",
+    title: i18n.t("index"),
     dataIndex: "index",
     key: "index",
   },
   {
-    title: "Дата изменения",
+    title: i18n.t("update_date"),
     dataIndex: "updated_date",
     key: "updated_date",
   },
   {
-    title: "Сотрудник",
+    title: i18n.t("employee"),
     dataIndex: "employee",
     key: "employee",
   },

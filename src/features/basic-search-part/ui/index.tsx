@@ -1,5 +1,6 @@
 import { Button, Flex, Form, Input } from "antd";
 import { FC } from "react";
+import { useTranslation } from "react-i18next";
 import { FaSearch } from "react-icons/fa";
 
 type Props = {
@@ -10,6 +11,7 @@ type Props = {
 export const BasicSearchPartUI: FC<Props> = (props) => {
   const { handleSearch, loading } = props;
   const [form] = Form.useForm();
+  const { t } = useTranslation();
 
   return (
     <Form form={form} id="basic-search" onFinish={handleSearch}>
@@ -17,7 +19,7 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
         <Form.Item name="search" style={{ marginBottom: 0, width: "100%" }}>
           <Input
             type="text"
-            placeholder="Поиск"
+            placeholder={t("search")}
             allowClear
             disabled={loading}
           />
@@ -30,7 +32,7 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
           type="primary"
           icon={<FaSearch />}
         >
-          Поиск
+          {t("search")}
         </Button>
       </Flex>
     </Form>

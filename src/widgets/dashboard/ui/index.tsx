@@ -1,5 +1,7 @@
 import { FC } from "react";
+import { useTranslation } from "react-i18next";
 
 export const Dashboard: FC = () => {
-  return <div>Главная страница</div>;
+  const { t } = useTranslation();
+  return <div>{t("main-page")}</div>;
 };

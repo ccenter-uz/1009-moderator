@@ -1,5 +1,6 @@
 import { Flex, Form } from "antd";
 import { FC, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
 
 import { BasicSearchPartUI, DeleteTableItemUI } from "@features/index";
@@ -15,6 +16,7 @@ import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
 import { columnsForAddress } from "@shared/utils/helpers";
 
 export const ManageArea: FC = () => {
+  const { t } = useTranslation();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [form] = Form.useForm<ItableDataAddress>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -76,7 +78,7 @@ export const ManageArea: FC = () => {
   return (
     <ManageWrapperBox
       totalItems={0}
-      title="Площадь"
+      title={t("area")}
       columns={overColumns}
       data={data}
       add={onOpen}
