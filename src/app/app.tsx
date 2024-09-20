@@ -1,20 +1,7 @@
-import { useTranslation, Trans } from "react-i18next";
-import { Provider } from "react-redux";
-
 import "./i18n/config";
-import { store } from "./store";
-import MainLayout from "./ui/layout";
+import "./style/global.css";
+import { ProviderWrapper } from "./providers";
 
-import "./main.css";
-
-const App = () => {
-  // const { t } = useTranslation();
-
-  return (
-    <Provider store={store}>
-      <MainLayout />
-    </Provider>
-  );
-};
+const App = () => <ProviderWrapper />;
 
 export default App;

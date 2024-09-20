@@ -1,5 +1,3 @@
-// import { ProfilePageArgsSchema } from "./react-router.types";
-
 export const pathKeys = {
   root: "/",
   login: () => pathKeys.root.concat("login/"),
