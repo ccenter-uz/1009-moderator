@@ -21,3 +21,57 @@ export const getActiveKeyFromRoutes = (
     return activeKey;
   }, "");
 };
+
+export const columnsForAddress: {
+  title: string;
+  dataIndex: string;
+  key: string;
+  align?: "left" | "center" | "right";
+  render?: (t: string, record: { id: number | string }) => JSX.Element;
+}[] = [
+  {
+    title: "Название",
+    dataIndex: "name",
+    key: "name",
+  },
+  {
+    title: "Cтарое название",
+    dataIndex: "old_name",
+    key: "old_name",
+  },
+  {
+    title: "Новое название",
+    dataIndex: "new_name",
+    key: "new_name",
+  },
+  {
+    title: "Регион",
+    dataIndex: "region",
+    key: "region",
+  },
+  {
+    title: "Город",
+    dataIndex: "city",
+    key: "city",
+  },
+  {
+    title: "Район",
+    dataIndex: "district",
+    key: "district",
+  },
+  {
+    title: "Индекс",
+    dataIndex: "index",
+    key: "index",
+  },
+  {
+    title: "Дата изменения",
+    dataIndex: "updated_date",
+    key: "updated_date",
+  },
+  {
+    title: "Сотрудник",
+    dataIndex: "employee",
+    key: "employee",
+  },
+];
