@@ -1,0 +1,12 @@
+.manage-wrapper-box {
+  .manage-wrapper-box__title {
+    font-size: 18px;
+    font-weight: 500;
+    text-align: center;
+  }
+  .manage-wrapper-box__search,
+  .manage-wrapper-box__add,
+  .manage-wrapper-box__table {
+    margin: 1em 0;
+  }
+}
