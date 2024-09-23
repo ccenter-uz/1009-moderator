@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 type ErrorHandlerProps = {
   error: Error;
   resetErrorBoundary?: (...args: any[]) => void;
@@ -7,10 +9,11 @@ const isDevelopment = import.meta.env.DEV;
 
 export function ErrorHandler(props: ErrorHandlerProps) {
   const { error, resetErrorBoundary } = props;
+  const { t } = useTranslation();
 
   return (
     <div>
-      <h3>Something went wrong.</h3>
+      <h3>{t("something-went-wrong")}</h3>
       {isDevelopment && (
         <>
           <ul className="error-messages">
@@ -20,7 +23,7 @@ export function ErrorHandler(props: ErrorHandlerProps) {
         </>
       )}
       <button type="button" onClick={resetErrorBoundary}>
-        Try again
+        {t("try-again")}
       </button>
     </div>
   );

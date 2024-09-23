@@ -2,7 +2,7 @@ import { lazy } from "react";
 
 // DASHBOARD
 export const DashboardAsync = lazy(() =>
-  import("./dashboard/ui").then((module) => ({ default: module.Dashboard })),
+  import("./dashboard").then((module) => ({ default: module.DashboardPage })),
 );
 
 // STATISTICS
@@ -10,26 +10,26 @@ export const DashboardAsync = lazy(() =>
 // ORGANIZATIONS
 // add
 export const OrgAddAsync = lazy(() =>
-  import("./organizations/add/ui").then((module) => ({
-    default: module.OrgAdd,
+  import("./organizations/add").then((module) => ({
+    default: module.OrgAddPage,
   })),
 );
 // mine
 export const OrgMineAsync = lazy(() =>
-  import("./organizations/mine/ui").then((module) => ({
-    default: module.OrgMine,
+  import("./organizations/mine").then((module) => ({
+    default: module.OrgMinePage,
   })),
 );
 // all
 export const OrgAllAsync = lazy(() =>
-  import("./organizations/all/ui").then((module) => ({
-    default: module.OrgAll,
+  import("./organizations/all").then((module) => ({
+    default: module.OrgAllPage,
   })),
 );
 // unconfirmed
 export const OrgUnconfirmedAsync = lazy(() =>
-  import("./organizations/unconfirmed/ui").then((module) => ({
-    default: module.OrgUnconfirmed,
+  import("./organizations/unconfirmed").then((module) => ({
+    default: module.OrgUnconfirmedPage,
   })),
 );
 
@@ -38,108 +38,108 @@ export const OrgUnconfirmedAsync = lazy(() =>
 // MANAGE
 // area
 export const ManageAreaAsync = lazy(() =>
-  import("./manage/area/ui").then((module) => ({
-    default: module.ManageArea,
+  import("./manage/area/").then((module) => ({
+    default: module.ManageAreaPage,
   })),
 );
 // main-org
 export const ManageMainOrgAsync = lazy(() =>
-  import("./manage/main-org/ui").then((module) => ({
-    default: module.ManageMainOrg,
+  import("./manage/main-org/").then((module) => ({
+    default: module.ManageMainOrgPage,
   })),
 );
 // passage
 export const ManagePassageAsync = lazy(() =>
-  import("./manage/passage/ui").then((module) => ({
-    default: module.ManagePassage,
+  import("./manage/passage/").then((module) => ({
+    default: module.ManagePassagePage,
   })),
 );
 // product-services
 export const ManageProductServicesAsync = lazy(() =>
-  import("./manage/product-services/ui").then((module) => ({
-    default: module.ManageProductServices,
+  import("./manage/product-services/").then((module) => ({
+    default: module.ManageProductServicesPage,
   })),
 );
 // users
 export const ManageUsersAsync = lazy(() =>
-  import("./manage/users/ui").then((module) => ({
-    default: module.ManageUsers,
+  import("./manage/users/").then((module) => ({
+    default: module.ManageUsersPage,
   })),
 );
 
 // nearby
 export const ManageNearbyAsync = lazy(() =>
-  import("./manage/nearby/ui").then((module) => ({
-    default: module.ManageNearby,
+  import("./manage/nearby/").then((module) => ({
+    default: module.ManageNearbyPage,
   })),
 );
 
 // nearby-category
 export const ManageNearbyCategoryAsync = lazy(() =>
-  import("./manage/nearby-category/ui").then((module) => ({
-    default: module.ManageNearbyCategory,
+  import("./manage/nearby-category/").then((module) => ({
+    default: module.ManageNearbyCategoryPage,
   })),
 );
 
 // street
 export const ManageStreetAsync = lazy(() =>
-  import("./manage/street/ui").then((module) => ({
-    default: module.ManageStreet,
+  import("./manage/street/").then((module) => ({
+    default: module.ManageStreetPage,
   })),
 );
 
 // village
 export const ManageVillageAsync = lazy(() =>
-  import("./manage/village/ui").then((module) => ({
-    default: module.ManageVillage,
+  import("./manage/village/").then((module) => ({
+    default: module.ManageVillagePage,
   })),
 );
 
 // residential-area
 export const ManageResidentialAreaAsync = lazy(() =>
-  import("./manage/residential-area/ui").then((module) => ({
-    default: module.ManageResidentialArea,
+  import("./manage/residential-area/").then((module) => ({
+    default: module.ManageResidentialAreaPage,
   })),
 );
 
 // phone-types
 export const ManagePhoneTypesAsync = lazy(() =>
-  import("./manage/phone-types/ui").then((module) => ({
-    default: module.ManagePhoneTypes,
+  import("./manage/phone-types/").then((module) => ({
+    default: module.ManagePhoneTypesPage,
   })),
 );
 
 // category
 export const ManageCategoryAsync = lazy(() =>
-  import("./manage/category/ui").then((module) => ({
-    default: module.ManageCategory,
+  import("./manage/category/").then((module) => ({
+    default: module.ManageCategoryPage,
   })),
 );
 
 // lane
 export const ManageLaneAsync = lazy(() =>
-  import("./manage/lane/ui").then((module) => ({
-    default: module.ManageLane,
+  import("./manage/lane/").then((module) => ({
+    default: module.ManageLanePage,
   })),
 );
 
 // impasse
 export const ManageImpasseAsync = lazy(() =>
-  import("./manage/impasse/ui").then((module) => ({
-    default: module.ManageImpasse,
+  import("./manage/impasse/").then((module) => ({
+    default: module.ManageImpassePage,
   })),
 );
 
 // avenue
 export const ManageAvenueAsync = lazy(() =>
-  import("./manage/avenue/ui").then((module) => ({
-    default: module.ManageAvenue,
+  import("./manage/avenue/").then((module) => ({
+    default: module.ManageAvenuePage,
   })),
 );
 
 // district
 export const ManageDistrictAsync = lazy(() =>
-  import("./manage/district/ui").then((module) => ({
-    default: module.ManageDistrict,
+  import("./manage/district/").then((module) => ({
+    default: module.ManageDistrictPage,
   })),
 );

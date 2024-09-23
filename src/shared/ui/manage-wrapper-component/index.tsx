@@ -1,82 +1,55 @@
-import { Flex, Popconfirm, Table } from "antd";
+import { Button, Table } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { FC } from "react";
 import "./style.css";
-import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
+import { FaPlus } from "react-icons/fa";
 
 import { usePaginate } from "@shared/hooks/usePaginate";
 
 type Props = {
   title: string;
   searchPart: JSX.Element;
-  addPart: JSX.Element;
+  add: () => void;
+  modalPart?: JSX.Element;
   columns: AnyObject[];
   data: AnyObject[];
-  onDelete: (id: number | string) => void;
   totalItems: number;
 };
 
 export const ManageWrapperBox: FC<Props> = (props) => {
   const {
-    onDelete,
     title,
     searchPart,
-    addPart,
+    modalPart,
+    add,
     columns = [],
     data = [],
     totalItems = 0,
   } = props;
   const { page, pageSize, pageSizeOptions, setPage, setPageSize } =
     usePaginate();
-
-  const overColumns = [
-    ...columns,
-    {
-      flex: 0.5,
-      title: "Действия",
-      key: "action",
-      dataIndex: "action",
-      align: "center",
-      render: (t: string, record: { id: number | string }) => (
-        <Flex justify="center" align="center" gap={8}>
-          <FaPencilAlt
-            color="grey"
-            fontSize={16}
-            cursor={"pointer"}
-            title="Редактировать"
-          />
-          <Popconfirm
-            title="Удалить?"
-            onConfirm={() => onDelete(record?.id)}
-            okText="Да"
-            cancelText="Нет"
-          >
-            <FaTrashAlt
-              color="crimson"
-              fontSize={16}
-              cursor={"pointer"}
-              title="Удалить"
-            />
-          </Popconfirm>
-        </Flex>
-      ),
-    },
-  ];
+  const { t } = useTranslation();
 
   return (
     <div className="manage-wrapper-box">
       <h1 className="manage-wrapper-box__title">{title}</h1>
       <div className="manage-wrapper-box__search">{searchPart}</div>
-      <div className="manage-wrapper-box__add">{addPart}</div>
+      <div className="manage-wrapper-box__add">
+        <Button type="primary" icon={<FaPlus />} onClick={add}>
+          {t("add")}
+        </Button>
+      </div>
       <div className="manage-wrapper-box__table">
         <Table
-          columns={overColumns}
+          size="small"
+          columns={columns}
           dataSource={data}
           pagination={{
             current: page,
             pageSize: pageSize,
             total: totalItems,
-            showTotal: (total) => `Total ${total} items`,
+            showTotal: (total) => `${total} ${t("piece")}`,
             showSizeChanger: true,
             pageSizeOptions: pageSizeOptions,
             onShowSizeChange: (current, size) => {
@@ -88,6 +61,7 @@ export const ManageWrapperBox: FC<Props> = (props) => {
           }}
         />
       </div>
+      {modalPart}
     </div>
   );
 };
