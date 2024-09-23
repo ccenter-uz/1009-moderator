@@ -1,0 +1,1 @@
+export { SingleNameCyrill } from "./ui";

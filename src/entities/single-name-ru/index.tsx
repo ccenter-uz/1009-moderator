@@ -1,0 +1,1 @@
+export { SingleNameRu } from "./ui";

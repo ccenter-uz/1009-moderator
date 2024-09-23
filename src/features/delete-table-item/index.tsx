@@ -1,0 +1,1 @@
+export { DeleteTableItemUI } from "./ui";

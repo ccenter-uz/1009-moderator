@@ -1,22 +1,17 @@
 import { Menu } from "antd";
 import { FC } from "react";
-import { useLocation } from "react-router-dom";
 import "./style.css";
+import { useLocation } from "react-router-dom";
 
-import { getActiveKeyFromRoutes } from "@shared/utils/helpers";
-import { routesPath } from "@shared/utils/routes";
+import { routesPath } from "@shared/lib/react-router";
 
 export const SiderUI: FC = () => {
   const location = useLocation();
-  const activeKey = getActiveKeyFromRoutes(
-    routesPath[0].children || [],
-    location,
-  );
 
   return (
     <aside aria-label="Sider">
       <Menu
-        defaultSelectedKeys={[activeKey as string]}
+        defaultSelectedKeys={[location.pathname as string]}
         style={{
           background: "transparent",
           borderRight: 0,

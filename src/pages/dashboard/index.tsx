@@ -1,4 +1,5 @@
-import { FC } from "react";
+import { lazy } from "react";
 
-import { Dashboard } from "@widgets/index";
-export const DashboardPage: FC = () => <Dashboard />;
+export const DashboardAsync = lazy(() =>
+  import("./ui").then((module) => ({ default: module.DashboardPage })),
+);

@@ -5,7 +5,7 @@ import "./style.css";
 import { useTranslation } from "react-i18next";
 import { FaPlus } from "react-icons/fa";
 
-import { usePaginate } from "@shared/hooks/usePaginate";
+import { usePaginate } from "@shared/lib/hooks";
 
 type Props = {
   title: string;

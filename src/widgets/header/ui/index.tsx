@@ -7,7 +7,8 @@ import { RxFrame } from "react-icons/rx";
 import { TiWeatherPartlySunny } from "react-icons/ti";
 
 import "./style.css";
-import { ChangeLng, LogoutUI } from "@features/index";
+import { ChangeLng } from "@features/change-lng";
+import { LogoutUI } from "@features/logout";
 
 const links = [
   {

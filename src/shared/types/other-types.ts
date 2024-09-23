@@ -17,3 +17,18 @@ export type ItableDataAddress = {
   updated_date: string;
   employee: string;
 };
+
+export type ItableBasicData = {
+  key: string | number;
+  id: number | string;
+  name_ru?: string;
+  name_uz?: string;
+  name_uzcyrill?: string;
+  updated_date: string;
+  employee: string;
+};
+
+export type ItableWithRegions = ItableBasicData & {
+  region: string;
+  city: string;
+};

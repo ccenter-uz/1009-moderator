@@ -3,7 +3,7 @@ import { FC } from "react";
 import { useTranslation } from "react-i18next";
 
 type Props = {
-  headerInputs: JSX.Element;
+  headerInputs?: JSX.Element;
   ruInputs: JSX.Element;
   uzInputs: JSX.Element;
   uzCyrillicInputs: JSX.Element;

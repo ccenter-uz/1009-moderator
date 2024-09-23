@@ -4,10 +4,10 @@ import Sider from "antd/es/layout/Sider";
 import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 
-import { HeaderUI, SiderUI } from "@widgets/index";
+import { HeaderUI } from "@widgets/header";
+import { SiderUI } from "@widgets/sider";
 
 import { LoadingSpinner } from "@shared/ui";
-
 const MainLayout = () => {
   return (
     <Layout style={{ height: "100dvh" }}>
