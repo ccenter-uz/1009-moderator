@@ -10,3 +10,11 @@
     margin: 1em 0;
   }
 }
+.selected-row {
+  background-color: #e2f3fc;
+  cursor: pointer;
+}
+.ordinary-row {
+  cursor: pointer;
+  color: #252525;
+}

@@ -24,6 +24,7 @@ export type ItableBasicData = {
   name_ru?: string;
   name_uz?: string;
   name_uzcyrill?: string;
+  name_cyrill?: string;
   updated_date: string;
   employee: string;
 };

@@ -154,3 +154,35 @@ export const columnsWithAddressAndNamings: {
     key: "employee",
   },
 ];
+
+export const columnsForCategories: {
+  title: string;
+  dataIndex: string;
+  key: string;
+}[] = [
+  {
+    title: i18next.t("name_ru"),
+    dataIndex: "name_ru",
+    key: "name_ru",
+  },
+  {
+    title: i18next.t("name_uz"),
+    dataIndex: "name_uz",
+    key: "name_uz",
+  },
+  {
+    title: i18next.t("name_uzcyrill"),
+    dataIndex: "name_cyrill",
+    key: "name_cyrill",
+  },
+  {
+    title: i18next.t("update_date"),
+    dataIndex: "updated_date",
+    key: "updated_date",
+  },
+  {
+    title: i18next.t("employee"),
+    dataIndex: "employee",
+    key: "employee",
+  },
+];

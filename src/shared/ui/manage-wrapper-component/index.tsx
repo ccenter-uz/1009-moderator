@@ -1,6 +1,6 @@
 import { Button, Table } from "antd";
 import { AnyObject } from "antd/es/_util/type";
-import { FC } from "react";
+import { FC, useState } from "react";
 import "./style.css";
 import { useTranslation } from "react-i18next";
 import { FaPlus } from "react-icons/fa";
@@ -15,6 +15,8 @@ type Props = {
   columns: AnyObject[];
   data: AnyObject[];
   totalItems: number;
+  rowSelect?: boolean;
+  onRowSelect?: (record: AnyObject) => void;
 };
 
 export const ManageWrapperBox: FC<Props> = (props) => {
@@ -26,10 +28,17 @@ export const ManageWrapperBox: FC<Props> = (props) => {
     columns = [],
     data = [],
     totalItems = 0,
+    rowSelect,
+    onRowSelect,
   } = props;
   const { page, pageSize, pageSizeOptions, setPage, setPageSize } =
     usePaginate();
   const { t } = useTranslation();
+  const [selectedRowKey, setSelectedRowKey] = useState<string>("");
+
+  const rowClassName = (record: AnyObject) => {
+    return record.key === selectedRowKey ? "selected-row" : "";
+  };
 
   return (
     <div className="manage-wrapper-box">
@@ -43,6 +52,16 @@ export const ManageWrapperBox: FC<Props> = (props) => {
       <div className="manage-wrapper-box__table">
         <Table
           size="small"
+          bordered
+          onRow={(record) => ({
+            onDoubleClick: () => {
+              rowSelect &&
+                (onRowSelect && onRowSelect(record),
+                setSelectedRowKey(record.key));
+            },
+          })}
+          rowClassName={rowClassName}
+          rowHoverable={rowSelect}
           columns={columns}
           dataSource={data}
           pagination={{

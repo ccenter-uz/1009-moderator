@@ -23,6 +23,7 @@ const MainLayout = () => {
             background: "var(--sider-bg-color)",
             padding: "8px 16px",
             overflowY: "auto",
+            overflowX: "hidden",
           }}
         >
           <SiderUI />
