@@ -1,0 +1,1 @@
+export { ContactSearchPartUI } from "./ui";

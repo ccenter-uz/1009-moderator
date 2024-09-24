@@ -1,5 +1,11 @@
 import { FC } from "react";
 
+import { SearchPartUI } from "@widgets/search-part";
+
 export const OrgAllPage: FC = () => {
-  return <div>OrgAll</div>;
+  return (
+    <div>
+      <SearchPartUI />
+    </div>
+  );
 };
