@@ -64,6 +64,7 @@ export const ContactSearchPartUI: FC = () => {
               name="belong-abonent"
               label={t("belong-abonent")}
               style={{ marginBottom: 10 }}
+              valuePropName="checked"
             >
               <Checkbox />
             </Form.Item>
@@ -73,6 +74,7 @@ export const ContactSearchPartUI: FC = () => {
               name="bounded"
               label={t("bounded")}
               style={{ marginBottom: 10 }}
+              valuePropName="checked"
             >
               <Checkbox />
             </Form.Item>
@@ -82,6 +84,7 @@ export const ContactSearchPartUI: FC = () => {
               name="no-phone-abonent"
               label={t("no-phone-abonent")}
               style={{ marginBottom: 10 }}
+              valuePropName="checked"
             >
               <Checkbox />
             </Form.Item>
@@ -91,6 +94,7 @@ export const ContactSearchPartUI: FC = () => {
               name="no-bounded"
               label={t("no-bounded")}
               style={{ marginBottom: 10 }}
+              valuePropName="checked"
             >
               <Checkbox />
             </Form.Item>

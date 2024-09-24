@@ -78,5 +78,11 @@
   "belong-abonent": "Абонентские",
   "bounded": "Привязанные",
   "no-phone-abonent": "Абоненты без телефонов",
-  "no-bounded": "Не Привязанные"
+  "no-bounded": "Не Привязанные",
+  "code": "Код",
+  "secret": "Секрет",
+  "open": "Открыть",
+  "sms": "SMS",
+  "description": "Пояснение",
+  "action": "Действие"
 }
