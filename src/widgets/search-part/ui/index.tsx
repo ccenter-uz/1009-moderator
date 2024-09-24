@@ -10,8 +10,16 @@ export const SearchPartUI: FC = () => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
 
+  const onSubmit = (values: unknown) => {
+    console.log(values, "search-part");
+  };
+
+  const onCancel = () => {
+    form.resetFields();
+  };
+
   return (
-    <Form form={form} id="search-part">
+    <Form form={form} id="search-part" onFinish={onSubmit}>
       <Form.Item
         name="category"
         label={t("category")}
@@ -39,8 +47,8 @@ export const SearchPartUI: FC = () => {
         </Col>
       </Row>
       <Flex justify="end" align="middle" gap={8}>
-        <Button>{t("cancel")}</Button>
-        <Button htmlType="submit" type="primary">
+        <Button onClick={onCancel}>{t("cancel")}</Button>
+        <Button htmlType="submit" type="primary" form="search-part">
           {t("search")}
         </Button>
       </Flex>
