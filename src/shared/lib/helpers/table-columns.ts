@@ -270,3 +270,16 @@ export const phoneColumns: searchColType = [
     align: "center",
   },
 ];
+
+export const searchModalColumns: searchColType = [
+  {
+    title: i18next.t("name_uz"),
+    dataIndex: "name_uz",
+    key: "name_uz",
+  },
+  {
+    title: i18next.t("name_ru"),
+    dataIndex: "name_ru",
+    key: "name_ru",
+  },
+];
