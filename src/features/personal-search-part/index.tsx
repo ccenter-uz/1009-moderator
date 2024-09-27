@@ -1,0 +1,1 @@
+export { PersonalSearchPartUI } from "./ui";

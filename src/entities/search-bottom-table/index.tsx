@@ -1,0 +1,1 @@
+export { SearchBottomTable } from "./ui";
