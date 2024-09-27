@@ -8,7 +8,7 @@ import { useDisclosure } from "@shared/lib/hooks";
 import { SearchModal } from "@shared/ui/search-modal";
 
 type Props = {
-  form: FormInstance;
+  form?: FormInstance;
   value: string;
   label: string;
   dataFetcher: () => AnyObject[];
@@ -31,7 +31,7 @@ export const SingleInputWithModalUI: FC<Props> = (props) => {
   };
 
   useEffect(() => {
-    selectedData && form.setFieldValue(`${value}`, selectedData?.id);
+    selectedData && form && form.setFieldValue(`${value}`, selectedData?.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedData]);
 
