@@ -37,14 +37,18 @@ const contentStyle: CSSProperties = {
 export const OrgAddPage: FC = () => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
-  const [current, setCurrent] = useState(0);
+  const [current, setCurrent] = useState(
+    Number(sessionStorage.getItem("currentStep")) || 0,
+  );
 
   const next = () => {
     setCurrent(current + 1);
+    sessionStorage.setItem("currentStep", JSON.stringify(current + 1));
   };
 
   const prev = () => {
     setCurrent(current - 1);
+    sessionStorage.setItem("currentStep", JSON.stringify(current - 1));
   };
 
   const onSubmit = (values: unknown) => {
