@@ -63,7 +63,7 @@ export const AddTableOrientirUI: FC = () => {
       render: (text: string, record: AnyObject) => (
         <Popconfirm
           title={t("delete")}
-          onConfirm={() => onDelete(record.id)}
+          onConfirm={() => onDelete(record?.colId)}
           okText="Да"
           cancelText="Нет"
         >
@@ -79,7 +79,7 @@ export const AddTableOrientirUI: FC = () => {
   ];
 
   const onDelete = async (id: string | number) => {
-    setData(data.filter((item: AnyObject) => item.id !== id));
+    setData(data.filter((item: AnyObject) => item.colId !== id));
   };
 
   const addSubCategory = () => {
@@ -89,6 +89,7 @@ export const AddTableOrientirUI: FC = () => {
         ...selectedNearbyCategory[0],
         ...selectedNearby[0],
         description,
+        colId: Date.now(),
       },
     ]);
     setSelectedNearby([]);

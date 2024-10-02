@@ -19,6 +19,7 @@ type selectedDataType = {
   value: string;
   "category-tu"?: string;
   "sub-category-tu"?: string;
+  colId?: number | string;
 };
 
 export const AddTableCategoryTuUI: FC = () => {
@@ -66,7 +67,7 @@ export const AddTableCategoryTuUI: FC = () => {
       render: (text: string, record: selectedDataType) => (
         <Popconfirm
           title={t("delete")}
-          onConfirm={() => onDelete(record.id)}
+          onConfirm={() => onDelete(record?.colId as string)}
           okText="Да"
           cancelText="Нет"
         >
@@ -82,7 +83,7 @@ export const AddTableCategoryTuUI: FC = () => {
   ];
 
   const onDelete = async (id: string | number) => {
-    setData(data.filter((item: AnyObject) => item.id !== id));
+    setData(data.filter((item: AnyObject) => item.colId !== id));
   };
 
   const addSubCategory = () => {
@@ -91,6 +92,7 @@ export const AddTableCategoryTuUI: FC = () => {
       {
         ...selectedCategory[0],
         ...selectedSubCategory[0],
+        colId: Date.now(),
       },
     ]);
     setSelectedSubCategory([]);

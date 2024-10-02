@@ -68,7 +68,7 @@ export const OrgAddThirdStepUI: FC = () => {
       render: (text: string, record: AnyObject) => (
         <Popconfirm
           title={t("delete")}
-          onConfirm={() => onDelete(record.id)}
+          onConfirm={() => onDelete(record?.phone)}
           okText="Да"
           cancelText="Нет"
         >
@@ -84,17 +84,16 @@ export const OrgAddThirdStepUI: FC = () => {
   ];
 
   const onSecretCheck = (e: CheckboxChangeEvent, record: AnyObject) => {
-    const filteredData = data?.filter((item) => item.id === record.id);
+    const filteredData = data?.filter((item) => item.phone === record.phone);
+    filteredData[0].secret = e.target.checked;
+    const otherData = data?.filter((item) => item.phone !== record.phone);
     if (!filteredData) return null;
 
-    filteredData[0].secret = e.target.checked;
-    const filt = { ...data, ...filteredData[0] };
-
-    setData([filt]);
+    setData([...otherData, ...filteredData]);
   };
 
-  const onDelete = async (id: string | number) => {
-    setData(data.filter((item: AnyObject) => item.id !== id));
+  const onDelete = async (phone: string) => {
+    setData(data.filter((item: AnyObject) => item.phone !== phone));
   };
 
   const addSubCategory = () => {
@@ -111,7 +110,6 @@ export const OrgAddThirdStepUI: FC = () => {
 
   const onSelectType = (value: string, option: AnyObject | unknown) => {
     setSelectedPhoneType([option as AnyObject]);
-    console.log(option, "option");
   };
 
   return (
