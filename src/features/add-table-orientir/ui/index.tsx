@@ -13,8 +13,17 @@ import { AnyObject } from "antd/es/_util/type";
 import { t } from "i18next";
 import { FC, useState } from "react";
 import { FaTrashAlt } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+
+import { RootState } from "@shared/types";
+
+import { setData } from "../model/Slicer";
 
 export const AddTableOrientirUI: FC = () => {
+  const { data } = useSelector(
+    ({ useAddTableOrientirSlice }: RootState) => useAddTableOrientirSlice,
+  );
+  const dispatch = useDispatch();
   const [selectedNearbyCategory, setSelectedNearbyCategory] = useState<
     AnyObject[] | []
   >([]);
@@ -38,7 +47,6 @@ export const AddTableOrientirUI: FC = () => {
     },
   ]);
   const [nearbyOptions, setNearbyOptions] = useState<AnyObject[] | null>(null);
-  const [data, setData] = useState<AnyObject[]>([]);
   const [description, setDescription] = useState<string>("");
   const columns = [
     {
@@ -79,11 +87,12 @@ export const AddTableOrientirUI: FC = () => {
   ];
 
   const onDelete = async (id: string | number) => {
-    setData(data.filter((item: AnyObject) => item.colId !== id));
+    const newData = data.filter((item: AnyObject) => item.colId !== id);
+    dispatch(setData(newData));
   };
 
   const addSubCategory = () => {
-    setData([
+    const newData = [
       ...data,
       {
         ...selectedNearbyCategory[0],
@@ -91,7 +100,8 @@ export const AddTableOrientirUI: FC = () => {
         description,
         colId: Date.now(),
       },
-    ]);
+    ];
+    dispatch(setData(newData));
     setSelectedNearby([]);
     setSelectedNearbyCategory([]);
     setDescription("");

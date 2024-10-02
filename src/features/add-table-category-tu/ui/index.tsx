@@ -12,6 +12,9 @@ import { AnyObject } from "antd/es/_util/type";
 import { t } from "i18next";
 import { FC, useState } from "react";
 import { FaTrashAlt } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+
+import { setData } from "../model/Slicer";
 type selectedDataType = {
   id: number | string;
   key: number | string;
@@ -23,6 +26,10 @@ type selectedDataType = {
 };
 
 export const AddTableCategoryTuUI: FC = () => {
+  const dispatch = useDispatch();
+  const data = useSelector(
+    (state: AnyObject) => state.useAddTableCategoryTuSlice.data,
+  );
   const [selectedCategory, setSelectedCategory] = useState<
     selectedDataType[] | []
   >([]);
@@ -48,7 +55,6 @@ export const AddTableCategoryTuUI: FC = () => {
   const [subCategoryOptions, setSubCategoryOptions] = useState<
     selectedDataType[] | null
   >(null);
-  const [data, setData] = useState<selectedDataType[]>([]);
   const columns = [
     {
       title: t("category-tu"),
@@ -83,18 +89,20 @@ export const AddTableCategoryTuUI: FC = () => {
   ];
 
   const onDelete = async (id: string | number) => {
-    setData(data.filter((item: AnyObject) => item.colId !== id));
+    const newData = data.filter((item: AnyObject) => item.colId !== id);
+    dispatch(setData(newData));
   };
 
   const addSubCategory = () => {
-    setData([
+    const newData = [
       ...data,
       {
         ...selectedCategory[0],
         ...selectedSubCategory[0],
         colId: Date.now(),
       },
-    ]);
+    ];
+    dispatch(setData(newData));
     setSelectedSubCategory([]);
     setSelectedCategory([]);
   };

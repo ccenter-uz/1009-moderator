@@ -15,8 +15,17 @@ import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { t } from "i18next";
 import { FC, useState } from "react";
 import { FaTrashAlt } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+
+import { RootState } from "@shared/types";
+
+import { setData } from "../model/Slicer";
 
 export const OrgAddThirdStepUI: FC = () => {
+  const { data } = useSelector(
+    ({ useAddOrgThirdStepSlice }: RootState) => useAddOrgThirdStepSlice,
+  );
+  const dispatch = useDispatch();
   const [selectedPhoneType, setSelectedPhoneType] = useState<AnyObject[] | []>(
     [],
   );
@@ -36,7 +45,6 @@ export const OrgAddThirdStepUI: FC = () => {
       "phone-type": "Тип телефона 2",
     },
   ]);
-  const [data, setData] = useState<AnyObject[]>([]);
   const [phone, setPhone] = useState<string>("");
   const columns = [
     {
@@ -84,26 +92,36 @@ export const OrgAddThirdStepUI: FC = () => {
   ];
 
   const onSecretCheck = (e: CheckboxChangeEvent, record: AnyObject) => {
-    const filteredData = data?.filter((item) => item.phone === record.phone);
-    filteredData[0].secret = e.target.checked;
-    const otherData = data?.filter((item) => item.phone !== record.phone);
-    if (!filteredData) return null;
+    const filteredData = data
+      ?.filter((item: { phone: string }) => item.phone === record.phone)
+      .map((item: { secret: boolean }) => ({
+        ...item,
+        secret: e.target.checked,
+      }));
 
-    setData([...otherData, ...filteredData]);
+    const otherData = data?.filter(
+      (item: { phone: string }) => item.phone !== record.phone,
+    );
+    if (!filteredData) return null;
+    const newData = [...otherData, ...filteredData];
+    dispatch(setData(newData));
+    console.log(newData, "newData");
   };
 
   const onDelete = async (phone: string) => {
-    setData(data.filter((item: AnyObject) => item.phone !== phone));
+    const newData = data.filter((item: AnyObject) => item.phone !== phone);
+    dispatch(setData(newData));
   };
 
   const addSubCategory = () => {
-    setData([
+    const newData = [
       ...data,
       {
         ...selectedPhoneType[0],
         phone,
       },
-    ]);
+    ];
+    dispatch(setData(newData));
     setSelectedPhoneType([]);
     setPhone("");
   };

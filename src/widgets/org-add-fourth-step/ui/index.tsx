@@ -14,6 +14,11 @@ import { GetProp } from "antd/es/_util/type";
 import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPlus } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+
+import { RootState } from "@shared/types";
+
+import { setData } from "../model/Slicer";
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
@@ -27,14 +32,27 @@ const getBase64 = (file: FileType): Promise<string> =>
 
 export const OrgAddFourthStepUI: FC = () => {
   const { t } = useTranslation();
+  const { data: fileListData } = useSelector(
+    ({ useAddOrgFourthStepSlice }: RootState) => useAddOrgFourthStepSlice,
+  );
+  const dispatch = useDispatch();
   const [allCheck, setAllCheck] = useState<boolean>(false);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [fileList, setFileList] = useState<UploadFile[]>([]);
 
   const handleUpload = ({ fileList }: { fileList: UploadFile[] }) => {
-    setFileList(fileList.map((file) => ({ ...file, status: "done" })));
+    const newData = fileList.map((file) => ({
+      ...file,
+      status: "done",
+      thumbUrl: "",
+    }));
+
+    dispatch(setData(newData));
   };
+
+  console.log(fileListData);
+
   const handlePreview = async (file: UploadFile) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj as FileType);
@@ -88,7 +106,7 @@ export const OrgAddFourthStepUI: FC = () => {
           onPreview={handlePreview}
           multiple
           listType="picture-card"
-          fileList={fileList}
+          fileList={[...fileListData]}
         >
           <div>
             <FaPlus />
