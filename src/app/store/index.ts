@@ -1,15 +1,16 @@
 import { configureStore, ConfigureStoreOptions } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
+import { useAddOrgFirstStepSlice } from "@widgets/org-add-first-step";
 import { useAddOrgFourthStepSlice } from "@widgets/org-add-fourth-step";
+import { useAddOrgSecondStepSlice } from "@widgets/org-add-second-step";
 import { useAddOrgThirdStepSlice } from "@widgets/org-add-third-step";
-
-import { useAddTableCategoryTuSlice } from "@features/add-table-category-tu";
-import { useAddTableOrientirSlice } from "@features/add-table-orientir";
+import { useEditOrgFirstStepSlice } from "@widgets/org-edit-first-step";
+import { useEditOrgFourthStepSlice } from "@widgets/org-edit-fourth-step";
+import { useEditOrgSecondStepSlice } from "@widgets/org-edit-second-step";
+import { useEditOrgThirdStepSlice } from "@widgets/org-edit-third-step";
 
 import { baseApi } from "@shared/api";
-
-// // eslint-disable-next-line no-restricted-imports
 
 export const createStore = (
   options?: ConfigureStoreOptions["preloadedState"] | undefined,
@@ -17,10 +18,16 @@ export const createStore = (
   configureStore({
     reducer: {
       [baseApi.reducerPath]: baseApi.reducer,
-      useAddTableCategoryTuSlice: useAddTableCategoryTuSlice.reducer,
-      useAddTableOrientirSlice: useAddTableOrientirSlice.reducer,
+      // ADD-ORG
+      useAddOrgFirstStepSlice: useAddOrgFirstStepSlice.reducer,
+      useAddOrgSecondStepSlice: useAddOrgSecondStepSlice.reducer,
       useAddOrgThirdStepSlice: useAddOrgThirdStepSlice.reducer,
       useAddOrgFourthStepSlice: useAddOrgFourthStepSlice.reducer,
+      // EDIT-ORG
+      useEditOrgFirstStepSlice: useEditOrgFirstStepSlice.reducer,
+      useEditOrgSecondStepSlice: useEditOrgSecondStepSlice.reducer,
+      useEditOrgThirdStepSlice: useEditOrgThirdStepSlice.reducer,
+      useEditOrgFourthStepSlice: useEditOrgFourthStepSlice.reducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({ serializableCheck: false }).concat(

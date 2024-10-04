@@ -13,24 +13,16 @@ import { AnyObject } from "antd/es/_util/type";
 import { t } from "i18next";
 import { FC, useState } from "react";
 import { FaTrashAlt } from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
-import { RootState } from "@shared/types";
+type Props = {
+  data: AnyObject[];
+  setData: any;
+};
 
-import { setData } from "../model/Slicer";
-
-export const AddTableOrientirUI: FC = () => {
-  const { data } = useSelector(
-    ({ useAddTableOrientirSlice }: RootState) => useAddTableOrientirSlice,
-  );
-  const dispatch = useDispatch();
-  const [selectedNearbyCategory, setSelectedNearbyCategory] = useState<
-    AnyObject[] | []
-  >([]);
-  const [selectedNearby, setSelectedNearby] = useState<AnyObject[] | []>([]);
-  const [nearbyCategoryOptions, setNearbyCategoryOptions] = useState<
-    AnyObject[]
-  >([
+// MOCKS
+const mocks = {
+  nearbyCategoryOptions: [
     {
       id: 1,
       key: 1,
@@ -45,10 +37,24 @@ export const AddTableOrientirUI: FC = () => {
       value: "nearby-category 2",
       "nearby-category": "Категория ориентир 2",
     },
-  ]);
-  const [nearbyOptions, setNearbyOptions] = useState<AnyObject[] | null>(null);
-  const [description, setDescription] = useState<string>("");
-  const columns = [
+  ],
+  nearbyOptions: [
+    {
+      id: 1,
+      key: 1,
+      label: "Ориентир 1.1",
+      value: "sub-category-tu 1.1",
+      nearby: "Ориентир 1.1",
+    },
+    {
+      id: 2,
+      key: 2,
+      label: "Ориентир 1.2",
+      value: "nearby 1.2",
+      nearby: "Ориентир 1.2",
+    },
+  ],
+  columns: [
     {
       title: t("nearby-category"),
       dataIndex: "nearby-category",
@@ -64,6 +70,23 @@ export const AddTableOrientirUI: FC = () => {
       dataIndex: "description",
       key: "description",
     },
+  ],
+};
+
+export const TableOrientirUI: FC<Props> = (props) => {
+  const { data, setData } = props;
+  const dispatch = useDispatch();
+  const [selectedNearby, setSelectedNearby] = useState<AnyObject[]>([]);
+  const [selectedNearbyCategory, setSelectedNearbyCategory] = useState<
+    AnyObject[]
+  >([]);
+  const [nearbyOptions, setNearbyOptions] = useState<AnyObject[]>([]);
+  const [description, setDescription] = useState<string>("");
+  const [nearbyCategoryOptions, setNearbyCategoryOptions] = useState<
+    AnyObject[]
+  >(mocks.nearbyCategoryOptions || []);
+  const overColumns = [
+    ...mocks.columns,
     {
       title: t("action"),
       dataIndex: "action",
@@ -102,6 +125,7 @@ export const AddTableOrientirUI: FC = () => {
       },
     ];
     dispatch(setData(newData));
+
     setSelectedNearby([]);
     setSelectedNearbyCategory([]);
     setDescription("");
@@ -112,41 +136,7 @@ export const AddTableOrientirUI: FC = () => {
     option: AnyObject | unknown,
   ) => {
     setSelectedNearbyCategory([option as AnyObject]);
-    if ((option as AnyObject).id === 1) {
-      setNearbyOptions([
-        {
-          id: 1,
-          key: 1,
-          label: "Ориентир 1.1",
-          value: "sub-category-tu 1.1",
-          nearby: "Ориентир 1.1",
-        },
-        {
-          id: 2,
-          key: 2,
-          label: "Ориентир 1.2",
-          value: "nearby 1.2",
-          nearby: "Ориентир 1.2",
-        },
-      ]);
-    } else {
-      setNearbyOptions([
-        {
-          id: 1,
-          key: 1,
-          label: "Ориентир 2.1",
-          value: "nearby 2.1",
-          nearby: "Ориентир 2.1",
-        },
-        {
-          id: 2,
-          key: 2,
-          label: "Ориентир 2.2",
-          value: "nearby 2.2",
-          nearby: "Ориентир 2.2",
-        },
-      ]);
-    }
+    setNearbyOptions(mocks.nearbyOptions);
   };
 
   const onSelectSubCategory = (value: string, option: AnyObject | unknown) => {
@@ -176,7 +166,7 @@ export const AddTableOrientirUI: FC = () => {
           <Flex align="center" gap={8}>
             <label htmlFor="nearby">{t("nearby")}</label>
             <Select
-              disabled={!nearbyOptions}
+              disabled={nearbyOptions.length === 0}
               showSearch
               id="nearby"
               value={selectedNearby[0]?.value}
@@ -192,7 +182,7 @@ export const AddTableOrientirUI: FC = () => {
             <Input.TextArea
               onChange={(e) => setDescription(e.target.value)}
               value={description}
-              disabled={!selectedNearbyCategory}
+              disabled={selectedNearbyCategory.length === 0}
               id="description"
               style={{ flex: 1 }}
             />
@@ -211,7 +201,7 @@ export const AddTableOrientirUI: FC = () => {
 
       <Table
         bordered
-        columns={columns}
+        columns={overColumns}
         dataSource={data}
         pagination={false}
         scroll={{ y: 300 }}

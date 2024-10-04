@@ -36,6 +36,7 @@ import { ManageResidentialAreaAsync } from "@pages/manage-residential-area";
 import { ManageStreetAsync } from "@pages/manage-street";
 import { ManageUsersAsync } from "@pages/manage-users";
 import { ManageVillageAsync } from "@pages/manage-village";
+import { OrgEditAsync } from "@pages/organization-edit";
 
 function BubbleError() {
   const error = useRouteError();
@@ -105,6 +106,11 @@ export const routesPath = [
             icon: <MdAdd />,
             path: "add",
             element: <OrgAddAsync />,
+          },
+          {
+            key: "/orgs/edit",
+            path: "edit",
+            element: <OrgEditAsync />,
           },
         ],
       },

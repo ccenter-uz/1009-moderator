@@ -7,6 +7,8 @@ import { routesPath } from "@shared/lib/react-router";
 
 export const SiderUI: FC = () => {
   const location = useLocation();
+  const menu =
+    routesPath[0]?.children && routesPath[0]?.children.map((item) => item);
 
   return (
     <aside aria-label="Sider">
@@ -16,9 +18,7 @@ export const SiderUI: FC = () => {
           background: "transparent",
           borderRight: 0,
         }}
-        items={
-          routesPath[0]?.children && routesPath[0]?.children.map((item) => item)
-        }
+        items={menu}
         mode="inline"
       />
     </aside>

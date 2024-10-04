@@ -9,10 +9,10 @@ import { RootState } from "@shared/types";
 
 import { setData } from "../model/Slicer";
 
-export const OrgAddFourthStepUI: FC = () => {
+export const OrgEditFourthStepUI: FC = () => {
   const { t } = useTranslation();
   const { data: fileListData } = useSelector(
-    ({ useAddOrgFourthStepSlice }: RootState) => useAddOrgFourthStepSlice,
+    ({ useEditOrgFourthStepSlice }: RootState) => useEditOrgFourthStepSlice,
   );
   const [allCheck, setAllCheck] = useState<boolean>(false);
 

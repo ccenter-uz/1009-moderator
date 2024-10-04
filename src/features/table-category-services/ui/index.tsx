@@ -12,31 +12,16 @@ import { AnyObject } from "antd/es/_util/type";
 import { t } from "i18next";
 import { FC, useState } from "react";
 import { FaTrashAlt } from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
-import { setData } from "../model/Slicer";
-type selectedDataType = {
-  id: number | string;
-  key: number | string;
-  label: string;
-  value: string;
-  "category-tu"?: string;
-  "sub-category-tu"?: string;
-  colId?: number | string;
+type Props = {
+  data: AnyObject[];
+  setData: any;
 };
 
-export const AddTableCategoryTuUI: FC = () => {
-  const dispatch = useDispatch();
-  const data = useSelector(
-    (state: AnyObject) => state.useAddTableCategoryTuSlice.data,
-  );
-  const [selectedCategory, setSelectedCategory] = useState<
-    selectedDataType[] | []
-  >([]);
-  const [selectedSubCategory, setSelectedSubCategory] = useState<
-    selectedDataType[] | []
-  >([]);
-  const [categoryOptions, setCategoryOptions] = useState<selectedDataType[]>([
+// MOCKS
+const mocks = {
+  categoryOptions: [
     {
       id: 1,
       key: 1,
@@ -51,11 +36,24 @@ export const AddTableCategoryTuUI: FC = () => {
       value: "category-tu 2",
       "category-tu": "Раздел Т/У 2",
     },
-  ]);
-  const [subCategoryOptions, setSubCategoryOptions] = useState<
-    selectedDataType[] | null
-  >(null);
-  const columns = [
+  ],
+  subCategoryOptions: [
+    {
+      id: 1,
+      key: 1,
+      label: "Подраздел  Т/У 1.1",
+      value: "sub-category-tu 1.1",
+      "sub-category-tu": "Подраздел  Т/У 1.1",
+    },
+    {
+      id: 2,
+      key: 2,
+      label: "Подраздел  Т/У 1.2",
+      value: "sub-category-tu 1.2",
+      "sub-category-tu": "Подраздел  Т/У 1.2",
+    },
+  ],
+  columns: [
     {
       title: t("category-tu"),
       dataIndex: "category-tu",
@@ -66,11 +64,30 @@ export const AddTableCategoryTuUI: FC = () => {
       dataIndex: "sub-category-tu",
       key: "sub-category-tu",
     },
+  ],
+};
+
+export const TableCategoryServices: FC<Props> = (props) => {
+  const { data, setData } = props;
+  const dispatch = useDispatch();
+  const [selectedCategory, setSelectedCategory] = useState<AnyObject[]>([]);
+  const [selectedSubCategory, setSelectedSubCategory] = useState<AnyObject[]>(
+    [],
+  );
+  const [categoryOptions, setCategoryOptions] = useState<AnyObject[]>(
+    mocks.categoryOptions,
+  );
+  const [subCategoryOptions, setSubCategoryOptions] = useState<
+    AnyObject[] | []
+  >([]);
+
+  const overColumns = [
+    ...mocks.columns,
     {
       title: t("action"),
       dataIndex: "action",
       key: "action",
-      render: (text: string, record: selectedDataType) => (
+      render: (text: string, record: AnyObject) => (
         <Popconfirm
           title={t("delete")}
           onConfirm={() => onDelete(record?.colId as string)}
@@ -107,53 +124,13 @@ export const AddTableCategoryTuUI: FC = () => {
     setSelectedCategory([]);
   };
 
-  const onSelectCategory = (
-    value: string,
-    option: selectedDataType | unknown,
-  ) => {
-    setSelectedCategory([option as selectedDataType]);
-    if ((option as selectedDataType).id === 1) {
-      setSubCategoryOptions([
-        {
-          id: 1,
-          key: 1,
-          label: "Подраздел  Т/У 1.1",
-          value: "sub-category-tu 1.1",
-          "sub-category-tu": "Подраздел  Т/У 1.1",
-        },
-        {
-          id: 2,
-          key: 2,
-          label: "Подраздел  Т/У 1.2",
-          value: "sub-category-tu 1.2",
-          "sub-category-tu": "Подраздел  Т/У 1.2",
-        },
-      ]);
-    } else {
-      setSubCategoryOptions([
-        {
-          id: 1,
-          key: 1,
-          label: "Подраздел  Т/У 2.1",
-          value: "sub-category-tu 2.1",
-          "sub-category-tu": "Подраздел  Т/У 2.1",
-        },
-        {
-          id: 2,
-          key: 2,
-          label: "Подраздел  Т/У 2.2",
-          value: "sub-category-tu 2.2",
-          "sub-category-tu": "Подраздел  Т/У 2.2",
-        },
-      ]);
-    }
+  const onSelectCategory = (value: string, option: AnyObject | unknown) => {
+    setSelectedCategory([option as AnyObject]);
+    setSubCategoryOptions(mocks.subCategoryOptions);
   };
 
-  const onSelectSubCategory = (
-    value: string,
-    option: selectedDataType | unknown,
-  ) => {
-    setSelectedSubCategory([option as selectedDataType]);
+  const onSelectSubCategory = (value: string, option: AnyObject | unknown) => {
+    setSelectedSubCategory([option as AnyObject]);
   };
 
   return (
@@ -179,7 +156,7 @@ export const AddTableCategoryTuUI: FC = () => {
           <Flex align="center" gap={8}>
             <label htmlFor="sub-category-tu">{t("sub-category-tu")}</label>
             <Select
-              disabled={!subCategoryOptions}
+              disabled={subCategoryOptions.length === 0}
               showSearch
               id="sub-category-tu"
               value={selectedSubCategory[0]?.value}
@@ -202,7 +179,7 @@ export const AddTableCategoryTuUI: FC = () => {
 
       <Table
         bordered
-        columns={columns}
+        columns={overColumns}
         dataSource={data}
         pagination={false}
         scroll={{ y: 300 }}

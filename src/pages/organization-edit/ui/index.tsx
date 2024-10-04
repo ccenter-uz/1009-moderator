@@ -4,16 +4,13 @@ import { CSSProperties, FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 
-import {
-  OrgAddFirstStepUI,
-  setCategoryData,
-} from "@widgets/org-add-first-step";
-import { OrgAddFourthStepUI } from "@widgets/org-add-fourth-step";
-import {
-  OrgAddSecondStepUI,
-  setOrientirData,
-} from "@widgets/org-add-second-step";
-import { OrgAddThirdStepUI, setPhoneData } from "@widgets/org-add-third-step";
+import { setCategoryData } from "@widgets/org-add-first-step";
+import { setOrientirData } from "@widgets/org-add-second-step";
+import { setPhoneData } from "@widgets/org-add-third-step";
+import { OrgEditFirstStepUI } from "@widgets/org-edit-first-step";
+import { OrgEditFourthStepUI } from "@widgets/org-edit-fourth-step";
+import { OrgEditSecondStepUI } from "@widgets/org-edit-second-step";
+import { OrgEditThirdStepUI } from "@widgets/org-edit-third-step";
 
 import { SEND_BODY, STEPS_DATA, STEPS_ENUM } from "@shared/lib/helpers";
 import { RootState } from "@shared/types";
@@ -22,29 +19,29 @@ const items = [
   {
     title: i18next.t("personal"),
     description: i18next.t("personal_description"),
-    content: <OrgAddFirstStepUI />,
+    content: <OrgEditFirstStepUI />,
   },
   {
     title: i18next.t("address"),
     description: i18next.t("address_description"),
-    content: <OrgAddSecondStepUI />,
+    content: <OrgEditSecondStepUI />,
   },
   {
     title: i18next.t("contacts"),
     description: i18next.t("contacts_description"),
-    content: <OrgAddThirdStepUI />,
+    content: <OrgEditThirdStepUI />,
   },
   {
     title: i18next.t("additional"),
     description: i18next.t("additional_description"),
-    content: <OrgAddFourthStepUI />,
+    content: <OrgEditFourthStepUI />,
   },
 ];
 const contentStyle: CSSProperties = {
   margin: "16px",
 };
 
-export const OrgAddPage: FC = () => {
+export const OrgEditPage: FC = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [form] = Form.useForm();
