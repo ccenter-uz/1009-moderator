@@ -96,6 +96,12 @@ export const OrgAddPage: FC = () => {
   const onSubmit = async () => {
     const body = {
       ...form.getFieldsValue(SEND_BODY),
+      payment_types: {
+        cash: form.getFieldValue("cash"),
+        terminal: form.getFieldValue("terminal"),
+        trasnfer: form.getFieldValue("trasnfer"),
+        all_type: form.getFieldValue("all_type"),
+      },
       "category-tu": categoryTu,
       orientir: orientirData,
       phone: phoneData,
