@@ -96,11 +96,29 @@ export const OrgAddPage: FC = () => {
   const onSubmit = async () => {
     const body = {
       ...form.getFieldsValue(SEND_BODY),
-      payment_types: {
-        cash: form.getFieldValue("cash"),
-        terminal: form.getFieldValue("terminal"),
-        trasnfer: form.getFieldValue("trasnfer"),
+      payment_type: {
+        cash: form.getFieldValue("all_type")
+          ? true
+          : form.getFieldValue("cash"),
+        terminal: form.getFieldValue("all_type")
+          ? true
+          : form.getFieldValue("terminal"),
+        trasnfer: form.getFieldValue("all_type")
+          ? true
+          : form.getFieldValue("trasnfer"),
         all_type: form.getFieldValue("all_type"),
+      },
+      worktime: {
+        dayoffs: form.getFieldValue("dayoffs"),
+        "worktime-from": form.getFieldValue("worktime-from"),
+        "worktime-to": form.getFieldValue("worktime-to"),
+        "lunch-from": form.getFieldValue("lunch-from"),
+        "lunch-to": form.getFieldValue("lunch-to"),
+      },
+      transport: {
+        bus: form.getFieldValue("bus"),
+        "micro-bus": form.getFieldValue("micro-bus"),
+        "metro-station": form.getFieldValue("metro-station"),
       },
       "category-tu": categoryTu,
       orientir: orientirData,

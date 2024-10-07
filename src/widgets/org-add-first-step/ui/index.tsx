@@ -1,4 +1,4 @@
-import { Col, Form, Input, Row } from "antd";
+import { Col, Form, Input, Row, Select } from "antd";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -57,6 +57,17 @@ export const OrgAddFirstStepUI: FC = () => {
           </Form.Item>
           <Form.Item name={"secret"} label={t("Секрет")}>
             <Input type="text" placeholder={t("Секрет")} allowClear />
+          </Form.Item>
+          <Form.Item name={"segment"} label={t("segment")}>
+            <Select
+              placeholder={t("segment")}
+              options={[]}
+              allowClear
+              showSearch
+            />
+          </Form.Item>
+          <Form.Item name={"manager"} label={t("manager")}>
+            <Input type="text" placeholder={t("manager")} allowClear />
           </Form.Item>
         </Col>
       </Row>
