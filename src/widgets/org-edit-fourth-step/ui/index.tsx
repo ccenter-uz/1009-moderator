@@ -1,4 +1,4 @@
-import { Form, Col, Row, Checkbox, Input, Typography } from "antd";
+import { Form, Col, Row, Checkbox, Input, Typography, Flex } from "antd";
 import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -20,29 +20,32 @@ export const OrgEditFourthStepUI: FC = () => {
     <>
       <Row>
         <Col span={12}>
-          <Form.Item
-            name="payment_type"
-            label={t("payment_type")}
-            valuePropName="checked"
-          >
-            <Checkbox.Group>
-              <Checkbox
-                value="all_type"
-                onChange={(e) => setAllCheck(e.target.checked)}
-              >
-                {t("all_type")}
-              </Checkbox>
-              <Checkbox disabled={allCheck} value="terminal">
-                {t("terminal")}
-              </Checkbox>
-              <Checkbox disabled={allCheck} value="cash">
-                {t("cash")}
-              </Checkbox>
-              <Checkbox disabled={allCheck} value="transfer">
-                {t("transfer")}
-              </Checkbox>
-            </Checkbox.Group>
-          </Form.Item>
+          <Flex align="center" gap={14}>
+            <Form.Item
+              name="all_type"
+              label={t("all_type")}
+              valuePropName="checked"
+            >
+              <Checkbox onChange={(e) => setAllCheck(e.target.checked)} />
+            </Form.Item>
+            <Form.Item
+              name={"terminal"}
+              label={t("terminal")}
+              valuePropName="checked"
+            >
+              <Checkbox disabled={allCheck} />
+            </Form.Item>
+            <Form.Item name={"cash"} label={t("cash")} valuePropName="checked">
+              <Checkbox disabled={allCheck} />
+            </Form.Item>
+            <Form.Item
+              name={"transfer"}
+              label={t("transfer")}
+              valuePropName="checked"
+            >
+              <Checkbox disabled={allCheck} />
+            </Form.Item>
+          </Flex>
         </Col>
         <Col span={12}>
           <Form.Item name={"description"} label={t("description")}>

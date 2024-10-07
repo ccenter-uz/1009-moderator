@@ -58,55 +58,64 @@ export const OrgEditPage: FC = () => {
     ({ useAddOrgFourthStepSlice }: RootState) => useAddOrgFourthStepSlice,
   );
   const [current, setCurrent] = useState(
-    Number(localStorage.getItem("currentStep")) || 0,
+    Number(localStorage.getItem("currentStepEdit")) || 0,
   );
 
   const next = () => {
     setCurrent(current + 1);
-    localStorage.setItem("currentStep", JSON.stringify(current + 1));
+    localStorage.setItem("currentStepEdit", JSON.stringify(current + 1));
     // STORE STEPS DATA
     if (current === STEPS_ENUM.firstStep) {
       const firstStepData = {
         ...form.getFieldsValue(STEPS_DATA.FIRST_FORMDATA),
         "category-tu": categoryTu,
       };
-      localStorage.setItem("firstStepData", JSON.stringify(firstStepData));
+      localStorage.setItem("firstStepDataEdit", JSON.stringify(firstStepData));
     } else if (current === STEPS_ENUM.secondStep) {
       const secondStepData = {
         ...form.getFieldsValue(STEPS_DATA.SECOND_FORMDATA),
         orientir: orientirData,
       };
-      localStorage.setItem("secondStepData", JSON.stringify(secondStepData));
+      localStorage.setItem(
+        "secondStepDataEdit",
+        JSON.stringify(secondStepData),
+      );
     } else if (current === STEPS_ENUM.thirdStep) {
       const thirdStepData = {
         phone: phoneData,
       };
-      localStorage.setItem("thirdStepData", JSON.stringify(thirdStepData));
+      localStorage.setItem("thirdStepDataEdit", JSON.stringify(thirdStepData));
     }
   };
 
   const prev = () => {
     setCurrent(current - 1);
-    localStorage.setItem("currentStep", JSON.stringify(current - 1));
+    localStorage.setItem("currentStepEdit", JSON.stringify(current - 1));
   };
 
   const onSubmit = async () => {
     const body = {
       ...form.getFieldsValue(SEND_BODY),
+      payment_types: {
+        cash: form.getFieldValue("cash"),
+        terminal: form.getFieldValue("terminal"),
+        trasnfer: form.getFieldValue("trasnfer"),
+        all_type: form.getFieldValue("all_type"),
+      },
       "category-tu": categoryTu,
       orientir: orientirData,
       phone: phoneData,
       images,
     };
 
-    console.log(body, "body");
+    console.log(body, "body-edit");
   };
 
   useEffect(() => {
     // SET-STORED-DATA-FROM-LOCAL-STORAGE
-    const firstStepData = localStorage.getItem("firstStepData");
-    const secondStepData = localStorage.getItem("secondStepData");
-    const thirdStepData = localStorage.getItem("thirdStepData");
+    const firstStepData = localStorage.getItem("firstStepDataEdit");
+    const secondStepData = localStorage.getItem("secondStepDataEdit");
+    const thirdStepData = localStorage.getItem("thirdStepDataEdit");
     if (firstStepData) {
       form.setFieldsValue(JSON.parse(firstStepData)),
         dispatch(setCategoryData(JSON.parse(firstStepData)["category-tu"]));
@@ -129,7 +138,7 @@ export const OrgEditPage: FC = () => {
       <Steps current={current} items={items} />
       <Divider />
       <div className="step-content" style={contentStyle}>
-        <Form onFinish={onSubmit} id="create-org-form" form={form}>
+        <Form onFinish={onSubmit} id="edit-org-form" form={form}>
           {items[current].content}
         </Form>
       </div>
@@ -146,7 +155,7 @@ export const OrgEditPage: FC = () => {
           </Button>
         )}
         {current === items.length - 1 && (
-          <Button type="primary" htmlType="submit" form="create-org-form">
+          <Button type="primary" htmlType="submit" form="edit-org-form">
             {t("save")}
           </Button>
         )}
