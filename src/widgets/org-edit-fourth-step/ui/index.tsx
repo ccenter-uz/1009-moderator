@@ -9,10 +9,10 @@ import { RootState } from "@shared/types";
 
 import { setData } from "../model/Slicer";
 
-export const OrgAddFourthStepUI: FC = () => {
+export const OrgEditFourthStepUI: FC = () => {
   const { t } = useTranslation();
   const { data: fileListData } = useSelector(
-    ({ useAddOrgFourthStepSlice }: RootState) => useAddOrgFourthStepSlice,
+    ({ useEditOrgFourthStepSlice }: RootState) => useEditOrgFourthStepSlice,
   );
   const [allCheck, setAllCheck] = useState<boolean>(false);
 
@@ -20,7 +20,7 @@ export const OrgAddFourthStepUI: FC = () => {
     <>
       <Row>
         <Col span={12}>
-          <Flex align="center" gap={16}>
+          <Flex align="center" gap={14}>
             <Form.Item
               name="all_type"
               label={t("all_type")}

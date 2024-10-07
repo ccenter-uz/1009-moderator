@@ -1,1 +1,0 @@
-export { AddTableCategoryTuUI } from "./ui";

@@ -1,0 +1,22 @@
+.upload {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  #upload-content {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    width: 120px;
+    height: 120px;
+    border: 1px dashed grey;
+    border-radius: 6px;
+    justify-content: center;
+    align-items: center;
+    color: #757575;
+    transition: all 0.3s ease;
+    &:hover {
+      border-color: cornflowerblue;
+      color: cornflowerblue;
+    }
+  }
+}

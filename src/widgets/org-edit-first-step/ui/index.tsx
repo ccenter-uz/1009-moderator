@@ -10,10 +10,10 @@ import { SingleInputWithModalUI } from "@shared/ui/single-input-with-modal";
 
 import { setData } from "../model/Slicer";
 
-export const OrgAddFirstStepUI: FC = () => {
+export const OrgEditFirstStepUI: FC = () => {
   const { t } = useTranslation();
   const { data } = useSelector(
-    ({ useAddOrgFirstStepSlice }: RootState) => useAddOrgFirstStepSlice,
+    ({ useEditOrgFirstStepSlice }: RootState) => useEditOrgFirstStepSlice,
   );
 
   return (

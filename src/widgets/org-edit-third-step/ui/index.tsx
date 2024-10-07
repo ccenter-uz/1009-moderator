@@ -53,9 +53,9 @@ const mocks = {
   ],
 };
 
-export const OrgAddThirdStepUI: FC = () => {
+export const OrgEditThirdStepUI: FC = () => {
   const { data } = useSelector(
-    ({ useAddOrgThirdStepSlice }: RootState) => useAddOrgThirdStepSlice,
+    ({ useEditOrgThirdStepSlice }: RootState) => useEditOrgThirdStepSlice,
   );
   const dispatch = useDispatch();
   const [selectedPhoneType, setSelectedPhoneType] = useState<AnyObject[] | []>(
@@ -65,7 +65,8 @@ export const OrgAddThirdStepUI: FC = () => {
     mocks.phoneTypeOptions,
   );
   const [phone, setPhone] = useState<string>("");
-  const overColumns = [
+
+  const columns = [
     {
       width: 80,
       title: t("secret"),
@@ -115,7 +116,6 @@ export const OrgAddThirdStepUI: FC = () => {
     if (!filteredData) return null;
     const newData = [...otherData, ...filteredData];
     dispatch(setData(newData));
-    console.log(newData, "newData");
   };
 
   const onDelete = async (phone: string) => {
@@ -185,7 +185,7 @@ export const OrgAddThirdStepUI: FC = () => {
 
       <Table
         bordered
-        columns={overColumns}
+        columns={columns}
         dataSource={data}
         pagination={false}
         scroll={{ y: 300 }}
