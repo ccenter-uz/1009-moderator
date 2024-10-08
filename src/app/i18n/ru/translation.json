@@ -115,5 +115,11 @@
   "bus": "Автобус",
   "micro-bus": "Микроавтобус",
   "metro-station": "Метро",
-  "dayoffs": "Выходные"
+  "dayoffs": "Выходные",
+  "oops": "Упс",
+  "you-were-editing": "Вы редактировали",
+  "organization": "Организация",
+  "do-you-want-to-continue-or-reset-before-data": "Хотите продолжить или сбросить данные",
+  "continue": "Продолжить",
+  "reset": "Сбросить"
 }
