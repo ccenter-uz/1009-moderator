@@ -9,14 +9,14 @@ import { SearchModal } from "@shared/ui/search-modal";
 
 type Props = {
   form?: FormInstance;
-  value: string;
+  name: string;
   label: string;
   dataFetcher: () => AnyObject[];
   columns: ColumnsType;
   searchHref: string;
 };
 export const SingleInputWithModalUI: FC<Props> = (props) => {
-  const { form, value, label, dataFetcher, columns, searchHref } = props;
+  const { form, name, label, dataFetcher, columns, searchHref } = props;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedData, setSelectedData] = useState<AnyObject | null>(null);
   const [data, setData] = useState<AnyObject[] | null>(null);
@@ -31,7 +31,7 @@ export const SingleInputWithModalUI: FC<Props> = (props) => {
   };
 
   useEffect(() => {
-    selectedData && form && form.setFieldValue(`${value}`, selectedData?.id);
+    selectedData && form && form.setFieldValue(`${name}`, selectedData?.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedData]);
 
@@ -39,7 +39,7 @@ export const SingleInputWithModalUI: FC<Props> = (props) => {
     <>
       <Col span={24}>
         <Form.Item
-          name={`${value}`}
+          name={`${name}`}
           label={t(`${label}`)}
           style={{ marginBottom: 10 }}
         >
