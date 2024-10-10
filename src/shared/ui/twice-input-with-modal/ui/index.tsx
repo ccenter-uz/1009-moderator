@@ -9,9 +9,9 @@ import { SearchModal } from "@shared/ui/search-modal";
 
 type Props = {
   form: FormInstance;
-  firstInputValue: string;
+  firstInputName: string;
   firstInputLabel: string;
-  secondInputValue: string;
+  secondInputName: string;
   secondInputLabel: string;
   categoryHref: string;
   subCategoryHref: string;
@@ -25,9 +25,9 @@ export const TwiceInputWithModal: FC<Props> = (props) => {
   const {
     form,
     firstInputLabel,
-    firstInputValue,
+    firstInputName,
     secondInputLabel,
-    secondInputValue,
+    secondInputName,
     categoryHref,
     subCategoryHref,
     categoryFetcher,
@@ -68,10 +68,10 @@ export const TwiceInputWithModal: FC<Props> = (props) => {
 
   useEffect(() => {
     selectedDataCategory &&
-      form.setFieldValue(`${firstInputValue}`, selectedDataCategory?.id);
+      form.setFieldValue(`${firstInputName}`, selectedDataCategory?.id);
 
     selectedDataSubCategory &&
-      form.setFieldValue(`${secondInputValue}`, selectedDataSubCategory?.id);
+      form.setFieldValue(`${secondInputName}`, selectedDataSubCategory?.id);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDataCategory, selectedDataSubCategory]);
@@ -80,7 +80,7 @@ export const TwiceInputWithModal: FC<Props> = (props) => {
     <>
       <Col span={24}>
         <Form.Item
-          name={`${firstInputValue}`}
+          name={`${firstInputName}`}
           label={t(`${firstInputLabel}`)}
           style={{ marginBottom: 10 }}
         >
@@ -95,7 +95,7 @@ export const TwiceInputWithModal: FC<Props> = (props) => {
       </Col>
       <Col span={24}>
         <Form.Item
-          name={`${secondInputValue}`}
+          name={`${secondInputName}`}
           label={t(`${secondInputLabel}`)}
           style={{ marginBottom: 10 }}
         >

@@ -10,23 +10,47 @@ import { PersonalSearchPartUI } from "@features/personal-search-part";
 import { TwiceInputWithModal } from "@shared/ui/twice-input-with-modal";
 
 // MOCKS
-// fetches data from backend for category data
-const categoryFetcher = () => [{ name: "Категория 1", key: 1, id: 1 }];
-// fetches data from backend for sub-category data
-const subCategoryFetcher = () => [{ name: "Подкатегория 1", key: 1, id: 1 }];
-// cols
-const columns = [
-  {
-    title: i18next.t("name"),
-    dataIndex: "name",
-    key: "name",
+// const mocks ={
+// twiceInputWithModal: {
+//      firstInputName:-> name for first select,
+//      firstInputLabel:-> label for first select and title for modal,
+//      secondInputName: -> name for second select,
+//      secondInputLabel: -> label for second select and title for modal,
+//      categoryHref: -> href for category inside modal,
+//      subCategoryHref: -> href for sub-category inside modal,
+//      categoryFetcher: () => [{}] -> function to fetch data from server and return array of objects corresponding to category-columns,
+//      subCategoryFetcher: () => [{}] -> function to fetch data from server and return array of objects corresponding to sub-category-columns,
+//      categoryColumns: [] -> columns for category table inside modal,
+//      subCategoryColumns: [] -> columns for sub-category table inside modal,
+// },
+// }
+
+const mocks = {
+  twiceInputWithModal: {
+    firstInputName: "category",
+    firstInputLabel: "Раздел",
+    secondInputName: "sub-category",
+    secondInputLabel: "Подраздел",
+    categoryHref: "/category",
+    subCategoryHref: "/sub-category",
+    categoryFetcher: () => [{ name: "Раздел 1", key: 1, id: 1 }],
+    subCategoryFetcher: () => [{ name: "Подраздел 1", key: 1, id: 1 }],
+    categoryColumns: [
+      {
+        title: i18next.t("name"),
+        dataIndex: "name",
+        key: "name",
+      },
+    ],
+    subCategoryColumns: [
+      {
+        title: i18next.t("name"),
+        dataIndex: "name",
+        key: "name",
+      },
+    ],
   },
-];
-// enums for label and value of inputs
-enum VARS {
-  category = "category",
-  subCategory = "sub-category",
-}
+};
 
 export const SearchPartUI: FC = () => {
   const { t } = useTranslation();
@@ -44,16 +68,16 @@ export const SearchPartUI: FC = () => {
     <Form form={form} id="search-part" onFinish={onSubmit}>
       <TwiceInputWithModal
         form={form}
-        firstInputValue={VARS.category}
-        firstInputLabel={VARS.category}
-        secondInputValue={VARS.subCategory}
-        secondInputLabel={VARS.subCategory}
-        categoryHref={VARS.category}
-        subCategoryHref={VARS.subCategory}
-        categoryFetcher={categoryFetcher}
-        subCategoryFetcher={subCategoryFetcher}
-        categoryColumns={columns}
-        subCategoryColumns={columns}
+        firstInputName={mocks.twiceInputWithModal.firstInputName}
+        firstInputLabel={mocks.twiceInputWithModal.firstInputLabel}
+        secondInputName={mocks.twiceInputWithModal.secondInputName}
+        secondInputLabel={mocks.twiceInputWithModal.secondInputLabel}
+        categoryHref={mocks.twiceInputWithModal.categoryHref}
+        subCategoryHref={mocks.twiceInputWithModal.subCategoryHref}
+        categoryFetcher={mocks.twiceInputWithModal.categoryFetcher}
+        subCategoryFetcher={mocks.twiceInputWithModal.subCategoryFetcher}
+        categoryColumns={mocks.twiceInputWithModal.categoryColumns}
+        subCategoryColumns={mocks.twiceInputWithModal.subCategoryColumns}
       />
       <Divider />
       <Row gutter={24}>

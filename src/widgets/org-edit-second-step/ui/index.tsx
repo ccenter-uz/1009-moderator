@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 import { TableOrientirUI } from "@features/table-orientir";
 
 import { RootState } from "@shared/types";
-import { SingleInputWithModalUI } from "@shared/ui/single-input-with-modal";
 
 import { setData } from "../model/Slicer";
 
@@ -37,50 +36,45 @@ export const OrgEditSecondStepUI: FC = () => {
             />
           </Form.Item>
           <Form.Item name={"village"} label={t("village")}>
-            <SingleInputWithModalUI
-              value={""}
-              label={""}
-              dataFetcher={() => [{}]}
-              columns={[]}
-              searchHref={""}
+            <Select
+              options={[]}
+              allowClear
+              showSearch
+              placeholder={t("village")}
             />
           </Form.Item>
           <Form.Item name={"district"} label={t("district")}>
-            <SingleInputWithModalUI
-              value={""}
-              label={""}
-              dataFetcher={() => [{}]}
-              columns={[]}
-              searchHref={""}
+            <Select
+              options={[]}
+              allowClear
+              showSearch
+              placeholder={t("district")}
             />
           </Form.Item>
           <Form.Item name={"avenue"} label={t("avenue")}>
-            <SingleInputWithModalUI
-              value={""}
-              label={""}
-              dataFetcher={() => [{}]}
-              columns={[]}
-              searchHref={""}
+            <Select
+              options={[]}
+              allowClear
+              showSearch
+              placeholder={t("avenue")}
             />
           </Form.Item>
           <Form.Item name={"residential-area"} label={t("residential-area")}>
-            <SingleInputWithModalUI
-              value={""}
-              label={""}
-              dataFetcher={() => [{}]}
-              columns={[]}
-              searchHref={""}
+            <Select
+              options={[]}
+              allowClear
+              showSearch
+              placeholder={t("residential-area")}
             />
           </Form.Item>
         </Col>
         <Col span={8}>
           <Form.Item name={"area"} label={t("area")}>
-            <SingleInputWithModalUI
-              value={""}
-              label={""}
-              dataFetcher={() => [{}]}
-              columns={[]}
-              searchHref={""}
+            <Select
+              options={[]}
+              allowClear
+              showSearch
+              placeholder={t("area")}
             />
           </Form.Item>
           <Form.Item name={"kvartal"} label={t("kvartal")}>
@@ -90,30 +84,27 @@ export const OrgEditSecondStepUI: FC = () => {
             <Input type="text" placeholder={t("street")} allowClear />
           </Form.Item>
           <Form.Item name={"lane"} label={t("lane")}>
-            <SingleInputWithModalUI
-              value={""}
-              label={""}
-              dataFetcher={() => [{}]}
-              columns={[]}
-              searchHref={""}
+            <Select
+              options={[]}
+              allowClear
+              showSearch
+              placeholder={t("lane")}
             />
           </Form.Item>
           <Form.Item name={"passage"} label={t("passage")}>
-            <SingleInputWithModalUI
-              value={""}
-              label={""}
-              dataFetcher={() => [{}]}
-              columns={[]}
-              searchHref={""}
+            <Select
+              options={[]}
+              allowClear
+              showSearch
+              placeholder={t("passage")}
             />
           </Form.Item>
           <Form.Item name={"impasse"} label={t("impasse")}>
-            <SingleInputWithModalUI
-              value={""}
-              label={""}
-              dataFetcher={() => [{}]}
-              columns={[]}
-              searchHref={""}
+            <Select
+              options={[]}
+              allowClear
+              showSearch
+              placeholder={t("impasse")}
             />
           </Form.Item>
         </Col>

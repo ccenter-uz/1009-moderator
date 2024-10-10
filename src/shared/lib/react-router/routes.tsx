@@ -109,7 +109,7 @@ export const routesPath = [
           },
           {
             key: "/orgs/edit",
-            path: "edit",
+            path: "/orgs/edit/:id",
             element: <OrgEditAsync />,
           },
         ],

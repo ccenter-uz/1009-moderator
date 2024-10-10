@@ -4,6 +4,7 @@ import { ColumnsType } from "antd/es/table";
 import { t } from "i18next";
 import { FC, useState } from "react";
 import { FaEnvelope, FaPencilAlt } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
 
 import { DeleteTableItemUI } from "@features/delete-table-item";
 
@@ -21,6 +22,7 @@ export const SearchTopTable: FC<Props> = (props) => {
   const { data, setAttrData, phonesData, onOpen } = props;
   const { page, pageSize, setPage, setPageSize } = usePaginate();
   const [selectedRowKeys, setSelectedRowKeys] = useState<number>(0);
+  const navigate = useNavigate();
 
   const columns: ColumnsType<AnyObject> = [
     {
@@ -68,12 +70,14 @@ export const SearchTopTable: FC<Props> = (props) => {
       align: "center",
       render: (text: string, record: AnyObject) => (
         <Flex justify="center" align="center" gap={8}>
-          <FaPencilAlt
-            color="grey"
-            fontSize={16}
-            cursor={"pointer"}
-            title={t("edit")}
-          />
+          <Link to={{ pathname: `/orgs/edit/${record.id}` }} state={record}>
+            <FaPencilAlt
+              color="grey"
+              fontSize={16}
+              cursor={"pointer"}
+              title={t("edit")}
+            />
+          </Link>
           <DeleteTableItemUI id={record.id} href={"/delete"} />
         </Flex>
       ),

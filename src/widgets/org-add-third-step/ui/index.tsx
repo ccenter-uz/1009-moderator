@@ -9,6 +9,7 @@ import {
   Button,
   Table,
   Checkbox,
+  Form,
 } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
@@ -142,6 +143,27 @@ export const OrgAddThirdStepUI: FC = () => {
 
   return (
     <Flex vertical gap={16}>
+      <Row gutter={24}>
+        <Col span={12}>
+          <Form.Item name={"account"} label={t("account")}>
+            <Input placeholder={t("account")} />
+          </Form.Item>
+          <Form.Item name={"email"} label={t("email")}>
+            <Input placeholder={t("email")} />
+          </Form.Item>
+          <Form.Item name={"index"} label={t("index")}>
+            <Input placeholder={t("index")} />
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item name={"tin"} label={t("tin")}>
+            <Input placeholder={t("tin")} />
+          </Form.Item>
+          <Form.Item name={"bank_number"} label={t("bank_number")}>
+            <Input placeholder={t("bank_number")} />
+          </Form.Item>
+        </Col>
+      </Row>
       <Typography.Title aria-level={4} level={4} style={{ margin: 0 }}>
         {t("phone")}
       </Typography.Title>

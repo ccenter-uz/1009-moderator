@@ -1,4 +1,4 @@
-import { Col, Form, Input, Row } from "antd";
+import { Col, Form, Input, Row, Select } from "antd";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -27,36 +27,44 @@ export const OrgEditFirstStepUI: FC = () => {
             <Input type="text" placeholder={t("org-name")} allowClear />
           </Form.Item>
           <Form.Item name={"category"} label={t("category")}>
-            <SingleInputWithModalUI
-              value={""}
-              label={""}
-              dataFetcher={() => [{}]}
-              columns={[]}
-              searchHref={""}
+            <Select
+              options={[]}
+              placeholder={t("category")}
+              allowClear
+              showSearch
             />
           </Form.Item>
           <Form.Item name={"sub-category"} label={t("sub-category")}>
-            <SingleInputWithModalUI
-              value={""}
-              label={""}
-              dataFetcher={() => [{}]}
-              columns={[]}
-              searchHref={""}
+            <Select
+              options={[]}
+              placeholder={t("sub-category")}
+              allowClear
+              showSearch
             />
           </Form.Item>
         </Col>
         <Col span={12}>
           <Form.Item name={"main-org"} label={t("main-org")}>
-            <SingleInputWithModalUI
-              value={""}
-              label={""}
-              dataFetcher={() => [{}]}
-              columns={[]}
-              searchHref={""}
+            <Select
+              placeholder={t("main-org")}
+              options={[]}
+              allowClear
+              showSearch
             />
           </Form.Item>
           <Form.Item name={"secret"} label={t("Секрет")}>
             <Input type="text" placeholder={t("Секрет")} allowClear />
+          </Form.Item>
+          <Form.Item name={"segment"} label={t("segment")}>
+            <Select
+              placeholder={t("segment")}
+              options={[]}
+              allowClear
+              showSearch
+            />
+          </Form.Item>
+          <Form.Item name={"manager"} label={t("manager")}>
+            <Input type="text" placeholder={t("manager")} allowClear />
           </Form.Item>
         </Col>
       </Row>
