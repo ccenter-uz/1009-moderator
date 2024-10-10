@@ -59,7 +59,7 @@ export const ContactSearchPartUI: FC = () => {
       </Col>
       <Col span={24}>
         <Row gutter={24}>
-          <Col span={12}>
+          <Col span={8}>
             <Form.Item
               name="belong-abonent"
               label={t("belong-abonent")}
@@ -69,10 +69,20 @@ export const ContactSearchPartUI: FC = () => {
               <Checkbox />
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col span={8}>
             <Form.Item
               name="bounded"
               label={t("bounded")}
+              style={{ marginBottom: 10 }}
+              valuePropName="checked"
+            >
+              <Checkbox />
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item
+              name="mine"
+              label={t("mine")}
               style={{ marginBottom: 10 }}
               valuePropName="checked"
             >

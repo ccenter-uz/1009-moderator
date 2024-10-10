@@ -2,7 +2,7 @@
 import { Link, redirect, useRouteError } from "react-router-dom";
 
 import MainLayout from "@app/ui/layout";
-import { FaRegNewspaper, FaRegUser } from "react-icons/fa";
+import { FaRegNewspaper } from "react-icons/fa";
 import { IoStatsChart } from "react-icons/io5";
 import {
   MdAdd,
@@ -18,7 +18,6 @@ import { LuCircleDot } from "react-icons/lu";
 import i18next from "i18next";
 import { DashboardAsync } from "@pages/dashboard";
 import { OrgAllAsync } from "@pages/organization-all";
-import { OrgMineAsync } from "@pages/organization-mine";
 import { OrgUnconfirmedAsync } from "@pages/organization-unconfirmed";
 import { OrgAddAsync } from "@pages/organization-add";
 import { ManageAreaAsync } from "@pages/manage-area";
@@ -37,6 +36,7 @@ import { ManageResidentialAreaAsync } from "@pages/manage-residential-area";
 import { ManageStreetAsync } from "@pages/manage-street";
 import { ManageUsersAsync } from "@pages/manage-users";
 import { ManageVillageAsync } from "@pages/manage-village";
+import { OrgEditAsync } from "@pages/organization-edit";
 
 function BubbleError() {
   const error = useRouteError();
@@ -90,14 +90,6 @@ export const routesPath = [
             element: <OrgAllAsync />,
           },
           {
-            key: "/orgs/mine",
-            name: "/orgs/mine",
-            label: <Link to="/orgs/mine">{i18next.t("mine")}</Link>,
-            icon: <FaRegUser />,
-            path: "mine",
-            element: <OrgMineAsync />,
-          },
-          {
             key: "/orgs/unconfirmed",
             name: "/orgs/unconfirmed",
             label: (
@@ -114,6 +106,11 @@ export const routesPath = [
             icon: <MdAdd />,
             path: "add",
             element: <OrgAddAsync />,
+          },
+          {
+            key: "/orgs/edit",
+            path: "edit",
+            element: <OrgEditAsync />,
           },
         ],
       },

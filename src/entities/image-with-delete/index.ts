@@ -1,0 +1,1 @@
+export { ImageWithDelete } from "./ui";

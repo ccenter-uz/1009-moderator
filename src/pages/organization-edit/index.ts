@@ -1,7 +1,7 @@
 import { lazy } from "react";
 
-export const OrgMineAsync = lazy(() =>
+export const OrgEditAsync = lazy(() =>
   import("./ui").then((module) => ({
-    default: module.OrgMinePage,
+    default: module.OrgEditPage,
   })),
 );
