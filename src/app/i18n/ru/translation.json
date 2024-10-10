@@ -121,5 +121,16 @@
   "organization": "Организация",
   "do-you-want-to-continue-or-reset-before-data": "Хотите продолжить или сбросить данные",
   "continue": "Продолжить",
-  "reset": "Сбросить"
+  "reset": "Сбросить",
+  "choose-additional-category": "Выберите дополнительную категорию",
+  "choose-additional-sub-category": "Выберите дополнительную подкатегорию",
+  "additional-entertainment": "Развлечения",
+  "additional-communal": "Коммунальные",
+  "additional-numbers-codes": "Номера и коды",
+  "additional-need-to-know": "Нужно знать",
+  "additional-info-tashkent": "Информация о Ташкенте",
+  "park": "Парк",
+  "cinema": "Кино",
+  "theatre": "Театр",
+  "updated": "Обновлено"
 }

@@ -37,6 +37,7 @@ import { ManageStreetAsync } from "@pages/manage-street";
 import { ManageUsersAsync } from "@pages/manage-users";
 import { ManageVillageAsync } from "@pages/manage-village";
 import { OrgEditAsync } from "@pages/organization-edit";
+import { AdditionalAsync } from "@pages/additional";
 
 function BubbleError() {
   const error = useRouteError();
@@ -73,7 +74,7 @@ export const routesPath = [
         label: <Link to="/additional">{i18next.t("additional")}</Link>,
         icon: <MdOutlineMenu />,
         path: "additional",
-        element: "Hello additional",
+        element: <AdditionalAsync />,
       },
       {
         key: "4",
