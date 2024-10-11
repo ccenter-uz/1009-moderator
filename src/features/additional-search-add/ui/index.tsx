@@ -1,9 +1,31 @@
-import { Button, Flex, Form, Input } from "antd";
+import { Button, Flex, Form, Input, Typography } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { Dispatch, FC, SetStateAction } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPlus, FaSearch } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
+
+import { returnAllParams } from "@shared/lib/helpers";
+
+/**
+ * AdditionalSearchAddUI
+ *
+ * This component is used to add a new element to the table.
+ *
+ * It has the following functions:
+ *
+ * - `onSubmit`: This function is called when the form is submitted.
+ *   It logs the form values to the console and closes the modal.
+ * - `onClear`: This function is called when the form is cleared.
+ *   It resets the form fields and closes the modal.
+ 
+ * It has the following props:
+ *
+ * - `setData`: This prop is used to update the data in the parent component.
+ *
+ * @param {{ setData: Dispatch<SetStateAction<AnyObject[]>> }} props
+ * @returns
+ */
 
 type Props = {
   setData: Dispatch<SetStateAction<AnyObject[]>>;
@@ -11,15 +33,18 @@ type Props = {
 
 export const AdditionalSearchAddUI: FC<Props> = (props) => {
   const { setData } = props;
+  const [searchParams, setSearchParams] = useSearchParams();
   const { t } = useTranslation();
   const [form] = Form.useForm();
 
   const onClear = () => form.resetFields();
 
-  const onSubmit = (values: unknown) => {
-    console.log(values, "additional-search");
-    // setData(values);
+  const onSubmit = ({ search }: string) => {
+    console.log(search, "additional-search");
+    const params = returnAllParams();
+    setSearchParams({ ...params, search } as string);
     onClear();
+    // setData(values);
   };
 
   return (
@@ -30,8 +55,17 @@ export const AdditionalSearchAddUI: FC<Props> = (props) => {
         id="additional-search"
         style={{ margin: "10px 0" }}
       >
+        {searchParams.get("category") && (
+          <Typography.Title level={3} style={{ textAlign: "center" }}>
+            {t(`${searchParams.get("category")}`)}
+          </Typography.Title>
+        )}
         <Flex gap={8} align="start">
-          <Form.Item name={"search"} style={{ flex: 1 }}>
+          <Form.Item
+            name={"search"}
+            style={{ flex: 1 }}
+            initialValue={searchParams.get("search") ?? ""}
+          >
             <Input
               autoComplete="off"
               type="text"

@@ -6,6 +6,29 @@ import { useTranslation } from "react-i18next";
 import { SingleInputWithModalUI } from "@shared/ui/single-input-with-modal";
 import { TwiceInputWithModal } from "@shared/ui/twice-input-with-modal";
 
+/**
+ * PersonalSearchPartUI
+ *
+ * This component is used to display personal search part in the search widget
+ * of the Manage pages.
+ *
+ * It has the following functionality:
+ *
+ * - Displays a select for abonent
+ * - Displays a select for address
+ * - Displays a TwiceInputWithModalUI for category and sub-category
+ * - Displays a SingleInputWithModalUI for main-org
+ *
+ * It takes the following props:
+ *
+ * - `form`: The form instance from antd.
+ *
+ * @param {Object} props - The props of the component.
+ * @param {FormInstance} props.form - The form instance from antd.
+ *
+ * @returns {JSX.Element} - The JSX element of the component.
+ */
+
 type Props = {
   form: FormInstance;
 };

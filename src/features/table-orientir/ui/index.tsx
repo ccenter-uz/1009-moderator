@@ -15,6 +15,32 @@ import { FC, useState } from "react";
 import { FaTrashAlt } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 
+/**
+ * TableOrientirUI
+ *
+ * This component is used to display table with orientirs data in the Manage pages.
+ *
+ * It has the following functionality:
+ *
+ * - Displays a table with columns: id, name, nearby-category, nearby-distance, actions
+ * - Displays a select for nearby-category
+ * - Displays an input for nearby-distance
+ * - Has a button for adding new row
+ * - Has a button for deleting row
+ * - Has a button for saving changes
+ *
+ * It takes the following props:
+ *
+ * - `data`: The data of the table.
+ * - `setData`: The function to update the data of the table.
+ *
+ * @param {Object} props - The props of the component.
+ * @param {AnyObject[]} props.data - The data of the table.
+ * @param {Function} props.setData - The function to update the data of the table.
+ *
+ * @returns {JSX.Element} - The JSX element of the component.
+ */
+
 type Props = {
   data: AnyObject[];
   setData: any;

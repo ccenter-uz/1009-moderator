@@ -12,7 +12,7 @@ const mock = [
   {
     id: 1,
     key: "1",
-    name: "John Brown",
+    title: "Kung-fu-Panda 4",
     warning: "warning",
     mention: "mention",
     update_date: "10.10.2021",
@@ -40,7 +40,6 @@ const mock = [
         data: [
           {
             id: 1,
-            key: "1",
             name: "John Brown",
             age: 32,
             address: "New York No. 1 Lake Park",
@@ -48,7 +47,6 @@ const mock = [
           },
           {
             id: 2,
-            key: "2",
             name: "Jim Green",
             age: 42,
             address: "London No. 1 Lake Park",
@@ -56,7 +54,6 @@ const mock = [
           },
           {
             id: 3,
-            key: "3",
             name: "Joe Black",
             age: 32,
             address: "Sidney No. 1 Lake Park",
@@ -68,12 +65,10 @@ const mock = [
     editor: [
       {
         id: 1,
-        key: "1",
         content: "BLA BLA BLA text",
       },
       {
         id: 2,
-        key: "2",
         content: "FEJIFEIFJEIJFEJIF",
       },
     ],

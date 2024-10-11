@@ -16,9 +16,9 @@ export const AdditionalTablePartUI: FC<Props> = (props) => {
   const { t } = useTranslation();
   const columns = [
     {
-      title: t("name"),
-      dataIndex: "name",
-      key: "name",
+      title: t("title"),
+      dataIndex: "title",
+      key: "title",
     },
     {
       title: t("action"),

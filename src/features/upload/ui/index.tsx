@@ -6,6 +6,29 @@ import { FaPlus } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 
 import { ImageWithDelete } from "@entities/image-with-delete";
+
+/**
+ * UploadUI
+ *
+ * This component is used to upload images in the Manage pages.
+ *
+ * It has the following functionality:
+ *
+ * - Displays all images that were uploaded.
+ * - Allows the user to upload new images.
+ * - Allows the user to delete existing images.
+ *
+ * It takes the following props:
+ *
+ * - `setData`: The function from the redux to set the data.
+ * - `data`: The array of images that were already uploaded.
+ *
+ * @param {Object} props - The props of the component.
+ * @param {function} props.setData - The function from the redux to set the data.
+ * @param {Array} props.data - The array of images that were already uploaded.
+ *
+ * @returns {JSX.Element} - The JSX element of the component.
+ */
 type Props = {
   setData: any;
   data: AnyObject[];

@@ -38,6 +38,8 @@ import { ManageUsersAsync } from "@pages/manage-users";
 import { ManageVillageAsync } from "@pages/manage-village";
 import { OrgEditAsync } from "@pages/organization-edit";
 import { AdditionalAsync } from "@pages/additional";
+import path from "path";
+import { AdditionalAddAsync } from "@pages/additional-add";
 
 function BubbleError() {
   const error = useRouteError();
@@ -75,6 +77,12 @@ export const routesPath = [
         icon: <MdOutlineMenu />,
         path: "additional",
         element: <AdditionalAsync />,
+      },
+      {
+        key: "/additional/add",
+        name: "/additional/add",
+        path: "additional/add",
+        element: <AdditionalAddAsync />,
       },
       {
         key: "4",

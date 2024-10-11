@@ -7,6 +7,41 @@ import { FC } from "react";
 import { MentionTextBlockUI } from "@shared/ui/mention-text-block";
 import { WarningTextBlockUI } from "@shared/ui/warning-text-block";
 
+/**
+ * AdditionalExpandPartUI
+ *
+ * This component is used to display additional information in the expanded view
+ * of the table in the Manage pages.
+ *
+ * It has the following functionality:
+ *
+ * - Displays the text block with the mention
+ * - Displays the warning text block
+ * - Displays tables with columns and data
+ * - Displays editor data
+ *
+ * It takes the following props:
+ *
+ * - `record`: The record from the table. It should contain the following fields:
+ *   - `mention`: The text to display in the mention text block.
+ *   - `warning`: The text to display in the warning text block.
+ *   - `table`: An array of tables to display. Each table should contain the following fields:
+ *     - `id`: The id of the table.
+ *     - `columns`: The columns of the table.
+ *     - `data`: The data of the table.
+ *   - `editor`: An array of editor data to display. Each editor should contain the following fields:
+ *     - `id`: The id of the editor.
+ *     - `html`: The HTML content of the editor.
+ *
+ * It has the following state:
+ *
+ * - `tableColumns`: The columns of the table.
+ *
+ * @param {Object} props - The props of the component.
+ * @param {Object} props.record - The record from the table.
+ *
+ * @returns {JSX.Element} - The JSX element of the component.
+ */
 type Props = {
   record: AnyObject;
 };
