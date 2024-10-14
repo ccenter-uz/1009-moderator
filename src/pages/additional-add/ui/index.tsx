@@ -66,7 +66,7 @@ export const AdditionalAdd: FC = () => {
           </Button>
         )}
         {current === steps.length - 1 && (
-          <Button type="primary" htmlType="submit" form="create-org-form">
+          <Button type="primary" htmlType="submit" form="additional-add">
             {t("save")}
           </Button>
         )}

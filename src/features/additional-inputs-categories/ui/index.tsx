@@ -1,6 +1,5 @@
 import { Button, Divider, Flex, Form, Input, Modal, Select } from "antd";
-import { AnyObject } from "antd/es/_util/type";
-import { Dispatch, FC, SetStateAction, useMemo, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPlus } from "react-icons/fa";
 import { useSearchParams } from "react-router-dom";
@@ -25,32 +24,19 @@ import { useDisclosure } from "@shared/lib/hooks";
  * - `onSubmit`: This function is called when the form is submitted.
  *   It logs the form values to the console and closes the modal.
  *
- * It has the following props:
- *
- * - `setData`: This prop is used to update the data in the parent component.
- *
  * It has the following state:
  *
  * - `category`: This state is used to store the selected category.
  * - `subCategory`: This state is used to store the selected subcategory.
- *
- *
- * @param {Object} props - The props of the component.
- * @param {Function} props.setData - The function to update the data in the parent component.
- *
  * @returns {JSX.Element} - The JSX element of the component.
  */
-
-type Props = {
-  setData: Dispatch<SetStateAction<AnyObject[]>>;
-};
 
 const enum ENUMS {
   CATEGORY = "category",
   SUBCATEGORY = "sub-category",
 }
 
-export const AdditionalInputsCategoriesUI: FC<Props> = (props) => {
+export const AdditionalInputsCategoriesUI: FC = () => {
   const { t } = useTranslation();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [searchParams, setSearchParams] = useSearchParams();

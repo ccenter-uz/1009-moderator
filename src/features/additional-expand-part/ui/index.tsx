@@ -65,7 +65,20 @@ export const AdditionalExpandPartUI: FC<Props> = (props) => {
             size="small"
           />
         ))}
-
+      {/* {record?.table &&
+        record?.table?.map((table: AnyObject) => (
+          <div
+            style={{
+              background: "#ffefdf",
+              padding: "0.5em 1em",
+              marginBottom: "1em",
+            }}
+            key={table.id}
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(table.content),
+            }}
+          />
+        ))} */}
       {/* EDITORS */}
       {record?.editor &&
         record?.editor?.map((editor: AnyObject) => (

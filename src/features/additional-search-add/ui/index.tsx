@@ -1,6 +1,5 @@
 import { Button, Flex, Form, Input, Typography } from "antd";
-import { AnyObject } from "antd/es/_util/type";
-import { Dispatch, FC, SetStateAction } from "react";
+import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPlus, FaSearch } from "react-icons/fa";
 import { Link, useSearchParams } from "react-router-dom";
@@ -18,21 +17,10 @@ import { returnAllParams } from "@shared/lib/helpers";
  *   It logs the form values to the console and closes the modal.
  * - `onClear`: This function is called when the form is cleared.
  *   It resets the form fields and closes the modal.
- 
- * It has the following props:
- *
- * - `setData`: This prop is used to update the data in the parent component.
- *
- * @param {{ setData: Dispatch<SetStateAction<AnyObject[]>> }} props
  * @returns
  */
 
-type Props = {
-  setData: Dispatch<SetStateAction<AnyObject[]>>;
-};
-
-export const AdditionalSearchAddUI: FC<Props> = (props) => {
-  const { setData } = props;
+export const AdditionalSearchAddUI: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { t } = useTranslation();
   const [form] = Form.useForm();
@@ -44,7 +32,6 @@ export const AdditionalSearchAddUI: FC<Props> = (props) => {
     const params = returnAllParams();
     setSearchParams({ ...params, search } as string);
     onClear();
-    // setData(values);
   };
 
   return (
