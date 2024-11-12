@@ -14,11 +14,13 @@ type Props = {
 export const AdditionalTablePartUI: FC<Props> = (props) => {
   const { data } = props;
   const { t } = useTranslation();
+
   const columns = [
     {
       title: t("title"),
       dataIndex: "title",
       key: "title",
+      render: (t: string, record: AnyObject) => record?.title?.ru,
     },
     {
       title: t("action"),

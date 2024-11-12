@@ -4,21 +4,34 @@ import { useTranslation } from "react-i18next";
 import { FaPlus, FaSearch } from "react-icons/fa";
 import { Link, useSearchParams } from "react-router-dom";
 
-import { returnAllParams } from "@shared/lib/helpers";
+import { removeLocalStorage, returnAllParams } from "@shared/lib/helpers";
 
 /**
  * AdditionalSearchAddUI
  *
- * This component is used to add a new element to the table.
+ * This component is used to display a search bar and a button to add new items
+ * in the search widget of the Manage pages.
  *
- * It has the following functions:
+ * It has the following functionality:
  *
- * - `onSubmit`: This function is called when the form is submitted.
- *   It logs the form values to the console and closes the modal.
- * - `onClear`: This function is called when the form is cleared.
- *   It resets the form fields and closes the modal.
- * @returns
+ * - Displays a text input with a placeholder.
+ * - Displays a search button with a loading indicator.
+ * - Submits the form when the search button is clicked.
+ * - Calls the function passed to the `handleSearch` prop with the form values.
+ * - Disables the search button and input when the component is in the loading state.
+ * - Displays a button to add new items.
+ * - Clears the local storage of the current step and previous steps when the button to add new items is clicked.
+ *
+ * It takes no props.
+ *
+ * @returns {JSX.Element} - The JSX element of the component.
  */
+const enum ADDITIONAL_ADD_STEP {
+  FIRST = "additionalAddFirstStep",
+  SECOND = "additionalAddSecondStep",
+  THIRD = "additionalAddThirdStep",
+  CURRENT = "additionalAddCurrentStep",
+}
 
 export const AdditionalSearchAddUI: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -32,6 +45,13 @@ export const AdditionalSearchAddUI: FC = () => {
     const params = returnAllParams();
     setSearchParams({ ...params, search } as string);
     onClear();
+  };
+
+  const onClearLocalStorage = () => {
+    removeLocalStorage(ADDITIONAL_ADD_STEP.CURRENT);
+    removeLocalStorage(ADDITIONAL_ADD_STEP.FIRST);
+    removeLocalStorage(ADDITIONAL_ADD_STEP.SECOND);
+    removeLocalStorage(ADDITIONAL_ADD_STEP.THIRD);
   };
 
   return (
@@ -70,8 +90,18 @@ export const AdditionalSearchAddUI: FC = () => {
             {t("search")}
           </Button>
         </Flex>
-        <Link to="/additional/add">
-          <Button type="primary" icon={<FaPlus />} title={t("add")}>
+        <Link
+          to="/additional/add"
+          state={{
+            category: searchParams.get("category"),
+          }}
+        >
+          <Button
+            type="primary"
+            icon={<FaPlus />}
+            title={t("add")}
+            onClick={onClearLocalStorage}
+          >
             {t("add")}
           </Button>
         </Link>

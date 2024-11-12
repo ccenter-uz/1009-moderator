@@ -150,6 +150,16 @@
   "main-data": "Основные данные",
   "table": "Таблица",
   "table-data": "Данные таблицы",
+  "list-table": "Список таблиц",
   "description-data": "Описание данных",
-  "mentions-list": "Список упомянутых"
+  "mentions-list": "Список упомянутых",
+  "are-you-sure": "Вы уверены?",
+  "yes": "Да",
+  "no": "Нет",
+  "yes-delete": "Да, удалить",
+  "no-cancel": "Нет, отменить",
+  "content-will-be-deleted": "Содержимое будет удалено",
+  "no-stay": "Нет, остатья",
+  "okay-restore": "Да, сбросить",
+  "all-data-will-be-restored": "Все данные будет сброшено"
 }

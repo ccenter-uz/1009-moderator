@@ -17,11 +17,7 @@ export const Additional: FC = () => {
   );
 
   useEffect(() => {
-    if (searchParams.get("category") === "entertainment") {
-      console.log("do not fetch untill selects subCategory");
-    } else {
-      console.log("fetch data when searchParams changes", searchParams);
-    }
+    console.log("fetch data when searchParams changes", searchParams);
 
     // setData(mock);
   }, [searchParams]);
@@ -30,8 +26,12 @@ export const Additional: FC = () => {
     <div className="additional">
       <AdditionalInputsCategoriesUI />
       <Divider />
-      <AdditionalSearchAddUI />
-      <AdditionalTablePartUI data={data} />
+      {searchParams.get("category") && (
+        <>
+          <AdditionalSearchAddUI />
+          <AdditionalTablePartUI data={data} />
+        </>
+      )}
     </div>
   );
 };

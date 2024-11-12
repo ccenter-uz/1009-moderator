@@ -1,9 +1,15 @@
 import { FC } from "react";
 
+import { AdditionalEditor } from "@shared/ui";
+
+import { SunEditorOptions } from "../model/options";
+
 export const AdditionalAddSecondStepUI: FC = () => {
   return (
-    <div>
-      <h1>AdditionalAddSecondStep</h1>
-    </div>
+    <AdditionalEditor
+      className="rendered-html-container"
+      localName="additionalAddSecondStep"
+      editorOptions={SunEditorOptions}
+    />
   );
 };

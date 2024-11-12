@@ -1,8 +1,18 @@
-import { Button, Divider, Flex, Form, Input, Modal, Select } from "antd";
+import {
+  Button,
+  Divider,
+  Flex,
+  Form,
+  Input,
+  Modal,
+  Select,
+  Typography,
+} from "antd";
 import { FC, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FaPlus } from "react-icons/fa";
+import { FaPen, FaPlus, FaTrash } from "react-icons/fa";
 import { useSearchParams } from "react-router-dom";
+import Swal from "sweetalert2";
 
 import { returnAllParams } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
@@ -33,7 +43,6 @@ import { useDisclosure } from "@shared/lib/hooks";
 
 const enum ENUMS {
   CATEGORY = "category",
-  SUBCATEGORY = "sub-category",
 }
 
 export const AdditionalInputsCategoriesUI: FC = () => {
@@ -42,74 +51,162 @@ export const AdditionalInputsCategoriesUI: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [form] = Form.useForm();
   const [category, setCategory] = useState<string>(
-    searchParams.get("category") || "",
+    searchParams.get(ENUMS.CATEGORY) || "",
   );
-  const [subCategory, setSubCategory] = useState<string>(
-    searchParams.get("subCategory") || "",
-  );
-  const [type, setType] = useState<string>("");
+  const [editCatId, setEditCatId] = useState<number | string | null>(null);
+  const onDeleteCategory = () => {
+    Swal.fire({
+      title: t("are-you-sure"),
+      text: t("content-will-be-deleted"),
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: t("yes-delete"),
+      cancelButtonText: t("no-cancel"),
+    }).then((result) => {
+      if (result.isConfirmed) {
+        console.log("deleted");
+      }
+    });
+  };
+
+  const onEditCategory = (name: string, id: string | number) => {
+    console.log(name, "edit-title");
+    console.log(id, "edit-id");
+    form.setFieldsValue({
+      ru: name,
+    });
+    setEditCatId(id);
+    onOpen();
+  };
+  const onAddCategory = () => {
+    setEditCatId(null);
+    onOpen();
+  };
 
   const categoryOption = [
     {
       value: "entertainment",
-      label: t("additional-entertainment"),
+      label: (
+        <Flex justify="space-between" align="center">
+          <Typography.Text>{t("additional-entertainment")}</Typography.Text>
+          <Flex align="center" gap={5}>
+            <FaPen
+              onClick={() => onEditCategory(t("additional-entertainment"), 1)}
+              cursor={"pointer"}
+              color="grey"
+              title={t("edit")}
+            />
+            <FaTrash
+              onClick={onDeleteCategory}
+              cursor={"pointer"}
+              color="grey"
+              title={t("delete")}
+            />
+          </Flex>
+        </Flex>
+      ),
     },
     {
       value: "communal",
-      label: t("additional-communal"),
+      label: (
+        <Flex justify="space-between" align="center">
+          <Typography.Text>{t("additional-communal")}</Typography.Text>
+          <Flex align="center" gap={5}>
+            <FaPen
+              onClick={() => onEditCategory(t("additional-communal"), 2)}
+              cursor={"pointer"}
+              color="grey"
+              title={t("edit")}
+            />
+            <FaTrash
+              onClick={onDeleteCategory}
+              cursor={"pointer"}
+              color="grey"
+              title={t("delete")}
+            />
+          </Flex>
+        </Flex>
+      ),
     },
     {
       value: "numbers-codes",
-      label: t("additional-numbers-codes"),
+      label: (
+        <Flex justify="space-between" align="center">
+          <Typography.Text>{t("additional-numbers-codes")}</Typography.Text>
+          <Flex align="center" gap={5}>
+            <FaPen
+              onClick={() => onEditCategory(t("additional-numbers-codes"), 3)}
+              cursor={"pointer"}
+              color="grey"
+              title={t("edit")}
+            />
+            <FaTrash
+              onClick={onDeleteCategory}
+              cursor={"pointer"}
+              color="grey"
+              title={t("delete")}
+            />
+          </Flex>
+        </Flex>
+      ),
     },
     {
       value: "need-to-know",
-      label: t("additional-need-to-know"),
+      label: (
+        <Flex justify="space-between" align="center">
+          <Typography.Text>{t("additional-need-to-know")}</Typography.Text>
+          <Flex align="center" gap={5}>
+            <FaPen
+              onClick={() => onEditCategory(t("additional-need-to-know"), 4)}
+              cursor={"pointer"}
+              color="grey"
+              title={t("edit")}
+            />
+            <FaTrash
+              onClick={onDeleteCategory}
+              cursor={"pointer"}
+              color="grey"
+              title={t("delete")}
+            />
+          </Flex>
+        </Flex>
+      ),
     },
     {
       value: "info-tashkent",
-      label: t("additional-info-tashkent"),
+      label: (
+        <Flex justify="space-between" align="center">
+          <Typography.Text>{t("additional-info-tashkent")}</Typography.Text>
+          <Flex align="center" gap={5}>
+            <FaPen
+              onClick={() => onEditCategory(t("additional-info-tashkent"), 5)}
+              cursor={"pointer"}
+              color="grey"
+              title={t("edit")}
+            />
+            <FaTrash
+              onClick={onDeleteCategory}
+              cursor={"pointer"}
+              color="grey"
+              title={t("delete")}
+            />
+          </Flex>
+        </Flex>
+      ),
     },
   ];
-  const subCategoryOption = [
-    {
-      value: "park",
-      label: t("park"),
-    },
-    {
-      value: "cinema",
-      label: t("cinema"),
-    },
-    {
-      value: "theatre",
-      label: t("theatre"),
-    },
-  ];
+
   const prevParams = useMemo(() => {
     return returnAllParams();
   }, []);
 
-  const categoryChange = (value: string) => {
+  const onCategoryChange = (value: string) => {
     setCategory(value);
-    if (value === "entertainment") {
-      setSearchParams({
-        ...prevParams,
-        category: value,
-        subCategory: subCategory,
-      });
-    } else {
-      setSearchParams({
-        ...prevParams,
-        category: value,
-      });
-    }
-  };
-
-  const subCategoryChange = (value: string) => {
-    setSubCategory(value);
     setSearchParams({
       ...prevParams,
-      subCategory: value,
+      category: value,
     });
   };
 
@@ -118,31 +215,26 @@ export const AdditionalInputsCategoriesUI: FC = () => {
     form.resetFields();
   };
 
-  const onSubmit = (values: {
-    "name-ru": string;
-    "name-uz": string;
-    "name-cyrill": string;
-  }) => {
-    if (type === ENUMS.CATEGORY) {
-      console.log(values, "category");
-    }
-    if (type === ENUMS.SUBCATEGORY) {
-      console.log(values, "subcategory");
+  const onSubmit = (values: { ru: string; uz: string; cy: string }) => {
+    if (editCatId) {
+      console.log("editing", { ...values, category_id: editCatId });
+    } else {
+      console.log("creating", values);
     }
     onCloseClear();
   };
 
-  const addPart = (menu: JSX.Element, type: string) => {
+  const onClear = () => {
+    setSearchParams("");
+    setCategory("");
+  };
+
+  const addPart = (menu: JSX.Element) => {
     return (
       <>
         {menu}
         <Divider style={{ margin: "8px 0" }} />
-        <Button
-          onClick={() => {
-            setType(type), onOpen();
-          }}
-          icon={<FaPlus color="#1890ff" />}
-        >
+        <Button onClick={onAddCategory} icon={<FaPlus color="#1890ff" />}>
           {t("add")}
         </Button>
       </>
@@ -159,31 +251,15 @@ export const AdditionalInputsCategoriesUI: FC = () => {
           <Select
             value={category}
             id={ENUMS.CATEGORY}
-            onSelect={categoryChange}
+            onSelect={onCategoryChange}
             placeholder={t("choose-additional-category")}
             options={categoryOption}
             allowClear
+            onClear={onClear}
             showSearch
-            dropdownRender={(menu) => addPart(menu, ENUMS.CATEGORY)}
+            dropdownRender={(menu) => addPart(menu)}
           />
         </Flex>
-        {category === "entertainment" && (
-          <Flex flex={1} vertical gap={5}>
-            <label htmlFor={ENUMS.SUBCATEGORY}>
-              {t("choose-additional-sub-category")}
-            </label>
-            <Select
-              value={subCategory}
-              id={ENUMS.SUBCATEGORY}
-              onSelect={subCategoryChange}
-              placeholder={t("choose-additional-sub-category")}
-              options={subCategoryOption}
-              allowClear
-              showSearch
-              dropdownRender={(menu) => addPart(menu, ENUMS.SUBCATEGORY)}
-            />
-          </Flex>
-        )}
       </Flex>
       {/* MODAL */}
       <Modal
@@ -208,13 +284,13 @@ export const AdditionalInputsCategoriesUI: FC = () => {
           id={"additional-category-modal"}
           layout="vertical"
         >
-          <Form.Item name={"name-ru"} label={t("name-ru")}>
+          <Form.Item name={"ru"} label={t("name-ru")}>
             <Input placeholder={t("name-ru")} />
           </Form.Item>
-          <Form.Item name={"name-uz"} label={t("name-uz")}>
+          <Form.Item name={"uz"} label={t("name-uz")}>
             <Input placeholder={t("name-uz")} />
           </Form.Item>
-          <Form.Item name={"name-cyrill"} label={t("name-cyrill")}>
+          <Form.Item name={"cy"} label={t("name-cyrill")}>
             <Input placeholder={t("name-cyrill")} />
           </Form.Item>
         </Form>
