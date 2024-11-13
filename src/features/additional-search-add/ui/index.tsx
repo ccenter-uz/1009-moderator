@@ -4,35 +4,29 @@ import { useTranslation } from "react-i18next";
 import { FaPlus, FaSearch } from "react-icons/fa";
 import { Link, useSearchParams } from "react-router-dom";
 
-import { removeLocalStorage, returnAllParams } from "@shared/lib/helpers";
+import {
+  clearAllAdditionalStorage,
+  returnAllParams,
+} from "@shared/lib/helpers";
 
 /**
  * AdditionalSearchAddUI
  *
- * This component is used to display a search bar and a button to add new items
- * in the search widget of the Manage pages.
+ * This component is responsible for rendering a search form with additional
+ * functionality for managing search parameters.
  *
- * It has the following functionality:
+ * - Provides an input field for entering search terms with a clear button.
+ * - Displays the category title based on the current search parameters.
+ * - Submits the search form and updates the URL with the search term and other parameters.
+ * - Includes a button to navigate to the "additional/add" page, clearing local storage on click.
  *
- * - Displays a text input with a placeholder.
- * - Displays a search button with a loading indicator.
- * - Submits the form when the search button is clicked.
- * - Calls the function passed to the `handleSearch` prop with the form values.
- * - Disables the search button and input when the component is in the loading state.
- * - Displays a button to add new items.
- * - Clears the local storage of the current step and previous steps when the button to add new items is clicked.
+ * Hooks:
+ * - `useSearchParams`: Used to access and set search parameters in the URL.
+ * - `useTranslation`: Provides translation functionality for internationalization.
+ * - `Form.useForm`: Utilized to manage form state and operations.
  *
- * It takes no props.
- *
- * @returns {JSX.Element} - The JSX element of the component.
+ * @returns {JSX.Element} - The JSX element for the component.
  */
-const enum ADDITIONAL_ADD_STEP {
-  FIRST = "additionalAddFirstStep",
-  SECOND = "additionalAddSecondStep",
-  THIRD = "additionalAddThirdStep",
-  CURRENT = "additionalAddCurrentStep",
-}
-
 export const AdditionalSearchAddUI: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { t } = useTranslation();
@@ -47,12 +41,7 @@ export const AdditionalSearchAddUI: FC = () => {
     onClear();
   };
 
-  const onClearLocalStorage = () => {
-    removeLocalStorage(ADDITIONAL_ADD_STEP.CURRENT);
-    removeLocalStorage(ADDITIONAL_ADD_STEP.FIRST);
-    removeLocalStorage(ADDITIONAL_ADD_STEP.SECOND);
-    removeLocalStorage(ADDITIONAL_ADD_STEP.THIRD);
-  };
+  const onClearLocalStorage = () => clearAllAdditionalStorage();
 
   return (
     <>

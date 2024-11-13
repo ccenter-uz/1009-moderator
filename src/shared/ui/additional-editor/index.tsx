@@ -27,13 +27,13 @@ export const AdditionalEditor: FC<Props> = (props) => {
   const [title, setTitle] = useState<{
     ru: string;
     uz: string;
-    cyrill: string;
-  }>({ ru: "", uz: "", cyrill: "" });
+    cy: string;
+  }>({ ru: "", uz: "", cy: "" });
   const [editor, setEditor] = useState<
     {
       id: string;
-      content: { ru: string; uz: string; cyrill: string };
-      title: { ru: string; uz: string; cyrill: string };
+      content: { ru: string; uz: string; cy: string };
+      title: { ru: string; uz: string; cy: string };
     }[]
   >(getLocalStorage(localName) ? getLocalStorage(localName) : []);
 
@@ -46,7 +46,7 @@ export const AdditionalEditor: FC<Props> = (props) => {
         content: {
           ru: valueRu,
           uz: valueUz,
-          cyrill: valueCyrill,
+          cy: valueCyrill,
         },
       },
     ];
@@ -54,7 +54,7 @@ export const AdditionalEditor: FC<Props> = (props) => {
     setValueRu("");
     setValueUz("");
     setValueCyrill("");
-    setTitle({ ru: "", uz: "", cyrill: "" });
+    setTitle({ ru: "", uz: "", cy: "" });
   };
 
   const onEdit = ({
@@ -62,13 +62,13 @@ export const AdditionalEditor: FC<Props> = (props) => {
     id,
     title,
   }: {
-    content: { ru: string; uz: string; cyrill: string };
+    content: { ru: string; uz: string; cy: string };
     id: string;
-    title: { ru: string; uz: string; cyrill: string };
+    title: { ru: string; uz: string; cy: string };
   }) => {
     setValueRu(content.ru);
     setValueUz(content.uz);
-    setValueCyrill(content.cyrill);
+    setValueCyrill(content.cy);
     setTitle(title);
     const newEditor = editor.filter((el) => el.id !== id);
     setEditor(newEditor);
@@ -121,9 +121,9 @@ export const AdditionalEditor: FC<Props> = (props) => {
       <Input
         type="text"
         placeholder={t("title-cyrill")}
-        name="cyrill"
+        name="cy"
         onChange={onChangeTitle}
-        value={title.cyrill}
+        value={title.cy}
       />
       <SunEditor
         setContents={valueCyrill}
@@ -181,11 +181,11 @@ export const AdditionalEditor: FC<Props> = (props) => {
                     __html: renderHtml(el.content.uz),
                   }}
                 />
-                <Typography.Text>{el.title.cyrill}</Typography.Text>
+                <Typography.Text>{el.title.cy}</Typography.Text>
                 <div
                   className={className}
                   dangerouslySetInnerHTML={{
-                    __html: renderHtml(el.content.cyrill),
+                    __html: renderHtml(el.content.cy),
                   }}
                 />
               </Flex>

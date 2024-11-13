@@ -40,6 +40,7 @@ import { OrgEditAsync } from "@pages/organization-edit";
 import { AdditionalAsync } from "@pages/additional";
 import path from "path";
 import { AdditionalAddAsync } from "@pages/additional-add";
+import { AdditionalEditAsync } from "@pages/additional-edit";
 
 function BubbleError() {
   const error = useRouteError();
@@ -83,6 +84,12 @@ export const routesPath = [
         name: "/additional/add",
         path: "additional/add",
         element: <AdditionalAddAsync />,
+      },
+      {
+        key: "/additional/edit/:id",
+        name: "/additional/edit/:id",
+        path: "additional/edit/:id",
+        element: <AdditionalEditAsync />,
       },
       {
         key: "4",
