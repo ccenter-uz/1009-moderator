@@ -13,7 +13,7 @@ export const SearchBottomTable: FC<Props> = (props) => {
   const { attrData, subCategoryData } = props;
 
   return (
-    <Row align={"top"} gutter={[8, 8]}>
+    <Row align={"top"} gutter={[8, 8]} style={{ marginBottom: 30 }}>
       <Col span={16}>
         <Table
           columns={attrColumns}

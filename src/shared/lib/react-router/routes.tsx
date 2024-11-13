@@ -38,7 +38,6 @@ import { ManageUsersAsync } from "@pages/manage-users";
 import { ManageVillageAsync } from "@pages/manage-village";
 import { OrgEditAsync } from "@pages/organization-edit";
 import { AdditionalAsync } from "@pages/additional";
-import path from "path";
 import { AdditionalAddAsync } from "@pages/additional-add";
 import { AdditionalEditAsync } from "@pages/additional-edit";
 
@@ -83,12 +82,14 @@ export const routesPath = [
         key: "/additional/add",
         name: "/additional/add",
         path: "additional/add",
+        private: "true",
         element: <AdditionalAddAsync />,
       },
       {
         key: "/additional/edit/:id",
         name: "/additional/edit/:id",
         path: "additional/edit/:id",
+        private: "true",
         element: <AdditionalEditAsync />,
       },
       {
@@ -125,7 +126,9 @@ export const routesPath = [
           },
           {
             key: "/orgs/edit",
+            name: "/orgs/edit/:id",
             path: "/orgs/edit/:id",
+            private: "true",
             element: <OrgEditAsync />,
           },
         ],
