@@ -40,6 +40,7 @@ import { OrgEditAsync } from "@pages/organization-edit";
 import { AdditionalAsync } from "@pages/additional";
 import { AdditionalAddAsync } from "@pages/additional-add";
 import { AdditionalEditAsync } from "@pages/additional-edit";
+import { LoginAsync } from "@pages/login";
 
 function BubbleError() {
   const error = useRouteError();
@@ -292,6 +293,6 @@ export const routesPath = [
   {
     path: "/login",
     name: "Login",
-    element: "Hello login",
+    element: <LoginAsync />,
   },
 ];
