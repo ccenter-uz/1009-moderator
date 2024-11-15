@@ -41,6 +41,7 @@ import { AdditionalAsync } from "@pages/additional";
 import { AdditionalAddAsync } from "@pages/additional-add";
 import { AdditionalEditAsync } from "@pages/additional-edit";
 import { LoginAsync } from "@pages/login";
+import { AuthProtector } from "@shared/ui/auth-protector";
 
 function BubbleError() {
   const error = useRouteError();
@@ -52,7 +53,11 @@ function BubbleError() {
 export const routesPath = [
   {
     path: "/",
-    element: <MainLayout />,
+    element: (
+      <AuthProtector>
+        <MainLayout />
+      </AuthProtector>
+    ),
     errorElement: <BubbleError />,
     children: [
       {

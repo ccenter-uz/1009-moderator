@@ -3,14 +3,20 @@ import { FC } from "react";
 import "./style.css";
 import { useTranslation } from "react-i18next";
 import { FaLock, FaUser } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+
+import { setCookie } from "@shared/lib/helpers";
 
 export const LoginPage: FC = () => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
+  const navigate = useNavigate();
 
   const onLogin = (values: { phone: string; password: string }) => {
     console.log(values, "values");
+    setCookie("access_token", "true");
     form.resetFields();
+    navigate("/");
   };
 
   return (
