@@ -2,8 +2,8 @@
 import { Link, redirect, useRouteError } from "react-router-dom";
 
 import MainLayout from "@app/ui/layout";
-import { FaRegNewspaper } from "react-icons/fa";
-import { IoStatsChart } from "react-icons/io5";
+import { FaRegNewspaper, FaUsers } from "react-icons/fa";
+import { IoAnalytics, IoStatsChart } from "react-icons/io5";
 import {
   MdAdd,
   MdListAlt,
@@ -11,6 +11,7 @@ import {
   MdOutlineMenu,
   MdOutlinePending,
   MdOutlineShoppingCart,
+  MdPayments,
   MdSettings,
 } from "react-icons/md";
 import { GoOrganization } from "react-icons/go";
@@ -42,6 +43,10 @@ import { AdditionalAddAsync } from "@pages/additional-add";
 import { AdditionalEditAsync } from "@pages/additional-edit";
 import { LoginAsync } from "@pages/login";
 import { AuthProtector } from "@shared/ui/auth-protector";
+import { MonitoringUserAsync } from "@pages/monitoring-user";
+import { MonitoringOrgsAsync } from "@pages/monitoring-orgs";
+import { MonitoringTransactionsAsync } from "@pages/monitoring-transaction";
+import { ManageRolesAsync } from "@pages/manage-roles";
 
 function BubbleError() {
   const error = useRouteError();
@@ -67,6 +72,44 @@ export const routesPath = [
         icon: <FaRegNewspaper />,
         path: "dashboard",
         element: <DashboardAsync />,
+      },
+      {
+        key: "/monitoring",
+        label: <Link to="/monitoring">{i18next.t("monitoring")}</Link>,
+        icon: <IoAnalytics />,
+        path: "monitoring",
+        children: [
+          {
+            key: "/monitoring/user",
+            name: "/monitoring/user",
+            label: <Link to="/monitoring/user">{i18next.t("users")}</Link>,
+            icon: <FaUsers />,
+            path: "user",
+            element: <MonitoringUserAsync />,
+          },
+          {
+            key: "/monitoring/organization",
+            name: "/monitoring/organization",
+            label: (
+              <Link to="/monitoring/organization">{i18next.t("orgs")}</Link>
+            ),
+            icon: <GoOrganization />,
+            path: "organization",
+            element: <MonitoringOrgsAsync />,
+          },
+          {
+            key: "/monitoring/transactions",
+            name: "/monitoring/transactions",
+            label: (
+              <Link to="/monitoring/transactions">
+                {i18next.t("transactions")}
+              </Link>
+            ),
+            icon: <MdPayments />,
+            path: "transactions",
+            element: <MonitoringTransactionsAsync />,
+          },
+        ],
       },
       {
         key: "/statistics",
@@ -152,6 +195,14 @@ export const routesPath = [
             icon: <MdOutlineManageAccounts />,
             path: "users",
             element: <ManageUsersAsync />,
+          },
+          {
+            key: "/manage/roles",
+            name: "/manage/roles",
+            label: <Link to="/manage/roles">{i18next.t("roles")}</Link>,
+            icon: <MdOutlineManageAccounts />,
+            path: "roles",
+            element: <ManageRolesAsync />,
           },
           {
             key: "/manage/product-services",
