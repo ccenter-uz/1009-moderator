@@ -16,6 +16,7 @@ import Swal from "sweetalert2";
 
 import { returnAllParams } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
+import { Can } from "@shared/ui";
 
 /**
  * AdditionalInputsCategoriesUI
@@ -92,18 +93,22 @@ export const AdditionalInputsCategoriesUI: FC = () => {
         <Flex justify="space-between" align="center">
           <Typography.Text>{t("additional-entertainment")}</Typography.Text>
           <Flex align="center" gap={5}>
-            <FaPen
-              onClick={() => onEditCategory(t("additional-entertainment"), 1)}
-              cursor={"pointer"}
-              color="grey"
-              title={t("edit")}
-            />
-            <FaTrash
-              onClick={onDeleteCategory}
-              cursor={"pointer"}
-              color="grey"
-              title={t("delete")}
-            />
+            <Can i="update" a="additional">
+              <FaPen
+                onClick={() => onEditCategory(t("additional-entertainment"), 1)}
+                cursor={"pointer"}
+                color="grey"
+                title={t("edit")}
+              />
+            </Can>
+            <Can i="delete" a="additional">
+              <FaTrash
+                onClick={onDeleteCategory}
+                cursor={"pointer"}
+                color="grey"
+                title={t("delete")}
+              />
+            </Can>
           </Flex>
         </Flex>
       ),
@@ -114,18 +119,22 @@ export const AdditionalInputsCategoriesUI: FC = () => {
         <Flex justify="space-between" align="center">
           <Typography.Text>{t("additional-communal")}</Typography.Text>
           <Flex align="center" gap={5}>
-            <FaPen
-              onClick={() => onEditCategory(t("additional-communal"), 2)}
-              cursor={"pointer"}
-              color="grey"
-              title={t("edit")}
-            />
-            <FaTrash
-              onClick={onDeleteCategory}
-              cursor={"pointer"}
-              color="grey"
-              title={t("delete")}
-            />
+            <Can i="update" a="additional">
+              <FaPen
+                onClick={() => onEditCategory(t("additional-communal"), 2)}
+                cursor={"pointer"}
+                color="grey"
+                title={t("edit")}
+              />
+            </Can>
+            <Can i="delete" a="additional">
+              <FaTrash
+                onClick={onDeleteCategory}
+                cursor={"pointer"}
+                color="grey"
+                title={t("delete")}
+              />
+            </Can>
           </Flex>
         </Flex>
       ),
@@ -136,18 +145,22 @@ export const AdditionalInputsCategoriesUI: FC = () => {
         <Flex justify="space-between" align="center">
           <Typography.Text>{t("additional-numbers-codes")}</Typography.Text>
           <Flex align="center" gap={5}>
-            <FaPen
-              onClick={() => onEditCategory(t("additional-numbers-codes"), 3)}
-              cursor={"pointer"}
-              color="grey"
-              title={t("edit")}
-            />
-            <FaTrash
-              onClick={onDeleteCategory}
-              cursor={"pointer"}
-              color="grey"
-              title={t("delete")}
-            />
+            <Can i="update" a="additional">
+              <FaPen
+                onClick={() => onEditCategory(t("additional-numbers-codes"), 3)}
+                cursor={"pointer"}
+                color="grey"
+                title={t("edit")}
+              />
+            </Can>
+            <Can i="delete" a="additional">
+              <FaTrash
+                onClick={onDeleteCategory}
+                cursor={"pointer"}
+                color="grey"
+                title={t("delete")}
+              />
+            </Can>
           </Flex>
         </Flex>
       ),
@@ -158,18 +171,22 @@ export const AdditionalInputsCategoriesUI: FC = () => {
         <Flex justify="space-between" align="center">
           <Typography.Text>{t("additional-need-to-know")}</Typography.Text>
           <Flex align="center" gap={5}>
-            <FaPen
-              onClick={() => onEditCategory(t("additional-need-to-know"), 4)}
-              cursor={"pointer"}
-              color="grey"
-              title={t("edit")}
-            />
-            <FaTrash
-              onClick={onDeleteCategory}
-              cursor={"pointer"}
-              color="grey"
-              title={t("delete")}
-            />
+            <Can i="update" a="additional">
+              <FaPen
+                onClick={() => onEditCategory(t("additional-need-to-know"), 4)}
+                cursor={"pointer"}
+                color="grey"
+                title={t("edit")}
+              />
+            </Can>
+            <Can i="delete" a="additional">
+              <FaTrash
+                onClick={onDeleteCategory}
+                cursor={"pointer"}
+                color="grey"
+                title={t("delete")}
+              />
+            </Can>
           </Flex>
         </Flex>
       ),
@@ -180,18 +197,22 @@ export const AdditionalInputsCategoriesUI: FC = () => {
         <Flex justify="space-between" align="center">
           <Typography.Text>{t("additional-info-tashkent")}</Typography.Text>
           <Flex align="center" gap={5}>
-            <FaPen
-              onClick={() => onEditCategory(t("additional-info-tashkent"), 5)}
-              cursor={"pointer"}
-              color="grey"
-              title={t("edit")}
-            />
-            <FaTrash
-              onClick={onDeleteCategory}
-              cursor={"pointer"}
-              color="grey"
-              title={t("delete")}
-            />
+            <Can i="update" a="additional">
+              <FaPen
+                onClick={() => onEditCategory(t("additional-info-tashkent"), 5)}
+                cursor={"pointer"}
+                color="grey"
+                title={t("edit")}
+              />
+            </Can>
+            <Can i="delete" a="additional">
+              <FaTrash
+                onClick={onDeleteCategory}
+                cursor={"pointer"}
+                color="grey"
+                title={t("delete")}
+              />
+            </Can>
           </Flex>
         </Flex>
       ),
@@ -234,9 +255,11 @@ export const AdditionalInputsCategoriesUI: FC = () => {
       <>
         {menu}
         <Divider style={{ margin: "8px 0" }} />
-        <Button onClick={onAddCategory} icon={<FaPlus color="#1890ff" />}>
-          {t("add")}
-        </Button>
+        <Can i="create" a="additional">
+          <Button onClick={onAddCategory} icon={<FaPlus color="#1890ff" />}>
+            {t("add")}
+          </Button>
+        </Can>
       </>
     );
   };

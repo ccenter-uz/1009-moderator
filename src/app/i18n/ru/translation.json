@@ -164,5 +164,10 @@
   "all-data-will-be-restored": "Все данные будет сброшено",
   "monitoring": "Мониторинг",
   "transactions": "Транзакции",
-  "roles": "Роли"
+  "roles": "Роли",
+  "monitoring-users": "Мониторинг пользователей",
+  "monitoring-transactions": "Мониторинг транзакций",
+  "monitoring-orgs": "Мониторинг организаций",
+  "manage-users": "Управление пользователями",
+  "manage-roles": "Управление ролями"
 }

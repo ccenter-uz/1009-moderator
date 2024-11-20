@@ -3,7 +3,7 @@ import { FC, startTransition } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { deleteCookie } from "@shared/lib/helpers";
+import { clearLocalStorage, deleteCookie } from "@shared/lib/helpers";
 
 export const LogoutUI: FC = () => {
   const { t } = useTranslation();
@@ -11,6 +11,7 @@ export const LogoutUI: FC = () => {
 
   const onLogout = () => {
     deleteCookie("access_token");
+    clearLocalStorage();
     startTransition(() => {
       navigate("/login");
     });

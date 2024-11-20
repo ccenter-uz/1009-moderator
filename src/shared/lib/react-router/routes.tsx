@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { Link, redirect, RouteObject, useRouteError } from "react-router-dom";
+import { Link, redirect, useRouteError } from "react-router-dom";
 
 import MainLayout from "@app/ui/layout";
 import { FaRegNewspaper, FaUsers } from "react-icons/fa";
@@ -47,8 +47,8 @@ import { MonitoringUserAsync } from "@pages/monitoring-user";
 import { MonitoringOrgsAsync } from "@pages/monitoring-orgs";
 import { MonitoringTransactionsAsync } from "@pages/monitoring-transaction";
 import { ManageRolesAsync } from "@pages/manage-roles";
-import { adminPermissionsByRole } from "./permissions-by-role";
-import { AnyObject } from "antd/es/_util/type";
+import { moderatorPermissionsByRole } from "./permissions-by-role";
+import { getLocalStorage } from "../helpers";
 
 function BubbleError() {
   const error = useRouteError();
@@ -164,7 +164,7 @@ const childRoutes = [
       {
         key: "/orgs/edit",
         name: "/orgs/edit/:id",
-        path: "/orgs/edit/:id",
+        path: "edit/:id",
         private: "true",
         element: <OrgEditAsync />,
       },
@@ -328,24 +328,23 @@ const childRoutes = [
   },
 ];
 
-const getAvailableChildren = (
-  childRoutes: AnyObject[],
-  permissionsObj: AnyObject,
-) => {
-  const userPermissions = Object.keys(permissionsObj);
+const getAccessibleChildRoutes = (
+  childRoutes: any[],
+  userPermissions: any,
+): any[] => {
+  const accessibleRoutes = childRoutes.filter((route) => {
+    const permission = route.path.split("/")[0];
+    return userPermissions[permission];
+  });
 
-  return userPermissions.map((permission: string) => {
-    const route = childRoutes.find(
-      (route: AnyObject) => route.path === permission,
-    );
-
-    if (route?.children) {
-      route.children = getAvailableChildren(
+  return accessibleRoutes.map((route) => {
+    if (route.children) {
+      route.children = getAccessibleChildRoutes(
         route.children,
-        permissionsObj[permission],
+        userPermissions[route.path],
       );
-      return route;
     }
+
     return route;
   });
 };
@@ -359,9 +358,9 @@ export const routesPath = [
       </AuthProtector>
     ),
     errorElement: <BubbleError />,
-    children: getAvailableChildren(
+    children: getAccessibleChildRoutes(
       childRoutes,
-      adminPermissionsByRole.permissions_pathname,
+      getLocalStorage("user").permissions_pathname,
     ),
   },
   {

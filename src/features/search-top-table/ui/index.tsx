@@ -4,12 +4,13 @@ import { ColumnsType } from "antd/es/table";
 import { t } from "i18next";
 import { FC, useState } from "react";
 import { FaEnvelope, FaPencilAlt } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { DeleteTableItemUI } from "@features/delete-table-item";
 
 import { phoneColumns } from "@shared/lib/helpers";
 import { usePaginate } from "@shared/lib/hooks";
+import { Can } from "@shared/ui";
 
 /**
  * SearchTopTable
@@ -53,7 +54,6 @@ export const SearchTopTable: FC<Props> = (props) => {
   const { data, setAttrData, phonesData, onOpen } = props;
   const { page, pageSize, setPage, setPageSize } = usePaginate();
   const [selectedRowKeys, setSelectedRowKeys] = useState<number>(0);
-  const navigate = useNavigate();
 
   const columns: ColumnsType<AnyObject> = [
     {
@@ -101,15 +101,19 @@ export const SearchTopTable: FC<Props> = (props) => {
       align: "center",
       render: (text: string, record: AnyObject) => (
         <Flex justify="center" align="center" gap={8}>
-          <Link to={{ pathname: `/orgs/edit/${record.id}` }} state={record}>
-            <FaPencilAlt
-              color="grey"
-              fontSize={16}
-              cursor={"pointer"}
-              title={t("edit")}
-            />
-          </Link>
-          <DeleteTableItemUI id={record.id} href={"/delete"} />
+          <Can i="update">
+            <Link to={{ pathname: `/orgs/edit/${record.id}` }} state={record}>
+              <FaPencilAlt
+                color="grey"
+                fontSize={16}
+                cursor={"pointer"}
+                title={t("edit")}
+              />
+            </Link>
+          </Can>
+          <Can i="delete">
+            <DeleteTableItemUI id={record.id} href={"/delete"} />
+          </Can>
         </Flex>
       ),
     },

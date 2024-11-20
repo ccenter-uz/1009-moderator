@@ -4,6 +4,8 @@ export const enum ACCESSESS {
   UPDATE = "update",
   DELETE = "delete",
   RESTORE = "restore",
+  UPDATE_OWN = "update-own",
+  DELETE_OWN = "delete-own",
 }
 
 export const adminPermissionsByRole = {
@@ -77,8 +79,8 @@ export const operatorPermissionsByRole = {
     orgs: {
       all: {
         [ACCESSESS.GET]: true,
-        [ACCESSESS.UPDATE]: true,
-        [ACCESSESS.DELETE]: true,
+        [ACCESSESS.UPDATE_OWN]: true,
+        [ACCESSESS.DELETE_OWN]: true,
       },
       add: {
         [ACCESSESS.CREATE]: true,
@@ -126,6 +128,13 @@ export const moderatorPermissionsByRole = {
       add: {
         [ACCESSESS.CREATE]: true,
       },
+      edit: {
+        [ACCESSESS.UPDATE]: true,
+      },
+      unconfirmed: {
+        [ACCESSESS.GET]: true,
+        [ACCESSESS.UPDATE]: true,
+      },
     },
     monitoring: {
       user: {
@@ -144,9 +153,6 @@ export const moderatorPermissionsByRole = {
         [ACCESSESS.CREATE]: true,
         [ACCESSESS.UPDATE]: true,
         [ACCESSESS.DELETE]: true,
-      },
-      unconfirmed: {
-        [ACCESSESS.GET]: true,
       },
     },
     manage: {

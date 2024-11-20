@@ -1,1 +1,0 @@
-export { RBAC } from "./ui";

@@ -5,7 +5,8 @@ import { useTranslation } from "react-i18next";
 import { FaLock, FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
-import { setCookie } from "@shared/lib/helpers";
+import { setCookie, setLocalStorage } from "@shared/lib/helpers";
+import { moderatorPermissionsByRole } from "@shared/lib/react-router";
 
 export const LoginPage: FC = () => {
   const { t } = useTranslation();
@@ -16,6 +17,7 @@ export const LoginPage: FC = () => {
     console.log(values, "values");
     setCookie("access_token", "true");
     form.resetFields();
+    setLocalStorage("user", moderatorPermissionsByRole);
     navigate("/");
   };
 

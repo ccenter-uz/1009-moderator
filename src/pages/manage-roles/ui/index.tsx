@@ -1,5 +1,31 @@
 import { FC } from "react";
+import { useTranslation } from "react-i18next";
+
+import { BasicSearchPartUI } from "@features/basic-search-part";
+
+import { ManageWrapperBox } from "@shared/ui";
 
 export const ManageRolesUI: FC = () => {
-  return <div>Manage Roles</div>;
+  const { t } = useTranslation();
+
+  const onSearch = (search: string) => {
+    console.log(search, "search");
+  };
+
+  const onAdd = () => {
+    console.log("add");
+  };
+
+  return (
+    <div>
+      <ManageWrapperBox
+        title={t("manage-roles")}
+        searchPart={<BasicSearchPartUI handleSearch={onSearch} />}
+        add={onAdd}
+        columns={[]}
+        data={[]}
+        totalItems={0}
+      />
+    </div>
+  );
 };
