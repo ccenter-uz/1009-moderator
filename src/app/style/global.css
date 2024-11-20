@@ -44,3 +44,24 @@ img {
   clip: rect(0 0 0 0);
   overflow: hidden;
 }
+
+/* rendered-html-table */
+.rendered-html-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.rendered-html-container table,
+.rendered-html-container th,
+.rendered-html-container td {
+  border: 1px solid lightgrey;
+  border-radius: 4px;
+  padding: 8px;
+}
+
+.editor-style {
+  background: #ffefdf;
+  padding: 0.5em 1em;
+  margin-bottom: 1em;
+  border-radius: 4px;
+}

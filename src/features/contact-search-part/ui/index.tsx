@@ -2,6 +2,22 @@ import { Row, Col, Input, Form, Checkbox } from "antd";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
 
+/**
+ * ContactSearchPartUI
+ *
+ * This component is used to display contact search part in the search widget
+ * of the Manage pages.
+ *
+ * It has the following functionality:
+ *
+ * - Displays a input for phone
+ * - Displays a checkbox for search by phone
+ *
+ * It takes no props.
+ *
+ * @returns {JSX.Element} - The JSX element of the component.
+ */
+
 export const ContactSearchPartUI: FC = () => {
   const { t } = useTranslation();
 

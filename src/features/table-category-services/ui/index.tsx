@@ -14,6 +14,30 @@ import { FC, useState } from "react";
 import { FaTrashAlt } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 
+/**
+ * TableCategoryServicesUI
+ *
+ * This component is used to display a table with category and services,
+ * and has the following functionality:
+ *
+ * - Displays a table with columns for category and services
+ * - Allows to add new category and service
+ * - Allows to delete existing category and service
+ * - Allows to edit existing category and service
+ *
+ * It takes the following props:
+ *
+ * - `data`: The data to display in the table.
+ * - `setData`: The function to call when the data in the table changes.
+ *
+ * @param {Object} props - The props of the component.
+ * @param {AnyObject[]} props.data - The data to display in the table.
+ * @param {Function} props.setData - The function to call when the data in the
+ *   table changes.
+ *
+ * @returns {JSX.Element} - The JSX element of the component.
+ */
+
 type Props = {
   data: AnyObject[];
   setData: any;

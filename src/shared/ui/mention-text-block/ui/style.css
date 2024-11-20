@@ -1,0 +1,21 @@
+#mention-text-block {
+  margin: 24px 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(0deg, #f3f8ff, #f3f8ff),
+    linear-gradient(90.05deg, #45bfff 27.8%, #00a7ff 98.65%);
+  &::before {
+    content: "";
+    width: 8px;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    background: #45bfff;
+  }
+
+  .content {
+    margin: 0;
+    padding: 1em;
+  }
+}

@@ -37,6 +37,9 @@ import { ManageStreetAsync } from "@pages/manage-street";
 import { ManageUsersAsync } from "@pages/manage-users";
 import { ManageVillageAsync } from "@pages/manage-village";
 import { OrgEditAsync } from "@pages/organization-edit";
+import { AdditionalAsync } from "@pages/additional";
+import { AdditionalAddAsync } from "@pages/additional-add";
+import { AdditionalEditAsync } from "@pages/additional-edit";
 
 function BubbleError() {
   const error = useRouteError();
@@ -73,7 +76,21 @@ export const routesPath = [
         label: <Link to="/additional">{i18next.t("additional")}</Link>,
         icon: <MdOutlineMenu />,
         path: "additional",
-        element: "Hello additional",
+        element: <AdditionalAsync />,
+      },
+      {
+        key: "/additional/add",
+        name: "/additional/add",
+        path: "additional/add",
+        private: "true",
+        element: <AdditionalAddAsync />,
+      },
+      {
+        key: "/additional/edit/:id",
+        name: "/additional/edit/:id",
+        path: "additional/edit/:id",
+        private: "true",
+        element: <AdditionalEditAsync />,
       },
       {
         key: "4",
@@ -109,7 +126,9 @@ export const routesPath = [
           },
           {
             key: "/orgs/edit",
+            name: "/orgs/edit/:id",
             path: "/orgs/edit/:id",
+            private: "true",
             element: <OrgEditAsync />,
           },
         ],

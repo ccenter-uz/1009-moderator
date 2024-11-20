@@ -1,0 +1,1 @@
+export { AdditionalTablePartUI } from "./ui";

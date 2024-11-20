@@ -1,0 +1,11 @@
+#warning-text-block {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5em;
+  color: #ff7c7c;
+  margin: 24px 0;
+
+  .content {
+    margin: 0;
+  }
+}

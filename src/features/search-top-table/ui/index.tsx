@@ -11,6 +11,37 @@ import { DeleteTableItemUI } from "@features/delete-table-item";
 import { phoneColumns } from "@shared/lib/helpers";
 import { usePaginate } from "@shared/lib/hooks";
 
+/**
+ * SearchTopTable
+ *
+ * This component is used to display search result in the search widget
+ * of the Manage pages.
+ *
+ * It has the following functionality:
+ *
+ * - Displays a table with columns and data
+ * - Displays a DeleteTableItemUI component to delete selected rows
+ * - Displays a button to open the modal to add or edit the data
+ *
+ * It takes the following props:
+ *
+ * - `data`: The data to display in the table. It should contain the following fields:
+ *   - `code`: The code of the abonent.
+ *   - `abonent`: The name of the abonent.
+ *   - `sms`: The count of sms.
+ * - `setAttrData`: A function to set the data of attributes.
+ * - `phonesData`: The data of phones.
+ * - `onOpen`: A function to open the modal to add or edit the data.
+ *
+ * @param {Object} props - The props of the component.
+ * @param {AnyObject[]} props.data - The data to display in the table.
+ * @param {Function} props.setAttrData - A function to set the data of attributes.
+ * @param {AnyObject[]} props.phonesData - The data of phones.
+ * @param {Function} props.onOpen - A function to open the modal to add or edit the data.
+ *
+ * @returns {JSX.Element} - The JSX element of the component.
+ */
+
 type Props = {
   data: AnyObject[];
   setAttrData: (data: AnyObject[]) => void;

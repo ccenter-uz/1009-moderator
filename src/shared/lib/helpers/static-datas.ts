@@ -1,3 +1,5 @@
+import { getLocalStorage } from "./fns";
+
 export const STEPS_DATA = {
   FIRST_FORMDATA: [
     "abonent",
@@ -81,3 +83,29 @@ export const SEND_BODY = [
   "lunch-to",
   "dayoffs",
 ];
+
+export const additionalSubmitData = (
+  firstStep: string,
+  secondStep: string,
+  thirdStep: string,
+) => {
+  return {
+    mention: {
+      ru: getLocalStorage(firstStep)["mention-ru"],
+      uz: getLocalStorage(firstStep)["mention-uz"],
+      cy: getLocalStorage(firstStep)["mention-cyrill"],
+    },
+    warning: {
+      ru: getLocalStorage(firstStep)["warning-ru"],
+      uz: getLocalStorage(firstStep)["warning-uz"],
+      cy: getLocalStorage(firstStep)["warning-cyrill"],
+    },
+    title: {
+      ru: getLocalStorage(firstStep)["title-ru"],
+      uz: getLocalStorage(firstStep)["title-uz"],
+      cy: getLocalStorage(firstStep)["title-cyrill"],
+    },
+    table: getLocalStorage(secondStep),
+    content: getLocalStorage(thirdStep),
+  };
+};
