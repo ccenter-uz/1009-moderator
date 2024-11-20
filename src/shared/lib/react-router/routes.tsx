@@ -47,7 +47,10 @@ import { MonitoringUserAsync } from "@pages/monitoring-user";
 import { MonitoringOrgsAsync } from "@pages/monitoring-orgs";
 import { MonitoringTransactionsAsync } from "@pages/monitoring-transaction";
 import { ManageRolesAsync } from "@pages/manage-roles";
-import { moderatorPermissionsByRole } from "./permissions-by-role";
+import {
+  moderatorPermissionsByRole,
+  operatorPermissionsByRole,
+} from "./permissions-by-role";
 import { getLocalStorage } from "../helpers";
 
 function BubbleError() {
@@ -360,7 +363,9 @@ export const routesPath = [
     errorElement: <BubbleError />,
     children: getAccessibleChildRoutes(
       childRoutes,
-      getLocalStorage("user").permissions_pathname,
+      getLocalStorage("user")
+        ? getLocalStorage("user")?.permissions_pathname
+        : operatorPermissionsByRole,
     ),
   },
   {
