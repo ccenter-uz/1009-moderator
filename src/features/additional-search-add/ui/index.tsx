@@ -8,6 +8,7 @@ import {
   clearAllAdditionalStorage,
   returnAllParams,
 } from "@shared/lib/helpers";
+import { Can } from "@shared/ui";
 
 /**
  * AdditionalSearchAddUI
@@ -79,21 +80,23 @@ export const AdditionalSearchAddUI: FC = () => {
             {t("search")}
           </Button>
         </Flex>
-        <Link
-          to="/additional/add"
-          state={{
-            category: searchParams.get("category"),
-          }}
-        >
-          <Button
-            type="primary"
-            icon={<FaPlus />}
-            title={t("add")}
-            onClick={onClearLocalStorage}
+        <Can i="create" a="additional">
+          <Link
+            to="/additional/add"
+            state={{
+              category: searchParams.get("category"),
+            }}
           >
-            {t("add")}
-          </Button>
-        </Link>
+            <Button
+              type="primary"
+              icon={<FaPlus />}
+              title={t("add")}
+              onClick={onClearLocalStorage}
+            >
+              {t("add")}
+            </Button>
+          </Link>
+        </Can>
       </Form>
     </>
   );

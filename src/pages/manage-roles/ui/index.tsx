@@ -5,7 +5,7 @@ import { BasicSearchPartUI } from "@features/basic-search-part";
 
 import { ManageWrapperBox } from "@shared/ui";
 
-export const ManageUsersPage: FC = () => {
+export const ManageRolesUI: FC = () => {
   const { t } = useTranslation();
 
   const onSearch = (search: string) => {
@@ -19,7 +19,7 @@ export const ManageUsersPage: FC = () => {
   return (
     <div>
       <ManageWrapperBox
-        title={t("manage-users")}
+        title={t("manage-roles")}
         searchPart={<BasicSearchPartUI handleSearch={onSearch} />}
         add={onAdd}
         columns={[]}

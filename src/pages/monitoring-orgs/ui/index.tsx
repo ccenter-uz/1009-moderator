@@ -5,23 +5,18 @@ import { BasicSearchPartUI } from "@features/basic-search-part";
 
 import { ManageWrapperBox } from "@shared/ui";
 
-export const ManageUsersPage: FC = () => {
+export const MonitoringOrgsUI: FC = () => {
   const { t } = useTranslation();
 
   const onSearch = (search: string) => {
     console.log(search, "search");
   };
 
-  const onAdd = () => {
-    console.log("add");
-  };
-
   return (
     <div>
       <ManageWrapperBox
-        title={t("manage-users")}
+        title={t("monitoring-orgs")}
         searchPart={<BasicSearchPartUI handleSearch={onSearch} />}
-        add={onAdd}
         columns={[]}
         data={[]}
         totalItems={0}

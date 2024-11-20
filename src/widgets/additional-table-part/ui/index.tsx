@@ -9,6 +9,7 @@ import { AdditionalExpandPartUI } from "@features/additional-expand-part";
 import { DeleteTableItemUI } from "@features/delete-table-item";
 
 import { ADDITIONAL_EDIT_STEPS, setLocalStorage } from "@shared/lib/helpers";
+import { Can } from "@shared/ui";
 
 type Props = {
   data: AnyObject[];
@@ -60,16 +61,20 @@ export const AdditionalTablePartUI: FC<Props> = (props) => {
       key: "action",
       render: (text: string, record: AnyObject) => (
         <Flex align="center" gap={5}>
-          <Link
-            onClick={() => onEditClick(record)}
-            to={`/additional/edit/${record?.id}`}
-            state={{
-              category: searchParams.get("category"),
-            }}
-          >
-            <FaPen cursor={"pointer"} color="grey" title={t("edit")} />
-          </Link>
-          <DeleteTableItemUI id={record?.id} href={"/delete"} />
+          <Can i="update" a="additional">
+            <Link
+              onClick={() => onEditClick(record)}
+              to={`/additional/edit/${record?.id}`}
+              state={{
+                category: searchParams.get("category"),
+              }}
+            >
+              <FaPen cursor={"pointer"} color="grey" title={t("edit")} />
+            </Link>
+          </Can>
+          <Can i="delete" a="additional">
+            <DeleteTableItemUI id={record?.id} href={"/delete"} />
+          </Can>
         </Flex>
       ),
     },
