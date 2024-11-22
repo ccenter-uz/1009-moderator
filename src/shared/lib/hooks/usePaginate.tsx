@@ -9,13 +9,13 @@ export const usePaginate = () => {
     searchParams.has("page") ? Number(searchParams.get("page")) : 1,
   );
   const [pageSize, setPageSize] = useState<number>(
-    searchParams.has("pageSize") ? Number(searchParams.get("pageSize")) : 10,
+    searchParams.has("limit") ? Number(searchParams.get("limit")) : 10,
   );
 
   useEffect(() => {
     setSearchParams({
       page: `${page}`,
-      pageSize: `${pageSize}`,
+      limit: `${pageSize}`,
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

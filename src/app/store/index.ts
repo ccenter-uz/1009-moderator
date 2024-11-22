@@ -2,6 +2,7 @@ import { configureStore, ConfigureStoreOptions } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
 import { useAdditionalSlice } from "@pages/additional";
+import { useManageUsersSlice } from "@pages/manage-users";
 
 import { useAddOrgFirstStepSlice } from "@widgets/org-add-first-step";
 import { useAddOrgFourthStepSlice } from "@widgets/org-add-fourth-step";
@@ -32,6 +33,8 @@ export const createStore = (
       useEditOrgFourthStepSlice: useEditOrgFourthStepSlice.reducer,
       // ADDITIONAL
       useAdditionalSlice: useAdditionalSlice.reducer,
+      // MANAGE
+      useManageUsersSlice: useManageUsersSlice.reducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({ serializableCheck: false }).concat(

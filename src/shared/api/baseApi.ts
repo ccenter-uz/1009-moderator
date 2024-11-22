@@ -27,6 +27,4 @@ export const baseApi = createApi({
     return result;
   },
   endpoints: () => ({}),
-
-  tagTypes: ["Counter"],
 });
