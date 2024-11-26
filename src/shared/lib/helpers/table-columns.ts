@@ -1,5 +1,6 @@
 import { AnyObject } from "antd/es/_util/type";
 import { ColumnsType } from "antd/es/table";
+import dayjs from "dayjs";
 import i18next from "i18next";
 
 type searchColType = ColumnsType<AnyObject> | undefined;
@@ -281,5 +282,95 @@ export const searchModalColumns: searchColType = [
     title: i18next.t("name_ru"),
     dataIndex: "name_ru",
     key: "name_ru",
+  },
+];
+
+const status: { [key: number]: string } = {
+  0: i18next.t("not-active"),
+  1: i18next.t("active"),
+};
+
+export const usersTableColumns = [
+  {
+    title: i18next.t("full-name"),
+    dataIndex: "fullName",
+    key: "fullName",
+  },
+  {
+    title: i18next.t("role"),
+    dataIndex: "role",
+    key: "role",
+    render: (text: { name: string }) => text.name,
+  },
+  {
+    title: i18next.t("phone"),
+    dataIndex: "phoneNumber",
+    key: "phoneNumber",
+  },
+  {
+    title: i18next.t("password"),
+    dataIndex: "password",
+    key: "password",
+  },
+  {
+    title: i18next.t("user-number"),
+    dataIndex: "numericId",
+    key: "numericId",
+  },
+  {
+    title: i18next.t("status"),
+    dataIndex: "status",
+    key: "status",
+    render: (text: number) => status[text],
+  },
+  {
+    title: i18next.t("createdAt"),
+    dataIndex: "createdAt",
+    key: "createdAt",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+  },
+  {
+    title: i18next.t("updatedAt"),
+    dataIndex: "updatedAt",
+    key: "updatedAt",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+  },
+  {
+    title: i18next.t("deletedAt"),
+    dataIndex: "deletedAt",
+    key: "deletedAt",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+  },
+];
+
+export const rolesTableColumns = [
+  {
+    title: i18next.t("name"),
+    dataIndex: "name",
+    key: "name",
+  },
+  {
+    title: i18next.t("status"),
+    dataIndex: "status",
+    key: "status",
+    render: (text: number) => status[text],
+  },
+  {
+    title: i18next.t("createdAt"),
+    dataIndex: "createdAt",
+    key: "createdAt",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+  },
+  {
+    title: i18next.t("updatedAt"),
+    dataIndex: "updatedAt",
+    key: "updatedAt",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+  },
+  {
+    title: i18next.t("deletedAt"),
+    dataIndex: "deletedAt",
+    key: "deletedAt",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
   },
 ];

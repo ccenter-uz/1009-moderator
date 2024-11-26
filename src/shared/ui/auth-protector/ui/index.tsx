@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Navigate } from "react-router-dom";
 
-import { getCookie } from "@shared/lib/helpers";
+import { getCookie, getLocalStorage } from "@shared/lib/helpers";
 
 type Props = {
   children: JSX.Element;
@@ -9,8 +9,9 @@ type Props = {
 
 export const AuthProtector: FC<Props> = ({ children }) => {
   const token = getCookie("access_token");
+  const accessess = getLocalStorage("user");
 
-  if (!token) return <Navigate to="/login" />;
+  if (!token && !accessess) return <Navigate to="/login" />;
 
   return children;
 };

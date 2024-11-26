@@ -10,13 +10,14 @@ import { usePaginate } from "@shared/lib/hooks";
 type Props = {
   title: string;
   searchPart: JSX.Element;
-  add: () => void;
+  add?: () => void;
   modalPart?: JSX.Element;
   columns: AnyObject[];
   data: AnyObject[];
   totalItems: number;
   rowSelect?: boolean;
   onRowSelect?: (record: AnyObject) => void;
+  loading?: boolean;
 };
 
 export const ManageWrapperBox: FC<Props> = (props) => {
@@ -30,6 +31,7 @@ export const ManageWrapperBox: FC<Props> = (props) => {
     totalItems = 0,
     rowSelect,
     onRowSelect,
+    loading,
   } = props;
   const { page, pageSize, pageSizeOptions, setPage, setPageSize } =
     usePaginate();
@@ -44,13 +46,16 @@ export const ManageWrapperBox: FC<Props> = (props) => {
     <div className="manage-wrapper-box">
       <h1 className="manage-wrapper-box__title">{title}</h1>
       <div className="manage-wrapper-box__search">{searchPart}</div>
-      <div className="manage-wrapper-box__add">
-        <Button type="primary" icon={<FaPlus />} onClick={add}>
-          {t("add")}
-        </Button>
-      </div>
+      {add && (
+        <div className="manage-wrapper-box__add">
+          <Button type="primary" icon={<FaPlus />} onClick={add}>
+            {t("add")}
+          </Button>
+        </div>
+      )}
       <div className="manage-wrapper-box__table">
         <Table
+          loading={loading || false}
           size="small"
           bordered
           onRow={(record) => ({
