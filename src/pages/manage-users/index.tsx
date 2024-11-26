@@ -5,4 +5,3 @@ export const ManageUsersAsync = lazy(() =>
     default: module.ManageUsersPage,
   })),
 );
-export { useManageUsersSlice } from "./model/Slicer";

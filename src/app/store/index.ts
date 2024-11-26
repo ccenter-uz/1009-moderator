@@ -2,7 +2,6 @@ import { configureStore, ConfigureStoreOptions } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
 import { useAdditionalSlice } from "@pages/additional";
-import { useManageUsersSlice } from "@pages/manage-users";
 
 import { useAddOrgFirstStepSlice } from "@widgets/org-add-first-step";
 import { useAddOrgFourthStepSlice } from "@widgets/org-add-fourth-step";
@@ -12,6 +11,8 @@ import { useEditOrgFirstStepSlice } from "@widgets/org-edit-first-step";
 import { useEditOrgFourthStepSlice } from "@widgets/org-edit-fourth-step";
 import { useEditOrgSecondStepSlice } from "@widgets/org-edit-second-step";
 import { useEditOrgThirdStepSlice } from "@widgets/org-edit-third-step";
+
+import { useManageUsersSlice } from "@entities/users";
 
 import { baseApi } from "@shared/api";
 

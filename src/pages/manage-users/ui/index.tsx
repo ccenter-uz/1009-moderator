@@ -1,84 +1,63 @@
 import { Flex } from "antd";
-import i18next from "i18next";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPen } from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 
 import { BasicSearchPartUI } from "@features/basic-search-part";
 import { DeleteTableItemUI } from "@features/delete-table-item";
+import { UserAddEditModalUI } from "@features/user-add-edit-modal";
 
-import { BASE_URL, getCookie } from "@shared/lib/helpers";
-import { RootState } from "@shared/types";
+import { useGetUsersQuery } from "@entities/users";
+
+import { returnAllParams, usersTableColumns } from "@shared/lib/helpers";
+import { useDisclosure } from "@shared/lib/hooks";
 import { ManageWrapperBox } from "@shared/ui";
 
-import { setUsers } from "../model/Slicer";
-
-const status: { [key: number]: string } = {
-  0: i18next.t("not-active"),
-  1: i18next.t("active"),
+export type RecordProps = {
+  fullName: string;
+  phoneNumber: string;
+  password: string;
+  numericId: string | number;
+  roleId?: string | number;
 };
 
 export const ManageUsersPage: FC = () => {
   const { t } = useTranslation();
-  const [searchParams] = useSearchParams();
-  const { users } = useSelector(
-    ({ useManageUsersSlice }: RootState) => useManageUsersSlice,
-  );
-  const [loading, setLoading] = useState<boolean>(false);
-  const dispatch = useDispatch();
+  const [_, setSearchParams] = useSearchParams();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { data, isLoading } = useGetUsersQuery({ ...returnAllParams() });
+  const [record, setRecord] = useState<RecordProps | null>(null);
+
+  const onEdit = (record: RecordProps) => {
+    setRecord(record);
+    onOpen();
+  };
+  const onAdd = () => {
+    onOpen();
+    setRecord(null);
+  };
+
+  const onSearch = ({ search }: { search: string }) => {
+    const prevParams = returnAllParams();
+    setSearchParams({ ...prevParams, search });
+  };
+
   const columns = [
-    {
-      title: t("full-name"),
-      dataIndex: "fullName",
-      key: "fullName",
-    },
-    {
-      title: t("role"),
-      dataIndex: "role",
-      key: "role",
-      render: (text: { name: string }) => text.name,
-    },
-    {
-      title: t("password"),
-      dataIndex: "password",
-      key: "password",
-    },
-    {
-      title: t("user-number"),
-      dataIndex: "numericId",
-      key: "numericId",
-    },
-    {
-      title: t("status"),
-      dataIndex: "status",
-      key: "status",
-      render: (text: number) => status[text],
-    },
-    {
-      title: t("createAt"),
-      dataIndex: "createAt",
-      key: "createAt",
-    },
-    {
-      title: t("updateAt"),
-      dataIndex: "updateAt",
-      key: "updateAt",
-    },
-    {
-      title: t("deleteAt"),
-      dataIndex: "deleteAt",
-      key: "deleteAt",
-    },
+    ...usersTableColumns,
     {
       title: t("actions"),
       dataIndex: "actions",
       key: "actions",
-      render: () => {
+      render: (text: string, record: RecordProps) => {
         return (
           <Flex align="center" gap={8}>
-            <FaPen cursor={"pointer"} color="grey" title={t("edit")} />
+            <FaPen
+              cursor={"pointer"}
+              color="grey"
+              title={t("edit")}
+              onClick={() => onEdit(record)}
+            />
             <DeleteTableItemUI id={1} href={"/delete"} />
           </Flex>
         );
@@ -86,60 +65,19 @@ export const ManageUsersPage: FC = () => {
     },
   ];
 
-  const onSearch = (search: string) => {
-    console.log(search, "search");
-  };
-
-  const onAdd = () => {
-    console.log("add");
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(
-          `${BASE_URL}user?${searchParams.toString()}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${getCookie("access_token")}`,
-            },
-          },
-        );
-        const data = await response.json();
-        if (!data) return null;
-
-        dispatch(
-          setUsers(
-            data?.result?.data.map((item: { id: number }) => ({
-              ...item,
-              key: item.id,
-            })),
-          ),
-        );
-        setLoading(false);
-      } catch (error) {
-        console.error(error);
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
-
   return (
     <div>
       <ManageWrapperBox
-        loading={loading}
+        loading={isLoading}
         title={t("manage-users")}
         searchPart={<BasicSearchPartUI handleSearch={onSearch} />}
         add={onAdd}
         columns={columns}
-        data={users}
-        totalItems={0}
+        data={data?.data || []}
+        totalItems={data?.total || 0}
+        modalPart={
+          <UserAddEditModalUI open={isOpen} onClose={onClose} record={record} />
+        }
       />
     </div>
   );

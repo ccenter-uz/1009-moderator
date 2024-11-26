@@ -18,3 +18,10 @@ export const enum ADDITIONAL_ADD_STEPS {
   ADDITIONAL_ADD_THIRD_STEP = "additionalAddThirdStep",
   ADDITIONAL_ADD_CURRENT_STEP = "additionalAddCurrentStep",
 }
+
+export const enum API_METHODS {
+  POST = "POST",
+  GET = "GET",
+  PUT = "PUT",
+  DELETE = "DELETE",
+}
