@@ -1,6 +1,6 @@
 import { getLocalStorage } from "./fns";
 
-export const BASE_URL = "http://192.168.31.50:3000/v1/";
+export const BASE_URL = "https://admin-1009.ccenter.uz/v1/";
 
 export const STEPS_DATA = {
   FIRST_FORMDATA: [

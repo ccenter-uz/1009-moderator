@@ -1,4 +1,4 @@
-import { Button, Flex, Form, Input, notification, Typography } from "antd";
+import { Button, Flex, Form, Input, Typography } from "antd";
 import { FC } from "react";
 import "./style.css";
 import { useTranslation } from "react-i18next";
@@ -13,14 +13,10 @@ export const LoginPage: FC = () => {
 
   const onLogin = async (values: { phoneNumber: string; password: string }) => {
     const { data } = await postLogin(values);
-    if (data?.status === 200) {
+
+    if (data) {
       form.resetFields();
       window.location.href = "/";
-    } else {
-      return notification.error({
-        message: data?.message,
-        placement: "bottomRight",
-      });
     }
   };
 

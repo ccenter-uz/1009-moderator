@@ -1,7 +1,7 @@
 export const API_MAP = {
-  users: "user",
-  createUser: "user",
-  updateUser: "user",
-  roles: "role",
-  "log-in": "user/log-in",
+  USERS: "user",
+  CREATE_USER: "user",
+  UPDATE_USER: "user",
+  ROLES: "role",
+  LOG_IN: "user/log-in",
 };
