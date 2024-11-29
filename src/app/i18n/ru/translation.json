@@ -169,5 +169,18 @@
   "monitoring-transactions": "Мониторинг транзакций",
   "monitoring-orgs": "Мониторинг организаций",
   "manage-users": "Управление пользователями",
-  "manage-roles": "Управление ролями"
+  "manage-roles": "Управление ролями",
+  "full-name": "ФИО",
+  "role": "Роль",
+  "password": "Пароль",
+  "user-number": "Номер пользователя",
+  "status": "Статус",
+  "createdAt": "Дата создания",
+  "updatedAt": "Дата обновления",
+  "deletedAt": "Дата удаления",
+  "actions": "Действия",
+  "restore": "Восстановить",
+  "active": "Активные",
+  "not-active": "Неактивные",
+  "success": "Успешно"
 }

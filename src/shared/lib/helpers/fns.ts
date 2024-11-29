@@ -1,3 +1,5 @@
+import { notification } from "antd";
+import { AnyObject } from "antd/es/_util/type";
 import DOMPurify from "dompurify";
 
 export const returnAllParams = () => {
@@ -75,4 +77,26 @@ export const setCookie = (name: string, value: string) => {
 export const clearCookie = () => {
   deleteCookie("token");
   deleteCookie("refreshToken");
+};
+
+export const notificationResponse = (
+  res: AnyObject,
+  t: (arg0: string) => string,
+  onClose: () => void,
+) => {
+  if (res.data) {
+    notification.success({
+      message: t("success"),
+      placement: "bottomRight",
+    });
+    onClose();
+  } else {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const error = res?.error?.data?.error.details.error.message[0];
+    notification.error({
+      message: error,
+      placement: "bottomRight",
+    });
+  }
 };

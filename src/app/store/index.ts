@@ -12,6 +12,8 @@ import { useEditOrgFourthStepSlice } from "@widgets/org-edit-fourth-step";
 import { useEditOrgSecondStepSlice } from "@widgets/org-edit-second-step";
 import { useEditOrgThirdStepSlice } from "@widgets/org-edit-third-step";
 
+import { useManageUsersSlice } from "@entities/users";
+
 import { baseApi } from "@shared/api";
 
 export const createStore = (
@@ -32,6 +34,8 @@ export const createStore = (
       useEditOrgFourthStepSlice: useEditOrgFourthStepSlice.reducer,
       // ADDITIONAL
       useAdditionalSlice: useAdditionalSlice.reducer,
+      // MANAGE
+      useManageUsersSlice: useManageUsersSlice.reducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({ serializableCheck: false }).concat(

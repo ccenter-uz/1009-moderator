@@ -17,6 +17,7 @@ type Props = {
   totalItems: number;
   rowSelect?: boolean;
   onRowSelect?: (record: AnyObject) => void;
+  loading?: boolean;
 };
 
 export const ManageWrapperBox: FC<Props> = (props) => {
@@ -30,6 +31,7 @@ export const ManageWrapperBox: FC<Props> = (props) => {
     totalItems = 0,
     rowSelect,
     onRowSelect,
+    loading,
   } = props;
   const { page, pageSize, pageSizeOptions, setPage, setPageSize } =
     usePaginate();
@@ -53,6 +55,7 @@ export const ManageWrapperBox: FC<Props> = (props) => {
       )}
       <div className="manage-wrapper-box__table">
         <Table
+          loading={loading || false}
           size="small"
           bordered
           onRow={(record) => ({
