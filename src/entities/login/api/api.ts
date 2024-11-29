@@ -1,5 +1,8 @@
+import {
+  FetchBaseQueryError,
+  FetchBaseQueryMeta,
+} from "@reduxjs/toolkit/query";
 import { notification } from "antd";
-import { AnyObject } from "antd/es/_util/type";
 import i18next from "i18next";
 
 import { baseApi } from "@shared/api";
@@ -11,6 +14,8 @@ import {
   setLocalStorage,
 } from "@shared/lib/helpers";
 
+import { errorLoginType, successLoginType } from "../model/types";
+
 export const loginApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     postLogin: build.mutation({
@@ -19,7 +24,7 @@ export const loginApi = baseApi.injectEndpoints({
         method: API_METHODS.POST,
         body: credentials,
       }),
-      transformResponse: (response: AnyObject) => {
+      transformResponse: (response: successLoginType) => {
         if (response?.result?.accessToken && response?.result?.permissions) {
           setCookie("access_token", response.result.accessToken);
           setLocalStorage("user", {
@@ -34,9 +39,11 @@ export const loginApi = baseApi.injectEndpoints({
           return null;
         }
       },
-      transformErrorResponse: (response: AnyObject) => {
+      transformErrorResponse: (
+        response: FetchBaseQueryError & FetchBaseQueryMeta & errorLoginType,
+      ) => {
         notification.error({
-          message: response?.data?.message,
+          message: response?.data.error.message ?? "",
           placement: "bottomRight",
         });
       },
