@@ -42,7 +42,7 @@ export const Service: FC<Props> = (props) => {
             title={t("edit")}
             onClick={() => onEditOpen(record)}
           />
-          <DeleteTableItemUI id={record.id} href={"/delete"} />
+          <DeleteTableItemUI fetch={() => null} />
         </Flex>
       ),
     },

@@ -4,13 +4,14 @@ import { baseApi } from "@shared/api";
 import { API_MAP, API_METHODS } from "@shared/lib/helpers";
 
 import { setRoles, setUsers } from "../model/Slicer";
+import { getRolesType, getUsersType } from "../model/types";
 
 export const usersApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getUsers: build.query({
       query: (params) => ({ url: API_MAP.USERS, params }),
       providesTags: ["Users"],
-      transformResponse: (response: AnyObject) => {
+      transformResponse: (response: getUsersType) => {
         return {
           data: response?.result?.data.map((item: { id: string }) => ({
             ...item,
@@ -35,7 +36,7 @@ export const usersApi = baseApi.injectEndpoints({
     getRoles: build.query({
       query: (params) => ({ url: API_MAP.ROLES, params }),
       providesTags: ["Roles"],
-      transformResponse: (response: AnyObject) => {
+      transformResponse: (response: getRolesType) => {
         return {
           data: response?.result?.data.map((item: { id: string }) => ({
             ...item,
@@ -74,6 +75,14 @@ export const usersApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Users"],
     }),
+    deleteUser: build.mutation({
+      query: (id) => ({
+        url: `${API_MAP.DELETE_USER}/${id}`,
+        method: API_METHODS.DELETE,
+        params: { delete: true },
+      }),
+      invalidatesTags: ["Users"],
+    }),
   }),
 });
 
@@ -82,4 +91,5 @@ export const {
   useGetRolesQuery,
   useCreateUserMutation,
   useUpdateUserMutation,
+  useDeleteUserMutation,
 } = usersApi;

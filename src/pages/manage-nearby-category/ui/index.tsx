@@ -62,7 +62,7 @@ export const ManageNearbyCategoryPage: FC = () => {
             title={t("edit")}
             onClick={() => onEditOpen(record)}
           />
-          <DeleteTableItemUI id={record.id} href={"/delete"} />
+          <DeleteTableItemUI fetch={() => null} />
         </Flex>
       ),
     },

@@ -112,7 +112,7 @@ export const SearchTopTable: FC<Props> = (props) => {
             </Link>
           </Can>
           <Can i="delete">
-            <DeleteTableItemUI id={record.id} href={"/delete"} />
+            <DeleteTableItemUI fetch={() => null} />
           </Can>
         </Flex>
       ),

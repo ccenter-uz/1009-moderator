@@ -8,13 +8,14 @@ import { BasicSearchPartUI } from "@features/basic-search-part";
 import { DeleteTableItemUI } from "@features/delete-table-item";
 import { UserAddEditModalUI } from "@features/user-add-edit-modal";
 
-import { useGetUsersQuery } from "@entities/users";
+import { useDeleteUserMutation, useGetUsersQuery } from "@entities/users";
 
 import { returnAllParams, usersTableColumns } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { ManageWrapperBox } from "@shared/ui";
 
 export type RecordProps = {
+  id: string | number;
   fullName: string;
   phoneNumber: string;
   password: string;
@@ -27,6 +28,7 @@ export const ManageUsersPage: FC = () => {
   const [_, setSearchParams] = useSearchParams();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { data, isLoading } = useGetUsersQuery({ ...returnAllParams() });
+  const [deleteUser] = useDeleteUserMutation();
   const [record, setRecord] = useState<RecordProps | null>(null);
 
   const onEdit = (record: RecordProps) => {
@@ -58,7 +60,7 @@ export const ManageUsersPage: FC = () => {
               title={t("edit")}
               onClick={() => onEdit(record)}
             />
-            <DeleteTableItemUI id={1} href={"/delete"} />
+            <DeleteTableItemUI fetch={() => deleteUser(record.id)} />
           </Flex>
         );
       },
