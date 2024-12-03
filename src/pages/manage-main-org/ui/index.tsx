@@ -1,52 +1,72 @@
 import { Flex, Form } from "antd";
+import { AnyObject } from "antd/es/_util/type";
 import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
+import { useSearchParams } from "react-router-dom";
 
 import { BasicSearchPartUI } from "@features/basic-search-part";
 import { DeleteTableItemUI } from "@features/delete-table-item";
 
-import { SingleNameCyrill } from "@entities/single-name-cyrill";
-import { SingleNameRu } from "@entities/single-name-ru";
-import { SingleNameUz } from "@entities/single-name-uz";
+import {
+  useCreateMainOrgMutation,
+  useDeleteMainOrgMutation,
+  useGetMainOrgQuery,
+  useUpdateMainOrgMutation,
+} from "@entities/main-org";
+import { SingleName } from "@entities/single-name";
 
-import { columnsForForBasicTable } from "@shared/lib/helpers";
+import {
+  columnsForForBasicTable,
+  notificationResponse,
+  returnAllParams,
+} from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { ItableBasicData } from "@shared/types";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
 
 export const ManageMainOrgPage: FC = () => {
   const { t } = useTranslation();
+  const [_, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [form] = Form.useForm<ItableBasicData>();
-  const [loading, setLoading] = useState<boolean>(false);
+  const { data, isLoading } = useGetMainOrgQuery({ ...returnAllParams() });
+  const [deleteMainOrg] = useDeleteMainOrgMutation();
+  const [createMainOrg] = useCreateMainOrgMutation();
+  const [updateMainOrg] = useUpdateMainOrgMutation();
+  const [editingData, setEditingData] = useState<AnyObject | null>(null);
 
-  const data: ItableBasicData[] = [
-    {
-      id: 1,
-      key: "1",
-      name_ru: "John Brown",
-      updated_date: "2022-01-01",
-      employee: "10032",
-    },
-  ];
-
-  const onEditOpen = (values: ItableBasicData) => {
+  const handleEditOpen = (values: ItableBasicData) => {
+    setEditingData({ ...values, id: values.id });
     form.setFieldsValue(values);
     onOpen();
   };
 
-  const onSearch = (value: string) => {
-    console.log(value, "search");
+  const handleSearch = ({ search }: { search: string }) => {
+    const previousParams = returnAllParams();
+    setSearchParams({ ...previousParams, search });
   };
 
-  const onSubmit = (values: ItableBasicData) => {
-    console.log(values, "add-edit");
+  const handleSubmit = async (values: ItableBasicData) => {
+    const body = {
+      ...values,
+      id: editingData?.id,
+    };
+    const request = editingData ? updateMainOrg : createMainOrg;
+
+    const response = await request(body);
+
+    notificationResponse(response, t, onClose);
     form.resetFields();
     onClose();
   };
 
-  const overColumns = [
+  const onAdd = () => {
+    onOpen();
+    setEditingData(null);
+  };
+
+  const columns = [
     ...columnsForForBasicTable,
     {
       flex: 0.5,
@@ -61,9 +81,9 @@ export const ManageMainOrgPage: FC = () => {
             fontSize={16}
             cursor={"pointer"}
             title={t("edit")}
-            onClick={() => onEditOpen(record)}
+            onClick={() => handleEditOpen(record)}
           />
-          <DeleteTableItemUI fetch={() => null} />
+          <DeleteTableItemUI fetch={() => deleteMainOrg(record.id)} />
         </Flex>
       ),
     },
@@ -72,26 +92,25 @@ export const ManageMainOrgPage: FC = () => {
   return (
     <div>
       <ManageWrapperBox
-        totalItems={0}
+        loading={isLoading}
+        totalItems={data?.total || 0}
         title={t("main-org")}
-        columns={overColumns}
-        data={data}
-        add={onOpen}
-        searchPart={<BasicSearchPartUI handleSearch={onSearch} />}
+        columns={columns}
+        data={data?.data || []}
+        add={onAdd}
+        searchPart={<BasicSearchPartUI handleSearch={handleSearch} />}
         modalPart={
           <Form
             form={form}
-            onFinish={onSubmit}
+            onFinish={handleSubmit}
             id="modal-add-edit"
             className="manage-main-org"
           >
             <ModalAddEdit
-              loading={loading}
+              singleInputs={<SingleName />}
+              loading={isLoading}
               open={isOpen}
               onClose={onClose}
-              ruInputs={<SingleNameRu />}
-              uzInputs={<SingleNameUz />}
-              uzCyrillicInputs={<SingleNameCyrill />}
               formId={"modal-add-edit"}
             />
           </Form>

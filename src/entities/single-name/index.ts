@@ -1,0 +1,1 @@
+export { SingleName } from "./ui";
