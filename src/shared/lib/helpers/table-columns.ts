@@ -179,6 +179,7 @@ export const columnsForCategories: {
   title: string;
   dataIndex: string;
   key: string;
+  render?: (text: number) => string;
 }[] = [
   {
     title: i18next.t("name_ru"),
@@ -194,6 +195,12 @@ export const columnsForCategories: {
     title: i18next.t("name_uzcyrill"),
     dataIndex: "name_cyrill",
     key: "name_cyrill",
+  },
+  {
+    title: i18next.t("status"),
+    dataIndex: "status",
+    key: "status",
+    render: (text: number) => status[text],
   },
   {
     title: i18next.t("update_date"),

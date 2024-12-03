@@ -1,31 +1,88 @@
 import { Flex, Form } from "antd";
+import { AnyObject } from "antd/es/_util/type";
 import { t } from "i18next";
 import { Dispatch, FC, SetStateAction, useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
+import { useSearchParams } from "react-router-dom";
 
 import { BasicSearchPartUI } from "@features/basic-search-part";
 import { DeleteTableItemUI } from "@features/delete-table-item";
 
+import {
+  useCreateProductMutation,
+  useDeleteProductMutation,
+  useGetProductsQuery,
+  useLazyGetSubCategoryQuery,
+  useUpdateProductMutation,
+} from "@entities/product-services";
 import { SingleNameCyrill } from "@entities/single-name-cyrill";
 import { SingleNameRu } from "@entities/single-name-ru";
 import { SingleNameUz } from "@entities/single-name-uz";
 
-import { columnsForCategories } from "@shared/lib/helpers";
+import {
+  columnsForCategories,
+  notificationResponse,
+  returnAllParams,
+} from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { ItableBasicData } from "@shared/types";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
 
 type Props = {
-  setSubData: Dispatch<SetStateAction<ItableBasicData[]>>;
+  setSubData: Dispatch<SetStateAction<ItableBasicData[] | null>>;
 };
 
 export const Product: FC<Props> = (props) => {
   const { setSubData } = props;
-  const [form] = Form.useForm();
+  const [_, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [form] = Form.useForm();
+  const { data, isLoading } = useGetProductsQuery({ ...returnAllParams() });
+  const [deleteProduct] = useDeleteProductMutation();
+  const [createProduct] = useCreateProductMutation();
+  const [updateProduct] = useUpdateProductMutation();
+  const [editingData, setEditingData] = useState<AnyObject | null>(null);
 
-  const overColumns = [
+  const handleEditOpen = (values: ItableBasicData) => {
+    setEditingData({ ...values, id: values.id });
+    form.setFieldsValue(values);
+    onOpen();
+  };
+
+  const handleSearch = ({ search }: { search: string }) => {
+    const previousParams = returnAllParams();
+    setSearchParams({ ...previousParams, search });
+  };
+
+  const handleSubmit = async (values: ItableBasicData) => {
+    const body = {
+      name: {
+        ru: values.name_ru,
+        uz: values.name_uz,
+        cy: values.name_cyrill,
+      },
+      id: editingData?.id,
+    };
+    const request = editingData ? updateProduct : createProduct;
+
+    const response = await request(body);
+
+    notificationResponse(response, t, onClose);
+    form.resetFields();
+    onClose();
+  };
+
+  const onAdd = () => {
+    onOpen();
+    setEditingData(null);
+    form.resetFields();
+  };
+
+  const onRowSelect = (record: unknown) => {
+    setSubData([record] as ItableBasicData[]);
+  };
+
+  const columns = [
     ...columnsForCategories,
     {
       flex: 0.5,
@@ -40,64 +97,34 @@ export const Product: FC<Props> = (props) => {
             fontSize={16}
             cursor={"pointer"}
             title={t("edit")}
-            onClick={() => onEditOpen(record)}
+            onClick={() => handleEditOpen(record)}
           />
-          <DeleteTableItemUI fetch={() => null} />
+          <DeleteTableItemUI fetch={() => deleteProduct(record.id)} />
         </Flex>
       ),
     },
   ];
-  const data: ItableBasicData[] = [
-    {
-      id: 1,
-      key: "1",
-      name_ru: "John Brown",
-      name_uz: "John Brown",
-      name_cyrill: "John Brown",
-      updated_date: "2022-01-01",
-      employee: "10032",
-    },
-  ];
-
-  const onEditOpen = (values: ItableBasicData) => {
-    form.setFieldsValue(values);
-    onOpen();
-  };
-
-  const onSearch = (value: string) => {
-    console.log(value, "search");
-  };
-
-  const onSubmit = (values: ItableBasicData) => {
-    console.log(values, "add-edit");
-    form.resetFields();
-    onClose();
-  };
-
-  const onRowSelect = (record: unknown) => {
-    console.log(record, "row-select");
-    setSubData([record] as ItableBasicData[]);
-  };
 
   return (
     <ManageWrapperBox
-      totalItems={0}
+      loading={isLoading}
+      totalItems={data?.total || 0}
       title={t("category-tu")}
       rowSelect
       onRowSelect={onRowSelect}
-      columns={overColumns}
-      data={data}
-      add={onOpen}
-      searchPart={<BasicSearchPartUI handleSearch={onSearch} />}
+      columns={columns}
+      data={data?.data || []}
+      add={onAdd}
+      searchPart={<BasicSearchPartUI handleSearch={handleSearch} />}
       modalPart={
         <Form
           form={form}
-          onFinish={onSubmit}
+          onFinish={handleSubmit}
           id="modal-add-edit"
           className="manage-category-tu"
         >
           <ModalAddEdit
-            loading={loading}
+            loading={isLoading}
             open={isOpen}
             onClose={onClose}
             ruInputs={<SingleNameRu />}

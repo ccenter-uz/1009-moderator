@@ -1,31 +1,82 @@
 import { Flex, Form } from "antd";
+import { AnyObject } from "antd/es/_util/type";
 import { t } from "i18next";
 import { FC, useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
+import { useSearchParams } from "react-router-dom";
 
 import { BasicSearchPartUI } from "@features/basic-search-part";
 import { DeleteTableItemUI } from "@features/delete-table-item";
 
+import {
+  useCreateSubCategoryMutation,
+  useDeleteSubCategoryMutation,
+  useUpdateSubCategoryMutation,
+} from "@entities/product-services";
 import { SingleNameCyrill } from "@entities/single-name-cyrill";
 import { SingleNameRu } from "@entities/single-name-ru";
 import { SingleNameUz } from "@entities/single-name-uz";
 
-import { columnsForCategories } from "@shared/lib/helpers";
+import {
+  columnsForCategories,
+  notificationResponse,
+  returnAllParams,
+} from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { ItableBasicData } from "@shared/types";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
 
 type Props = {
-  data: ItableBasicData[];
+  data: AnyObject | undefined;
+  isLoading: boolean;
 };
 
 export const Service: FC<Props> = (props) => {
-  const { data } = props;
-  const [form] = Form.useForm();
+  const { data, isLoading } = props;
+  const [_, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [form] = Form.useForm();
+  const [createSubCategory] = useCreateSubCategoryMutation();
+  const [updateSubCategory] = useUpdateSubCategoryMutation();
+  const [deleteSubCategory] = useDeleteSubCategoryMutation();
+  const [editingData, setEditingData] = useState<AnyObject | null>(null);
 
-  const overColumns = [
+  const handleEditOpen = (values: ItableBasicData) => {
+    setEditingData({ ...values, id: values.id });
+    form.setFieldsValue(values);
+    onOpen();
+  };
+
+  const handleSearch = ({ search }: { search: string }) => {
+    const previousParams = returnAllParams();
+    setSearchParams({ ...previousParams, search });
+  };
+
+  const handleSubmit = async (values: ItableBasicData) => {
+    const body = {
+      name: {
+        ru: values.name_ru,
+        uz: values.name_uz,
+        cy: values.name_cyrill,
+      },
+      id: editingData?.id,
+    };
+    const request = editingData ? updateSubCategory : createSubCategory;
+
+    const response = await request(body);
+
+    notificationResponse(response, t, onClose);
+    form.resetFields();
+    onClose();
+  };
+
+  const onAdd = () => {
+    onOpen();
+    setEditingData(null);
+    form.resetFields();
+  };
+
+  const columns = [
     ...columnsForCategories,
     {
       flex: 0.5,
@@ -40,46 +91,32 @@ export const Service: FC<Props> = (props) => {
             fontSize={16}
             cursor={"pointer"}
             title={t("edit")}
-            onClick={() => onEditOpen(record)}
+            onClick={() => handleEditOpen(record)}
           />
-          <DeleteTableItemUI fetch={() => null} />
+          <DeleteTableItemUI fetch={() => deleteSubCategory(record.id)} />
         </Flex>
       ),
     },
   ];
 
-  const onEditOpen = (values: ItableBasicData) => {
-    form.setFieldsValue(values);
-    onOpen();
-  };
-
-  const onSearch = (value: string) => {
-    console.log(value, "search");
-  };
-
-  const onSubmit = (values: ItableBasicData) => {
-    console.log(values, "add-edit");
-    form.resetFields();
-    onClose();
-  };
-
   return (
     <ManageWrapperBox
-      totalItems={0}
+      loading={isLoading}
+      totalItems={data?.total || 0}
       title={t("sub-category-tu")}
-      columns={overColumns}
-      data={data}
-      add={onOpen}
-      searchPart={<BasicSearchPartUI handleSearch={onSearch} />}
+      columns={columns}
+      data={data?.data || []}
+      add={onAdd}
+      searchPart={<BasicSearchPartUI handleSearch={handleSearch} />}
       modalPart={
         <Form
           form={form}
-          onFinish={onSubmit}
+          onFinish={handleSubmit}
           id="modal-add-edit"
           className="manage-sub-category-tu"
         >
           <ModalAddEdit
-            loading={loading}
+            loading={isLoading}
             open={isOpen}
             onClose={onClose}
             ruInputs={<SingleNameRu />}

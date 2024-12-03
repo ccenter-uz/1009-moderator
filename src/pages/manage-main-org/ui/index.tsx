@@ -64,6 +64,7 @@ export const ManageMainOrgPage: FC = () => {
   const onAdd = () => {
     onOpen();
     setEditingData(null);
+    form.resetFields();
   };
 
   const columns = [
