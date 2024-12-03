@@ -84,6 +84,12 @@ export const columnsForForBasicTable = [
     render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
   },
   {
+    title: i18next.t("status"),
+    dataIndex: "status",
+    key: "status",
+    render: (text: number) => status[text],
+  },
+  {
     title: i18next.t("employee"),
     dataIndex: "employee",
     key: "employee",
