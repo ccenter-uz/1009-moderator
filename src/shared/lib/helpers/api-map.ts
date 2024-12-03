@@ -9,4 +9,12 @@ export const API_MAP = {
   CREATE_MAIN_ORGANIZATION: "main-organization",
   UPDATE_MAIN_ORGANIZATION: "main-organization",
   DELETE_MAIN_ORGANIZATION: "main-organization",
+  NEARBY_CATEGORY_ALL: "nearby-category",
+  CREATE_NEARBY_CATEGORY: "nearby-category",
+  UPDATE_NEARBY_CATEGORY: "nearby-category",
+  DELETE_NEARBY_CATEGORY: "nearby-category",
+  NEARBY_ALL: "nearby",
+  CREATE_NEARBY: "nearby",
+  UPDATE_NEARBY: "nearby",
+  DELETE_NEARBY: "nearby",
 };
