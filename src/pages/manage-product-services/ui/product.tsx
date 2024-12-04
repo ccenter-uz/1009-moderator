@@ -1,7 +1,7 @@
 import { Flex, Form } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { t } from "i18next";
-import { Dispatch, FC, SetStateAction, useState } from "react";
+import { Dispatch, FC, memo, SetStateAction, useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
 import { useSearchParams } from "react-router-dom";
 
@@ -12,7 +12,6 @@ import {
   useCreateProductMutation,
   useDeleteProductMutation,
   useGetProductsQuery,
-  useLazyGetSubCategoryQuery,
   useUpdateProductMutation,
 } from "@entities/product-services";
 import { SingleNameCyrill } from "@entities/single-name-cyrill";
@@ -28,16 +27,25 @@ import { useDisclosure } from "@shared/lib/hooks";
 import { ItableBasicData } from "@shared/types";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
 
-type Props = {
-  setSubData: Dispatch<SetStateAction<ItableBasicData[] | null>>;
-};
+export enum ProductServicesEnum {
+  productPage = "products-page",
+  productLimit = "products-limit",
+  productSearch = "products-search",
+  productId = "product-id",
+}
 
-export const Product: FC<Props> = (props) => {
-  const { setSubData } = props;
+export const Product: FC = () => {
+  const {
+    [ProductServicesEnum.productPage]: page,
+    [ProductServicesEnum.productLimit]: limit,
+  } = returnAllParams();
   const [_, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [form] = Form.useForm();
-  const { data, isLoading } = useGetProductsQuery({ ...returnAllParams() });
+  const { data, isLoading } = useGetProductsQuery({
+    page,
+    limit,
+  });
   const [deleteProduct] = useDeleteProductMutation();
   const [createProduct] = useCreateProductMutation();
   const [updateProduct] = useUpdateProductMutation();
@@ -51,7 +59,7 @@ export const Product: FC<Props> = (props) => {
 
   const handleSearch = ({ search }: { search: string }) => {
     const previousParams = returnAllParams();
-    setSearchParams({ ...previousParams, search });
+    setSearchParams({ ...previousParams, productSearch: search });
   };
 
   const handleSubmit = async (values: ItableBasicData) => {
@@ -78,8 +86,12 @@ export const Product: FC<Props> = (props) => {
     form.resetFields();
   };
 
-  const onRowSelect = (record: unknown) => {
-    setSubData([record] as ItableBasicData[]);
+  const onRowSelect = (record: AnyObject) => {
+    const previousParams = returnAllParams();
+    setSearchParams({
+      ...previousParams,
+      [ProductServicesEnum.productId]: record.id as string,
+    });
   };
 
   const columns = [
@@ -112,6 +124,8 @@ export const Product: FC<Props> = (props) => {
       title={t("category-tu")}
       rowSelect
       onRowSelect={onRowSelect}
+      pageName={ProductServicesEnum.productPage}
+      limitName={ProductServicesEnum.productLimit}
       columns={columns}
       data={data?.data || []}
       add={onAdd}
@@ -137,3 +151,5 @@ export const Product: FC<Props> = (props) => {
     />
   );
 };
+
+export default memo(Product);

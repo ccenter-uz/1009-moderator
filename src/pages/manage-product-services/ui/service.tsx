@@ -1,7 +1,7 @@
 import { Flex, Form } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { t } from "i18next";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
 import { useSearchParams } from "react-router-dom";
 
@@ -11,6 +11,7 @@ import { DeleteTableItemUI } from "@features/delete-table-item";
 import {
   useCreateSubCategoryMutation,
   useDeleteSubCategoryMutation,
+  useGetSubCategoryQuery,
   useUpdateSubCategoryMutation,
 } from "@entities/product-services";
 import { SingleNameCyrill } from "@entities/single-name-cyrill";
@@ -26,16 +27,23 @@ import { useDisclosure } from "@shared/lib/hooks";
 import { ItableBasicData } from "@shared/types";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
 
-type Props = {
-  data: AnyObject | undefined;
-  isLoading: boolean;
-};
+import { ProductServicesEnum } from "./product";
 
-export const Service: FC<Props> = (props) => {
-  const { data, isLoading } = props;
-  const [_, setSearchParams] = useSearchParams();
+const pageName = "sub-product-page";
+const limitName = "sub-product-limit";
+
+export const Service: FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [form] = Form.useForm();
+  const { [pageName]: page, [limitName]: limit } = returnAllParams();
+  const { data, isLoading } = useGetSubCategoryQuery(
+    {
+      page,
+      limit,
+    },
+    { skip: searchParams.has(ProductServicesEnum.productId) },
+  );
   const [createSubCategory] = useCreateSubCategoryMutation();
   const [updateSubCategory] = useUpdateSubCategoryMutation();
   const [deleteSubCategory] = useDeleteSubCategoryMutation();
@@ -104,6 +112,8 @@ export const Service: FC<Props> = (props) => {
       loading={isLoading}
       totalItems={data?.total || 0}
       title={t("sub-category-tu")}
+      pageName={pageName}
+      limitName={limitName}
       columns={columns}
       data={data?.data || []}
       add={onAdd}

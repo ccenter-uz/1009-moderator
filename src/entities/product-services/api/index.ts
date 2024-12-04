@@ -129,7 +129,7 @@ export const {
   useCreateProductMutation,
   useDeleteProductMutation,
   useUpdateProductMutation,
-  useLazyGetSubCategoryQuery,
+  useGetSubCategoryQuery,
   useCreateSubCategoryMutation,
   useUpdateSubCategoryMutation,
   useDeleteSubCategoryMutation,

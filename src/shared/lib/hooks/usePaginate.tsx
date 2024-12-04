@@ -1,21 +1,25 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
+import { returnAllParams } from "../helpers";
+
 const pageSizeOptions = [10, 20, 50, 100];
 
-export const usePaginate = () => {
+export const usePaginate = (props) => {
+  const { pageName, limitName } = props;
   const [searchParams, setSearchParams] = useSearchParams();
   const [page, setPage] = useState<number>(
-    searchParams.has("page") ? Number(searchParams.get("page")) : 1,
+    searchParams.has(pageName) ? Number(searchParams.get(pageName)) : 1,
   );
   const [pageSize, setPageSize] = useState<number>(
-    searchParams.has("limit") ? Number(searchParams.get("limit")) : 10,
+    searchParams.has(limitName) ? Number(searchParams.get(limitName)) : 10,
   );
 
   useEffect(() => {
     setSearchParams({
-      page: `${page}`,
-      limit: `${pageSize}`,
+      ...returnAllParams(),
+      [pageName]: `${page}`,
+      [limitName]: `${pageSize}`,
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
