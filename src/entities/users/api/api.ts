@@ -1,5 +1,3 @@
-import { AnyObject } from "antd/es/_util/type";
-
 import { baseApi } from "@shared/api";
 import { API_MAP, API_METHODS } from "@shared/lib/helpers";
 
@@ -79,7 +77,6 @@ export const usersApi = baseApi.injectEndpoints({
       query: (id) => ({
         url: `${API_MAP.DELETE_USER}/${id}`,
         method: API_METHODS.DELETE,
-        params: { delete: true },
       }),
       invalidatesTags: ["Users"],
     }),

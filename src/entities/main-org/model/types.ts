@@ -1,8 +1,6 @@
-export type getUsersType = {
+export type getMainOrgType = {
   result: {
     data: { id: string; name: string }[];
     totalDocs: number;
   };
 };
-
-export type getRolesType = getUsersType;

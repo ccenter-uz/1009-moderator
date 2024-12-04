@@ -59,20 +59,35 @@ export const columnsForAddress: {
   },
 ];
 
-export const columnsForForBasicTable: {
-  title: string;
-  dataIndex: string;
-  key: string;
-}[] = [
+export const columnsForForBasicTable = [
   {
     title: i18next.t("name"),
     dataIndex: "name",
     key: "name",
   },
   {
+    title: i18next.t("createdAt"),
+    dataIndex: "createdAt",
+    key: "createdAt",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+  },
+  {
     title: i18next.t("update_date"),
-    dataIndex: "updated_date",
-    key: "updated_date",
+    dataIndex: "updatedAt",
+    key: "updatedAt",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+  },
+  {
+    title: i18next.t("deletedAt"),
+    dataIndex: "deletedAt",
+    key: "deletedAt",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+  },
+  {
+    title: i18next.t("status"),
+    dataIndex: "status",
+    key: "status",
+    render: (text: number) => status[text],
   },
   {
     title: i18next.t("employee"),
