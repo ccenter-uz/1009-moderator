@@ -5,7 +5,12 @@ import { returnAllParams } from "../helpers";
 
 const pageSizeOptions = [10, 20, 50, 100];
 
-export const usePaginate = (props) => {
+type propsType = {
+  pageName: string;
+  limitName: string;
+};
+
+export const usePaginate = (props: propsType) => {
   const { pageName, limitName } = props;
   const [searchParams, setSearchParams] = useSearchParams();
   const [page, setPage] = useState<number>(

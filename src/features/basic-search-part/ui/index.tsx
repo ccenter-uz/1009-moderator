@@ -34,15 +34,21 @@ type Props = {
   handleSearch: (values: any) => void;
   loading?: boolean;
   additionalSearch?: JSX.Element;
+  id: string;
 };
 
 export const BasicSearchPartUI: FC<Props> = (props) => {
-  const { handleSearch, loading, additionalSearch } = props;
+  const {
+    handleSearch,
+    loading,
+    additionalSearch,
+    id = "basic-search",
+  } = props;
   const [form] = Form.useForm();
   const { t } = useTranslation();
 
   return (
-    <Form form={form} id="basic-search" onFinish={handleSearch}>
+    <Form form={form} id={id} onFinish={handleSearch}>
       <Flex gap={8} align="center" wrap="wrap">
         {additionalSearch}
         <Form.Item name="search" style={{ marginBottom: 0, flex: 1 }}>
@@ -57,7 +63,7 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
           loading={loading}
           disabled={loading}
           htmlType="submit"
-          form="basic-search"
+          form={id}
           type="primary"
           icon={<FaSearch />}
         >

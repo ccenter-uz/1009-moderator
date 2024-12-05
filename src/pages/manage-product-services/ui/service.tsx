@@ -1,5 +1,4 @@
 import { Flex, Form } from "antd";
-import { AnyObject } from "antd/es/_util/type";
 import { t } from "i18next";
 import { FC, useEffect, useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
@@ -11,7 +10,7 @@ import { DeleteTableItemUI } from "@features/delete-table-item";
 import {
   useCreateSubCategoryMutation,
   useDeleteSubCategoryMutation,
-  useGetSubCategoryQuery,
+  useLazyGetSubCategoryQuery,
   useUpdateSubCategoryMutation,
 } from "@entities/product-services";
 import { SingleNameCyrill } from "@entities/single-name-cyrill";
@@ -27,51 +26,61 @@ import { useDisclosure } from "@shared/lib/hooks";
 import { ItableBasicData } from "@shared/types";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
 
-import { ProductServicesEnum } from "./product";
-
-const pageName = "sub-product-page";
-const limitName = "sub-product-limit";
+import { editServiceType, ProductServicesEnum } from "../model/types";
 
 export const Service: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [form] = Form.useForm();
-  const { [pageName]: page, [limitName]: limit } = returnAllParams();
-  const { data, isLoading } = useGetSubCategoryQuery(
-    {
-      page,
-      limit,
-    },
-    { skip: searchParams.has(ProductServicesEnum.productId) },
-  );
+  const {
+    [ProductServicesEnum.servicePage]: page,
+    [ProductServicesEnum.serviceLimit]: limit,
+    [ProductServicesEnum.serviceSearch]: search,
+  } = returnAllParams();
+  const [trigger, { data, isLoading }] = useLazyGetSubCategoryQuery();
   const [createSubCategory] = useCreateSubCategoryMutation();
   const [updateSubCategory] = useUpdateSubCategoryMutation();
   const [deleteSubCategory] = useDeleteSubCategoryMutation();
-  const [editingData, setEditingData] = useState<AnyObject | null>(null);
+  const [editingData, setEditingData] = useState<editServiceType | null>(null);
 
-  const handleEditOpen = (values: ItableBasicData) => {
+  const handleEditOpen = (values: editServiceType) => {
     setEditingData({ ...values, id: values.id });
-    form.setFieldsValue(values);
+    form.setFieldsValue({
+      name_uz: values.name.uz,
+      name_ru: values.name.ru,
+      name_cyrill: values.name.cy,
+    });
     onOpen();
   };
 
   const handleSearch = ({ search }: { search: string }) => {
     const previousParams = returnAllParams();
-    setSearchParams({ ...previousParams, search });
+
+    setSearchParams({
+      ...previousParams,
+      [ProductServicesEnum.serviceSearch]: search,
+    });
   };
 
-  const handleSubmit = async (values: ItableBasicData) => {
-    const body = {
+  const handleSubmit = async (serviceData: ItableBasicData) => {
+    const serviceBody = {
       name: {
-        ru: values.name_ru,
-        uz: values.name_uz,
-        cy: values.name_cyrill,
+        ru: serviceData.name_ru,
+        uz: serviceData.name_uz,
+        cy: serviceData.name_cyrill,
       },
-      id: editingData?.id,
     };
-    const request = editingData ? updateSubCategory : createSubCategory;
 
-    const response = await request(body);
+    const request =
+      editingData?.id != null ? updateSubCategory : createSubCategory;
+
+    const response = await request({
+      ...serviceBody,
+      id: editingData?.id,
+      productServiceCategoryId: Number(
+        searchParams.get(ProductServicesEnum.productId),
+      ),
+    });
 
     notificationResponse(response, t, onClose);
     form.resetFields();
@@ -92,7 +101,7 @@ export const Service: FC = () => {
       key: "action",
       dataIndex: "action",
       align: "center",
-      render: (text: string, record: ItableBasicData) => (
+      render: (text: string, record: editServiceType) => (
         <Flex justify="center" align="center" gap={8}>
           <FaPencilAlt
             color="grey"
@@ -107,22 +116,35 @@ export const Service: FC = () => {
     },
   ];
 
+  useEffect(() => {
+    if (searchParams.has(ProductServicesEnum.productId)) {
+      trigger({
+        page: Number(page) || 1,
+        limit: Number(limit) || 10,
+        search,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams.get(ProductServicesEnum.productId), search, page, limit]);
+
   return (
     <ManageWrapperBox
       loading={isLoading}
       totalItems={data?.total || 0}
       title={t("sub-category-tu")}
-      pageName={pageName}
-      limitName={limitName}
+      pageName={ProductServicesEnum.servicePage}
+      limitName={ProductServicesEnum.serviceLimit}
       columns={columns}
       data={data?.data || []}
       add={onAdd}
-      searchPart={<BasicSearchPartUI handleSearch={handleSearch} />}
+      searchPart={
+        <BasicSearchPartUI id={"service-search"} handleSearch={handleSearch} />
+      }
       modalPart={
         <Form
           form={form}
           onFinish={handleSubmit}
-          id="modal-add-edit"
+          id="manage-sub-category-tu"
           className="manage-sub-category-tu"
         >
           <ModalAddEdit
@@ -132,7 +154,7 @@ export const Service: FC = () => {
             ruInputs={<SingleNameRu />}
             uzInputs={<SingleNameUz />}
             uzCyrillicInputs={<SingleNameCyrill />}
-            formId={"modal-add-edit"}
+            formId={"manage-sub-category-tu"}
           />
         </Form>
       }

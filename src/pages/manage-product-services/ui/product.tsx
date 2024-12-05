@@ -1,7 +1,7 @@
 import { Flex, Form } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { t } from "i18next";
-import { Dispatch, FC, memo, SetStateAction, useState } from "react";
+import { FC, memo, useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
 import { useSearchParams } from "react-router-dom";
 
@@ -27,17 +27,13 @@ import { useDisclosure } from "@shared/lib/hooks";
 import { ItableBasicData } from "@shared/types";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
 
-export enum ProductServicesEnum {
-  productPage = "products-page",
-  productLimit = "products-limit",
-  productSearch = "products-search",
-  productId = "product-id",
-}
+import { editProductType, ProductServicesEnum } from "../model/types";
 
 export const Product: FC = () => {
   const {
     [ProductServicesEnum.productPage]: page,
     [ProductServicesEnum.productLimit]: limit,
+    [ProductServicesEnum.productSearch]: search,
   } = returnAllParams();
   const [_, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -45,21 +41,30 @@ export const Product: FC = () => {
   const { data, isLoading } = useGetProductsQuery({
     page,
     limit,
+    search,
   });
   const [deleteProduct] = useDeleteProductMutation();
   const [createProduct] = useCreateProductMutation();
   const [updateProduct] = useUpdateProductMutation();
-  const [editingData, setEditingData] = useState<AnyObject | null>(null);
+  const [editingData, setEditingData] = useState<editProductType | null>(null);
 
-  const handleEditOpen = (values: ItableBasicData) => {
+  const handleEditOpen = (values: editProductType) => {
     setEditingData({ ...values, id: values.id });
-    form.setFieldsValue(values);
+    form.setFieldsValue({
+      name_uz: values.name.uz,
+      name_ru: values.name.ru,
+      name_cyrill: values.name.cy,
+    });
     onOpen();
   };
 
   const handleSearch = ({ search }: { search: string }) => {
     const previousParams = returnAllParams();
-    setSearchParams({ ...previousParams, productSearch: search });
+
+    setSearchParams({
+      ...previousParams,
+      [ProductServicesEnum.productSearch]: search,
+    });
   };
 
   const handleSubmit = async (values: ItableBasicData) => {
@@ -102,7 +107,7 @@ export const Product: FC = () => {
       key: "action",
       dataIndex: "action",
       align: "center",
-      render: (text: string, record: ItableBasicData) => (
+      render: (text: string, record: editProductType) => (
         <Flex justify="center" align="center" gap={8}>
           <FaPencilAlt
             color="grey"
@@ -129,7 +134,9 @@ export const Product: FC = () => {
       columns={columns}
       data={data?.data || []}
       add={onAdd}
-      searchPart={<BasicSearchPartUI handleSearch={handleSearch} />}
+      searchPart={
+        <BasicSearchPartUI id={"product-search"} handleSearch={handleSearch} />
+      }
       modalPart={
         <Form
           form={form}
