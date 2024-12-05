@@ -91,8 +91,8 @@ export const columnsForForBasicTable = [
   },
   {
     title: i18next.t("employee"),
-    dataIndex: "employee",
-    key: "employee",
+    dataIndex: "staffNumber",
+    key: "staffNumber",
   },
 ];
 
