@@ -34,7 +34,7 @@ type Props = {
   handleSearch: (values: any) => void;
   loading?: boolean;
   additionalSearch?: JSX.Element;
-  id: string;
+  id?: string;
 };
 
 export const BasicSearchPartUI: FC<Props> = (props) => {
