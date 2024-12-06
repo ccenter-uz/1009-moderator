@@ -101,18 +101,22 @@ export const Service: FC = () => {
       key: "action",
       dataIndex: "action",
       align: "center",
-      render: (text: string, record: editServiceType) => (
-        <Flex justify="center" align="center" gap={8}>
-          <FaPencilAlt
-            color="grey"
-            fontSize={16}
-            cursor={"pointer"}
-            title={t("edit")}
-            onClick={() => handleEditOpen(record)}
-          />
-          <DeleteTableItemUI fetch={() => deleteSubCategory(record.id)} />
-        </Flex>
-      ),
+      render: (text: string, record: editServiceType) => {
+        if (record.status === 1) {
+          return (
+            <Flex justify="center" align="center" gap={8}>
+              <FaPencilAlt
+                color="grey"
+                fontSize={16}
+                cursor={"pointer"}
+                title={t("edit")}
+                onClick={() => handleEditOpen(record)}
+              />
+              <DeleteTableItemUI fetch={() => deleteSubCategory(record.id)} />
+            </Flex>
+          );
+        }
+      },
     },
   ];
 
@@ -122,6 +126,7 @@ export const Service: FC = () => {
         page: Number(page) || 1,
         limit: Number(limit) || 10,
         search,
+        category_id: Number(searchParams.get(ProductServicesEnum.productId)),
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

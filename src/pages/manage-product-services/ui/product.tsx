@@ -107,18 +107,22 @@ export const Product: FC = () => {
       key: "action",
       dataIndex: "action",
       align: "center",
-      render: (text: string, record: editProductType) => (
-        <Flex justify="center" align="center" gap={8}>
-          <FaPencilAlt
-            color="grey"
-            fontSize={16}
-            cursor={"pointer"}
-            title={t("edit")}
-            onClick={() => handleEditOpen(record)}
-          />
-          <DeleteTableItemUI fetch={() => deleteProduct(record.id)} />
-        </Flex>
-      ),
+      render: (text: string, record: editProductType) => {
+        if (record.status === 1) {
+          return (
+            <Flex justify="center" align="center" gap={8}>
+              <FaPencilAlt
+                color="grey"
+                fontSize={16}
+                cursor={"pointer"}
+                title={t("edit")}
+                onClick={() => handleEditOpen(record)}
+              />
+              <DeleteTableItemUI fetch={() => deleteProduct(record.id)} />
+            </Flex>
+          );
+        }
+      },
     },
   ];
 
