@@ -5,13 +5,7 @@ import i18next from "i18next";
 
 type searchColType = ColumnsType<AnyObject> | undefined;
 
-export const columnsForAddress: {
-  title: string;
-  dataIndex: string;
-  key: string;
-  align?: "left" | "center" | "right";
-  render?: (t: string, record: { id: number | string }) => JSX.Element;
-}[] = [
+export const columnsForAddress = [
   {
     title: i18next.t("name"),
     dataIndex: "name",
@@ -48,9 +42,16 @@ export const columnsForAddress: {
     key: "index",
   },
   {
+    title: i18next.t("status"),
+    dataIndex: "status",
+    key: "status",
+    render: (text: number) => status[text],
+  },
+  {
     title: i18next.t("update_date"),
-    dataIndex: "updated_date",
-    key: "updated_date",
+    dataIndex: "updatedAt",
+    key: "updatedAt",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
   },
   {
     title: i18next.t("employee"),
@@ -96,15 +97,12 @@ export const columnsForForBasicTable = [
   },
 ];
 
-export const columnsWithRegions: {
-  title: string;
-  dataIndex: string;
-  key: string;
-}[] = [
+export const columnsWithRegions = [
   {
     title: i18next.t("name"),
     dataIndex: "name",
     key: "name",
+    render: (text: { [key: string]: string }) => text[i18next.language],
   },
   {
     title: i18next.t("region"),
@@ -117,9 +115,16 @@ export const columnsWithRegions: {
     key: "city",
   },
   {
+    title: i18next.t("status"),
+    dataIndex: "status",
+    key: "status",
+    render: (text: number) => status[text],
+  },
+  {
     title: i18next.t("update_date"),
-    dataIndex: "updated_date",
-    key: "updated_date",
+    dataIndex: "updatedAt",
+    key: "updatedAt",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
   },
   {
     title: i18next.t("employee"),
@@ -128,11 +133,7 @@ export const columnsWithRegions: {
   },
 ];
 
-export const columnsWithAddressAndNamings: {
-  title: string;
-  dataIndex: string;
-  key: string;
-}[] = [
+export const columnsWithAddressAndNamings = [
   {
     title: i18next.t("name"),
     dataIndex: "name",
@@ -164,9 +165,16 @@ export const columnsWithAddressAndNamings: {
     key: "index",
   },
   {
+    title: i18next.t("status"),
+    dataIndex: "status",
+    key: "status",
+    render: (text: number) => status[text],
+  },
+  {
     title: i18next.t("update_date"),
-    dataIndex: "updated_date",
-    key: "updated_date",
+    dataIndex: "updatedAt",
+    key: "updatedAt",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
   },
   {
     title: i18next.t("employee"),
@@ -175,12 +183,7 @@ export const columnsWithAddressAndNamings: {
   },
 ];
 
-export const columnsForCategories: {
-  title: string;
-  dataIndex: string;
-  key: string;
-  render?: AnyObject;
-}[] = [
+export const columnsForCategories = [
   {
     title: i18next.t("name_ru"),
     dataIndex: "name_ru",

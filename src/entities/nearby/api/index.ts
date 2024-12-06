@@ -8,9 +8,10 @@ export const nearbyApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     // GET-CATEGORY
     getNearbyCategory: build.query({
-      query: () => ({
+      query: (params) => ({
         url: API_MAP.NEARBY_CATEGORY_ALL,
         method: API_METHODS.GET,
+        params,
       }),
       providesTags: ["NearbyCategory"],
       transformResponse: (response: getNearbyCategoryType) => {
@@ -67,7 +68,7 @@ export const nearbyApi = baseApi.injectEndpoints({
     // GET-NEARBY
     getNearby: build.query({
       query: (params) => ({
-        url: API_MAP.NEARBY_CATEGORY_ALL,
+        url: API_MAP.NEARBY_ALL,
         method: API_METHODS.GET,
         params,
       }),

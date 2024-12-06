@@ -25,4 +25,6 @@ export const API_MAP = {
   CREATE_NEARBY: "nearby",
   UPDATE_NEARBY: "nearby",
   DELETE_NEARBY: "nearby",
+  REGION_ALL: "region",
+  CITY_ALL: "city",
 };

@@ -9,7 +9,7 @@ export const LogoutUI: FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const onLogout = () => {
+  const onLogout = async () => {
     deleteCookie("access_token");
     clearLocalStorage();
     startTransition(() => {
