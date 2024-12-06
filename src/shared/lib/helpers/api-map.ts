@@ -17,4 +17,12 @@ export const API_MAP = {
   CREATE_PRODUCT_SERVICE_SUB_CATEGORY: "product-servise-sub-category",
   UPDATE_PRODUCT_SERVICE_SUB_CATEGORY: "product-servise-sub-category",
   DELETE_PRODUCT_SERVICE_SUB_CATEGORY: "product-servise-sub-category",
+  NEARBY_CATEGORY_ALL: "nearby-category",
+  CREATE_NEARBY_CATEGORY: "nearby-category",
+  UPDATE_NEARBY_CATEGORY: "nearby-category",
+  DELETE_NEARBY_CATEGORY: "nearby-category",
+  NEARBY_ALL: "nearby",
+  CREATE_NEARBY: "nearby",
+  UPDATE_NEARBY: "nearby",
+  DELETE_NEARBY: "nearby",
 };

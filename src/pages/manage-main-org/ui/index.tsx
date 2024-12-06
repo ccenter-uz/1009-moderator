@@ -61,9 +61,9 @@ export const ManageMainOrgPage: FC = () => {
     onClose();
   };
 
-  const onAdd = () => {
-    onOpen();
+  const handleAdd = () => {
     setEditingData(null);
+    onOpen();
     form.resetFields();
   };
 
@@ -98,7 +98,7 @@ export const ManageMainOrgPage: FC = () => {
         title={t("main-org")}
         columns={columns}
         data={data?.data || []}
-        add={onAdd}
+        add={handleAdd}
         searchPart={<BasicSearchPartUI handleSearch={handleSearch} />}
         modalPart={
           <Form
