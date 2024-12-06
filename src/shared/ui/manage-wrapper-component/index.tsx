@@ -18,6 +18,8 @@ type Props = {
   rowSelect?: boolean;
   onRowSelect?: (record: AnyObject) => void;
   loading?: boolean;
+  pageName?: string;
+  limitName?: string;
 };
 
 export const ManageWrapperBox: FC<Props> = (props) => {
@@ -32,9 +34,12 @@ export const ManageWrapperBox: FC<Props> = (props) => {
     rowSelect,
     onRowSelect,
     loading,
+    pageName = "page",
+    limitName = "limit",
   } = props;
-  const { page, pageSize, pageSizeOptions, setPage, setPageSize } =
-    usePaginate();
+  const { page, pageSize, pageSizeOptions, setPage, setPageSize } = usePaginate(
+    { pageName, limitName },
+  );
   const { t } = useTranslation();
   const [selectedRowKey, setSelectedRowKey] = useState<string>("");
 
