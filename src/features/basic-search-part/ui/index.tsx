@@ -8,7 +8,7 @@ import { useSearchParams } from "react-router-dom";
 import { returnAllParams } from "@shared/lib/helpers";
 
 type Props = {
-  handleSearch: (values: AnyObject) => void;
+  handleSearch: ({ search }: { search: string }) => void;
   loading?: boolean;
   additionalSearch?: JSX.Element;
   id?: string;

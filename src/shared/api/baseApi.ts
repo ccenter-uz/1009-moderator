@@ -31,6 +31,7 @@ export const baseApi = createApi({
     "NearbyCategory",
     "Regions",
     "Cities",
+    "Districts",
   ],
   endpoints: () => ({}),
 });
