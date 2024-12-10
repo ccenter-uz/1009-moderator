@@ -1,34 +1,50 @@
-import { Row, Col, Select, Form, Input } from "antd";
+import { Row, Col, Select, Form, Input, FormInstance } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import i18next from "i18next";
-import { FC, useState } from "react";
+import { FC, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useGetCitiesQuery, useGetRegionsQuery } from "@entities/region-city";
+import {
+  useGetRegionsQuery,
+  useLazyGetCitiesQuery,
+} from "@entities/region-city";
 
 import { GET_ALL_ACTIVE_STATUS } from "@shared/lib/helpers";
 
 type Props = {
   withIndex?: boolean;
+  form: FormInstance;
 };
 
 // REGION AND CITY IS ANYOBJECT CAUSE CANNOT FIND PROPER TYPE
 
 export const Address2Inputs: FC<Props> = (props) => {
-  const { withIndex } = props;
+  const { withIndex, form } = props;
   const { t } = useTranslation();
-  const [regionId, setRegionId] = useState(null);
   const { data: dataRegions, isLoading: isLoadingRegions } = useGetRegionsQuery(
     {
       all: GET_ALL_ACTIVE_STATUS.all,
       status: GET_ALL_ACTIVE_STATUS.active,
     },
   );
-  const { data: dataCities, isLoading: isLoadingCities } = useGetCitiesQuery({
-    region_id: regionId,
-    all: GET_ALL_ACTIVE_STATUS.all,
-    status: GET_ALL_ACTIVE_STATUS.active,
-  });
+  const [trigger, { data: dataCities, isLoading: isLoadingCities }] =
+    useLazyGetCitiesQuery();
+
+  const onSelectRegion = useCallback((value: string) => {
+    trigger({
+      category_id: value,
+      all: GET_ALL_ACTIVE_STATUS.all,
+      status: GET_ALL_ACTIVE_STATUS.active,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (form.getFieldValue("region")) {
+      onSelectRegion(form.getFieldValue("region"));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.getFieldValue("region")]);
 
   return (
     <Row gutter={8}>
@@ -50,7 +66,7 @@ export const Address2Inputs: FC<Props> = (props) => {
               })) || []
             }
             placeholder={t("region")}
-            onSelect={setRegionId}
+            onSelect={onSelectRegion}
             loading={isLoadingRegions}
           />
         </Form.Item>

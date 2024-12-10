@@ -6,8 +6,8 @@ import { FaPencilAlt } from "react-icons/fa";
 import { useSearchParams } from "react-router-dom";
 
 import { Address2Inputs } from "@features/address-2-inputs";
-import { BasicSearchPartUI } from "@features/basic-search-part";
 import { DeleteTableItemUI } from "@features/delete-table-item";
+import { NearbyPageSearchUI } from "@features/nearby-page-search";
 
 import {
   useCreateNearbyMutation,
@@ -151,7 +151,7 @@ export const ManageNearbyPage: FC = () => {
         data={data?.data || []}
         add={nearbyCategoryId ? handleAdd : undefined}
         searchPart={
-          <BasicSearchPartUI
+          <NearbyPageSearchUI
             handleSearch={handleSearch}
             additionalSearch={
               <Form.Item
@@ -183,7 +183,7 @@ export const ManageNearbyPage: FC = () => {
               loading={isLoading}
               open={isOpen}
               onClose={onClose}
-              headerInputs={<Address2Inputs />}
+              headerInputs={<Address2Inputs form={form} />}
               ruInputs={<SingleNameRu />}
               uzInputs={<SingleNameUz />}
               uzCyrillicInputs={<SingleNameCyrill />}

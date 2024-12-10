@@ -67,4 +67,5 @@ export const regionCityApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetRegionsQuery, useGetCitiesQuery } = regionCityApi;
+export const { useGetRegionsQuery, useLazyGetCitiesQuery, useGetCitiesQuery } =
+  regionCityApi;
