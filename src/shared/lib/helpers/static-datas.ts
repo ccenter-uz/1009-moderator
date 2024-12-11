@@ -111,3 +111,8 @@ export const additionalSubmitData = (
     content: getLocalStorage(thirdStep),
   };
 };
+
+export const GET_ALL_ACTIVE_STATUS = {
+  active: 1,
+  all: true,
+};

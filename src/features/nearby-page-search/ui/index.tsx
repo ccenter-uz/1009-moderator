@@ -1,5 +1,4 @@
 import { Button, Flex, Form, Input } from "antd";
-import { AnyObject } from "antd/es/_util/type";
 import { FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { FaSearch } from "react-icons/fa";
@@ -8,13 +7,16 @@ import { useSearchParams } from "react-router-dom";
 import { returnAllParams } from "@shared/lib/helpers";
 
 type Props = {
-  handleSearch: (values: AnyObject) => void;
+  handleSearch: (values: {
+    search: string;
+    category_id: string | number;
+  }) => void;
   loading?: boolean;
   additionalSearch?: JSX.Element;
   id?: string;
 };
 
-export const BasicSearchPartUI: FC<Props> = (props) => {
+export const NearbyPageSearchUI: FC<Props> = (props) => {
   const {
     handleSearch,
     loading,
@@ -27,9 +29,12 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
 
   useEffect(() => {
     const params = returnAllParams();
-    form.setFieldsValue({
-      search: params.search,
-    });
+    if (params.category_id) {
+      form.setFieldsValue({
+        ...params,
+        "nearby-category": Number(params.category_id),
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 

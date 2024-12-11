@@ -47,17 +47,6 @@ export const Category: FC<Props> = (props) => {
       ),
     },
   ];
-  const data: ItableBasicData[] = [
-    {
-      id: 1,
-      key: "1",
-      name_ru: "John Brown",
-      name_uz: "John Brown",
-      name_cyrill: "John Brown",
-      updated_date: "2022-01-01",
-      employee: "10032",
-    },
-  ];
 
   const onEditOpen = (values: ItableBasicData) => {
     form.setFieldsValue(values);
@@ -86,7 +75,7 @@ export const Category: FC<Props> = (props) => {
       rowSelect
       onRowSelect={onRowSelect}
       columns={overColumns}
-      data={data}
+      data={[]}
       add={onOpen}
       searchPart={
         <BasicSearchPartUI
