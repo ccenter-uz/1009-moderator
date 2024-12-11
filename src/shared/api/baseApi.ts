@@ -5,7 +5,7 @@ import {
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query/react";
 
-import { deleteCookie, getCookie } from "@shared/lib/helpers";
+import { API_MAP, deleteCookie, getCookie } from "@shared/lib/helpers";
 import { RootState } from "@shared/types/store";
 
 const baseUrl = import.meta.env.VITE_APP_BASE_URL;
@@ -32,7 +32,7 @@ const baseQuery = async (
   if (rawResult.error?.status === 401) {
     // Redirect to the login page
     deleteCookie("access_token");
-    window.location.href = "/login";
+    window.location.href = API_MAP.LOG_IN;
   }
 
   return rawResult;
