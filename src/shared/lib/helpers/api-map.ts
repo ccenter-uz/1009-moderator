@@ -31,4 +31,8 @@ export const API_MAP = {
   CREATE_DISTRICT: "district",
   UPDATE_DISTRICT: "district",
   DELETE_DISTRICT: "district",
+  PASSAGE_ALL: "passage",
+  CREATE_PASSAGE: "passage",
+  UPDATE_PASSAGE: "passage",
+  DELETE_PASSAGE: "passage",
 };
