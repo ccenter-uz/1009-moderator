@@ -4,6 +4,8 @@ import {
   FetchArgs,
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query/react";
+import { notification } from "antd";
+import i18next from "i18next";
 
 import { API_MAP, deleteCookie, getCookie } from "@shared/lib/helpers";
 import { RootState } from "@shared/types/store";
@@ -33,6 +35,10 @@ const baseQuery = async (
     // Redirect to the login page
     deleteCookie("access_token");
     window.location.href = API_MAP.LOG_IN;
+    notification.error({
+      message: i18next.t("unauthorized"),
+      placement: "bottomRight",
+    });
   }
 
   return rawResult;
