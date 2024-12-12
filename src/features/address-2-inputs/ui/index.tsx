@@ -32,7 +32,7 @@ export const Address2Inputs: FC<Props> = (props) => {
 
   const onSelectRegion = useCallback((value: string) => {
     trigger({
-      category_id: value,
+      region_id: value,
       all: GET_ALL_ACTIVE_STATUS.all,
       status: GET_ALL_ACTIVE_STATUS.active,
     });

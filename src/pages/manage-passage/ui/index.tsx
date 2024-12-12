@@ -93,7 +93,7 @@ export const ManagePassagePage: FC = () => {
       regionId: values.region,
       cityId: values.city,
       districtId: values.district,
-      index: values.index,
+      index: +values.index,
       name: {
         uz: values.name_uz,
         ru: values.name_ru,
@@ -133,18 +133,22 @@ export const ManagePassagePage: FC = () => {
       key: "action",
       dataIndex: "action",
       align: "center",
-      render: (text: string, record: valueProps) => (
-        <Flex justify="center" align="center" gap={8}>
-          <FaPencilAlt
-            color="grey"
-            fontSize={16}
-            cursor={"pointer"}
-            title={t("edit")}
-            onClick={() => handleEditOpen(record)}
-          />
-          <DeleteTableItemUI fetch={() => deletePassage(record.id)} />
-        </Flex>
-      ),
+      render: (text: string, record: valueProps) => {
+        if (record.status === 1) {
+          return (
+            <Flex justify="center" align="center" gap={8}>
+              <FaPencilAlt
+                color="grey"
+                fontSize={16}
+                cursor={"pointer"}
+                title={t("edit")}
+                onClick={() => handleEditOpen(record)}
+              />
+              <DeleteTableItemUI fetch={() => deletePassage(record.id)} />
+            </Flex>
+          );
+        }
+      },
     },
   ];
 

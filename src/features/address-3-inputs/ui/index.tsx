@@ -4,7 +4,7 @@ import i18next from "i18next";
 import { FC, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useLazyGetPassagesQuery } from "@entities/passage";
+import { useLazyGetDistrictsQuery } from "@entities/district";
 import {
   useGetRegionsQuery,
   useLazyGetCitiesQuery,
@@ -28,13 +28,13 @@ export const Address3Inputs: FC<Props> = (props) => {
   const [triggerCities, { data: dataCities, isLoading: isLoadingCities }] =
     useLazyGetCitiesQuery();
   const [
-    triggerPassages,
-    { data: dataPassages, isLoading: isLoadingPassages },
-  ] = useLazyGetPassagesQuery();
+    triggerDistrict,
+    { data: dataDistrict, isLoading: isLoadingDistrict },
+  ] = useLazyGetDistrictsQuery();
 
   const onSelectRegion = useCallback((value: string) => {
     triggerCities({
-      category_id: value,
+      region_id: value,
       all: GET_ALL_ACTIVE_STATUS.all,
       status: GET_ALL_ACTIVE_STATUS.active,
     });
@@ -42,8 +42,9 @@ export const Address3Inputs: FC<Props> = (props) => {
   }, []);
 
   const onSelectCity = useCallback((value: string) => {
-    triggerPassages({
-      category_id: value,
+    triggerDistrict({
+      region_id: form.getFieldValue("region"),
+      city_id: value,
       all: GET_ALL_ACTIVE_STATUS.all,
       status: GET_ALL_ACTIVE_STATUS.active,
     });
@@ -107,12 +108,12 @@ export const Address3Inputs: FC<Props> = (props) => {
           <Select
             placeholder={t("district")}
             options={
-              dataPassages?.data.map((passage: AnyObject) => ({
+              dataDistrict?.data.map((passage: AnyObject) => ({
                 label: passage.name[i18next.language],
                 value: passage.id,
               })) || []
             }
-            loading={isLoadingPassages}
+            loading={isLoadingDistrict}
           />
         </Form.Item>
       </Col>

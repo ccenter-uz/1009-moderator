@@ -46,7 +46,7 @@ export const districtApi = baseApi.injectEndpoints({
     }),
     updateDistrict: build.mutation({
       query: (body) => ({
-        url: `${API_MAP.UPDATE_DISTRICT}/${body.userId}`,
+        url: `${API_MAP.UPDATE_DISTRICT}/${body.id}`,
         method: API_METHODS.PUT,
         body,
       }),
@@ -64,6 +64,7 @@ export const districtApi = baseApi.injectEndpoints({
 
 export const {
   useGetDistrictsQuery,
+  useLazyGetDistrictsQuery,
   useCreateDistrictMutation,
   useDeleteDistrictMutation,
   useUpdateDistrictMutation,

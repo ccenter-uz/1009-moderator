@@ -90,7 +90,7 @@ export const ManageDistrictPage: FC = () => {
       id: editingData?.id,
       regionId: values.region,
       cityId: values.city,
-      index: values.index,
+      index: +values.index,
       name: {
         uz: values.name_uz,
         ru: values.name_ru,
@@ -107,6 +107,7 @@ export const ManageDistrictPage: FC = () => {
         cy: values.new_name_uzcyrill,
       },
     };
+
     const request = editingData ? updateDistrict : createDistrict;
 
     const response = await request(body);
@@ -130,18 +131,22 @@ export const ManageDistrictPage: FC = () => {
       key: "action",
       dataIndex: "action",
       align: "center",
-      render: (text: string, record: valueProps) => (
-        <Flex justify="center" align="center" gap={8}>
-          <FaPencilAlt
-            color="grey"
-            fontSize={16}
-            cursor={"pointer"}
-            title={t("edit")}
-            onClick={() => handleEditOpen(record)}
-          />
-          <DeleteTableItemUI fetch={() => deleteDistrict(record.id)} />
-        </Flex>
-      ),
+      render: (text: string, record: valueProps) => {
+        if (record.status === 1) {
+          return (
+            <Flex justify="center" align="center" gap={8}>
+              <FaPencilAlt
+                color="grey"
+                fontSize={16}
+                cursor={"pointer"}
+                title={t("edit")}
+                onClick={() => handleEditOpen(record)}
+              />
+              <DeleteTableItemUI fetch={() => deleteDistrict(record.id)} />
+            </Flex>
+          );
+        }
+      },
     },
   ];
 
