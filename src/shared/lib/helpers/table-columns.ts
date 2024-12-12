@@ -10,16 +10,19 @@ export const columnsForAddress = [
     title: i18next.t("name"),
     dataIndex: "name",
     key: "name",
+    render: (text: { [key: string]: string }) => text[i18next.language],
   },
   {
     title: i18next.t("old_name"),
     dataIndex: "old_name",
     key: "old_name",
+    render: (text: { [key: string]: string }) => text[i18next.language],
   },
   {
     title: i18next.t("new_name"),
     dataIndex: "new_name",
     key: "new_name",
+    render: (text: { [key: string]: string }) => text[i18next.language],
   },
   {
     title: i18next.t("region"),
@@ -138,16 +141,19 @@ export const columnsWithAddressAndNamings = [
     title: i18next.t("name"),
     dataIndex: "name",
     key: "name",
+    render: (text: { [key: string]: string }) => text[i18next.language],
   },
   {
     title: i18next.t("old_name"),
     dataIndex: "old_name",
     key: "old_name",
+    render: (text: { [key: string]: string }) => text[i18next.language],
   },
   {
     title: i18next.t("new_name"),
     dataIndex: "new_name",
     key: "new_name",
+    render: (text: { [key: string]: string }) => text[i18next.language],
   },
   {
     title: i18next.t("region"),

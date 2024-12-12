@@ -75,7 +75,7 @@ export const setCookie = (name: string, value: string) => {
 };
 
 export const clearCookie = () => {
-  deleteCookie("token");
+  deleteCookie("access_token");
   deleteCookie("refreshToken");
 };
 

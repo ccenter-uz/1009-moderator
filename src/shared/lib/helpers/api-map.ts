@@ -27,4 +27,12 @@ export const API_MAP = {
   DELETE_NEARBY: "nearby",
   REGION_ALL: "region",
   CITY_ALL: "city",
+  DISTRICT_ALL: "district",
+  CREATE_DISTRICT: "district",
+  UPDATE_DISTRICT: "district",
+  DELETE_DISTRICT: "district",
+  PASSAGE_ALL: "passage",
+  CREATE_PASSAGE: "passage",
+  UPDATE_PASSAGE: "passage",
+  DELETE_PASSAGE: "passage",
 };

@@ -75,18 +75,22 @@ export const ManageMainOrgPage: FC = () => {
       key: "action",
       dataIndex: "action",
       align: "center",
-      render: (text: string, record: ItableBasicData) => (
-        <Flex justify="center" align="center" gap={8}>
-          <FaPencilAlt
-            color="grey"
-            fontSize={16}
-            cursor={"pointer"}
-            title={t("edit")}
-            onClick={() => handleEditOpen(record)}
-          />
-          <DeleteTableItemUI fetch={() => deleteMainOrg(record.id)} />
-        </Flex>
-      ),
+      render: (text: string, record: ItableBasicData & { status: number }) => {
+        if (record.status === 1) {
+          return (
+            <Flex justify="center" align="center" gap={8}>
+              <FaPencilAlt
+                color="grey"
+                fontSize={16}
+                cursor={"pointer"}
+                title={t("edit")}
+                onClick={() => handleEditOpen(record)}
+              />
+              <DeleteTableItemUI fetch={() => deleteMainOrg(record.id)} />
+            </Flex>
+          );
+        }
+      },
     },
   ];
 

@@ -3,10 +3,10 @@ import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
 
+import { Address3Inputs } from "@features/address-3-inputs";
 import { BasicSearchPartUI } from "@features/basic-search-part";
 import { DeleteTableItemUI } from "@features/delete-table-item";
 
-import { Address3Inputs } from "@entities/address-3-inputs";
 import { NameInputsCyrill } from "@entities/name-inputs-cyrill";
 import { NameInputsRu } from "@entities/name-inputs-ru";
 import { NameInputsUz } from "@entities/name-inputs-uz";

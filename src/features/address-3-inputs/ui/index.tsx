@@ -1,9 +1,10 @@
-import { Row, Col, Select, Form, Input, FormInstance } from "antd";
+import { Row, Col, Input, Select, Form, FormInstance } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import i18next from "i18next";
 import { FC, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
+import { useLazyGetDistrictsQuery } from "@entities/district";
 import {
   useGetRegionsQuery,
   useLazyGetCitiesQuery,
@@ -11,15 +12,12 @@ import {
 
 import { GET_ALL_ACTIVE_STATUS } from "@shared/lib/helpers";
 
-type Props = {
-  withIndex?: boolean;
+interface Props {
   form: FormInstance;
-};
+}
 
-// REGION AND CITY IS ANYOBJECT CAUSE CANNOT FIND PROPER TYPE
-
-export const Address2Inputs: FC<Props> = (props) => {
-  const { withIndex, form } = props;
+export const Address3Inputs: FC<Props> = (props) => {
+  const { form } = props;
   const { t } = useTranslation();
   const { data: dataRegions, isLoading: isLoadingRegions } = useGetRegionsQuery(
     {
@@ -27,12 +25,26 @@ export const Address2Inputs: FC<Props> = (props) => {
       status: GET_ALL_ACTIVE_STATUS.active,
     },
   );
-  const [trigger, { data: dataCities, isLoading: isLoadingCities }] =
+  const [triggerCities, { data: dataCities, isLoading: isLoadingCities }] =
     useLazyGetCitiesQuery();
+  const [
+    triggerDistrict,
+    { data: dataDistrict, isLoading: isLoadingDistrict },
+  ] = useLazyGetDistrictsQuery();
 
   const onSelectRegion = useCallback((value: string) => {
-    trigger({
+    triggerCities({
       region_id: value,
+      all: GET_ALL_ACTIVE_STATUS.all,
+      status: GET_ALL_ACTIVE_STATUS.active,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const onSelectCity = useCallback((value: string) => {
+    triggerDistrict({
+      region_id: form.getFieldValue("region"),
+      city_id: value,
       all: GET_ALL_ACTIVE_STATUS.all,
       status: GET_ALL_ACTIVE_STATUS.active,
     });
@@ -43,20 +55,25 @@ export const Address2Inputs: FC<Props> = (props) => {
     if (form.getFieldValue("region")) {
       onSelectRegion(form.getFieldValue("region"));
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.getFieldValue("region")]);
 
+  useEffect(() => {
+    if (form.getFieldValue("city")) {
+      onSelectCity(form.getFieldValue("city"));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.getFieldValue("city")]);
+
   return (
     <Row gutter={8}>
-      {withIndex && (
-        <Col span={8}>
-          <Form.Item name={"index"} label={t("index")} layout="vertical">
-            <Input type="text" placeholder={t("index")} />
-          </Form.Item>
-        </Col>
-      )}
-
-      <Col span={8}>
+      <Col xs={24} sm={12} md={12} lg={12} xl={5}>
+        <Form.Item name={"index"} label={t("index")} layout="vertical">
+          <Input type="text" placeholder={t("index")} />
+        </Form.Item>
+      </Col>
+      <Col xs={24} sm={12} md={12} lg={12} xl={6}>
         <Form.Item name={"region"} label={t("region")} layout="vertical">
           <Select
             options={
@@ -71,7 +88,7 @@ export const Address2Inputs: FC<Props> = (props) => {
           />
         </Form.Item>
       </Col>
-      <Col span={8}>
+      <Col xs={24} sm={12} md={12} lg={12} xl={6}>
         <Form.Item name={"city"} label={t("city")} layout="vertical">
           <Select
             options={
@@ -81,7 +98,22 @@ export const Address2Inputs: FC<Props> = (props) => {
               })) || []
             }
             placeholder={t("city")}
+            onSelect={onSelectCity}
             loading={isLoadingCities}
+          />
+        </Form.Item>
+      </Col>
+      <Col xs={24} sm={12} md={12} lg={12} xl={6}>
+        <Form.Item name={"district"} label={t("district")} layout="vertical">
+          <Select
+            placeholder={t("district")}
+            options={
+              dataDistrict?.data.map((passage: AnyObject) => ({
+                label: passage.name[i18next.language],
+                value: passage.id,
+              })) || []
+            }
+            loading={isLoadingDistrict}
           />
         </Form.Item>
       </Col>
