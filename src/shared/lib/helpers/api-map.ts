@@ -35,4 +35,12 @@ export const API_MAP = {
   CREATE_PASSAGE: "passage",
   UPDATE_PASSAGE: "passage",
   DELETE_PASSAGE: "passage",
+  CATEGORY_ALL: "category",
+  CREATE_CATEGORY: "category",
+  UPDATE_CATEGORY: "category",
+  DELETE_CATEGORY: "category",
+  SUB_CATEGORY_ALL: "sub-category",
+  CREATE_SUB_CATEGORY: "sub-category",
+  UPDATE_SUB_CATEGORY: "sub-category",
+  DELETE_SUB_CATEGORY: "sub-category",
 };
