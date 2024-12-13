@@ -19,6 +19,7 @@ import { SingleNameUz } from "@entities/single-name-uz";
 
 import {
   columnsForCategories,
+  columnsForCategoriesTu,
   notificationResponse,
   returnAllParams,
 } from "@shared/lib/helpers";
@@ -94,10 +95,10 @@ export const Service: FC = () => {
   };
 
   const columns = [
-    ...columnsForCategories,
+    ...columnsForCategoriesTu,
     {
       flex: 0.5,
-      title: "Действия",
+      title: t("action"),
       key: "action",
       dataIndex: "action",
       align: "center",
@@ -143,7 +144,13 @@ export const Service: FC = () => {
       data={data?.data || []}
       add={onAdd}
       searchPart={
-        <BasicSearchPartUI id={"service-search"} handleSearch={handleSearch} />
+        <BasicSearchPartUI
+          id={"service-search"}
+          handleSearch={handleSearch}
+          additionalParams={{
+            search: searchParams.get(ProductServicesEnum.serviceSearch),
+          }}
+        />
       }
       modalPart={
         <Form

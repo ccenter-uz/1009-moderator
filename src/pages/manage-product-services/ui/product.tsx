@@ -20,6 +20,7 @@ import { SingleNameUz } from "@entities/single-name-uz";
 
 import {
   columnsForCategories,
+  columnsForCategoriesTu,
   notificationResponse,
   returnAllParams,
 } from "@shared/lib/helpers";
@@ -35,7 +36,7 @@ export const Product: FC = () => {
     [ProductServicesEnum.productLimit]: limit,
     [ProductServicesEnum.productSearch]: search,
   } = returnAllParams();
-  const [_, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [form] = Form.useForm();
   const { data, isLoading } = useGetProductsQuery({
@@ -100,7 +101,7 @@ export const Product: FC = () => {
   };
 
   const columns = [
-    ...columnsForCategories,
+    ...columnsForCategoriesTu,
     {
       flex: 0.5,
       title: "Действия",
@@ -139,13 +140,19 @@ export const Product: FC = () => {
       data={data?.data || []}
       add={onAdd}
       searchPart={
-        <BasicSearchPartUI id={"product-search"} handleSearch={handleSearch} />
+        <BasicSearchPartUI
+          id={"product-search"}
+          handleSearch={handleSearch}
+          additionalParams={{
+            search: searchParams.get(ProductServicesEnum.productSearch),
+          }}
+        />
       }
       modalPart={
         <Form
           form={form}
           onFinish={handleSubmit}
-          id="modal-add-edit"
+          id="manage-category-tu"
           className="manage-category-tu"
         >
           <ModalAddEdit
@@ -155,7 +162,7 @@ export const Product: FC = () => {
             ruInputs={<SingleNameRu />}
             uzInputs={<SingleNameUz />}
             uzCyrillicInputs={<SingleNameCyrill />}
-            formId={"modal-add-edit"}
+            formId={"manage-category-tu"}
           />
         </Form>
       }

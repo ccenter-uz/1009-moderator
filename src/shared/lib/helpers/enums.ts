@@ -43,3 +43,9 @@ export const enum RESPONSE_STATUS {
   DELETED = 204,
   UPDATED = 204,
 }
+
+export const enum STATUS {
+  ACTIVE = 1,
+  INACTIVE = 0,
+  ALL = 2,
+}

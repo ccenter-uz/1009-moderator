@@ -12,6 +12,7 @@ type Props = {
   loading?: boolean;
   additionalSearch?: JSX.Element;
   id?: string;
+  additionalParams?: unknown | AnyObject;
 };
 
 export const BasicSearchPartUI: FC<Props> = (props) => {
@@ -20,6 +21,7 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
     loading,
     additionalSearch,
     id = "basic-search",
+    additionalParams,
   } = props;
   const [form] = Form.useForm();
   const { t } = useTranslation();
@@ -27,9 +29,16 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
 
   useEffect(() => {
     const params = returnAllParams();
-    form.setFieldsValue({
-      search: params.search,
-    });
+    if (additionalParams) {
+      form.setFieldsValue({
+        ...params,
+        ...additionalParams,
+      });
+    } else {
+      form.setFieldsValue({
+        search: params.search,
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 

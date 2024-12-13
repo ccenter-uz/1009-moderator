@@ -1,6 +1,7 @@
 import { notification } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import DOMPurify from "dompurify";
+import i18next from "i18next";
 
 export const returnAllParams = () => {
   const params = new URLSearchParams(window.location.search);
@@ -98,5 +99,18 @@ export const notificationResponse = (
       message: error,
       placement: "bottomRight",
     });
+  }
+};
+
+export const setColorByStatus = (status: string) => {
+  switch (status) {
+    case i18next.t("not-active"):
+      return (
+        <span style={{ color: "#ff4d4f" }}>{i18next.t("not-active")}</span>
+      );
+    case i18next.t("active"):
+      return <span style={{ color: "#52c41a" }}>{i18next.t("active")}</span>;
+    default:
+      return null;
   }
 };

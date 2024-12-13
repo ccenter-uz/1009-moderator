@@ -1,120 +1,195 @@
-import { Flex, Form, Select } from "antd";
+import { Flex, Form } from "antd";
+import { AnyObject } from "antd/es/_util/type";
 import { t } from "i18next";
-import { Dispatch, FC, SetStateAction, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
+import { useSearchParams } from "react-router-dom";
 
+import { Address2Inputs } from "@features/address-2-inputs";
 import { BasicSearchPartUI } from "@features/basic-search-part";
 import { DeleteTableItemUI } from "@features/delete-table-item";
+import { SearchWithRegionCityUI } from "@features/search-with-region-city";
 
+import {
+  useGetCategoriesQuery,
+  useDeleteCategoryMutation,
+  useCreateCategoryMutation,
+  useUpdateCategoryMutation,
+} from "@entities/category-subcategory";
 import { SingleNameCyrill } from "@entities/single-name-cyrill";
 import { SingleNameRu } from "@entities/single-name-ru";
 import { SingleNameUz } from "@entities/single-name-uz";
 
-import { columnsForCategories } from "@shared/lib/helpers";
+import {
+  columnsForCategories,
+  notificationResponse,
+  returnAllParams,
+  STATUS,
+} from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { ItableBasicData } from "@shared/types";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
 
-type Props = {
-  setSubData: Dispatch<SetStateAction<ItableBasicData[]>>;
-};
+import { CategorySubCategoryEnums, editCategoryType } from "../model/types";
 
-export const Category: FC<Props> = (props) => {
-  const { setSubData } = props;
-  const [form] = Form.useForm();
+export const Category: FC = () => {
+  const {
+    [CategorySubCategoryEnums.categoryPage]: page,
+    [CategorySubCategoryEnums.categoryLimit]: limit,
+    [CategorySubCategoryEnums.categorySearch]: search,
+    [CategorySubCategoryEnums.regionId]: region_id,
+    [CategorySubCategoryEnums.cityId]: city_id,
+  } = returnAllParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [form] = Form.useForm();
+  const [searchForm] = Form.useForm();
+  const { data, isLoading } = useGetCategoriesQuery({
+    page,
+    limit,
+    search,
+    region_id,
+    city_id,
+  });
+  const [deleteCategory] = useDeleteCategoryMutation();
+  const [createCategory] = useCreateCategoryMutation();
+  const [updateCategory] = useUpdateCategoryMutation();
+  const [editingData, setEditingData] = useState<editCategoryType | null>(null);
 
-  const overColumns = [
-    ...columnsForCategories,
-    {
-      flex: 0.5,
-      title: "Действия",
-      key: "action",
-      dataIndex: "action",
-      align: "center",
-      render: (text: string, record: ItableBasicData) => (
-        <Flex justify="center" align="center" gap={8}>
-          <FaPencilAlt
-            color="grey"
-            fontSize={16}
-            cursor={"pointer"}
-            title={t("edit")}
-            onClick={() => onEditOpen(record)}
-          />
-          <DeleteTableItemUI fetch={() => null} />
-        </Flex>
-      ),
-    },
-  ];
-
-  const onEditOpen = (values: ItableBasicData) => {
-    form.setFieldsValue(values);
+  const handleEditOpen = (values: editCategoryType) => {
+    setEditingData({ ...values, id: values.id });
+    form.setFieldsValue({
+      name_uz: values.name.uz,
+      name_ru: values.name.ru,
+      name_cyrill: values.name.cy,
+      region_id: values.region?.id,
+      city_id: values.city?.id,
+    });
     onOpen();
   };
 
-  const onSearch = (value: string) => {
-    console.log(value, "search");
-  };
+  const handleSearch = ({ search }: { search: string }) => {
+    const previousParams = returnAllParams();
 
-  const onSubmit = (values: ItableBasicData) => {
-    console.log(values, "add-edit");
+    setSearchParams({
+      ...previousParams,
+      [CategorySubCategoryEnums.categorySearch]: search || "",
+      [CategorySubCategoryEnums.regionId]:
+        searchForm.getFieldValue("region_id") || "",
+      [CategorySubCategoryEnums.cityId]:
+        searchForm.getFieldValue("city_id") || "",
+    });
+  };
+  const handleSubmit = async (
+    values: ItableBasicData & { region: number; city: number },
+  ) => {
+    const body = {
+      regionId: values.region,
+      cityId: values.city,
+      name: {
+        ru: values.name_ru,
+        uz: values.name_uz,
+        cy: values.name_cyrill,
+      },
+      id: editingData?.id,
+    };
+    const request = editingData ? updateCategory : createCategory;
+
+    const response = await request(body);
+
+    notificationResponse(response, t, onClose);
     form.resetFields();
     onClose();
   };
 
-  const onRowSelect = (record: unknown) => {
-    console.log(record, "row-select");
-    setSubData([record] as ItableBasicData[]);
+  const onAdd = () => {
+    onOpen();
+    setEditingData(null);
+    form.resetFields();
   };
+
+  const onRowSelect = (record: AnyObject) => {
+    const previousParams = returnAllParams();
+    setSearchParams({
+      ...previousParams,
+      [CategorySubCategoryEnums.categoryId]: record.id as string,
+    });
+  };
+
+  const columns = [
+    ...columnsForCategories,
+    {
+      flex: 0.5,
+      title: t("action"),
+      key: "action",
+      dataIndex: "action",
+      align: "center",
+      render: (text: string, record: editCategoryType) => {
+        if (record.status === STATUS.ACTIVE) {
+          return (
+            <Flex justify="center" align="center" gap={8}>
+              <FaPencilAlt
+                color="grey"
+                fontSize={16}
+                cursor={"pointer"}
+                title={t("edit")}
+                onClick={() => handleEditOpen(record)}
+              />
+              <DeleteTableItemUI fetch={() => deleteCategory(record.id)} />
+            </Flex>
+          );
+        }
+      },
+    },
+  ];
+
+  useEffect(() => {
+    if (region_id || city_id) {
+      searchForm.setFieldsValue({
+        region_id: Number(region_id),
+        city_id: Number(city_id),
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [region_id, city_id]);
 
   return (
     <ManageWrapperBox
-      totalItems={0}
+      totalItems={data?.total || 0}
       title={t("category")}
       rowSelect
       onRowSelect={onRowSelect}
-      columns={overColumns}
-      data={[]}
-      add={onOpen}
+      columns={columns}
+      data={data?.data || []}
+      pageName={CategorySubCategoryEnums.categoryPage}
+      limitName={CategorySubCategoryEnums.categoryLimit}
+      add={onAdd}
       searchPart={
         <BasicSearchPartUI
-          handleSearch={onSearch}
-          additionalSearch={
-            <>
-              <Form.Item
-                name={"region"}
-                label={t("region")}
-                style={{ marginBottom: 0, flex: 0.3 }}
-              >
-                <Select options={[]} />
-              </Form.Item>
-              <Form.Item
-                name={"city"}
-                label={t("city")}
-                style={{ marginBottom: 0, flex: 0.3 }}
-              >
-                <Select options={[]} />
-              </Form.Item>
-            </>
-          }
+          handleSearch={handleSearch}
+          id="category-search"
+          additionalSearch={<SearchWithRegionCityUI form={searchForm} />}
+          additionalParams={{
+            search: searchParams.get(CategorySubCategoryEnums.categorySearch),
+          }}
         />
       }
       modalPart={
         <Form
           form={form}
-          onFinish={onSubmit}
-          id="modal-add-edit"
+          onFinish={handleSubmit}
+          id="manage-category"
           className="manage-category"
         >
           <ModalAddEdit
-            loading={loading}
+            loading={isLoading}
             open={isOpen}
             onClose={onClose}
+            headerInputs={<Address2Inputs form={form} />}
             ruInputs={<SingleNameRu />}
             uzInputs={<SingleNameUz />}
             uzCyrillicInputs={<SingleNameCyrill />}
-            formId={"modal-add-edit"}
+            formId={"manage-category"}
           />
         </Form>
       }
