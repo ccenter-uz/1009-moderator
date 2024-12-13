@@ -154,6 +154,13 @@ export const moderatorPermissionsByRole = {
       },
     },
     manage: {
+      segments: {
+        [ACCESSESS.GET]: true,
+        [ACCESSESS.CREATE]: true,
+        [ACCESSESS.UPDATE]: true,
+        [ACCESSESS.DELETE]: true,
+        [ACCESSESS.RESTORE]: true,
+      },
       "product-services": {
         [ACCESSESS.GET]: true,
         [ACCESSESS.CREATE]: true,

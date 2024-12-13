@@ -43,4 +43,8 @@ export const API_MAP = {
   CREATE_SUB_CATEGORY: "sub-category",
   UPDATE_SUB_CATEGORY: "sub-category",
   DELETE_SUB_CATEGORY: "sub-category",
+  SEGMENTS_ALL: "segment",
+  CREATE_SEGMENT: "segment",
+  UPDATE_SEGMENT: "segment",
+  DELETE_SEGMENT: "segment",
 };

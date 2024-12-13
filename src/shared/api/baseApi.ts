@@ -61,6 +61,7 @@ export const baseApi = createApi({
     "Passages",
     "Categories",
     "SubCategories",
+    "Segments",
   ],
   endpoints: () => ({}),
 });
