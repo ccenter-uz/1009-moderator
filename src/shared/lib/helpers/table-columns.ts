@@ -240,6 +240,44 @@ export const columnsForCategories = [
     key: "staffNumber",
   },
 ];
+export const columnsForCategoriesTu = [
+  {
+    title: i18next.t("name_ru"),
+    dataIndex: "name_ru",
+    key: "name_ru",
+    render: (text: string, record: { name: { ru: string } }) => record.name.ru,
+  },
+  {
+    title: i18next.t("name_uz"),
+    dataIndex: "name_uz",
+    key: "name_uz",
+    render: (text: string, record: { name: { uz: string } }) => record.name.uz,
+  },
+  {
+    title: i18next.t("name_uzcyrill"),
+    dataIndex: "name_cyrill",
+    key: "name_cyrill",
+    render: (text: string, record: { name: { cy: string } }) => record.name.cy,
+  },
+
+  {
+    title: i18next.t("status"),
+    dataIndex: "status",
+    key: "status",
+    render: (text: number) => setColorByStatus(status[text]),
+  },
+  {
+    title: i18next.t("update_date"),
+    dataIndex: "updatedAt",
+    key: "updatedAt",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+  },
+  {
+    title: i18next.t("employee"),
+    dataIndex: "staffNumber",
+    key: "staffNumber",
+  },
+];
 
 export const subCategoryColumns: searchColType = [
   {
