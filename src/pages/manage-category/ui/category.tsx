@@ -1,13 +1,14 @@
-import { Flex, Form, Select } from "antd";
+import { Flex, Form } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { t } from "i18next";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
 import { useSearchParams } from "react-router-dom";
 
 import { Address2Inputs } from "@features/address-2-inputs";
 import { BasicSearchPartUI } from "@features/basic-search-part";
 import { DeleteTableItemUI } from "@features/delete-table-item";
+import { SearchWithRegionCityUI } from "@features/search-with-region-city";
 
 import {
   useGetCategoriesQuery,
@@ -39,7 +40,7 @@ export const Category: FC = () => {
     [CategorySubCategoryEnums.regionId]: region_id,
     [CategorySubCategoryEnums.cityId]: city_id,
   } = returnAllParams();
-  const [_, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [form] = Form.useForm();
   const [searchForm] = Form.useForm();
@@ -61,6 +62,8 @@ export const Category: FC = () => {
       name_uz: values.name.uz,
       name_ru: values.name.ru,
       name_cyrill: values.name.cy,
+      region_id: values.region?.id,
+      city_id: values.city?.id,
     });
     onOpen();
   };
@@ -70,10 +73,11 @@ export const Category: FC = () => {
 
     setSearchParams({
       ...previousParams,
-      [CategorySubCategoryEnums.categorySearch]: search,
+      [CategorySubCategoryEnums.categorySearch]: search || "",
       [CategorySubCategoryEnums.regionId]:
-        searchForm.getFieldValue("region_id"),
-      [CategorySubCategoryEnums.cityId]: searchForm.getFieldValue("city_id"),
+        searchForm.getFieldValue("region_id") || "",
+      [CategorySubCategoryEnums.cityId]:
+        searchForm.getFieldValue("city_id") || "",
     });
   };
   const handleSubmit = async (
@@ -116,7 +120,7 @@ export const Category: FC = () => {
     ...columnsForCategories,
     {
       flex: 0.5,
-      title: "Действия",
+      title: t("action"),
       key: "action",
       dataIndex: "action",
       align: "center",
@@ -139,6 +143,16 @@ export const Category: FC = () => {
     },
   ];
 
+  useEffect(() => {
+    if (region_id || city_id) {
+      searchForm.setFieldsValue({
+        region_id: Number(region_id),
+        city_id: Number(city_id),
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [region_id, city_id]);
+
   return (
     <ManageWrapperBox
       totalItems={data?.total || 0}
@@ -154,31 +168,17 @@ export const Category: FC = () => {
         <BasicSearchPartUI
           handleSearch={handleSearch}
           id="category-search"
-          additionalSearch={
-            <Form form={searchForm}>
-              <Form.Item
-                name={"region_id"}
-                label={t("region")}
-                style={{ marginBottom: 0, flex: 0.3 }}
-              >
-                <Select allowClear options={[{ value: 1, label: "1" }]} />
-              </Form.Item>
-              <Form.Item
-                name={"city_id"}
-                label={t("city")}
-                style={{ marginBottom: 0, flex: 0.3 }}
-              >
-                <Select allowClear options={[{ value: 1, label: "1" }]} />
-              </Form.Item>
-            </Form>
-          }
+          additionalSearch={<SearchWithRegionCityUI form={searchForm} />}
+          additionalParams={{
+            search: searchParams.get(CategorySubCategoryEnums.categorySearch),
+          }}
         />
       }
       modalPart={
         <Form
           form={form}
           onFinish={handleSubmit}
-          id="modal-add-edit"
+          id="manage-category"
           className="manage-category"
         >
           <ModalAddEdit
@@ -189,7 +189,7 @@ export const Category: FC = () => {
             ruInputs={<SingleNameRu />}
             uzInputs={<SingleNameUz />}
             uzCyrillicInputs={<SingleNameCyrill />}
-            formId={"modal-add-edit"}
+            formId={"manage-category"}
           />
         </Form>
       }

@@ -3,6 +3,8 @@ import { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
 import i18next from "i18next";
 
+import { setColorByStatus } from "./fns";
+
 type searchColType = ColumnsType<AnyObject> | undefined;
 
 export const columnsForAddress = [
@@ -48,7 +50,7 @@ export const columnsForAddress = [
     title: i18next.t("status"),
     dataIndex: "status",
     key: "status",
-    render: (text: number) => status[text],
+    render: (text: number) => setColorByStatus(status[text]),
   },
   {
     title: i18next.t("update_date"),
@@ -91,7 +93,7 @@ export const columnsForForBasicTable = [
     title: i18next.t("status"),
     dataIndex: "status",
     key: "status",
-    render: (text: number) => status[text],
+    render: (text: number) => setColorByStatus(status[text]),
   },
   {
     title: i18next.t("employee"),
@@ -121,7 +123,7 @@ export const columnsWithRegions = [
     title: i18next.t("status"),
     dataIndex: "status",
     key: "status",
-    render: (text: number) => status[text],
+    render: (text: number) => setColorByStatus(status[text]),
   },
   {
     title: i18next.t("update_date"),
@@ -174,7 +176,7 @@ export const columnsWithAddressAndNamings = [
     title: i18next.t("status"),
     dataIndex: "status",
     key: "status",
-    render: (text: number) => status[text],
+    render: (text: number) => setColorByStatus(status[text]),
   },
   {
     title: i18next.t("update_date"),
@@ -209,10 +211,22 @@ export const columnsForCategories = [
     render: (text: string, record: { name: { cy: string } }) => record.name.cy,
   },
   {
+    title: i18next.t("region"),
+    dataIndex: "region",
+    key: "region",
+    // render: (text: { [key: string]: string }) => text[i18next.language],
+  },
+  {
+    title: i18next.t("city"),
+    dataIndex: "city",
+    key: "city",
+    // render: (text: { [key: string]: string }) => text[i18next.language],
+  },
+  {
     title: i18next.t("status"),
     dataIndex: "status",
     key: "status",
-    render: (text: number) => status[text],
+    render: (text: number) => setColorByStatus(status[text]),
   },
   {
     title: i18next.t("update_date"),
@@ -356,7 +370,7 @@ export const usersTableColumns = [
     title: i18next.t("status"),
     dataIndex: "status",
     key: "status",
-    render: (text: number) => status[text],
+    render: (text: number) => setColorByStatus(status[text]),
   },
   {
     title: i18next.t("createdAt"),
@@ -388,7 +402,7 @@ export const rolesTableColumns = [
     title: i18next.t("status"),
     dataIndex: "status",
     key: "status",
-    render: (text: number) => status[text],
+    render: (text: number) => setColorByStatus(status[text]),
   },
   {
     title: i18next.t("createdAt"),

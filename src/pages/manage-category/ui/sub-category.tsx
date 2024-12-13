@@ -61,7 +61,7 @@ export const SubCategory: FC = () => {
 
     setSearchParams({
       ...previousParams,
-      [CategorySubCategoryEnums.subCategorySearch]: search,
+      [CategorySubCategoryEnums.subCategorySearch]: search || "",
     });
   };
 
@@ -80,9 +80,7 @@ export const SubCategory: FC = () => {
     const response = await request({
       ...serviceBody,
       id: editingData?.id,
-      productServiceCategoryId: Number(
-        searchParams.get(CategorySubCategoryEnums.categoryId),
-      ),
+      categoryId: Number(searchParams.get(CategorySubCategoryEnums.categoryId)),
     });
 
     notificationResponse(response, t, onClose);
@@ -153,12 +151,22 @@ export const SubCategory: FC = () => {
       add={onAdd}
       pageName={CategorySubCategoryEnums.subCategoryPage}
       limitName={CategorySubCategoryEnums.subCategoryLimit}
-      searchPart={<BasicSearchPartUI handleSearch={handleSearch} />}
+      searchPart={
+        <BasicSearchPartUI
+          id="sub-category-search"
+          handleSearch={handleSearch}
+          additionalParams={{
+            search: searchParams.get(
+              CategorySubCategoryEnums.subCategorySearch,
+            ),
+          }}
+        />
+      }
       modalPart={
         <Form
           form={form}
           onFinish={handleSubmit}
-          id="modal-add-edit"
+          id="manage-sub-category"
           className="manage-sub-category"
         >
           <ModalAddEdit
@@ -168,7 +176,7 @@ export const SubCategory: FC = () => {
             ruInputs={<SingleNameRu />}
             uzInputs={<SingleNameUz />}
             uzCyrillicInputs={<SingleNameCyrill />}
-            formId={"modal-add-edit"}
+            formId={"manage-sub-category"}
           />
         </Form>
       }

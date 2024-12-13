@@ -20,6 +20,16 @@ export type editCategoryType = {
   staffNumber: string;
   status: string | number;
   key?: string | number;
+  region?: {
+    id: number | string;
+    title?: string;
+    name: { ru: string; uz: string; cy: string };
+  };
+  city?: {
+    id: number | string;
+    title?: string;
+    name: { ru: string; uz: string; cy: string };
+  };
 };
 
 export type editSubcategoryType = editCategoryType;
