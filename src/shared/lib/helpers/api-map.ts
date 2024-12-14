@@ -55,4 +55,8 @@ export const API_MAP = {
   CREATE_AREA: "area",
   UPDATE_AREA: "area",
   DELETE_AREA: "area",
+  IMPASSE_ALL: "impasse",
+  CREATE_IMPASSE: "impasse",
+  UPDATE_IMPASSE: "impasse",
+  DELETE_IMPASSE: "impasse",
 };
