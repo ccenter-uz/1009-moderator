@@ -26,7 +26,7 @@ import {
 import { useDisclosure } from "@shared/lib/hooks";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
 
-interface valueProps {
+export interface valueProps {
   index: string;
   region: string;
   city: string;

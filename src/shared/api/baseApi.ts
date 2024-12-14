@@ -62,6 +62,7 @@ export const baseApi = createApi({
     "Categories",
     "SubCategories",
     "Segments",
+    "Streets",
   ],
   endpoints: () => ({}),
 });

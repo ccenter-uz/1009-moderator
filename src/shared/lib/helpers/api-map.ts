@@ -47,4 +47,8 @@ export const API_MAP = {
   CREATE_SEGMENT: "segment",
   UPDATE_SEGMENT: "segment",
   DELETE_SEGMENT: "segment",
+  STREET_ALL: "street",
+  CREATE_STREET: "street",
+  UPDATE_STREET: "street",
+  DELETE_STREET: "street",
 };
