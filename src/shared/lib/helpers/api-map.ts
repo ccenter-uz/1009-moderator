@@ -51,4 +51,8 @@ export const API_MAP = {
   CREATE_STREET: "street",
   UPDATE_STREET: "street",
   DELETE_STREET: "street",
+  AREA_ALL: "area",
+  CREATE_AREA: "area",
+  UPDATE_AREA: "area",
+  DELETE_AREA: "area",
 };
