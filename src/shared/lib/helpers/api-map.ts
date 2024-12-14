@@ -59,4 +59,8 @@ export const API_MAP = {
   CREATE_IMPASSE: "impasse",
   UPDATE_IMPASSE: "impasse",
   DELETE_IMPASSE: "impasse",
+  VILLAGE_ALL: "village",
+  CREATE_VILLAGE: "village",
+  UPDATE_VILLAGE: "village",
+  DELETE_VILLAGE: "village",
 };
