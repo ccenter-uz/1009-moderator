@@ -55,4 +55,8 @@ export const API_MAP = {
   CREATE_AREA: "area",
   UPDATE_AREA: "area",
   DELETE_AREA: "area",
+  RESIDENTIAL_AREA_ALL: "residential-area",
+  CREATE_RESIDENTIAL_AREA: "residential-area",
+  UPDATE_RESIDENTIAL_AREA: "residential-area",
+  DELETE_RESIDENTIAL_AREA: "residential-area",
 };
