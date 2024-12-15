@@ -67,6 +67,7 @@ export const baseApi = createApi({
     "Impasses",
     "Villages",
     "Avenues",
+    "Lanes",
   ],
   endpoints: () => ({}),
 });
