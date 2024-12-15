@@ -34,7 +34,7 @@ export const Address3Inputs: FC<Props> = (props) => {
 
   const onSelectRegion = useCallback((value: string) => {
     triggerCities({
-      region_id: value,
+      regionId: value,
       all: GET_ALL_ACTIVE_STATUS.all,
       status: GET_ALL_ACTIVE_STATUS.active,
     });
@@ -43,8 +43,8 @@ export const Address3Inputs: FC<Props> = (props) => {
 
   const onSelectCity = useCallback((value: string) => {
     triggerDistrict({
-      region_id: form.getFieldValue("region"),
-      city_id: value,
+      regionId: form.getFieldValue("region"),
+      cityId: value,
       all: GET_ALL_ACTIVE_STATUS.all,
       status: GET_ALL_ACTIVE_STATUS.active,
     });

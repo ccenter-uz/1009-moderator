@@ -12,7 +12,7 @@ module.exports = {
   parser: "@typescript-eslint/parser",
   plugins: ["@typescript-eslint", "react", "prettier"],
   rules: {
-    "prettier/prettier": "error",
+    "prettier/prettier": ["error"],
     "react/react-in-jsx-scope": "off",
     "no-restricted-imports": [
       "error",

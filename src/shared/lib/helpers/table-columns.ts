@@ -16,14 +16,14 @@ export const columnsForAddress = [
   },
   {
     title: i18next.t("old_name"),
-    dataIndex: "old_name",
-    key: "old_name",
+    dataIndex: "oldName",
+    key: "oldName",
     render: (text: { [key: string]: string }) => text[i18next.language],
   },
   {
     title: i18next.t("new_name"),
-    dataIndex: "new_name",
-    key: "new_name",
+    dataIndex: "newName",
+    key: "newName",
     render: (text: { [key: string]: string }) => text[i18next.language],
   },
   {
@@ -147,14 +147,14 @@ export const columnsWithAddressAndNamings = [
   },
   {
     title: i18next.t("old_name"),
-    dataIndex: "old_name",
-    key: "old_name",
+    dataIndex: "oldName",
+    key: "oldName",
     render: (text: { [key: string]: string }) => text[i18next.language],
   },
   {
     title: i18next.t("new_name"),
-    dataIndex: "new_name",
-    key: "new_name",
+    dataIndex: "newName",
+    key: "newName",
     render: (text: { [key: string]: string }) => text[i18next.language],
   },
   {
@@ -194,21 +194,21 @@ export const columnsWithAddressAndNamings = [
 export const columnsForCategories = [
   {
     title: i18next.t("name_ru"),
-    dataIndex: "name_ru",
-    key: "name_ru",
-    render: (text: string, record: { name: { ru: string } }) => record.name.ru,
+    dataIndex: "name",
+    key: "name",
+    render: (text: { ru: string }) => text.ru,
   },
   {
     title: i18next.t("name_uz"),
-    dataIndex: "name_uz",
-    key: "name_uz",
-    render: (text: string, record: { name: { uz: string } }) => record.name.uz,
+    dataIndex: "name",
+    key: "name",
+    render: (text: { uz: string }) => text.uz,
   },
   {
     title: i18next.t("name_uzcyrill"),
-    dataIndex: "name_cyrill",
-    key: "name_cyrill",
-    render: (text: string, record: { name: { cy: string } }) => record.name.cy,
+    dataIndex: "name",
+    key: "name",
+    render: (text: { cy: string }) => text.cy,
   },
   {
     title: i18next.t("region"),
@@ -243,23 +243,22 @@ export const columnsForCategories = [
 export const columnsForCategoriesTu = [
   {
     title: i18next.t("name_ru"),
-    dataIndex: "name_ru",
-    key: "name_ru",
-    render: (text: string, record: { name: { ru: string } }) => record.name.ru,
+    dataIndex: "name",
+    key: "name",
+    render: (text: { ru: string }) => text.ru,
   },
   {
     title: i18next.t("name_uz"),
-    dataIndex: "name_uz",
-    key: "name_uz",
-    render: (text: string, record: { name: { uz: string } }) => record.name.uz,
+    dataIndex: "name",
+    key: "name",
+    render: (text: { uz: string }) => text.uz,
   },
   {
     title: i18next.t("name_uzcyrill"),
-    dataIndex: "name_cyrill",
-    key: "name_cyrill",
-    render: (text: string, record: { name: { cy: string } }) => record.name.cy,
+    dataIndex: "name",
+    key: "name",
+    render: (text: { cy: string }) => text.cy,
   },
-
   {
     title: i18next.t("status"),
     dataIndex: "status",
@@ -282,8 +281,8 @@ export const columnsForCategoriesTu = [
 export const subCategoryColumns: searchColType = [
   {
     title: i18next.t("sub-category-tu"),
-    dataIndex: "sub-category-tu",
-    key: "sub-category-tu",
+    dataIndex: "subCategory-tu",
+    key: "subCategory-tu",
   },
 ];
 
@@ -297,14 +296,14 @@ export const attrColumns: searchColType = [
   {
     width: 150,
     title: i18next.t("sub-category"),
-    dataIndex: "sub-category",
-    key: "sub-category",
+    dataIndex: "subCategory",
+    key: "subCategory",
   },
   {
     width: 100,
     title: i18next.t("main-org"),
-    dataIndex: "main-org",
-    key: "main-org",
+    dataIndex: "mainOrg",
+    key: "mainOrg",
   },
   {
     width: 60,
@@ -352,8 +351,8 @@ export const phoneColumns: searchColType = [
   },
   {
     title: i18next.t("phone-type"),
-    dataIndex: "phone-type",
-    key: "phone-type",
+    dataIndex: "phoneType",
+    key: "phoneType",
     width: 200,
     align: "center",
   },
@@ -362,13 +361,15 @@ export const phoneColumns: searchColType = [
 export const searchModalColumns: searchColType = [
   {
     title: i18next.t("name_uz"),
-    dataIndex: "name_uz",
-    key: "name_uz",
+    dataIndex: "name",
+    key: "name",
+    render: (text: { [key: string]: string }) => text.uz,
   },
   {
     title: i18next.t("name_ru"),
-    dataIndex: "name_ru",
-    key: "name_ru",
+    dataIndex: "name",
+    key: "name",
+    render: (text: { [key: string]: string }) => text.ru,
   },
 ];
 
