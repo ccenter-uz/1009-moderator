@@ -29,10 +29,10 @@ export const NearbyPageSearchUI: FC<Props> = (props) => {
 
   useEffect(() => {
     const params = returnAllParams();
-    if (params.category_id) {
+    if (params.categoryId) {
       form.setFieldsValue({
         ...params,
-        "nearby-category": Number(params.category_id),
+        "nearby-category": Number(params.categoryId),
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

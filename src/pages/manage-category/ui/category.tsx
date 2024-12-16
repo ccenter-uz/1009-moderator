@@ -37,8 +37,8 @@ export const Category: FC = () => {
     [CategorySubCategoryEnums.categoryPage]: page,
     [CategorySubCategoryEnums.categoryLimit]: limit,
     [CategorySubCategoryEnums.categorySearch]: search,
-    [CategorySubCategoryEnums.regionId]: region_id,
-    [CategorySubCategoryEnums.cityId]: city_id,
+    [CategorySubCategoryEnums.regionId]: regionId,
+    [CategorySubCategoryEnums.cityId]: cityId,
   } = returnAllParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -48,8 +48,8 @@ export const Category: FC = () => {
     page,
     limit,
     search,
-    region_id,
-    city_id,
+    regionId,
+    cityId,
   });
   const [deleteCategory] = useDeleteCategoryMutation();
   const [createCategory] = useCreateCategoryMutation();
@@ -144,14 +144,14 @@ export const Category: FC = () => {
   ];
 
   useEffect(() => {
-    if (region_id || city_id) {
+    if (regionId || cityId) {
       searchForm.setFieldsValue({
-        region_id: Number(region_id),
-        city_id: Number(city_id),
+        region_id: Number(regionId),
+        city_id: Number(cityId),
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [region_id, city_id]);
+  }, [regionId, cityId]);
 
   return (
     <ManageWrapperBox

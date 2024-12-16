@@ -63,4 +63,8 @@ export const API_MAP = {
   CREATE_VILLAGE: "village",
   UPDATE_VILLAGE: "village",
   DELETE_VILLAGE: "village",
+  AVENUE_ALL: "avenue",
+  CREATE_AVENUE: "avenue",
+  UPDATE_AVENUE: "avenue",
+  DELETE_AVENUE: "avenue",
 };
