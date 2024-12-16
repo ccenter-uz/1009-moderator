@@ -30,11 +30,15 @@ export const columnsForAddress = [
     title: i18next.t("region"),
     dataIndex: "region",
     key: "region",
+    render: (text: { name: { [key: string]: string } }) =>
+      text?.name[i18next.language],
   },
   {
     title: i18next.t("city"),
     dataIndex: "city",
     key: "city",
+    render: (text: { name: { [key: string]: string } }) =>
+      text?.name[i18next.language],
   },
   {
     title: i18next.t("district"),
@@ -113,11 +117,15 @@ export const columnsWithRegions = [
     title: i18next.t("region"),
     dataIndex: "region",
     key: "region",
+    render: (text: { name: { [key: string]: string } }) =>
+      text?.name[i18next.language],
   },
   {
     title: i18next.t("city"),
     dataIndex: "city",
     key: "city",
+    render: (text: { name: { [key: string]: string } }) =>
+      text?.name[i18next.language],
   },
   {
     title: i18next.t("status"),
@@ -161,11 +169,15 @@ export const columnsWithAddressAndNamings = [
     title: i18next.t("region"),
     dataIndex: "region",
     key: "region",
+    render: (text: { name: { [key: string]: string } }) =>
+      text?.name[i18next.language],
   },
   {
     title: i18next.t("city"),
     dataIndex: "city",
     key: "city",
+    render: (text: { name: { [key: string]: string } }) =>
+      text?.name[i18next.language],
   },
   {
     title: i18next.t("index"),
@@ -214,13 +226,15 @@ export const columnsForCategories = [
     title: i18next.t("region"),
     dataIndex: "region",
     key: "region",
-    // render: (text: { [key: string]: string }) => text[i18next.language],
+    render: (text: { name: { [key: string]: string } }) =>
+      text?.name[i18next.language],
   },
   {
     title: i18next.t("city"),
     dataIndex: "city",
     key: "city",
-    // render: (text: { [key: string]: string }) => text[i18next.language],
+    render: (text: { name: { [key: string]: string } }) =>
+      text?.name[i18next.language],
   },
   {
     title: i18next.t("status"),
@@ -311,6 +325,8 @@ export const attrColumns: searchColType = [
     title: i18next.t("region"),
     dataIndex: "region",
     key: "region",
+    render: (text: { name: { [key: string]: string } }) =>
+      text?.name[i18next.language],
   },
   {
     width: 60,
@@ -318,6 +334,8 @@ export const attrColumns: searchColType = [
     title: i18next.t("city"),
     dataIndex: "city",
     key: "city",
+    render: (text: { name: { [key: string]: string } }) =>
+      text?.name[i18next.language],
   },
   {
     width: 60,
