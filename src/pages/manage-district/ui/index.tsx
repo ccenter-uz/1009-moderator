@@ -96,12 +96,12 @@ export const ManageDistrictPage: FC = () => {
         ru: values.name_ru,
         cy: values.name_uzcyrill,
       },
-      old_name: {
+      oldName: {
         uz: values.old_name_uz,
         ru: values.old_name_ru,
         cy: values.old_name_uzcyrill,
       },
-      new_name: {
+      newName: {
         uz: values.new_name_uz,
         ru: values.new_name_ru,
         cy: values.new_name_uzcyrill,
@@ -127,7 +127,7 @@ export const ManageDistrictPage: FC = () => {
     ...columnsWithAddressAndNamings,
     {
       flex: 0.5,
-      title: "Действия",
+      title: t("action"),
       key: "action",
       dataIndex: "action",
       align: "center",

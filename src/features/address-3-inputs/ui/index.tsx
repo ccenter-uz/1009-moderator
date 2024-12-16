@@ -34,7 +34,7 @@ export const Address3Inputs: FC<Props> = (props) => {
 
   const onSelectRegion = useCallback((value: string) => {
     triggerCities({
-      region_id: value,
+      regionId: value,
       all: GET_ALL_ACTIVE_STATUS.all,
       status: GET_ALL_ACTIVE_STATUS.active,
     });
@@ -43,8 +43,8 @@ export const Address3Inputs: FC<Props> = (props) => {
 
   const onSelectCity = useCallback((value: string) => {
     triggerDistrict({
-      region_id: form.getFieldValue("region"),
-      city_id: value,
+      regionId: form.getFieldValue("region"),
+      cityId: value,
       all: GET_ALL_ACTIVE_STATUS.all,
       status: GET_ALL_ACTIVE_STATUS.active,
     });
@@ -76,6 +76,7 @@ export const Address3Inputs: FC<Props> = (props) => {
       <Col xs={24} sm={12} md={12} lg={12} xl={6}>
         <Form.Item name={"region"} label={t("region")} layout="vertical">
           <Select
+            allowClear
             options={
               dataRegions?.data.map((region: AnyObject) => ({
                 label: region.name[i18next.language],
@@ -91,6 +92,7 @@ export const Address3Inputs: FC<Props> = (props) => {
       <Col xs={24} sm={12} md={12} lg={12} xl={6}>
         <Form.Item name={"city"} label={t("city")} layout="vertical">
           <Select
+            allowClear
             options={
               dataCities?.data.map((city: AnyObject) => ({
                 label: city.name[i18next.language],
@@ -106,6 +108,7 @@ export const Address3Inputs: FC<Props> = (props) => {
       <Col xs={24} sm={12} md={12} lg={12} xl={6}>
         <Form.Item name={"district"} label={t("district")} layout="vertical">
           <Select
+            allowClear
             placeholder={t("district")}
             options={
               dataDistrict?.data.map((passage: AnyObject) => ({
