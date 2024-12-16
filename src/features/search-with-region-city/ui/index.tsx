@@ -29,7 +29,7 @@ export const SearchWithRegionCityUI: FC<Props> = (props) => {
 
   const onSelectRegion = useCallback((value: string) => {
     trigger({
-      region_id: value,
+      regionId: value,
       all: GET_ALL_ACTIVE_STATUS.all,
       status: GET_ALL_ACTIVE_STATUS.active,
     });

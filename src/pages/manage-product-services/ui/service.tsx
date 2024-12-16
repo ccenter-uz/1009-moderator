@@ -127,7 +127,7 @@ export const Service: FC = () => {
         page: Number(page) || 1,
         limit: Number(limit) || 10,
         search,
-        category_id: Number(searchParams.get(ProductServicesEnum.productId)),
+        categoryId: Number(searchParams.get(ProductServicesEnum.productId)),
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

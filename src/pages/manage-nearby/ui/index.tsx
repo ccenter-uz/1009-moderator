@@ -85,7 +85,7 @@ export const ManageNearbyPage: FC = () => {
   const handleCategorySelect = (value: string | number) => {
     setNearbyCategoryId(value);
     const params = returnAllParams();
-    setSearchParams({ ...params, category_id: String(value) });
+    setSearchParams({ ...params, categoryId: String(value) });
   };
   const handleSubmit = async (values: valueProps) => {
     const body = {

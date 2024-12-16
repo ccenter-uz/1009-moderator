@@ -127,7 +127,7 @@ export const SubCategory: FC = () => {
         page: Number(page) || 1,
         limit: Number(limit) || 10,
         search,
-        category_id: Number(
+        categoryId: Number(
           searchParams.get(CategorySubCategoryEnums.categoryId),
         ),
       });
