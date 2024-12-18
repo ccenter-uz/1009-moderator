@@ -116,3 +116,8 @@ export const GET_ALL_ACTIVE_STATUS = {
   active: 1,
   all: true,
 };
+
+export const allActives = {
+  all: GET_ALL_ACTIVE_STATUS.all,
+  active: GET_ALL_ACTIVE_STATUS.active,
+};

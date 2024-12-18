@@ -1,10 +1,20 @@
 import { Col, Form, Input, Row, Select } from "antd";
+import { AnyObject } from "antd/es/_util/type";
+import i18next from "i18next";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 import { TableCategoryServices } from "@features/table-category-services";
 
+import {
+  useGetCategoriesQuery,
+  useLazyGetSubCategoriesQuery,
+} from "@entities/category-subcategory";
+import { useGetMainOrgQuery } from "@entities/main-org";
+import { useGetSegmentsQuery } from "@entities/segments";
+
+import { allActives } from "@shared/lib/helpers";
 import { RootState } from "@shared/types";
 
 import { setData } from "../model/Slicer";
@@ -14,6 +24,23 @@ export const OrgAddFirstStepUI: FC = () => {
   const { data } = useSelector(
     ({ useAddOrgFirstStepSlice }: RootState) => useAddOrgFirstStepSlice,
   );
+  const { data: categoryData, isLoading: isLoadingCategories } =
+    useGetCategoriesQuery(allActives);
+  const { data: mainOrgData, isLoading: isLoadingMainOrg } =
+    useGetMainOrgQuery(allActives);
+  const { data: segmentsData, isLoading: isLoadingSegments } =
+    useGetSegmentsQuery(allActives);
+  const [
+    trigerSubcategory,
+    { data: subcategoryData, isLoading: isLoadingSubcategory },
+  ] = useLazyGetSubCategoriesQuery();
+
+  const onChangeCategory = (value: string) => {
+    trigerSubcategory({
+      categoryId: value,
+      allActives,
+    });
+  };
 
   return (
     <>
@@ -27,18 +54,27 @@ export const OrgAddFirstStepUI: FC = () => {
           </Form.Item>
           <Form.Item name={"category"} label={t("category")}>
             <Select
-              options={[]}
+              options={categoryData?.data.map((item: AnyObject) => ({
+                value: item.id,
+                label: item.name[i18next.language],
+              }))}
               placeholder={t("category")}
               allowClear
               showSearch
+              loading={isLoadingCategories}
+              onSelect={onChangeCategory}
             />
           </Form.Item>
           <Form.Item name={"sub-category"} label={t("sub-category")}>
             <Select
-              options={[]}
+              options={subcategoryData?.data.map((item: AnyObject) => ({
+                value: item.id,
+                label: item.name[i18next.language],
+              }))}
               placeholder={t("sub-category")}
               allowClear
               showSearch
+              loading={isLoadingSubcategory}
             />
           </Form.Item>
         </Col>
@@ -46,7 +82,11 @@ export const OrgAddFirstStepUI: FC = () => {
           <Form.Item name={"main-org"} label={t("main-org")}>
             <Select
               placeholder={t("main-org")}
-              options={[]}
+              options={mainOrgData?.data.map((item: AnyObject) => ({
+                value: item.id,
+                label: item.name,
+              }))}
+              loading={isLoadingMainOrg}
               allowClear
               showSearch
             />
@@ -57,7 +97,11 @@ export const OrgAddFirstStepUI: FC = () => {
           <Form.Item name={"segment"} label={t("segment")}>
             <Select
               placeholder={t("segment")}
-              options={[]}
+              options={segmentsData?.data.map((item: AnyObject) => ({
+                value: item.id,
+                label: item.name[i18next.language],
+              }))}
+              loading={isLoadingSegments}
               allowClear
               showSearch
             />
