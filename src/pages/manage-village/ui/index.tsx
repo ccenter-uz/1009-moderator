@@ -45,8 +45,8 @@ export interface valueProps {
   cityId?: string;
   districtId?: string;
   name: { uz: string; ru: string; cy: string };
-  old_name: { uz: string; ru: string; cy: string };
-  new_name: { uz: string; ru: string; cy: string };
+  oldName: { uz: string; ru: string; cy: string };
+  newName: { uz: string; ru: string; cy: string };
 }
 
 export const ManageVillagePage: FC = () => {
@@ -70,12 +70,12 @@ export const ManageVillagePage: FC = () => {
       name_uz: values.name.uz,
       name_ru: values.name.ru,
       name_uzcyrill: values.name.cy,
-      old_name_uz: values.name.uz,
-      old_name_ru: values.name.ru,
-      old_name_uzcyrill: values.name.cy,
-      new_name_uz: values.name.uz,
-      new_name_ru: values.name.ru,
-      new_name_uzcyrill: values.name.cy,
+      old_name_uz: values.oldName.uz,
+      old_name_ru: values.oldName.ru,
+      old_name_uzcyrill: values.oldName.cy,
+      new_name_uz: values.newName.uz,
+      new_name_ru: values.newName.ru,
+      new_name_uzcyrill: values.newName.cy,
     };
     setEditingData({ ...values, id: values.id });
     form.setFieldsValue(editingBody);
