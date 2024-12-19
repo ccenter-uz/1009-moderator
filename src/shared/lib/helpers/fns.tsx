@@ -85,20 +85,12 @@ export const notificationResponse = (
   t: (arg0: string) => string,
   onClose: () => void,
 ) => {
-  if (res.data) {
+  if (res.data.status >= 200 && res.data.status < 300) {
     notification.success({
       message: t("success"),
       placement: "bottomRight",
     });
     onClose();
-  } else {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const error = res?.error?.data?.error.details.error.message[0];
-    notification.error({
-      message: error,
-      placement: "bottomRight",
-    });
   }
 };
 

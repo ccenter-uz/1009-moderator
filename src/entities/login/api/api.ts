@@ -25,11 +25,17 @@ export const loginApi = baseApi.injectEndpoints({
         body: credentials,
       }),
       transformResponse: (response: successLoginType) => {
-        if (response?.result?.accessToken && response?.result?.permissions) {
-          setCookie("access_token", response.result.accessToken);
-          setLocalStorage("user", {
-            permissions_pathname: response.result.permissions,
-          });
+        if (response.result) {
+          if (response.result.accessToken) {
+            setCookie("access_token", response.result.accessToken);
+          }
+
+          if (response.result.permissions) {
+            setLocalStorage("user", {
+              permissions_pathname: response.result.permissions,
+            });
+          }
+
           notification.success({
             message: i18next.t("success"),
             placement: "bottomRight",
@@ -38,14 +44,6 @@ export const loginApi = baseApi.injectEndpoints({
         } else {
           return null;
         }
-      },
-      transformErrorResponse: (
-        response: FetchBaseQueryError & FetchBaseQueryMeta & errorLoginType,
-      ) => {
-        notification.error({
-          message: response?.data.error.message ?? "",
-          placement: "bottomRight",
-        });
       },
     }),
   }),

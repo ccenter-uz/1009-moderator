@@ -31,6 +31,8 @@ export const Address2Inputs: FC<Props> = (props) => {
     useLazyGetCitiesQuery();
 
   const onSelectRegion = useCallback((value: string) => {
+    form.setFieldsValue({ city: undefined });
+
     trigger({
       regionId: value,
       all: GET_ALL_ACTIVE_STATUS.all,
