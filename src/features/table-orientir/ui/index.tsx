@@ -10,77 +10,37 @@ import {
   Input,
 } from "antd";
 import { AnyObject } from "antd/es/_util/type";
-import { t } from "i18next";
+import i18next, { t } from "i18next";
 import { FC, useState } from "react";
 import { FaTrashAlt } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 
-/**
- * TableOrientirUI
- *
- * This component is used to display table with orientirs data in the Manage pages.
- *
- * It has the following functionality:
- *
- * - Displays a table with columns: id, name, nearby-category, nearby-distance, actions
- * - Displays a select for nearby-category
- * - Displays an input for nearby-distance
- * - Has a button for adding new row
- * - Has a button for deleting row
- * - Has a button for saving changes
- *
- * It takes the following props:
- *
- * - `data`: The data of the table.
- * - `setData`: The function to update the data of the table.
- *
- * @param {Object} props - The props of the component.
- * @param {AnyObject[]} props.data - The data of the table.
- * @param {Function} props.setData - The function to update the data of the table.
- *
- * @returns {JSX.Element} - The JSX element of the component.
- */
+import {
+  useGetNearbyCategoryQuery,
+  useLazyGetNearbyQuery,
+} from "@entities/nearby";
+
+import { allActives } from "@shared/lib/helpers";
 
 type Props = {
   data: AnyObject[];
   setData: any;
 };
 
-// MOCKS
-const mocks = {
-  nearbyCategoryOptions: [
-    {
-      id: 1,
-      key: 1,
-      label: "Категория ориентир 1",
-      value: "nearby-category",
-      "nearby-category": "Категория ориентир 1",
-    },
-    {
-      id: 2,
-      key: 2,
-      label: "Категория ориентир 2",
-      value: "nearby-category 2",
-      "nearby-category": "Категория ориентир 2",
-    },
-  ],
-  nearbyOptions: [
-    {
-      id: 1,
-      key: 1,
-      label: "Ориентир 1.1",
-      value: "sub-category-tu 1.1",
-      nearby: "Ориентир 1.1",
-    },
-    {
-      id: 2,
-      key: 2,
-      label: "Ориентир 1.2",
-      value: "nearby 1.2",
-      nearby: "Ориентир 1.2",
-    },
-  ],
-  columns: [
+export const TableOrientirUI: FC<Props> = (props) => {
+  const { data, setData } = props;
+  const dispatch = useDispatch();
+  const { data: nearbyCategoryOptions, isLoading: isLoadingNearbyCategory } =
+    useGetNearbyCategoryQuery(allActives);
+  const [triggerNearby, { data: nearbyOptions, isLoading: isLoadingNearby }] =
+    useLazyGetNearbyQuery();
+  const [selectedNearby, setSelectedNearby] = useState<AnyObject[]>([]);
+  const [selectedNearbyCategory, setSelectedNearbyCategory] = useState<
+    AnyObject[]
+  >([]);
+  const [description, setDescription] = useState<string>("");
+
+  const columns = [
     {
       title: t("nearby-category"),
       dataIndex: "nearby-category",
@@ -96,23 +56,6 @@ const mocks = {
       dataIndex: "description",
       key: "description",
     },
-  ],
-};
-
-export const TableOrientirUI: FC<Props> = (props) => {
-  const { data, setData } = props;
-  const dispatch = useDispatch();
-  const [selectedNearby, setSelectedNearby] = useState<AnyObject[]>([]);
-  const [selectedNearbyCategory, setSelectedNearbyCategory] = useState<
-    AnyObject[]
-  >([]);
-  const [nearbyOptions, setNearbyOptions] = useState<AnyObject[]>([]);
-  const [description, setDescription] = useState<string>("");
-  const [nearbyCategoryOptions, setNearbyCategoryOptions] = useState<
-    AnyObject[]
-  >(mocks.nearbyCategoryOptions || []);
-  const overColumns = [
-    ...mocks.columns,
     {
       title: t("action"),
       dataIndex: "action",
@@ -159,14 +102,23 @@ export const TableOrientirUI: FC<Props> = (props) => {
 
   const onSelectNearbyCategory = (
     value: string,
-    option: AnyObject | unknown,
+    option: { value: string | number; label: string },
   ) => {
-    setSelectedNearbyCategory([option as AnyObject]);
-    setNearbyOptions(mocks.nearbyOptions);
+    setSelectedNearbyCategory([
+      { nearbyCategoryId: value, "nearby-category": option.label },
+    ]);
+
+    triggerNearby({
+      nearbyCategoryId: value,
+      ...allActives,
+    });
   };
 
-  const onSelectSubCategory = (value: string, option: AnyObject | unknown) => {
-    setSelectedNearby([option as AnyObject]);
+  const onSelectSubCategory = (
+    value: string,
+    option: { value: string | number; label: string },
+  ) => {
+    setSelectedNearby([{ nearbyId: value, nearby: option.label }]);
   };
 
   return (
@@ -181,9 +133,16 @@ export const TableOrientirUI: FC<Props> = (props) => {
             <Select
               showSearch
               id="nearby-category"
-              value={selectedNearbyCategory[0]?.value}
-              onChange={onSelectNearbyCategory}
-              options={nearbyCategoryOptions}
+              value={selectedNearbyCategory[0]?.nearbyCategoryId}
+              onSelect={onSelectNearbyCategory}
+              allowClear
+              disabled={isLoadingNearbyCategory}
+              options={
+                nearbyCategoryOptions?.data.map((item: AnyObject) => ({
+                  value: item.id,
+                  label: item.name,
+                })) || []
+              }
               style={{ flex: 1 }}
             />
           </Flex>
@@ -192,12 +151,18 @@ export const TableOrientirUI: FC<Props> = (props) => {
           <Flex align="center" gap={8}>
             <label htmlFor="nearby">{t("nearby")}</label>
             <Select
-              disabled={nearbyOptions.length === 0}
+              disabled={isLoadingNearby}
               showSearch
               id="nearby"
-              value={selectedNearby[0]?.value}
-              onChange={onSelectSubCategory}
-              options={nearbyOptions ?? []}
+              value={selectedNearby[0]?.nearbyId}
+              onSelect={onSelectSubCategory}
+              allowClear
+              options={
+                nearbyOptions?.data.map((item: AnyObject) => ({
+                  value: item.id,
+                  label: item.name[i18next.language],
+                })) || []
+              }
               style={{ flex: 1 }}
             />
           </Flex>
@@ -227,7 +192,7 @@ export const TableOrientirUI: FC<Props> = (props) => {
 
       <Table
         bordered
-        columns={overColumns}
+        columns={columns}
         dataSource={data}
         pagination={false}
         scroll={{ y: 300 }}

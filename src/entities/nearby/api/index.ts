@@ -130,6 +130,7 @@ export const nearbyApi = baseApi.injectEndpoints({
 export const {
   useGetNearbyCategoryQuery,
   useGetNearbyQuery,
+  useLazyGetNearbyQuery,
   useCreateNearbyCategoryMutation,
   useCreateNearbyMutation,
   useUpdateNearbyCategoryMutation,

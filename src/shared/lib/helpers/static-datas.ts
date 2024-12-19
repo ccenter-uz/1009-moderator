@@ -16,6 +16,7 @@ export const STEPS_DATA = {
   SECOND_FORMDATA: [
     "region",
     "city",
+    "avenue",
     "village",
     "district",
     "manage",
@@ -59,6 +60,7 @@ export const SEND_BODY = [
   "village",
   "district",
   "manage",
+  "avenue",
   "residential-area",
   "area",
   "kvartal",
@@ -119,5 +121,5 @@ export const GET_ALL_ACTIVE_STATUS = {
 
 export const allActives = {
   all: GET_ALL_ACTIVE_STATUS.all,
-  active: GET_ALL_ACTIVE_STATUS.active,
+  status: GET_ALL_ACTIVE_STATUS.active,
 };
