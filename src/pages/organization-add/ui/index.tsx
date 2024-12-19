@@ -1,4 +1,4 @@
-import { Button, Divider, Flex, Form, Steps } from "antd";
+import { Button, Divider, Flex, Form, notification, Steps } from "antd";
 import i18next from "i18next";
 import { CSSProperties, FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -15,7 +15,12 @@ import {
 } from "@widgets/org-add-second-step";
 import { OrgAddThirdStepUI, setPhoneData } from "@widgets/org-add-third-step";
 
-import { SEND_BODY, STEPS_DATA, STEPS_ENUM } from "@shared/lib/helpers";
+import {
+  removeLocalStorage,
+  SEND_BODY,
+  STEPS_DATA,
+  STEPS_ENUM,
+} from "@shared/lib/helpers";
 import { RootState } from "@shared/types";
 
 const items = [
@@ -129,6 +134,19 @@ export const OrgAddPage: FC = () => {
     console.log(body, "body");
   };
 
+  const onClearAllData = () => {
+    removeLocalStorage("firstStepData");
+    removeLocalStorage("secondStepData");
+    removeLocalStorage("thirdStepData");
+    removeLocalStorage("currentStep");
+    form.resetFields();
+
+    notification.success({
+      message: t("erased"),
+      placement: "bottomRight",
+    });
+  };
+
   useEffect(() => {
     // SET-STORED-DATA-FROM-LOCAL-STORAGE
     const firstStepData = localStorage.getItem("firstStepData");
@@ -162,6 +180,9 @@ export const OrgAddPage: FC = () => {
       </div>
       <Divider />
       <Flex align="center" justify="end" gap={8} style={{ marginTop: 24 }}>
+        <Button style={{ margin: "0 8px" }} onClick={onClearAllData}>
+          {t("erase-all")}
+        </Button>
         {current > 0 && (
           <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
             {t("previous")}
