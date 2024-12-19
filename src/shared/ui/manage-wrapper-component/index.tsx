@@ -64,7 +64,7 @@ export const ManageWrapperBox: FC<Props> = (props) => {
           size="small"
           bordered
           onRow={(record) => ({
-            onDoubleClick: () => {
+            onClick: () => {
               rowSelect &&
                 (onRowSelect && onRowSelect(record),
                 setSelectedRowKey(record.key));
