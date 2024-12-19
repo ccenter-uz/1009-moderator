@@ -2,6 +2,7 @@ import { notification } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import DOMPurify from "dompurify";
 import i18next from "i18next";
+import { ReactNode } from "react";
 
 export const returnAllParams = () => {
   const params = new URLSearchParams(window.location.search);
@@ -113,4 +114,11 @@ export const setColorByStatus = (status: string) => {
     default:
       return null;
   }
+};
+
+export const renderLabelSelect = ({ label }: { label: string | ReactNode }) => {
+  if (label == undefined) {
+    return "";
+  }
+  return label;
 };

@@ -1,7 +1,7 @@
 import { Col, Form, Input, Row, Select } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import i18next from "i18next";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
@@ -14,12 +14,18 @@ import {
 import { useGetMainOrgQuery } from "@entities/main-org";
 import { useGetSegmentsQuery } from "@entities/segments";
 
-import { allActives } from "@shared/lib/helpers";
+import {
+  allActives,
+  getLocalStorage,
+  renderLabelSelect,
+} from "@shared/lib/helpers";
 import { RootState } from "@shared/types";
 
 import { setData } from "../model/Slicer";
 
 export const OrgAddFirstStepUI: FC = () => {
+  const Storage = localStorage.getItem("firstStepData");
+  const localS = getLocalStorage("firstStepData");
   const { t } = useTranslation();
   const { data } = useSelector(
     ({ useAddOrgFirstStepSlice }: RootState) => useAddOrgFirstStepSlice,
@@ -38,9 +44,21 @@ export const OrgAddFirstStepUI: FC = () => {
   const onChangeCategory = (value: string) => {
     trigerSubcategory({
       categoryId: value,
-      allActives,
+      ...allActives,
     });
   };
+
+  useEffect(() => {
+    if (Storage) {
+      const { ["sub-category"]: subCategory } = localS;
+
+      if (subCategory) {
+        trigerSubcategory({ ...allActives });
+      }
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [Storage]);
 
   return (
     <>
@@ -54,6 +72,7 @@ export const OrgAddFirstStepUI: FC = () => {
           </Form.Item>
           <Form.Item name={"category"} label={t("category")}>
             <Select
+              labelRender={renderLabelSelect}
               options={categoryData?.data.map((item: AnyObject) => ({
                 value: item.id,
                 label: item.name[i18next.language],
@@ -67,6 +86,7 @@ export const OrgAddFirstStepUI: FC = () => {
           </Form.Item>
           <Form.Item name={"sub-category"} label={t("sub-category")}>
             <Select
+              labelRender={renderLabelSelect}
               options={subcategoryData?.data.map((item: AnyObject) => ({
                 value: item.id,
                 label: item.name[i18next.language],
