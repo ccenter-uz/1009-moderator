@@ -50,9 +50,9 @@ export const OrgAddFirstStepUI: FC = () => {
 
   useEffect(() => {
     if (Storage) {
-      const { ["sub-category"]: subCategory } = localS;
+      const { subCategoryId } = localS;
 
-      if (subCategory) {
+      if (subCategoryId) {
         trigerSubcategory({ ...allActives });
       }
     }
@@ -67,10 +67,10 @@ export const OrgAddFirstStepUI: FC = () => {
           <Form.Item name={"abonent"} label={t("abonent")}>
             <Input type="text" placeholder={t("abonent")} allowClear />
           </Form.Item>
-          <Form.Item name={"org-name"} label={t("org-name")}>
+          <Form.Item name={"legalName"} label={t("org-name")}>
             <Input type="text" placeholder={t("org-name")} allowClear />
           </Form.Item>
-          <Form.Item name={"category"} label={t("category")}>
+          <Form.Item name={"categoryId"} label={t("category")}>
             <Select
               labelRender={renderLabelSelect}
               options={categoryData?.data.map((item: AnyObject) => ({
@@ -84,7 +84,7 @@ export const OrgAddFirstStepUI: FC = () => {
               onSelect={onChangeCategory}
             />
           </Form.Item>
-          <Form.Item name={"sub-category"} label={t("sub-category")}>
+          <Form.Item name={"subCategoryId"} label={t("sub-category")}>
             <Select
               labelRender={renderLabelSelect}
               options={subcategoryData?.data.map((item: AnyObject) => ({
@@ -99,7 +99,7 @@ export const OrgAddFirstStepUI: FC = () => {
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item name={"main-org"} label={t("main-org")}>
+          <Form.Item name={"mainOrganizationId"} label={t("main-org")}>
             <Select
               placeholder={t("main-org")}
               options={mainOrgData?.data.map((item: AnyObject) => ({
@@ -114,7 +114,7 @@ export const OrgAddFirstStepUI: FC = () => {
           <Form.Item name={"secret"} label={t("Секрет")}>
             <Input type="text" placeholder={t("Секрет")} allowClear />
           </Form.Item>
-          <Form.Item name={"segment"} label={t("segment")}>
+          <Form.Item name={"segmentId"} label={t("segment")}>
             <Select
               placeholder={t("segment")}
               options={segmentsData?.data.map((item: AnyObject) => ({
