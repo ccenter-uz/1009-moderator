@@ -115,7 +115,7 @@ export const setColorByStatus = (status: string) => {
   }
 };
 
-export const getDayOffsCheckbox = (form) => {
+export const getDayOffsCheckbox = (form: AnyObject) => {
   const dayOffs = [];
   form.getFieldValue("monday") && dayOffs.push("monday");
   form.getFieldValue("tuesday") && dayOffs.push("tuesday");
