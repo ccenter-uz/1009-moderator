@@ -66,6 +66,7 @@ export const OrgAddThirdStepUI: FC = () => {
     mocks.phoneTypeOptions,
   );
   const [phone, setPhone] = useState<string>("");
+
   const overColumns = [
     {
       width: 80,

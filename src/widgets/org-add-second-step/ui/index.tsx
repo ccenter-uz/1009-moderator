@@ -31,7 +31,8 @@ import { RootState } from "@shared/types";
 import { setData } from "../model/Slicer";
 
 export const OrgAddSecondStepUI: FC = () => {
-  const localStorage = getLocalStorage("secondStepData");
+  const Storage = localStorage.getItem("secondStepData");
+  const localS = getLocalStorage("secondStepData");
   const { t } = useTranslation();
   const { data } = useSelector(
     ({ useAddOrgSecondStepSlice }: RootState) => useAddOrgSecondStepSlice,
@@ -76,19 +77,21 @@ export const OrgAddSecondStepUI: FC = () => {
   };
 
   useEffect(() => {
-    const { city, district } = localStorage;
-    if (city) {
-      triggerCities({
-        ...allActives,
-      });
-    }
-    if (district) {
-      triggerDistrict({
-        ...allActives,
-      });
+    if (Storage) {
+      const { city, district } = localS;
+      if (city) {
+        triggerCities({
+          ...allActives,
+        });
+      }
+      if (district) {
+        triggerDistrict({
+          ...allActives,
+        });
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [localStorage]);
+  }, [Storage]);
 
   return (
     <>
