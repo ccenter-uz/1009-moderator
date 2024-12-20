@@ -43,13 +43,13 @@ export const TableOrientirUI: FC<Props> = (props) => {
   const columns = [
     {
       title: t("nearby-category"),
-      dataIndex: "nearby-category",
-      key: "nearby-category",
+      dataIndex: "nearbyCategoryName",
+      key: "nearbyCategoryName",
     },
     {
       title: t("nearby"),
-      dataIndex: "nearby",
-      key: "nearby",
+      dataIndex: "nearbyName",
+      key: "nearbyName",
     },
     {
       title: t("description"),
@@ -105,7 +105,7 @@ export const TableOrientirUI: FC<Props> = (props) => {
     option: { value: string | number; label: string },
   ) => {
     setSelectedNearbyCategory([
-      { nearbyCategoryId: value, "nearby-category": option.label },
+      { nearbyCategoryId: value, nearbyCategoryName: option.label },
     ]);
 
     triggerNearby({
@@ -118,7 +118,7 @@ export const TableOrientirUI: FC<Props> = (props) => {
     value: string,
     option: { value: string | number; label: string },
   ) => {
-    setSelectedNearby([{ nearbyId: value, nearby: option.label }]);
+    setSelectedNearby([{ nearby: value, nearbyName: option.label }]);
   };
 
   return (
@@ -129,10 +129,10 @@ export const TableOrientirUI: FC<Props> = (props) => {
       <Row gutter={16} align={"middle"}>
         <Col span={7}>
           <Flex align="center" gap={8}>
-            <label htmlFor="nearby-category">{t("nearby-category")}</label>
+            <label htmlFor="nearbyCategory">{t("nearby-category")}</label>
             <Select
               showSearch
-              id="nearby-category"
+              id="nearbyCategory"
               value={selectedNearbyCategory[0]?.nearbyCategoryId}
               onSelect={onSelectNearbyCategory}
               allowClear
@@ -154,7 +154,7 @@ export const TableOrientirUI: FC<Props> = (props) => {
               disabled={isLoadingNearby}
               showSearch
               id="nearby"
-              value={selectedNearby[0]?.nearbyId}
+              value={selectedNearby[0]?.nearby}
               onSelect={onSelectSubCategory}
               allowClear
               options={

@@ -78,13 +78,13 @@ export const OrgAddSecondStepUI: FC = () => {
 
   useEffect(() => {
     if (Storage) {
-      const { city, district } = localS;
-      if (city) {
+      const { cityId, districtId } = localS;
+      if (cityId) {
         triggerCities({
           ...allActives,
         });
       }
-      if (district) {
+      if (districtId) {
         triggerDistrict({
           ...allActives,
         });
@@ -97,7 +97,7 @@ export const OrgAddSecondStepUI: FC = () => {
     <>
       <Row justify={"space-between"} gutter={24}>
         <Col span={8}>
-          <Form.Item name={"region"} label={t("region")} required>
+          <Form.Item name={"regionId"} label={t("region")} required>
             <Select
               labelRender={renderLabelSelect}
               onSelect={onChangeRegion}
@@ -111,7 +111,7 @@ export const OrgAddSecondStepUI: FC = () => {
               placeholder={t("region")}
             />
           </Form.Item>
-          <Form.Item name={"city"} label={t("city")} required>
+          <Form.Item name={"cityId"} label={t("city")} required>
             <Select
               labelRender={renderLabelSelect}
               onSelect={onChangeCity}
@@ -125,7 +125,7 @@ export const OrgAddSecondStepUI: FC = () => {
               placeholder={t("city")}
             />
           </Form.Item>
-          <Form.Item name={"district"} label={t("district")}>
+          <Form.Item name={"districtId"} label={t("district")}>
             <Select
               labelRender={renderLabelSelect}
               loading={isLoadingDistrict}
@@ -138,7 +138,7 @@ export const OrgAddSecondStepUI: FC = () => {
               placeholder={t("district")}
             />
           </Form.Item>
-          <Form.Item name={"village"} label={t("village")}>
+          <Form.Item name={"villageId"} label={t("village")}>
             <Select
               labelRender={renderLabelSelect}
               loading={isLoadingVillage}
@@ -151,7 +151,7 @@ export const OrgAddSecondStepUI: FC = () => {
               placeholder={t("village")}
             />
           </Form.Item>
-          <Form.Item name={"avenue"} label={t("avenue")}>
+          <Form.Item name={"avenueId"} label={t("avenue")}>
             <Select
               labelRender={renderLabelSelect}
               loading={isLoadingAvenue}
@@ -164,7 +164,7 @@ export const OrgAddSecondStepUI: FC = () => {
               placeholder={t("avenue")}
             />
           </Form.Item>
-          <Form.Item name={"residential-area"} label={t("residential-area")}>
+          <Form.Item name={"residentialId"} label={t("residential-area")}>
             <Select
               labelRender={renderLabelSelect}
               loading={isLoadingResidentialArea}
@@ -179,7 +179,7 @@ export const OrgAddSecondStepUI: FC = () => {
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item name={"area"} label={t("area")}>
+          <Form.Item name={"areaId"} label={t("area")}>
             <Select
               labelRender={renderLabelSelect}
               loading={isLoadingArea}
@@ -195,7 +195,7 @@ export const OrgAddSecondStepUI: FC = () => {
           <Form.Item name={"kvartal"} label={t("kvartal")}>
             <Input type="text" placeholder={t("kvartal")} allowClear />
           </Form.Item>
-          <Form.Item name={"street"} label={t("street")}>
+          <Form.Item name={"streetId"} label={t("street")}>
             <Select
               labelRender={renderLabelSelect}
               loading={isLoadingStreet}
@@ -208,7 +208,7 @@ export const OrgAddSecondStepUI: FC = () => {
               placeholder={t("street")}
             />
           </Form.Item>
-          <Form.Item name={"lane"} label={t("lane")}>
+          <Form.Item name={"laneId"} label={t("lane")}>
             <Select
               labelRender={renderLabelSelect}
               loading={isLoadingLane}
@@ -221,7 +221,7 @@ export const OrgAddSecondStepUI: FC = () => {
               placeholder={t("lane")}
             />
           </Form.Item>
-          <Form.Item name={"passage"} label={t("passage")}>
+          <Form.Item name={"passageId"} label={t("passage")}>
             <Select
               labelRender={renderLabelSelect}
               loading={isLoadingPassage}
@@ -234,7 +234,7 @@ export const OrgAddSecondStepUI: FC = () => {
               placeholder={t("passage")}
             />
           </Form.Item>
-          <Form.Item name={"impasse"} label={t("impasse")}>
+          <Form.Item name={"impasseId"} label={t("impasse")}>
             <Select
               labelRender={renderLabelSelect}
               loading={isLoadingImpasse}
