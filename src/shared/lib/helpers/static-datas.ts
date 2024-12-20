@@ -72,16 +72,7 @@ export const SEND_BODY = [
   "index",
   "inn",
   "bank_number",
-  "paymentTypes",
   "description",
-  "bus",
-  "microBus",
-  "metroStation",
-  "worktimeFrom",
-  "worktimeTo",
-  "lunchFrom",
-  "lunchTo",
-  "dayoffs",
 ];
 
 export const additionalSubmitData = (
