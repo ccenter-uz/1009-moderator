@@ -1,4 +1,4 @@
-import { Button, Divider, Flex, Form, Steps } from "antd";
+import { Button, Divider, Flex, Form, notification, Steps } from "antd";
 import i18next from "i18next";
 import { CSSProperties, FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -15,7 +15,12 @@ import {
 } from "@widgets/org-add-second-step";
 import { OrgAddThirdStepUI, setPhoneData } from "@widgets/org-add-third-step";
 
-import { SEND_BODY, STEPS_DATA, STEPS_ENUM } from "@shared/lib/helpers";
+import {
+  removeLocalStorage,
+  SEND_BODY,
+  STEPS_DATA,
+  STEPS_ENUM,
+} from "@shared/lib/helpers";
 import { RootState } from "@shared/types";
 
 const items = [
@@ -71,7 +76,7 @@ export const OrgAddPage: FC = () => {
     if (current === STEPS_ENUM.firstStep) {
       const firstStepData = {
         ...form.getFieldsValue(STEPS_DATA.FIRST_FORMDATA),
-        "category-tu": categoryTu,
+        categoryTu: categoryTu,
       };
       localStorage.setItem("firstStepData", JSON.stringify(firstStepData));
     } else if (current === STEPS_ENUM.secondStep) {
@@ -96,37 +101,47 @@ export const OrgAddPage: FC = () => {
   const onSubmit = async () => {
     const body = {
       ...form.getFieldsValue(SEND_BODY),
-      payment_type: {
-        cash: form.getFieldValue("all_type")
-          ? true
-          : form.getFieldValue("cash"),
-        terminal: form.getFieldValue("all_type")
+      paymentTypes: {
+        cash: form.getFieldValue("allType") ? true : form.getFieldValue("cash"),
+        terminal: form.getFieldValue("allType")
           ? true
           : form.getFieldValue("terminal"),
-        trasnfer: form.getFieldValue("all_type")
+        trasnfer: form.getFieldValue("allType")
           ? true
           : form.getFieldValue("trasnfer"),
-        all_type: form.getFieldValue("all_type"),
       },
-      worktime: {
+      workTime: {
         dayoffs: form.getFieldValue("dayoffs"),
-        "worktime-from": form.getFieldValue("worktime-from"),
-        "worktime-to": form.getFieldValue("worktime-to"),
-        "lunch-from": form.getFieldValue("lunch-from"),
-        "lunch-to": form.getFieldValue("lunch-to"),
+        worktimeFrom: form.getFieldValue("worktimeFrom"),
+        worktimeTo: form.getFieldValue("worktimeTo"),
+        lunchFrom: form.getFieldValue("lunchFrom"),
+        lunchTo: form.getFieldValue("lunchTo"),
       },
       transport: {
         bus: form.getFieldValue("bus"),
-        "micro-bus": form.getFieldValue("micro-bus"),
-        "metro-station": form.getFieldValue("metro-station"),
+        microBus: form.getFieldValue("microBus"),
+        metroStation: form.getFieldValue("metroStation"),
       },
-      "category-tu": categoryTu,
-      orientir: orientirData,
+      categoryTu: categoryTu,
+      nearbees: orientirData,
       phone: phoneData,
-      images,
+      photos: images,
     };
 
     console.log(body, "body");
+  };
+
+  const onClearAllData = () => {
+    removeLocalStorage("firstStepData");
+    removeLocalStorage("secondStepData");
+    removeLocalStorage("thirdStepData");
+    removeLocalStorage("currentStep");
+    form.resetFields();
+
+    notification.success({
+      message: t("erased"),
+      placement: "bottomRight",
+    });
   };
 
   useEffect(() => {
@@ -136,7 +151,7 @@ export const OrgAddPage: FC = () => {
     const thirdStepData = localStorage.getItem("thirdStepData");
     if (firstStepData) {
       form.setFieldsValue(JSON.parse(firstStepData)),
-        dispatch(setCategoryData(JSON.parse(firstStepData)["category-tu"]));
+        dispatch(setCategoryData(JSON.parse(firstStepData)["categoryTu"]));
     }
 
     if (secondStepData) {
@@ -162,6 +177,9 @@ export const OrgAddPage: FC = () => {
       </div>
       <Divider />
       <Flex align="center" justify="end" gap={8} style={{ marginTop: 24 }}>
+        <Button style={{ margin: "0 8px" }} onClick={onClearAllData}>
+          {t("erase-all")}
+        </Button>
         {current > 0 && (
           <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
             {t("previous")}
