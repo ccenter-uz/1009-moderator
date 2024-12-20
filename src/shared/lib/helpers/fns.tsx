@@ -114,3 +114,15 @@ export const setColorByStatus = (status: string) => {
       return null;
   }
 };
+
+export const getDayOffsCheckbox = (form) => {
+  const dayOffs = [];
+  form.getFieldValue("monday") && dayOffs.push("monday");
+  form.getFieldValue("tuesday") && dayOffs.push("tuesday");
+  form.getFieldValue("wednesday") && dayOffs.push("wednesday");
+  form.getFieldValue("thursday") && dayOffs.push("thursday");
+  form.getFieldValue("friday") && dayOffs.push("friday");
+  form.getFieldValue("saturday") && dayOffs.push("saturday");
+  form.getFieldValue("sunday") && dayOffs.push("sunday");
+  return dayOffs;
+};

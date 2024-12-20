@@ -16,6 +16,7 @@ import {
 import { OrgAddThirdStepUI, setPhoneData } from "@widgets/org-add-third-step";
 
 import {
+  getDayOffsCheckbox,
   removeLocalStorage,
   SEND_BODY,
   STEPS_DATA,
@@ -106,12 +107,12 @@ export const OrgAddPage: FC = () => {
         terminal: form.getFieldValue("allType")
           ? true
           : form.getFieldValue("terminal"),
-        trasnfer: form.getFieldValue("allType")
+        transfer: form.getFieldValue("allType")
           ? true
-          : form.getFieldValue("trasnfer"),
+          : form.getFieldValue("transfer"),
       },
       workTime: {
-        dayoffs: form.getFieldValue("dayoffs"),
+        dayoffs: getDayOffsCheckbox(form),
         worktimeFrom: form.getFieldValue("worktimeFrom"),
         worktimeTo: form.getFieldValue("worktimeTo"),
         lunchFrom: form.getFieldValue("lunchFrom"),
