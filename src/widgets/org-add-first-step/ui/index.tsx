@@ -64,7 +64,7 @@ export const OrgAddFirstStepUI: FC = () => {
     <>
       <Row justify={"space-between"} gutter={24}>
         <Col span={12}>
-          <Form.Item name={"abonent"} label={t("abonent")}>
+          <Form.Item name={"name"} label={t("abonent")}>
             <Input type="text" placeholder={t("abonent")} allowClear />
           </Form.Item>
           <Form.Item name={"legalName"} label={t("org-name")}>
