@@ -45,7 +45,7 @@ export const STEPS_DATA = {
 };
 
 export const SEND_BODY = [
-  "abonent",
+  "name",
   "legalName",
   "categoryId",
   "subCategoryId",
