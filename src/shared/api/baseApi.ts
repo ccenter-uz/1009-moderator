@@ -7,12 +7,7 @@ import {
 import { notification } from "antd";
 import i18next from "i18next";
 
-import {
-  API_MAP,
-  deleteCookie,
-  getCookie,
-  RESPONSE_STATUS,
-} from "@shared/lib/helpers";
+import { deleteCookie, getCookie, RESPONSE_STATUS } from "@shared/lib/helpers";
 import { RootState } from "@shared/types/store";
 
 const baseUrl = import.meta.env.VITE_APP_BASE_URL;
