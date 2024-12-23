@@ -105,6 +105,43 @@ export const columnsForForBasicTable = [
     key: "staffNumber",
   },
 ];
+export const columnsForPhoneTypeTable = [
+  {
+    title: i18next.t("name"),
+    dataIndex: "name",
+    key: "name",
+    render: (text: { [key: string]: string }) => text[i18next.language],
+  },
+  {
+    title: i18next.t("createdAt"),
+    dataIndex: "createdAt",
+    key: "createdAt",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+  },
+  {
+    title: i18next.t("update_date"),
+    dataIndex: "updatedAt",
+    key: "updatedAt",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+  },
+  {
+    title: i18next.t("deletedAt"),
+    dataIndex: "deletedAt",
+    key: "deletedAt",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+  },
+  {
+    title: i18next.t("status"),
+    dataIndex: "status",
+    key: "status",
+    render: (text: number) => setColorByStatus(status[text]),
+  },
+  {
+    title: i18next.t("employee"),
+    dataIndex: "staffNumber",
+    key: "staffNumber",
+  },
+];
 
 export const columnsWithRegions = [
   {

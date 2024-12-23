@@ -13,34 +13,34 @@ import {
 } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
-import { t } from "i18next";
+import i18next, { t } from "i18next";
 import { FC, useState } from "react";
 import { FaTrashAlt } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 
+import { useGetPhoneTypeQuery } from "@entities/phone";
+
+import { GET_ALL_ACTIVE_STATUS } from "@shared/lib/helpers";
 import { RootState } from "@shared/types";
 
 import { setData } from "../model/Slicer";
 
-// MOCKS
-const mocks = {
-  phoneTypeOptions: [
-    {
-      id: 1,
-      key: 1,
-      label: "Тип телефона 1",
-      value: "phone-type 1",
-      "phone-type": "Тип телефона 1",
-    },
-    {
-      id: 2,
-      key: 2,
-      label: "Тип телефона 2",
-      value: "phone-type 2",
-      "phone-type": "Тип телефона 2",
-    },
-  ],
-  columns: [
+export const OrgAddThirdStepUI: FC = () => {
+  const { data } = useSelector(
+    ({ useAddOrgThirdStepSlice }: RootState) => useAddOrgThirdStepSlice,
+  );
+  const dispatch = useDispatch();
+  const { data: phoneTypesData, isLoading: phoneTypesLoading } =
+    useGetPhoneTypeQuery({
+      all: GET_ALL_ACTIVE_STATUS.all,
+      status: GET_ALL_ACTIVE_STATUS.active,
+    });
+  const [selectedPhoneType, setSelectedPhoneType] = useState<AnyObject[] | []>(
+    [],
+  );
+  const [phone, setPhone] = useState<string>("");
+
+  const columns = [
     {
       title: t("phone-type"),
       dataIndex: "phone-type",
@@ -68,11 +68,12 @@ export const OrgAddThirdStepUI: FC = () => {
   const [phone, setPhone] = useState<string>("");
 
   const overColumns = [
+
     {
       width: 80,
       title: t("secret"),
-      dataIndex: "secret",
-      key: "secret",
+      dataIndex: "isSecret",
+      key: "isSecret",
       render: (text: string, record: AnyObject) => (
         <Checkbox
           checked={!!text}
@@ -80,7 +81,6 @@ export const OrgAddThirdStepUI: FC = () => {
         />
       ),
     },
-    ...mocks.columns,
     {
       title: t("action"),
       dataIndex: "action",
@@ -106,9 +106,9 @@ export const OrgAddThirdStepUI: FC = () => {
   const onSecretCheck = (e: CheckboxChangeEvent, record: AnyObject) => {
     const filteredData = data
       ?.filter((item: { phone: string }) => item.phone === record.phone)
-      .map((item: { secret: boolean }) => ({
+      .map((item: { isSecret: boolean }) => ({
         ...item,
-        secret: e.target.checked,
+        isSecret: e.target.checked,
       }));
 
     const otherData = data?.filter(
@@ -117,7 +117,6 @@ export const OrgAddThirdStepUI: FC = () => {
     if (!filteredData) return null;
     const newData = [...otherData, ...filteredData];
     dispatch(setData(newData));
-    console.log(newData, "newData");
   };
 
   const onDelete = async (phone: string) => {
@@ -138,8 +137,11 @@ export const OrgAddThirdStepUI: FC = () => {
     setPhone("");
   };
 
-  const onSelectType = (value: string, option: AnyObject | unknown) => {
-    setSelectedPhoneType([option as AnyObject]);
+  const onSelectType = (
+    value: string,
+    option: { value: string | number; label: string },
+  ) => {
+    setSelectedPhoneType([{ phoneTypeId: value, "phone-type": option.label }]);
   };
 
   return (
@@ -149,7 +151,7 @@ export const OrgAddThirdStepUI: FC = () => {
           <Form.Item name={"account"} label={t("account")}>
             <Input placeholder={t("account")} />
           </Form.Item>
-          <Form.Item name={"email"} label={t("email")}>
+          <Form.Item name={"mail"} label={t("email")}>
             <Input placeholder={t("email")} />
           </Form.Item>
           <Form.Item name={"index"} label={t("index")}>
@@ -157,7 +159,7 @@ export const OrgAddThirdStepUI: FC = () => {
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item name={"tin"} label={t("tin")}>
+          <Form.Item name={"inn"} label={t("tin")}>
             <Input placeholder={t("tin")} />
           </Form.Item>
           <Form.Item name={"bank_number"} label={t("bank_number")}>
@@ -173,11 +175,16 @@ export const OrgAddThirdStepUI: FC = () => {
           <Flex align="center" gap={8}>
             <label htmlFor="phone-type">{t("phone-type")}</label>
             <Select
+              loading={phoneTypesLoading}
+              allowClear
               showSearch
               id="phone-type"
-              value={selectedPhoneType[0]?.value}
+              value={selectedPhoneType[0]?.phoneTypeId}
               onSelect={onSelectType}
-              options={phoneTypeOptions}
+              options={phoneTypesData?.data?.map((item: AnyObject) => ({
+                value: item.id,
+                label: item.name[i18next.language],
+              }))}
               style={{ flex: 1 }}
             />
           </Flex>
@@ -208,7 +215,7 @@ export const OrgAddThirdStepUI: FC = () => {
 
       <Table
         bordered
-        columns={overColumns}
+        columns={columns}
         dataSource={data}
         pagination={false}
         scroll={{ y: 300 }}

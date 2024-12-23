@@ -16,6 +16,7 @@ import {
 import { OrgAddThirdStepUI, setPhoneData } from "@widgets/org-add-third-step";
 
 import {
+  getDayOffsCheckbox,
   removeLocalStorage,
   SEND_BODY,
   STEPS_DATA,
@@ -87,6 +88,7 @@ export const OrgAddPage: FC = () => {
       localStorage.setItem("secondStepData", JSON.stringify(secondStepData));
     } else if (current === STEPS_ENUM.thirdStep) {
       const thirdStepData = {
+        ...form.getFieldsValue(STEPS_DATA.THIRD_FORMDATA),
         phone: phoneData,
       };
       localStorage.setItem("thirdStepData", JSON.stringify(thirdStepData));
@@ -106,12 +108,12 @@ export const OrgAddPage: FC = () => {
         terminal: form.getFieldValue("allType")
           ? true
           : form.getFieldValue("terminal"),
-        trasnfer: form.getFieldValue("allType")
+        transfer: form.getFieldValue("allType")
           ? true
-          : form.getFieldValue("trasnfer"),
+          : form.getFieldValue("transfer"),
       },
       workTime: {
-        dayoffs: form.getFieldValue("dayoffs"),
+        dayoffs: getDayOffsCheckbox(form),
         worktimeFrom: form.getFieldValue("worktimeFrom"),
         worktimeTo: form.getFieldValue("worktimeTo"),
         lunchFrom: form.getFieldValue("lunchFrom"),
@@ -122,9 +124,11 @@ export const OrgAddPage: FC = () => {
         microBus: form.getFieldValue("microBus"),
         metroStation: form.getFieldValue("metroStation"),
       },
-      categoryTu: categoryTu,
-      nearbees: orientirData,
-      phone: phoneData,
+      productService: { productService: categoryTu },
+      nearby: {
+        nearbees: orientirData,
+      },
+      phone: { phones: phoneData },
       photos: images,
     };
 
