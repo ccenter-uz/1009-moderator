@@ -161,6 +161,7 @@ export const ManageNearbyPage: FC = () => {
               >
                 {/* AnyObject cause cannot find proper type */}
                 <Select
+                  allowClear
                   onSelect={handleCategorySelect}
                   loading={isLoadingCategory}
                   options={dataCategory?.data.map((item: AnyObject) => ({

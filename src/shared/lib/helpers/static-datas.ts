@@ -20,6 +20,7 @@ export const STEPS_DATA = {
     "districtId",
     "residentialId",
     "areaId",
+    "avenueId",
     "kvartal",
     "streetId",
     "laneId",
@@ -55,6 +56,7 @@ export const SEND_BODY = [
   "manager",
   "regionId",
   "cityId",
+  "avenueId",
   "villageId",
   "districtId",
   "residentialId",
@@ -108,5 +110,5 @@ export const GET_ALL_ACTIVE_STATUS = {
 
 export const allActives = {
   all: GET_ALL_ACTIVE_STATUS.all,
-  active: GET_ALL_ACTIVE_STATUS.active,
+  status: GET_ALL_ACTIVE_STATUS.active,
 };

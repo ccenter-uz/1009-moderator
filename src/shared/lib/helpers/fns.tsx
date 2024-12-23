@@ -86,20 +86,12 @@ export const notificationResponse = (
   t: (arg0: string) => string,
   onClose: () => void,
 ) => {
-  if (res.data) {
+  if (res.data.status >= 200 && res.data.status < 300) {
     notification.success({
       message: t("success"),
       placement: "bottomRight",
     });
     onClose();
-  } else {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const error = res?.error?.data?.error.details.error.message[0];
-    notification.error({
-      message: error,
-      placement: "bottomRight",
-    });
   }
 };
 
@@ -116,9 +108,24 @@ export const setColorByStatus = (status: string) => {
   }
 };
 
+
 export const renderLabelSelect = ({ label }: { label: string | ReactNode }) => {
   if (label == undefined) {
     return "";
   }
   return label;
+
+
+export const getDayOffsCheckbox = (form: AnyObject) => {
+  const dayOffs = [];
+  form.getFieldValue("monday") && dayOffs.push("monday");
+  form.getFieldValue("tuesday") && dayOffs.push("tuesday");
+  form.getFieldValue("wednesday") && dayOffs.push("wednesday");
+  form.getFieldValue("thursday") && dayOffs.push("thursday");
+  form.getFieldValue("friday") && dayOffs.push("friday");
+  form.getFieldValue("saturday") && dayOffs.push("saturday");
+  form.getFieldValue("sunday") && dayOffs.push("sunday");
+  return dayOffs;
+
+
 };
