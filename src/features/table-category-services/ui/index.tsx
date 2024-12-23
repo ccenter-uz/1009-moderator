@@ -43,13 +43,13 @@ export const TableCategoryServices: FC<Props> = (props) => {
   const columns = [
     {
       title: t("category-tu"),
-      dataIndex: "category-tu",
-      key: "category-tu",
+      dataIndex: "productServiceCategoryName",
+      key: "productServiceCategoryName",
     },
     {
       title: t("sub-category-tu"),
-      dataIndex: "sub-category-tu",
-      key: "sub-category-tu",
+      dataIndex: "productServiceSubCategoryName",
+      key: "productServiceSubCategoryName",
     },
     {
       title: t("action"),
@@ -96,7 +96,12 @@ export const TableCategoryServices: FC<Props> = (props) => {
     value: string,
     option: { value: string | number; label: string },
   ) => {
-    setSelectedCategory([{ categoryId: value, "category-tu": option.label }]);
+    setSelectedCategory([
+      {
+        productServiceCategoryId: value,
+        productServiceCategoryName: option.label,
+      },
+    ]);
 
     triggerSubcategoryTu({ categoryId: value, ...allActives });
   };
@@ -106,7 +111,10 @@ export const TableCategoryServices: FC<Props> = (props) => {
     option: { value: string | number; label: string },
   ) => {
     setSelectedSubCategory([
-      { subCategoryId: value, "sub-category-tu": option.label },
+      {
+        productServiceSubCategoryId: value,
+        productServiceSubCategoryName: option.label,
+      },
     ]);
   };
 
@@ -118,11 +126,11 @@ export const TableCategoryServices: FC<Props> = (props) => {
       <Row gutter={16} align={"middle"}>
         <Col span={11}>
           <Flex align="center" gap={8}>
-            <label htmlFor="category-tu">{t("category-tu")}</label>
+            <label htmlFor="productServiceCategoryId">{t("category-tu")}</label>
             <Select
               showSearch
-              id="category-tu"
-              value={selectedCategory[0]?.["category-tu"]}
+              id="productServiceCategoryId"
+              value={selectedCategory[0]?.productServiceCategoryId}
               onSelect={onSelectCategory}
               allowClear
               disabled={isLoadingCategoryTu}
@@ -138,11 +146,13 @@ export const TableCategoryServices: FC<Props> = (props) => {
         </Col>
         <Col span={11}>
           <Flex align="center" gap={8}>
-            <label htmlFor="sub-category-tu">{t("sub-category-tu")}</label>
+            <label htmlFor="productServiceSubCategoryId">
+              {t("sub-category-tu")}
+            </label>
             <Select
               showSearch
-              id="sub-category-tu"
-              value={selectedSubCategory[0]?.["sub-category-tu"]}
+              id="productServiceSubCategoryId"
+              value={selectedSubCategory[0]?.productServiceSubCategoryId}
               onSelect={onSelectSubCategory}
               allowClear
               disabled={isLoadingSubcategoryTu}

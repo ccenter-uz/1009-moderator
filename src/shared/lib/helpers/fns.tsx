@@ -115,6 +115,7 @@ export const renderLabelSelect = ({ label }: { label: string | ReactNode }) => {
   }
   return label;
 
+
 export const getDayOffsCheckbox = (form: AnyObject) => {
   const dayOffs = [];
   form.getFieldValue("monday") && dayOffs.push("monday");
@@ -125,5 +126,6 @@ export const getDayOffsCheckbox = (form: AnyObject) => {
   form.getFieldValue("saturday") && dayOffs.push("saturday");
   form.getFieldValue("sunday") && dayOffs.push("sunday");
   return dayOffs;
+
 
 };
