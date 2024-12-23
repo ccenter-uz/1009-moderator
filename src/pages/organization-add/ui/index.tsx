@@ -88,6 +88,7 @@ export const OrgAddPage: FC = () => {
       localStorage.setItem("secondStepData", JSON.stringify(secondStepData));
     } else if (current === STEPS_ENUM.thirdStep) {
       const thirdStepData = {
+        ...form.getFieldsValue(STEPS_DATA.THIRD_FORMDATA),
         phone: phoneData,
       };
       localStorage.setItem("thirdStepData", JSON.stringify(thirdStepData));
