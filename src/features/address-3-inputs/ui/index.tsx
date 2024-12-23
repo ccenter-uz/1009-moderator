@@ -10,7 +10,7 @@ import {
   useLazyGetCitiesQuery,
 } from "@entities/region-city";
 
-import { GET_ALL_ACTIVE_STATUS } from "@shared/lib/helpers";
+import { GET_ALL_ACTIVE_STATUS, resetFieldsValue } from "@shared/lib/helpers";
 
 interface Props {
   form: FormInstance;
@@ -35,9 +35,6 @@ export const Address3Inputs: FC<Props> = (props) => {
   ] = useLazyGetDistrictsQuery();
 
   const onSelectRegion = useCallback((value: string) => {
-    form.setFieldsValue({ city: undefined });
-    form.setFieldsValue({ district: undefined });
-
     triggerCities({
       regionId: value,
       all: GET_ALL_ACTIVE_STATUS.all,
@@ -47,8 +44,6 @@ export const Address3Inputs: FC<Props> = (props) => {
   }, []);
 
   const onSelectCity = useCallback((value: string) => {
-    form.setFieldsValue({ district: undefined });
-
     triggerDistrict({
       regionId: form.getFieldValue("region"),
       cityId: value,
@@ -91,6 +86,7 @@ export const Address3Inputs: FC<Props> = (props) => {
               })) || []
             }
             placeholder={t("region")}
+            onChange={() => resetFieldsValue(form, ["city", "district"])}
             onSelect={onSelectRegion}
             loading={isLoadingRegions}
           />
@@ -107,6 +103,7 @@ export const Address3Inputs: FC<Props> = (props) => {
               })) || []
             }
             placeholder={t("city")}
+            onChange={() => resetFieldsValue(form, ["district"])}
             onSelect={onSelectCity}
             loading={isLoadingCities}
           />
