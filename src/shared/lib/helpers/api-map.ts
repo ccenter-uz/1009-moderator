@@ -75,4 +75,10 @@ export const API_MAP = {
   CREATE_LANE: "lane",
   UPDATE_LANE: "lane",
   DELETE_LANE: "lane",
+  // Phone
+
+  PHONE_ALL: "phone-type",
+  CREATE_PHONE: "phone-type",
+  UPDATE_PHONE: "phone-type",
+  DELETE_PHONE: "phone-type",
 };

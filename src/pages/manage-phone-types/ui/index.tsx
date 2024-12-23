@@ -1,52 +1,85 @@
 import { Flex, Form } from "antd";
+import { AnyObject } from "antd/es/_util/type";
 import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
+import { useSearchParams } from "react-router-dom";
 
 import { BasicSearchPartUI } from "@features/basic-search-part";
 import { DeleteTableItemUI } from "@features/delete-table-item";
 
+import {
+  useCreatePhoneTypeMutation,
+  useDeletePhoneTypeMutation,
+  useGetPhoneTypeQuery,
+  useUpdatePhoneTypeMutation,
+} from "@entities/phone";
 import { SingleNameCyrill } from "@entities/single-name-cyrill";
 import { SingleNameRu } from "@entities/single-name-ru";
 import { SingleNameUz } from "@entities/single-name-uz";
 
-import { columnsForForBasicTable } from "@shared/lib/helpers";
+import {
+  columnsForForBasicTable,
+  notificationResponse,
+  returnAllParams,
+} from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { ItableBasicData } from "@shared/types";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
 
 export const ManagePhoneTypesPage: FC = () => {
   const { t } = useTranslation();
+  const [_, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [form] = Form.useForm<ItableBasicData>();
-  const [loading, setLoading] = useState<boolean>(false);
+  const { data, isLoading } = useGetPhoneTypeQuery({
+    ...returnAllParams(),
+  });
+  const [deletePhoneType] = useDeletePhoneTypeMutation();
+  const [createPhoneType] = useCreatePhoneTypeMutation();
+  const [updatePhoneType] = useUpdatePhoneTypeMutation();
+  const [editingData, setEditingData] = useState<AnyObject | null>(null);
 
-  const data: ItableBasicData[] = [
-    {
-      id: 1,
-      key: "1",
-      name_ru: "John Brown",
-      updated_date: "2022-01-01",
-      employee: "10032",
-    },
-  ];
-
-  const onEditOpen = (values: ItableBasicData) => {
-    form.setFieldsValue(values);
+  const handleEditOpen = (values: ItableBasicData) => {
+    const editingBody = {
+      ru: values.name_ru,
+      uz: values.name_uz,
+      cy: values.name_cyrill,
+      id: editingData?.id,
+    };
+    setEditingData({ ...values, id: values.id });
+    form.setFieldsValue(editingBody);
     onOpen();
   };
 
-  const onSearch = (value: string) => {
-    console.log(value, "search");
+  const handleSearch = ({ search }: { search: string }) => {
+    const previousParams = returnAllParams();
+    setSearchParams({ ...previousParams, search });
   };
 
-  const onSubmit = (values: ItableBasicData) => {
-    console.log(values, "add-edit");
+  const handleSubmit = async (values: ItableBasicData) => {
+    const body = {
+      ru: values.name_ru,
+      uz: values.name_uz,
+      cy: values.name_cyrill,
+      id: editingData?.id,
+    };
+
+    const request = editingData ? updatePhoneType : createPhoneType;
+
+    const response = await request(body);
+
+    notificationResponse(response, t, onClose);
     form.resetFields();
     onClose();
   };
 
-  const overColumns = [
+  const handleAdd = () => {
+    onOpen();
+    setEditingData(null);
+  };
+
+  const columns = [
     ...columnsForForBasicTable,
     {
       flex: 0.5,
@@ -54,39 +87,44 @@ export const ManagePhoneTypesPage: FC = () => {
       key: "action",
       dataIndex: "action",
       align: "center",
-      render: (text: string, record: ItableBasicData) => (
-        <Flex justify="center" align="center" gap={8}>
-          <FaPencilAlt
-            color="grey"
-            fontSize={16}
-            cursor={"pointer"}
-            title={t("edit")}
-            onClick={() => onEditOpen(record)}
-          />
-          <DeleteTableItemUI fetch={() => null} />
-        </Flex>
-      ),
+      render: (text: string, record: ItableBasicData & { status: number }) => {
+        if (record.status === 1) {
+          return (
+            <Flex justify="center" align="center" gap={8}>
+              <FaPencilAlt
+                color="grey"
+                fontSize={16}
+                cursor={"pointer"}
+                title={t("edit")}
+                onClick={() => handleEditOpen(record)}
+              />
+              <DeleteTableItemUI fetch={() => deletePhoneType(record.id)} />
+            </Flex>
+          );
+        }
+      },
     },
   ];
 
   return (
     <div>
       <ManageWrapperBox
-        totalItems={0}
+        loading={isLoading}
+        totalItems={data?.total || 0}
         title={t("phone-types")}
-        columns={overColumns}
-        data={data}
-        add={onOpen}
-        searchPart={<BasicSearchPartUI handleSearch={onSearch} />}
+        columns={columns}
+        data={data?.data || []}
+        add={handleAdd}
+        searchPart={<BasicSearchPartUI handleSearch={handleSearch} />}
         modalPart={
           <Form
             form={form}
-            onFinish={onSubmit}
+            onFinish={handleSubmit}
             id="modal-add-edit"
             className="manage-phone-types"
           >
             <ModalAddEdit
-              loading={loading}
+              loading={isLoading}
               open={isOpen}
               onClose={onClose}
               ruInputs={<SingleNameRu />}
