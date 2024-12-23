@@ -92,6 +92,7 @@ export const baseApi = createApi({
     "Avenues",
     "Lanes",
     "PhoneType",
+    "Organizations",
   ],
   endpoints: () => ({}),
 });

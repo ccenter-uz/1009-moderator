@@ -84,14 +84,19 @@ export const clearCookie = () => {
 export const notificationResponse = (
   res: AnyObject,
   t: (arg0: string) => string,
-  onClose: () => void,
+  onClose?: () => void,
 ) => {
   if (res.data.status >= 200 && res.data.status < 300) {
     notification.success({
       message: t("success"),
       placement: "bottomRight",
     });
-    onClose();
+    onClose && onClose();
+  } else {
+    notification.error({
+      message: t("error"),
+      placement: "bottomRight",
+    });
   }
 };
 

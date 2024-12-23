@@ -15,8 +15,11 @@ import {
 } from "@widgets/org-add-second-step";
 import { OrgAddThirdStepUI, setPhoneData } from "@widgets/org-add-third-step";
 
+import { useCreateOrganizationMutation } from "@entities/organization";
+
 import {
   getDayOffsCheckbox,
+  notificationResponse,
   removeLocalStorage,
   SEND_BODY,
   STEPS_DATA,
@@ -53,6 +56,7 @@ const contentStyle: CSSProperties = {
 export const OrgAddPage: FC = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const [createOrganization] = useCreateOrganizationMutation();
   const [form] = Form.useForm();
   const { data: categoryTu } = useSelector(
     ({ useAddOrgFirstStepSlice }: RootState) => useAddOrgFirstStepSlice,
@@ -101,6 +105,8 @@ export const OrgAddPage: FC = () => {
   };
 
   const onSubmit = async () => {
+    const formData = new FormData();
+
     const body = {
       ...form.getFieldsValue(SEND_BODY),
       paymentTypes: {
@@ -124,15 +130,21 @@ export const OrgAddPage: FC = () => {
         microBus: form.getFieldValue("microBus"),
         metroStation: form.getFieldValue("metroStation"),
       },
-      productService: { productService: categoryTu },
+      productService: { productServices: categoryTu },
       nearby: {
         nearbees: orientirData,
       },
       phone: { phones: phoneData },
-      photos: images,
     };
+    for (const key in body) {
+      formData.append(key, JSON.stringify(body[key]));
+    }
+    formData.append("photos", images);
 
     console.log(body, "body");
+    const response = await createOrganization(formData);
+
+    notificationResponse(response, t);
   };
 
   const onClearAllData = () => {
@@ -141,10 +153,13 @@ export const OrgAddPage: FC = () => {
     removeLocalStorage("thirdStepData");
     removeLocalStorage("currentStep");
     form.resetFields();
-
+    dispatch(setCategoryData([]));
+    dispatch(setOrientirData([]));
+    dispatch(setPhoneData([]));
     notification.success({
       message: t("erased"),
       placement: "bottomRight",
+      duration: 1,
     });
   };
 

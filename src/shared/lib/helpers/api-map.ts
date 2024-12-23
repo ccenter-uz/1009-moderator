@@ -81,4 +81,8 @@ export const API_MAP = {
   CREATE_PHONE: "phone-type",
   UPDATE_PHONE: "phone-type",
   DELETE_PHONE: "phone-type",
+  ORGANIZATION_ALL: "organization",
+  CREATE_ORGANIZATION: "organization",
+  UPDATE_ORGANIZATION: "organization",
+  DELETE_ORGANIZATION: "organization",
 };
