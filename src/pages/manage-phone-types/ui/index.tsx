@@ -19,13 +19,19 @@ import { SingleNameRu } from "@entities/single-name-ru";
 import { SingleNameUz } from "@entities/single-name-uz";
 
 import {
-  columnsForForBasicTable,
+  columnsForPhoneTypeTable,
   notificationResponse,
   returnAllParams,
 } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { ItableBasicData } from "@shared/types";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
+
+interface ImanagePhoneTypeValues {
+  name: { ru: string; uz: string; cy: string };
+  id: number;
+  status?: number;
+}
 
 export const ManagePhoneTypesPage: FC = () => {
   const { t } = useTranslation();
@@ -40,11 +46,11 @@ export const ManagePhoneTypesPage: FC = () => {
   const [updatePhoneType] = useUpdatePhoneTypeMutation();
   const [editingData, setEditingData] = useState<AnyObject | null>(null);
 
-  const handleEditOpen = (values: ItableBasicData) => {
+  const handleEditOpen = (values: ImanagePhoneTypeValues) => {
     const editingBody = {
-      ru: values.name_ru,
-      uz: values.name_uz,
-      cy: values.name_cyrill,
+      name_ru: values.name.ru,
+      name_uz: values.name.uz,
+      name_cyrill: values.name.cy,
       id: editingData?.id,
     };
     setEditingData({ ...values, id: values.id });
@@ -59,9 +65,11 @@ export const ManagePhoneTypesPage: FC = () => {
 
   const handleSubmit = async (values: ItableBasicData) => {
     const body = {
-      ru: values.name_ru,
-      uz: values.name_uz,
-      cy: values.name_cyrill,
+      name: {
+        ru: values.name_ru,
+        uz: values.name_uz,
+        cy: values.name_cyrill,
+      },
       id: editingData?.id,
     };
 
@@ -80,14 +88,14 @@ export const ManagePhoneTypesPage: FC = () => {
   };
 
   const columns = [
-    ...columnsForForBasicTable,
+    ...columnsForPhoneTypeTable,
     {
       flex: 0.5,
       title: "Действия",
       key: "action",
       dataIndex: "action",
       align: "center",
-      render: (text: string, record: ItableBasicData & { status: number }) => {
+      render: (text: string, record: ImanagePhoneTypeValues) => {
         if (record.status === 1) {
           return (
             <Flex justify="center" align="center" gap={8}>
