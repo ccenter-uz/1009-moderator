@@ -9,7 +9,7 @@ import {
   useLazyGetCitiesQuery,
 } from "@entities/region-city";
 
-import { GET_ALL_ACTIVE_STATUS } from "@shared/lib/helpers";
+import { GET_ALL_ACTIVE_STATUS, resetFieldsValue } from "@shared/lib/helpers";
 
 type Props = {
   withIndex?: boolean;
@@ -66,6 +66,7 @@ export const Address2Inputs: FC<Props> = (props) => {
               })) || []
             }
             placeholder={t("region")}
+            onChange={() => resetFieldsValue(form, ["city"])}
             onSelect={onSelectRegion}
             loading={isLoadingRegions}
           />
