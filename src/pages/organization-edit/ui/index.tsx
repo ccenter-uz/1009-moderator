@@ -18,7 +18,15 @@ import {
 } from "@widgets/org-edit-second-step";
 import { OrgEditThirdStepUI, setPhoneData } from "@widgets/org-edit-third-step";
 
-import { SEND_BODY, STEPS_DATA, STEPS_ENUM } from "@shared/lib/helpers";
+import { useUpdateOrganizationMutation } from "@entities/organization";
+
+import {
+  getDayOffsCheckbox,
+  notificationResponse,
+  SEND_BODY,
+  STEPS_DATA,
+  STEPS_ENUM,
+} from "@shared/lib/helpers";
 import { RootState } from "@shared/types";
 
 // STEPS
@@ -197,6 +205,7 @@ export const OrgEditPage: FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const dispatch = useDispatch();
+  const [updateOrganization] = useUpdateOrganizationMutation();
   const [form] = Form.useForm();
   const { data: categoryTu } = useSelector(
     ({ useEditOrgFirstStepSlice }: RootState) => useEditOrgFirstStepSlice,
@@ -326,34 +335,48 @@ export const OrgEditPage: FC = () => {
     localStorage.setItem(STEPS_EDIT_DATA.CURRENT, JSON.stringify(current - 1));
   };
   const onSubmit = async () => {
+    const formData = new FormData();
+
     const body = {
       ...form.getFieldsValue(SEND_BODY),
-      payment_type: {
-        cash: form.getFieldValue("cash"),
-        terminal: form.getFieldValue("terminal"),
-        transfer: form.getFieldValue("transfer"),
-        all_type: form.getFieldValue("all_type"),
+      paymentTypes: {
+        cash: form.getFieldValue("allType") ? true : form.getFieldValue("cash"),
+        terminal: form.getFieldValue("allType")
+          ? true
+          : form.getFieldValue("terminal"),
+        transfer: form.getFieldValue("allType")
+          ? true
+          : form.getFieldValue("transfer"),
       },
-      worktime: {
-        dayoffs: form.getFieldValue("dayoffs"),
-        "worktime-from": form.getFieldValue("worktime-from"),
-        "worktime-to": form.getFieldValue("worktime-to"),
-        "lunch-from": form.getFieldValue("lunch-from"),
-        "lunch-to": form.getFieldValue("lunch-to"),
+      workTime: {
+        dayoffs: getDayOffsCheckbox(form),
+        worktimeFrom: form.getFieldValue("worktimeFrom"),
+        worktimeTo: form.getFieldValue("worktimeTo"),
+        lunchFrom: form.getFieldValue("lunchFrom"),
+        lunchTo: form.getFieldValue("lunchTo"),
       },
       transport: {
         bus: form.getFieldValue("bus"),
-        "micro-bus": form.getFieldValue("micro-bus"),
-        "metro-station": form.getFieldValue("metro-station"),
+        microBus: form.getFieldValue("microBus"),
+        metroStation: form.getFieldValue("metroStation"),
       },
-      "category-tu": categoryTu,
-      orientir: orientirData,
-      phone: phoneData,
-      images,
+      productService: { productServices: categoryTu },
+      nearby: {
+        nearbees: orientirData,
+      },
+      phone: { phones: phoneData },
+      pictures: [],
     };
+    for (const key in body) {
+      formData.append(key, JSON.stringify(body[key]));
+    }
+    formData.append("photos", images);
 
-    clearStorage();
     console.log(body, "body-edit");
+    const response = await updateOrganization({ formData, id });
+
+    notificationResponse(response, t);
+    clearStorage();
   };
 
   useEffect(() => {

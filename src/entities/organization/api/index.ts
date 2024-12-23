@@ -1,3 +1,5 @@
+import { AnyObject } from "antd/es/_util/type";
+
 import { baseApi } from "@shared/api";
 import { API_MAP, API_METHODS } from "@shared/lib/helpers";
 
@@ -50,8 +52,8 @@ export const organizationApi = baseApi.injectEndpoints({
 
     // UPDATE
     updateOrganization: build.mutation({
-      query: (body) => ({
-        url: `${API_MAP.UPDATE_ORGANIZATION}/${body.id}`,
+      query: ({ body, id }) => ({
+        url: `${API_MAP.UPDATE_ORGANIZATION}/${id}`,
         method: API_METHODS.PUT,
         body,
       }),
