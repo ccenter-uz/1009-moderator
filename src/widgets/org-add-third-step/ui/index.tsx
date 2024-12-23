@@ -59,6 +59,8 @@ export const OrgAddThirdStepUI: FC = () => {
     ({ useAddOrgThirdStepSlice }: RootState) => useAddOrgThirdStepSlice,
   );
   const dispatch = useDispatch();
+  const { data: phoneTypesData, isLoading: phoneTypesLoading } =
+    useGetPhoneTypesQuery();
   const [selectedPhoneType, setSelectedPhoneType] = useState<AnyObject[] | []>(
     [],
   );
@@ -66,7 +68,8 @@ export const OrgAddThirdStepUI: FC = () => {
     mocks.phoneTypeOptions,
   );
   const [phone, setPhone] = useState<string>("");
-  const overColumns = [
+
+  const columns = [
     {
       width: 80,
       title: t("secret"),
@@ -148,7 +151,7 @@ export const OrgAddThirdStepUI: FC = () => {
           <Form.Item name={"account"} label={t("account")}>
             <Input placeholder={t("account")} />
           </Form.Item>
-          <Form.Item name={"email"} label={t("email")}>
+          <Form.Item name={"mail"} label={t("email")}>
             <Input placeholder={t("email")} />
           </Form.Item>
           <Form.Item name={"index"} label={t("index")}>
@@ -156,7 +159,7 @@ export const OrgAddThirdStepUI: FC = () => {
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item name={"tin"} label={t("tin")}>
+          <Form.Item name={"inn"} label={t("tin")}>
             <Input placeholder={t("tin")} />
           </Form.Item>
           <Form.Item name={"bank_number"} label={t("bank_number")}>
@@ -207,7 +210,7 @@ export const OrgAddThirdStepUI: FC = () => {
 
       <Table
         bordered
-        columns={overColumns}
+        columns={columns}
         dataSource={data}
         pagination={false}
         scroll={{ y: 300 }}
