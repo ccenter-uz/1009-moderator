@@ -19,7 +19,6 @@ import { SingleNameRu } from "@entities/single-name-ru";
 import { SingleNameUz } from "@entities/single-name-uz";
 
 import {
-  columnsForCategories,
   columnsForCategoriesTu,
   notificationResponse,
   returnAllParams,
