@@ -145,7 +145,7 @@ export const OrgAddThirdStepUI: FC = () => {
           <Form.Item name={"inn"} label={t("tin")}>
             <Input placeholder={t("tin")} />
           </Form.Item>
-          <Form.Item name={"bank_number"} label={t("bank_number")}>
+          <Form.Item name={"bankNumber"} label={t("bank_number")}>
             <Input placeholder={t("bank_number")} />
           </Form.Item>
         </Col>

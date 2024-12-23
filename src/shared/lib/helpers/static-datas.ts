@@ -30,7 +30,7 @@ export const STEPS_DATA = {
     "home",
     "apartment",
   ],
-  THIRD_FORMDATA: ["account", "mail", "index", "inn", "bank_number"],
+  THIRD_FORMDATA: ["account", "mail", "index", "inn", "bankNumber"],
   FOURTH_FORMDATA: [
     "paymentType",
     "description",
@@ -73,7 +73,7 @@ export const SEND_BODY = [
   "mail",
   "index",
   "inn",
-  "bank_number",
+  "bankNumber",
   "description",
 ];
 

@@ -109,6 +109,7 @@ export const OrgAddPage: FC = () => {
 
     const body = {
       ...form.getFieldsValue(SEND_BODY),
+      index: Number(form.getFieldValue("index")),
       paymentTypes: {
         cash: form.getFieldValue("allType") ? true : form.getFieldValue("cash"),
         terminal: form.getFieldValue("allType")
@@ -135,6 +136,9 @@ export const OrgAddPage: FC = () => {
         nearbees: orientirData,
       },
       phone: { phones: phoneData },
+      // REMOVE-THEN
+      sectionId: 1,
+      clientId: 1,
     };
     for (const key in body) {
       formData.append(key, JSON.stringify(body[key]));
