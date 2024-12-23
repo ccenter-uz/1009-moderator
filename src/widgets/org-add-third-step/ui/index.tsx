@@ -51,6 +51,24 @@ export const OrgAddThirdStepUI: FC = () => {
       dataIndex: "phone",
       key: "phone",
     },
+  ],
+};
+
+export const OrgAddThirdStepUI: FC = () => {
+  const { data } = useSelector(
+    ({ useAddOrgThirdStepSlice }: RootState) => useAddOrgThirdStepSlice,
+  );
+  const dispatch = useDispatch();
+  const [selectedPhoneType, setSelectedPhoneType] = useState<AnyObject[] | []>(
+    [],
+  );
+  const [phoneTypeOptions, setPhoneTypeOptions] = useState<AnyObject[] | []>(
+    mocks.phoneTypeOptions,
+  );
+  const [phone, setPhone] = useState<string>("");
+
+  const overColumns = [
+
     {
       width: 80,
       title: t("secret"),

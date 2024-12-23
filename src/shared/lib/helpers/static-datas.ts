@@ -110,5 +110,5 @@ export const GET_ALL_ACTIVE_STATUS = {
 
 export const allActives = {
   all: GET_ALL_ACTIVE_STATUS.all,
-  active: GET_ALL_ACTIVE_STATUS.active,
+  status: GET_ALL_ACTIVE_STATUS.active,
 };

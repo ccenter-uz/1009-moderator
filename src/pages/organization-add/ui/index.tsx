@@ -83,7 +83,7 @@ export const OrgAddPage: FC = () => {
     } else if (current === STEPS_ENUM.secondStep) {
       const secondStepData = {
         ...form.getFieldsValue(STEPS_DATA.SECOND_FORMDATA),
-        orientir: orientirData,
+        nearbees: orientirData,
       };
       localStorage.setItem("secondStepData", JSON.stringify(secondStepData));
     } else if (current === STEPS_ENUM.thirdStep) {
@@ -155,12 +155,12 @@ export const OrgAddPage: FC = () => {
     const thirdStepData = localStorage.getItem("thirdStepData");
     if (firstStepData) {
       form.setFieldsValue(JSON.parse(firstStepData)),
-        dispatch(setCategoryData(JSON.parse(firstStepData)["categoryTu"]));
+        dispatch(setCategoryData(JSON.parse(firstStepData)?.categoryTu));
     }
 
     if (secondStepData) {
       form.setFieldsValue(JSON.parse(secondStepData)),
-        dispatch(setOrientirData(JSON.parse(secondStepData)?.orientir));
+        dispatch(setOrientirData(JSON.parse(secondStepData)?.nearbees));
     }
     if (thirdStepData) {
       form.setFieldsValue(JSON.parse(thirdStepData)),
