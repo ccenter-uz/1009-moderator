@@ -62,8 +62,8 @@ export const Category: FC = () => {
       name_uz: values.name.uz,
       name_ru: values.name.ru,
       name_cyrill: values.name.cy,
-      region_id: values.region?.id,
-      city_id: values.city?.id,
+      region: values.region?.id,
+      city: values.city?.id,
     });
     onOpen();
   };

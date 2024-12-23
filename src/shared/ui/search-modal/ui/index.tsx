@@ -62,7 +62,7 @@ export const SearchModal: FC<Props> = (props) => {
         pagination={false}
         scroll={{ y: 300 }}
         onRow={(record) => ({
-          onDoubleClick: () => (
+          onClick: () => (
             setSelectedData(record),
             onClose(),
             onClickSubCategory && onClickSubCategory()

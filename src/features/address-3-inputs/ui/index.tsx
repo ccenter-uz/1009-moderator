@@ -25,14 +25,19 @@ export const Address3Inputs: FC<Props> = (props) => {
       status: GET_ALL_ACTIVE_STATUS.active,
     },
   );
+
   const [triggerCities, { data: dataCities, isLoading: isLoadingCities }] =
     useLazyGetCitiesQuery();
+
   const [
     triggerDistrict,
     { data: dataDistrict, isLoading: isLoadingDistrict },
   ] = useLazyGetDistrictsQuery();
 
   const onSelectRegion = useCallback((value: string) => {
+    form.setFieldsValue({ city: undefined });
+    form.setFieldsValue({ district: undefined });
+
     triggerCities({
       regionId: value,
       all: GET_ALL_ACTIVE_STATUS.all,
@@ -42,6 +47,8 @@ export const Address3Inputs: FC<Props> = (props) => {
   }, []);
 
   const onSelectCity = useCallback((value: string) => {
+    form.setFieldsValue({ district: undefined });
+
     triggerDistrict({
       regionId: form.getFieldValue("region"),
       cityId: value,

@@ -7,10 +7,17 @@ import {
 import { notification } from "antd";
 import i18next from "i18next";
 
-import { API_MAP, deleteCookie, getCookie } from "@shared/lib/helpers";
+import { deleteCookie, getCookie, RESPONSE_STATUS } from "@shared/lib/helpers";
 import { RootState } from "@shared/types/store";
 
 const baseUrl = import.meta.env.VITE_APP_BASE_URL;
+
+interface IRowResultData {
+  status?: number;
+  error?: { message: string };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  result?: any;
+}
 
 const baseQuery = async (
   args: string | FetchArgs,
@@ -30,11 +37,26 @@ const baseQuery = async (
     },
   })(args, api, extraOptions);
 
-  // Check for 401 Unauthorized error
-  if (rawResult.error?.status === 401) {
+  const errorData: IRowResultData =
+    rawResult.error?.data || rawResult.data || {};
+
+  if (errorData.error) {
+    notification.error({
+      message: `${errorData.status}: ${errorData.error.message.toUpperCase()}`,
+      placement: "bottomRight",
+    });
+  }
+
+  // Check for 401 and 403 Unauthorized error
+  if (
+    [RESPONSE_STATUS.UNAUTHENTICATED, RESPONSE_STATUS.UNAUTHORIZED].includes(
+      errorData.status as number,
+    )
+  ) {
     // Redirect to the login page
     deleteCookie("access_token");
-    window.location.href = API_MAP.LOG_IN;
+
+    window.location.href = "/login";
     notification.error({
       message: i18next.t("unauthorized"),
       placement: "bottomRight",
@@ -69,6 +91,7 @@ export const baseApi = createApi({
     "Villages",
     "Avenues",
     "Lanes",
+    "PhoneType",
   ],
   endpoints: () => ({}),
 });
