@@ -61,7 +61,7 @@ const baseQuery = async (
     // Redirect to the login page
     deleteCookie("access_token");
 
-    window.location.href = API_MAP.LOG_IN;
+    window.location.href = "/login";
     notification.error({
       message: i18next.t("unauthorized"),
       placement: "bottomRight",
