@@ -123,9 +123,11 @@ export const OrgAddPage: FC = () => {
         microBus: form.getFieldValue("microBus"),
         metroStation: form.getFieldValue("metroStation"),
       },
-      categoryTu: categoryTu,
-      nearbees: orientirData,
-      phone: phoneData,
+      productService: { productService: categoryTu },
+      nearby: {
+        nearbees: orientirData,
+      },
+      phone: { phones: phoneData },
       photos: images,
     };
 
