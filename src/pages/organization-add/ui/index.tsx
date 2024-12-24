@@ -109,14 +109,17 @@ export const OrgAddPage: FC = () => {
 
     const body = {
       ...form.getFieldsValue(SEND_BODY),
+      index: Number(form.getFieldValue("index")),
       paymentTypes: {
-        cash: form.getFieldValue("allType") ? true : form.getFieldValue("cash"),
+        cash: form.getFieldValue("allType")
+          ? true
+          : form.getFieldValue("cash") ?? false,
         terminal: form.getFieldValue("allType")
           ? true
-          : form.getFieldValue("terminal"),
+          : form.getFieldValue("terminal") ?? false,
         transfer: form.getFieldValue("allType")
           ? true
-          : form.getFieldValue("transfer"),
+          : form.getFieldValue("transfer") ?? false,
       },
       workTime: {
         dayoffs: getDayOffsCheckbox(form),
@@ -135,6 +138,9 @@ export const OrgAddPage: FC = () => {
         nearbees: orientirData,
       },
       phone: { phones: phoneData },
+      // REMOVE-THEN
+      sectionId: 1,
+      clientId: 1,
     };
     for (const key in body) {
       formData.append(key, JSON.stringify(body[key]));

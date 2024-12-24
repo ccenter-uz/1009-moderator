@@ -18,7 +18,7 @@ export const organizationApi = baseApi.injectEndpoints({
       providesTags: ["Organizations"],
       transformResponse: (response: getOrganizationType) => {
         return {
-          data: response?.result?.data.map((item: { id: string }) => ({
+          data: response?.result?.data.map((item) => ({
             ...item,
             key: item.id,
           })),

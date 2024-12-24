@@ -3,11 +3,23 @@ import { FC } from "react";
 import { SearchPartUI } from "@widgets/search-part";
 import { SearchTableUI } from "@widgets/search-table";
 
+import { useGetOrganizationsQuery } from "@entities/organization";
+
+import { returnAllParams } from "@shared/lib/helpers";
+
 export const OrgAllPage: FC = () => {
+  const { data, isLoading } = useGetOrganizationsQuery({
+    ...returnAllParams(),
+  });
+
   return (
     <div>
       <SearchPartUI />
-      <SearchTableUI />
+      <SearchTableUI
+        data={data?.data || []}
+        totalItems={data?.total || 0}
+        isLoading={isLoading}
+      />
     </div>
   );
 };
