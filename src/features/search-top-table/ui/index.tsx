@@ -12,62 +12,37 @@ import { phoneColumns } from "@shared/lib/helpers";
 import { usePaginate } from "@shared/lib/hooks";
 import { Can } from "@shared/ui";
 
-/**
- * SearchTopTable
- *
- * This component is used to display search result in the search widget
- * of the Manage pages.
- *
- * It has the following functionality:
- *
- * - Displays a table with columns and data
- * - Displays a DeleteTableItemUI component to delete selected rows
- * - Displays a button to open the modal to add or edit the data
- *
- * It takes the following props:
- *
- * - `data`: The data to display in the table. It should contain the following fields:
- *   - `code`: The code of the abonent.
- *   - `abonent`: The name of the abonent.
- *   - `sms`: The count of sms.
- * - `setAttrData`: A function to set the data of attributes.
- * - `phonesData`: The data of phones.
- * - `onOpen`: A function to open the modal to add or edit the data.
- *
- * @param {Object} props - The props of the component.
- * @param {AnyObject[]} props.data - The data to display in the table.
- * @param {Function} props.setAttrData - A function to set the data of attributes.
- * @param {AnyObject[]} props.phonesData - The data of phones.
- * @param {Function} props.onOpen - A function to open the modal to add or edit the data.
- *
- * @returns {JSX.Element} - The JSX element of the component.
- */
-
 type Props = {
   data: AnyObject[];
   setAttrData: (data: AnyObject[]) => void;
   phonesData: AnyObject[];
   onOpen: () => void;
+  totalItems: number;
+  isLoading?: boolean;
 };
 
 export const SearchTopTable: FC<Props> = (props) => {
-  const { data, setAttrData, phonesData, onOpen } = props;
-  const { page, pageSize, setPage, setPageSize } = usePaginate();
+  const { data, totalItems, isLoading, setAttrData, phonesData, onOpen } =
+    props;
+  const { page, pageSize, setPage, setPageSize } = usePaginate({
+    pageName: "page",
+    limitName: "limit",
+  });
   const [selectedRowKeys, setSelectedRowKeys] = useState<number>(0);
 
   const columns: ColumnsType<AnyObject> = [
     {
       title: t("code"),
-      dataIndex: "code",
-      key: "code",
+      dataIndex: "inn",
+      key: "inn",
       width: 80,
       align: "center",
     },
     {
       width: 400,
       title: t("abonent"),
-      dataIndex: "abonent",
-      key: "abonent",
+      dataIndex: "name",
+      key: "name",
       render: (text: string) => <p style={{ margin: 0 }}>{text}</p>,
     },
     {
@@ -118,16 +93,18 @@ export const SearchTopTable: FC<Props> = (props) => {
       ),
     },
   ];
+
   return (
     <Row align={"top"} gutter={[8, 8]}>
       <Col span={16}>
         <Table
+          loading={isLoading}
           columns={columns}
           dataSource={data}
           pagination={{
             current: page,
             pageSize: pageSize,
-            total: 0,
+            total: totalItems,
             showTotal(total, range) {
               return `${range[0]}-${range[1]} из ${total} элементов`;
             },
