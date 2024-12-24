@@ -94,9 +94,12 @@ export const OrgAddThirdStepUI: FC = () => {
         isSecret: e.target.checked,
       }));
 
-    const otherData = data?.filter(
-      (item: { phone: string }) => item.phone !== record.phone,
-    );
+    const otherData = data
+      ?.filter((item: { phone: string }) => item.phone !== record.phone)
+      .map((item: { isSecret: boolean }) => ({
+        ...item,
+        isSecret: false,
+      }));
     if (!filteredData) return null;
     const newData = [...otherData, ...filteredData];
     dispatch(setData(newData));
@@ -113,6 +116,7 @@ export const OrgAddThirdStepUI: FC = () => {
       {
         ...selectedPhoneType[0],
         phone,
+        isSecret: false,
       },
     ];
     dispatch(setData(newData));

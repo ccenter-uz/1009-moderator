@@ -111,13 +111,15 @@ export const OrgAddPage: FC = () => {
       ...form.getFieldsValue(SEND_BODY),
       index: Number(form.getFieldValue("index")),
       paymentTypes: {
-        cash: form.getFieldValue("allType") ? true : form.getFieldValue("cash"),
+        cash: form.getFieldValue("allType")
+          ? true
+          : form.getFieldValue("cash") ?? false,
         terminal: form.getFieldValue("allType")
           ? true
-          : form.getFieldValue("terminal"),
+          : form.getFieldValue("terminal") ?? false,
         transfer: form.getFieldValue("allType")
           ? true
-          : form.getFieldValue("transfer"),
+          : form.getFieldValue("transfer") ?? false,
       },
       workTime: {
         dayoffs: getDayOffsCheckbox(form),
