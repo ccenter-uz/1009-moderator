@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 
 import { DeleteTableItemUI } from "@features/delete-table-item";
 
-import { phoneColumns } from "@shared/lib/helpers";
+import { phoneColumns, setLocalStorage } from "@shared/lib/helpers";
 import { usePaginate } from "@shared/lib/hooks";
 import { Can } from "@shared/ui";
 
@@ -29,6 +29,10 @@ export const SearchTopTable: FC<Props> = (props) => {
     limitName: "limit",
   });
   const [selectedRowKeys, setSelectedRowKeys] = useState<number>(0);
+
+  const handleEditLocalDatas = (record: AnyObject) => {
+    setLocalStorage("editingData", record);
+  };
 
   const columns: ColumnsType<AnyObject> = [
     {
@@ -77,8 +81,9 @@ export const SearchTopTable: FC<Props> = (props) => {
       render: (text: string, record: AnyObject) => (
         <Flex justify="center" align="center" gap={8}>
           <Can i="update">
-            <Link to={{ pathname: `/orgs/edit/${record.id}` }} state={record}>
+            <Link to={{ pathname: `/orgs/edit/${record.id}` }}>
               <FaPencilAlt
+                onClick={() => handleEditLocalDatas(record)}
                 color="grey"
                 fontSize={16}
                 cursor={"pointer"}
