@@ -4,11 +4,20 @@ import { ColumnsType } from "antd/es/table";
 import { t } from "i18next";
 import { FC, useState } from "react";
 import { FaEnvelope, FaPencilAlt } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 import { DeleteTableItemUI } from "@features/delete-table-item";
 
-import { phoneColumns, setLocalStorage } from "@shared/lib/helpers";
+import {
+  clearEditStepStorage,
+  getEditingStepStorageValues,
+  handleEditLocalDatas,
+  phoneColumns,
+  setLocalStorage,
+  STEPS_EDIT_DATA,
+  STEPS_ENUM,
+} from "@shared/lib/helpers";
 import { usePaginate } from "@shared/lib/hooks";
 import { Can } from "@shared/ui";
 
@@ -28,10 +37,44 @@ export const SearchTopTable: FC<Props> = (props) => {
     pageName: "page",
     limitName: "limit",
   });
+  const navigate = useNavigate();
   const [selectedRowKeys, setSelectedRowKeys] = useState<number>(0);
 
-  const handleEditLocalDatas = (record: AnyObject) => {
-    setLocalStorage("editingData", record);
+  const checkExistId = (record: AnyObject) => {
+    const { editingId, firstStepData } = getEditingStepStorageValues();
+
+    if (editingId && Number(record.id) !== Number(editingId)) {
+      Swal.fire({
+        icon: "warning",
+        title: t("oops"),
+        text: `${t("you-were-editing")} ${firstStepData?.name}, ${t(
+          "do-you-want-to-continue-or-reset-before-data",
+        )} ${firstStepData?.name} ?`,
+        showCancelButton: true,
+        confirmButtonColor: "#1677ff",
+        cancelButtonColor: "crimson",
+        confirmButtonText: t("continue"),
+        cancelButtonText: t("reset"),
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate(`/orgs/edit/${editingId}`, { replace: true });
+        } else if (
+          !result.isConfirmed &&
+          result.isDismissed &&
+          !!result.dismiss
+        ) {
+          clearEditStepStorage();
+          setLocalStorage(STEPS_EDIT_DATA.CURRENT, STEPS_ENUM.firstStep);
+          handleEditLocalDatas(record);
+          navigate(`/orgs/edit/${record.id}`);
+        }
+      });
+    } else {
+      handleEditLocalDatas(record);
+      navigate(`/orgs/edit/${record.id}`);
+    }
   };
 
   const columns: ColumnsType<AnyObject> = [
@@ -81,15 +124,13 @@ export const SearchTopTable: FC<Props> = (props) => {
       render: (text: string, record: AnyObject) => (
         <Flex justify="center" align="center" gap={8}>
           <Can i="update">
-            <Link to={{ pathname: `/orgs/edit/${record.id}` }}>
-              <FaPencilAlt
-                onClick={() => handleEditLocalDatas(record)}
-                color="grey"
-                fontSize={16}
-                cursor={"pointer"}
-                title={t("edit")}
-              />
-            </Link>
+            <FaPencilAlt
+              onClick={() => checkExistId(record)}
+              color="grey"
+              fontSize={16}
+              cursor={"pointer"}
+              title={t("edit")}
+            />
           </Can>
           <Can i="delete">
             <DeleteTableItemUI fetch={() => null} />

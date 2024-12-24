@@ -54,11 +54,11 @@ export const OrgEditThirdStepUI: FC = () => {
     {
       width: 80,
       title: t("secret"),
-      dataIndex: "secret",
-      key: "secret",
+      dataIndex: "isSecret",
+      key: "isSecret",
       render: (text: string, record: AnyObject) => (
         <Checkbox
-          checked={!!text}
+          defaultChecked={!!text}
           onChange={(e: CheckboxChangeEvent) => onSecretCheck(e, record)}
         />
       ),
@@ -93,9 +93,12 @@ export const OrgEditThirdStepUI: FC = () => {
         isSecret: e.target.checked,
       }));
 
-    const otherData = data?.filter(
-      (item: { phone: string }) => item.phone !== record.phone,
-    );
+    const otherData = data
+      ?.filter((item: { phone: string }) => item.phone !== record.phone)
+      .map((item: { isSecret: boolean }) => ({
+        ...item,
+        isSecret: false,
+      }));
     if (!filteredData) return null;
     const newData = [...otherData, ...filteredData];
     dispatch(setData(newData));
@@ -112,6 +115,7 @@ export const OrgEditThirdStepUI: FC = () => {
       {
         ...selectedPhoneType[0],
         phone,
+        isSecret: false,
       },
     ];
     dispatch(setData(newData));
@@ -144,7 +148,7 @@ export const OrgEditThirdStepUI: FC = () => {
           <Form.Item name={"inn"} label={t("tin")}>
             <Input placeholder={t("tin")} />
           </Form.Item>
-          <Form.Item name={"bank_number"} label={t("bank_number")}>
+          <Form.Item name={"bankNumber"} label={t("bank_number")}>
             <Input placeholder={t("bank_number")} />
           </Form.Item>
         </Col>

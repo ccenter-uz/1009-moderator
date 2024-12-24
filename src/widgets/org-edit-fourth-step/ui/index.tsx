@@ -7,7 +7,7 @@ import { UploadUI } from "@features/upload";
 
 import { RootState } from "@shared/types";
 
-import { setData } from "../model/Slicer";
+import { setData, setPictures } from "../model/Slicer";
 
 export const OrgEditFourthStepUI: FC = () => {
   const { t } = useTranslation();
@@ -175,7 +175,11 @@ export const OrgEditFourthStepUI: FC = () => {
         {t("images")}
       </Typography.Title>
       <div style={{ marginTop: 10 }}>
-        <UploadUI setData={setData} data={fileListData} />
+        <UploadUI
+          setData={setData}
+          data={fileListData}
+          setPictures={setPictures}
+        />
       </div>
     </>
   );

@@ -52,8 +52,8 @@ export const organizationApi = baseApi.injectEndpoints({
 
     // UPDATE
     updateOrganization: build.mutation({
-      query: ({ body, id }) => ({
-        url: `${API_MAP.UPDATE_ORGANIZATION}/${id}`,
+      query: (body) => ({
+        url: `${API_MAP.UPDATE_ORGANIZATION}/${JSON.parse(body.get("id"))}`,
         method: API_METHODS.PUT,
         body,
       }),
