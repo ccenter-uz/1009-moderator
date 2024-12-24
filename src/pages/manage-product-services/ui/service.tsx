@@ -44,6 +44,8 @@ export const Service: FC = () => {
   const [deleteSubCategory] = useDeleteSubCategoryMutation();
   const [editingData, setEditingData] = useState<editServiceType | null>(null);
 
+  const [isAddBtnDisable, setIsAddBtnDisable] = useState<boolean>(false);
+
   const handleEditOpen = (values: editServiceType) => {
     setEditingData({ ...values, id: values.id });
     form.setFieldsValue({
@@ -122,6 +124,8 @@ export const Service: FC = () => {
   ];
 
   useEffect(() => {
+    const hasParamsServiceId = searchParams.has(ProductServicesEnum.productId);
+    setIsAddBtnDisable(!hasParamsServiceId);
     if (searchParams.has(ProductServicesEnum.productId)) {
       trigger({
         page: Number(page) || 1,
@@ -143,6 +147,7 @@ export const Service: FC = () => {
       columns={columns}
       data={data?.data || []}
       add={onAdd}
+      isAddBtnDisable={isAddBtnDisable}
       searchPart={
         <BasicSearchPartUI
           id={"service-search"}
