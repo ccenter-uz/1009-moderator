@@ -118,7 +118,7 @@ export const TableOrientirUI: FC<Props> = (props) => {
     value: string,
     option: { value: string | number; label: string },
   ) => {
-    setSelectedNearby([{ nearby: value, nearbyName: option.label }]);
+    setSelectedNearby([{ nearbyId: value, nearbyName: option.label }]);
   };
 
   return (
