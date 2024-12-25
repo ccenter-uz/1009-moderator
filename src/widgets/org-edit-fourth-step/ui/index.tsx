@@ -7,7 +7,7 @@ import { UploadUI } from "@features/upload";
 
 import { RootState } from "@shared/types";
 
-import { setData } from "../model/Slicer";
+import { setData, setPictures } from "../model/Slicer";
 
 export const OrgEditFourthStepUI: FC = () => {
   const { t } = useTranslation();
@@ -29,7 +29,7 @@ export const OrgEditFourthStepUI: FC = () => {
           </Typography.Title>
           <Flex align="center" gap={14}>
             <Form.Item
-              name="all_type"
+              name="allType"
               label={t("all_type")}
               valuePropName="checked"
             >
@@ -64,12 +64,12 @@ export const OrgEditFourthStepUI: FC = () => {
             <Col span={24}>
               <Row gutter={16}>
                 <Col span={6}>
-                  <Form.Item name={"worktime-from"} label={t("from")}>
+                  <Form.Item name={"worktimeFrom"} label={t("from")}>
                     <Input type="time" />
                   </Form.Item>
                 </Col>
                 <Col span={6}>
-                  <Form.Item name={"worktime-to"} label={t("to")}>
+                  <Form.Item name={"worktimeTo"} label={t("to")}>
                     <Input type="time" />
                   </Form.Item>
                 </Col>
@@ -85,19 +85,74 @@ export const OrgEditFourthStepUI: FC = () => {
             <Col span={24}>
               <Row gutter={16}>
                 <Col span={6}>
-                  <Form.Item name={"lunch-from"} label={t("from")}>
+                  <Form.Item name={"lunchFrom"} label={t("from")}>
                     <Input type="time" />
                   </Form.Item>
                 </Col>
                 <Col span={6}>
-                  <Form.Item name={"lunch-to"} label={t("to")}>
+                  <Form.Item name={"lunchTo"} label={t("to")}>
                     <Input type="time" />
                   </Form.Item>
                 </Col>
               </Row>
-              <Form.Item name={"dayoffs"} label={t("dayoffs")}>
-                <Input type="text" />
-              </Form.Item>
+              <Typography.Title
+                aria-level={4}
+                level={5}
+                style={{ margin: 0, color: "grey" }}
+              >
+                {t("dayoffs")}
+              </Typography.Title>
+              <Flex align="center" gap={14}>
+                <Form.Item
+                  name={"monday"}
+                  label={t("monday")}
+                  valuePropName="checked"
+                >
+                  <Checkbox />
+                </Form.Item>
+                <Form.Item
+                  name={"tuesday"}
+                  label={t("tuesday")}
+                  valuePropName="checked"
+                >
+                  <Checkbox />
+                </Form.Item>
+                <Form.Item
+                  name={"wednesday"}
+                  label={t("wednesday")}
+                  valuePropName="checked"
+                >
+                  <Checkbox />
+                </Form.Item>
+                <Form.Item
+                  name={"thursday"}
+                  label={t("thursday")}
+                  valuePropName="checked"
+                >
+                  <Checkbox />
+                </Form.Item>
+                <Form.Item
+                  name={"friday"}
+                  label={t("friday")}
+                  valuePropName="checked"
+                >
+                  <Checkbox />
+                </Form.Item>
+                <Form.Item
+                  name={"saturday"}
+                  label={t("saturday")}
+                  valuePropName="checked"
+                >
+                  <Checkbox />
+                </Form.Item>
+                <Form.Item
+                  name={"sunday"}
+                  label={t("sunday")}
+                  valuePropName="checked"
+                >
+                  <Checkbox />
+                </Form.Item>
+              </Flex>
             </Col>
           </Row>
         </Col>
@@ -108,10 +163,10 @@ export const OrgEditFourthStepUI: FC = () => {
           <Form.Item name={"bus"} label={`${t("bus")} №`}>
             <Input placeholder={t("bus")} />
           </Form.Item>
-          <Form.Item name={"micro-bus"} label={`${t("micro-bus")} №`}>
+          <Form.Item name={"microBus"} label={`${t("micro-bus")} №`}>
             <Input placeholder={t("micro-bus")} />
           </Form.Item>
-          <Form.Item name={"metro-station"} label={t("metro-station")}>
+          <Form.Item name={"metroStation"} label={t("metro-station")}>
             <Input placeholder={t("metro-station")} />
           </Form.Item>
         </Col>
@@ -120,7 +175,11 @@ export const OrgEditFourthStepUI: FC = () => {
         {t("images")}
       </Typography.Title>
       <div style={{ marginTop: 10 }}>
-        <UploadUI setData={setData} data={fileListData} />
+        <UploadUI
+          setData={setData}
+          data={fileListData}
+          setPictures={setPictures}
+        />
       </div>
     </>
   );
