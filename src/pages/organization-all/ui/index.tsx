@@ -1,4 +1,5 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import { SearchPartUI } from "@widgets/search-part";
 import { SearchTableUI } from "@widgets/search-table";
@@ -8,12 +9,14 @@ import { useGetOrganizationsQuery } from "@entities/organization";
 import { returnAllParams } from "@shared/lib/helpers";
 
 export const OrgAllPage: FC = () => {
-  const { data, isLoading } = useGetOrganizationsQuery(
-    {
-      ...returnAllParams(),
-    },
-    { refetchOnMountOrArgChange: true },
-  );
+  const [searchParams] = useSearchParams();
+  const { data, isLoading, refetch } = useGetOrganizationsQuery({
+    ...returnAllParams(),
+  });
+
+  useEffect(() => {
+    refetch();
+  }, [searchParams]);
 
   return (
     <div>
