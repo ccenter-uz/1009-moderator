@@ -20,7 +20,6 @@ import { OrgEditThirdStepUI, setPhoneData } from "@widgets/org-edit-third-step";
 import { useUpdateOrganizationMutation } from "@entities/organization";
 
 import {
-  clearEditStepStorage,
   getDayOffsCheckbox,
   getEditingStepStorageValues,
   notificationResponse,
@@ -107,7 +106,8 @@ export const OrgEditPage: FC = () => {
       dispatch(setImages(fourthStepData.images));
     }
   };
-  const next = () => {
+  const next = async () => {
+    await form.validateFields();
     setCurrent(current + 1);
     localStorage.setItem(STEPS_EDIT_DATA.CURRENT, JSON.stringify(current + 1));
     // STORE STEPS DATA
@@ -176,7 +176,14 @@ export const OrgEditPage: FC = () => {
       nearby: {
         nearbees: orientirData,
       },
-      phone: { phones: phoneData },
+      phone: {
+        phones: phoneData.map((item: AnyObject) => ({
+          key: item.id,
+          phone: item.phone,
+          phoneTypeId: item.phoneTypeId,
+          isSecret: item.isSecret,
+        })),
+      },
       picture: {
         pictures:
           pictures.length !== 0
@@ -194,10 +201,10 @@ export const OrgEditPage: FC = () => {
         formData.append("photos", images[i]);
       }
     }
+
     const response = await updateOrganization(formData);
 
     notificationResponse(response, t);
-    clearEditStepStorage();
   };
 
   useEffect(() => {
