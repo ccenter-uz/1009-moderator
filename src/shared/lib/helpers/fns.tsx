@@ -229,7 +229,7 @@ export const handleEditLocalDatas = (record: AnyObject) => {
   // Third step
   const thirdEditStep = {
     ...getStepsValueByKey(STEPS_DATA.THIRD_FORMDATA, record),
-    phone: record.Phone.map((item: AnyObject) => ({
+    phone: record.Phone?.map((item: AnyObject) => ({
       ...item,
       key: item.id,
       phone: item.phone,

@@ -85,4 +85,5 @@ export const API_MAP = {
   CREATE_ORGANIZATION: "organization",
   UPDATE_ORGANIZATION: "organization",
   DELETE_ORGANIZATION: "organization",
+  CHECK_ORGANIZATION: "organization/check",
 };

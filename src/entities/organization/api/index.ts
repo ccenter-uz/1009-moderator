@@ -1,5 +1,3 @@
-import { AnyObject } from "antd/es/_util/type";
-
 import { baseApi } from "@shared/api";
 import { API_MAP, API_METHODS } from "@shared/lib/helpers";
 
@@ -64,6 +62,15 @@ export const organizationApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Organizations"],
     }),
+
+    // CHECK
+    checkOrganization: build.mutation({
+      query: (body) => ({
+        url: `${API_MAP.CHECK_ORGANIZATION}/${body.id}`,
+        method: API_METHODS.PUT,
+        body,
+      }),
+    }),
   }),
 });
 
@@ -72,4 +79,5 @@ export const {
   useCreateOrganizationMutation,
   useUpdateOrganizationMutation,
   useDeleteOrganizationMutation,
+  useCheckOrganizationMutation,
 } = organizationApi;

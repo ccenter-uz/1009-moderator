@@ -200,5 +200,7 @@
   "must-be-number": "Должно быть числом",
   "invalid-password": "Неверный пароль",
   "allowed": "Разрешено",
-  "not-allowed": "Не разрешено"
+  "not-allowed": "Не разрешено",
+  "confirm": "Подтвердить",
+  "reject": "Отклонить"
 }

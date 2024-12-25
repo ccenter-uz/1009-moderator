@@ -537,3 +537,41 @@ export const rolesTableColumns = [
     render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
   },
 ];
+
+export const unconfirmedTableColumns = [
+  {
+    title: i18next.t("code"),
+    dataIndex: "inn",
+    key: "inn",
+    width: 100,
+  },
+  {
+    title: i18next.t("abonent"),
+    dataIndex: "name",
+    key: "name",
+  },
+  {
+    title: i18next.t("region"),
+    dataIndex: "region",
+    key: "region",
+    render: (text: { name: { [key: string]: string } }) =>
+      text?.name[i18next.language],
+  },
+  {
+    title: i18next.t("city"),
+    dataIndex: "city",
+    key: "city",
+    render: (text: { name: { [key: string]: string } }) =>
+      text?.name[i18next.language],
+  },
+  {
+    title: i18next.t("address"),
+    dataIndex: "address",
+    key: "address",
+  },
+  {
+    title: i18next.t("employee"),
+    dataIndex: "staffNumber",
+    key: "staffNumber",
+  },
+];
