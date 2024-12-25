@@ -9,7 +9,10 @@ import Swal from "sweetalert2";
 
 import { BasicSearchPartUI } from "@features/basic-search-part";
 
-import { useCheckOrganizationMutation } from "@entities/organization";
+import {
+  useCheckOrganizationMutation,
+  useGetUnconfirmedOrganizationsQuery,
+} from "@entities/organization";
 
 import {
   clearEditStepStorage,
@@ -37,6 +40,9 @@ export const OrgUnconfirmedPage: FC = () => {
   const { page, pageSize, pageSizeOptions, setPage, setPageSize } = usePaginate(
     { pageName: "page", limitName: "limit" },
   );
+  const { data, isLoading } = useGetUnconfirmedOrganizationsQuery({
+    ...returnAllParams(),
+  });
   const [checkOrganization] = useCheckOrganizationMutation();
 
   const handleCheckOrganization = (id: number, type: string) => {
@@ -140,8 +146,6 @@ export const OrgUnconfirmedPage: FC = () => {
     },
   ];
 
-  const data = [{ key: 1, id: 1 }];
-
   const handleSearch = ({ search }: { search: string }) => {
     const prevParams = returnAllParams();
     setSearchParams({
@@ -156,8 +160,9 @@ export const OrgUnconfirmedPage: FC = () => {
       <Flex vertical gap={16}>
         <BasicSearchPartUI handleSearch={handleSearch} />
         <Table
+          loading={isLoading}
           columns={columns}
-          dataSource={data}
+          dataSource={data?.data || []}
           size="small"
           bordered
           pagination={{

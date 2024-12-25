@@ -86,4 +86,5 @@ export const API_MAP = {
   UPDATE_ORGANIZATION: "organization",
   DELETE_ORGANIZATION: "organization",
   CHECK_ORGANIZATION: "organization/check",
+  UNCONFIRMED_ORGANIZATION_ALL: "organization/unconfirm",
 };
