@@ -61,7 +61,10 @@ export const ManageNearbyPage: FC = () => {
   const [editingData, setEditingData] = useState<valueProps | null>(null);
   const [nearbyCategoryId, setNearbyCategoryId] = useState<
     string | number | boolean
-  >(false);
+  >(true);
+  const [modalNearbyCategoryId, setModalNearbyCategoryId] = useState<
+    string | number | boolean
+  >(true);
 
   const handleEditOpen = (values: valueProps) => {
     const editingBody = {
@@ -79,18 +82,20 @@ export const ManageNearbyPage: FC = () => {
 
   const handleSearch = ({ search }: { search: string }) => {
     const previousParams = returnAllParams();
-    setSearchParams({ ...previousParams, search });
+    if (search) {
+      setSearchParams({ ...previousParams, search });
+    }
   };
 
   const handleCategorySelect = (value: string | number) => {
     setNearbyCategoryId(value);
     const params = returnAllParams();
-    setSearchParams({ ...params, categoryId: String(value) });
+    setSearchParams({ ...params, nearbyCategoryId: String(value) });
   };
   const handleSubmit = async (values: valueProps) => {
     const body = {
       id: editingData?.id,
-      nearbyCategoryId,
+      nearbyCategoryId: modalNearbyCategoryId,
       regionId: values.region,
       cityId: values.city,
       name: {
@@ -99,6 +104,7 @@ export const ManageNearbyPage: FC = () => {
         cy: values.name_cyrill,
       },
     };
+
     const request = editingData ? updateNearby : createNearby;
 
     const response = await request(body);
@@ -140,6 +146,10 @@ export const ManageNearbyPage: FC = () => {
       },
     },
   ];
+
+  const handleModalCategorySelect = (value: string | number) => {
+    setModalNearbyCategoryId(value);
+  };
 
   return (
     <div>
@@ -184,7 +194,27 @@ export const ManageNearbyPage: FC = () => {
               loading={isLoading}
               open={isOpen}
               onClose={onClose}
-              headerInputs={<Address2Inputs form={form} />}
+              headerInputs={
+                <>
+                  <Form.Item
+                    name={"nearby-category"}
+                    label={t("nearby-category")}
+                    style={{ marginBottom: 0, flex: 1, marginTop: "16px" }}
+                  />
+                  <Select
+                    style={{ width: "100%", marginBottom: "16px" }}
+                    allowClear
+                    onSelect={handleModalCategorySelect}
+                    placeholder={t("nearby-category")}
+                    // loading={isLoadingCategory}
+                    options={dataCategory?.data.map((item: AnyObject) => ({
+                      label: item.name,
+                      value: item.id,
+                    }))}
+                  />
+                  <Address2Inputs form={form} />
+                </>
+              }
               ruInputs={<SingleNameRu />}
               uzInputs={<SingleNameUz />}
               uzCyrillicInputs={<SingleNameCyrill />}

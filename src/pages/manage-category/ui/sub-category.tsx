@@ -38,6 +38,7 @@ export const SubCategory: FC = () => {
     [CategorySubCategoryEnums.subCategoryLimit]: limit,
     [CategorySubCategoryEnums.subCategorySearch]: search,
   } = returnAllParams();
+
   const [trigger, { data, isLoading }] = useLazyGetSubCategoriesQuery();
   const [createSubCategory] = useCreateSubCategoriesMutation();
   const [updateSubCategory] = useUpdateSubCategoriesMutation();
@@ -45,6 +46,8 @@ export const SubCategory: FC = () => {
   const [editingData, setEditingData] = useState<editSubcategoryType | null>(
     null,
   );
+
+  const [isAddBtnDisable, setIsAddBtnDisable] = useState<boolean>(false);
 
   const handleEditOpen = (values: editSubcategoryType) => {
     setEditingData({ ...values, id: values.id });
@@ -122,6 +125,11 @@ export const SubCategory: FC = () => {
   ];
 
   useEffect(() => {
+    const hasParamsCategoryId = searchParams.has(
+      CategorySubCategoryEnums.categoryId,
+    );
+    setIsAddBtnDisable(!hasParamsCategoryId);
+
     if (searchParams.has(CategorySubCategoryEnums.categoryId)) {
       trigger({
         page: Number(page) || 1,
@@ -149,6 +157,7 @@ export const SubCategory: FC = () => {
       columns={columns}
       data={data?.data || []}
       add={onAdd}
+      isAddBtnDisable={isAddBtnDisable}
       pageName={CategorySubCategoryEnums.subCategoryPage}
       limitName={CategorySubCategoryEnums.subCategoryLimit}
       searchPart={
