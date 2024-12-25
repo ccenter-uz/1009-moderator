@@ -97,7 +97,16 @@ export const OrgAddSecondStepUI: FC = () => {
     <>
       <Row justify={"space-between"} gutter={24}>
         <Col span={8}>
-          <Form.Item name={"regionId"} label={t("region")} required>
+          <Form.Item
+            name={"regionId"}
+            label={t("region")}
+            rules={[
+              {
+                required: true,
+                message: t("required-field"),
+              },
+            ]}
+          >
             <Select
               labelRender={renderLabelSelect}
               onSelect={onChangeRegion}
@@ -111,7 +120,16 @@ export const OrgAddSecondStepUI: FC = () => {
               placeholder={t("region")}
             />
           </Form.Item>
-          <Form.Item name={"cityId"} label={t("city")} required>
+          <Form.Item
+            name={"cityId"}
+            label={t("city")}
+            rules={[
+              {
+                required: true,
+                message: t("required-field"),
+              },
+            ]}
+          >
             <Select
               labelRender={renderLabelSelect}
               onSelect={onChangeCity}
@@ -249,13 +267,31 @@ export const OrgAddSecondStepUI: FC = () => {
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item name={"address"} label={t("address")}>
+          <Form.Item
+            name={"address"}
+            label={t("address")}
+            rules={[
+              {
+                required: true,
+                message: t("required-field"),
+              },
+            ]}
+          >
             <Input type="text" placeholder={t("address")} allowClear />
           </Form.Item>
           <Form.Item name={"home"} label={t("home")}>
             <Input type="text" placeholder={t("home")} allowClear />
           </Form.Item>
-          <Form.Item name={"apartment"} label={t("apartment")}>
+          <Form.Item
+            name={"apartment"}
+            label={t("apartment")}
+            rules={[
+              {
+                required: true,
+                message: t("required-field"),
+              },
+            ]}
+          >
             <Input type="text" placeholder={t("apartment")} allowClear />
           </Form.Item>
         </Col>

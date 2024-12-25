@@ -64,13 +64,40 @@ export const OrgAddFirstStepUI: FC = () => {
     <>
       <Row justify={"space-between"} gutter={24}>
         <Col span={12}>
-          <Form.Item name={"name"} label={t("abonent")}>
+          <Form.Item
+            name={"name"}
+            label={t("abonent")}
+            rules={[
+              {
+                required: true,
+                message: t("required-field"),
+              },
+            ]}
+          >
             <Input type="text" placeholder={t("abonent")} allowClear />
           </Form.Item>
-          <Form.Item name={"legalName"} label={t("org-name")}>
+          <Form.Item
+            name={"legalName"}
+            label={t("org-name")}
+            rules={[
+              {
+                required: true,
+                message: t("required-field"),
+              },
+            ]}
+          >
             <Input type="text" placeholder={t("org-name")} allowClear />
           </Form.Item>
-          <Form.Item name={"categoryId"} label={t("category")}>
+          <Form.Item
+            name={"categoryId"}
+            label={t("category")}
+            rules={[
+              {
+                required: true,
+                message: t("required-field"),
+              },
+            ]}
+          >
             <Select
               labelRender={renderLabelSelect}
               options={categoryData?.data.map((item: AnyObject) => ({
@@ -84,7 +111,16 @@ export const OrgAddFirstStepUI: FC = () => {
               onSelect={onChangeCategory}
             />
           </Form.Item>
-          <Form.Item name={"subCategoryId"} label={t("sub-category")}>
+          <Form.Item
+            name={"subCategoryId"}
+            label={t("sub-category")}
+            rules={[
+              {
+                required: true,
+                message: t("required-field"),
+              },
+            ]}
+          >
             <Select
               labelRender={renderLabelSelect}
               options={subcategoryData?.data.map((item: AnyObject) => ({
@@ -99,7 +135,16 @@ export const OrgAddFirstStepUI: FC = () => {
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item name={"mainOrganizationId"} label={t("main-org")}>
+          <Form.Item
+            name={"mainOrganizationId"}
+            label={t("main-org")}
+            rules={[
+              {
+                required: true,
+                message: t("required-field"),
+              },
+            ]}
+          >
             <Select
               placeholder={t("main-org")}
               options={mainOrgData?.data.map((item: AnyObject) => ({
@@ -111,10 +156,28 @@ export const OrgAddFirstStepUI: FC = () => {
               showSearch
             />
           </Form.Item>
-          <Form.Item name={"secret"} label={t("Секрет")}>
+          <Form.Item
+            name={"secret"}
+            label={t("Секрет")}
+            rules={[
+              {
+                required: true,
+                message: t("required-field"),
+              },
+            ]}
+          >
             <Input type="text" placeholder={t("Секрет")} allowClear />
           </Form.Item>
-          <Form.Item name={"segmentId"} label={t("segment")}>
+          <Form.Item
+            name={"segmentId"}
+            label={t("segment")}
+            rules={[
+              {
+                required: true,
+                message: t("required-field"),
+              },
+            ]}
+          >
             <Select
               placeholder={t("segment")}
               options={segmentsData?.data.map((item: AnyObject) => ({
@@ -126,7 +189,16 @@ export const OrgAddFirstStepUI: FC = () => {
               showSearch
             />
           </Form.Item>
-          <Form.Item name={"manager"} label={t("manager")}>
+          <Form.Item
+            name={"manager"}
+            label={t("manager")}
+            rules={[
+              {
+                required: true,
+                message: t("required-field"),
+              },
+            ]}
+          >
             <Input type="text" placeholder={t("manager")} allowClear />
           </Form.Item>
         </Col>

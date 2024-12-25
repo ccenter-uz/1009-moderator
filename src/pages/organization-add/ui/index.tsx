@@ -74,7 +74,8 @@ export const OrgAddPage: FC = () => {
     Number(localStorage.getItem("currentStep")) || 0,
   );
 
-  const next = () => {
+  const next = async () => {
+    await form.validateFields();
     setCurrent(current + 1);
     localStorage.setItem("currentStep", JSON.stringify(current + 1));
     // STORE STEPS DATA
