@@ -47,7 +47,7 @@ export const SubCategory: FC = () => {
     null,
   );
 
-  const [isAddBtnDisable, setIsAddBtnDisable] = useState<boolean>(false);
+  const [isAddBtnDisable, setIsAddBtnDisable] = useState<boolean>(true);
 
   const handleEditOpen = (values: editSubcategoryType) => {
     setEditingData({ ...values, id: values.id });
@@ -169,6 +169,7 @@ export const SubCategory: FC = () => {
               CategorySubCategoryEnums.subCategorySearch,
             ),
           }}
+          isSearchBtnDisable={isAddBtnDisable}
         />
       }
       modalPart={

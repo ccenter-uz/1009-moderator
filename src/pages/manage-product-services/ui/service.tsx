@@ -44,7 +44,7 @@ export const Service: FC = () => {
   const [deleteSubCategory] = useDeleteSubCategoryMutation();
   const [editingData, setEditingData] = useState<editServiceType | null>(null);
 
-  const [isAddBtnDisable, setIsAddBtnDisable] = useState<boolean>(false);
+  const [isAddBtnDisable, setIsAddBtnDisable] = useState<boolean>(true);
 
   const handleEditOpen = (values: editServiceType) => {
     setEditingData({ ...values, id: values.id });
@@ -59,10 +59,12 @@ export const Service: FC = () => {
   const handleSearch = ({ search }: { search: string }) => {
     const previousParams = returnAllParams();
 
-    setSearchParams({
-      ...previousParams,
-      [ProductServicesEnum.serviceSearch]: search,
-    });
+    if (search || search === "") {
+      setSearchParams({
+        ...previousParams,
+        [ProductServicesEnum.serviceSearch]: search,
+      });
+    }
   };
 
   const handleSubmit = async (serviceData: ItableBasicData) => {
@@ -155,6 +157,7 @@ export const Service: FC = () => {
           additionalParams={{
             search: searchParams.get(ProductServicesEnum.serviceSearch),
           }}
+          isSearchBtnDisable={isAddBtnDisable}
         />
       }
       modalPart={

@@ -55,6 +55,7 @@ export const Category: FC = () => {
   const [createCategory] = useCreateCategoryMutation();
   const [updateCategory] = useUpdateCategoryMutation();
   const [editingData, setEditingData] = useState<editCategoryType | null>(null);
+  const [isSearchBtnDisable, setIsSearchBtnDisable] = useState<boolean>(true);
 
   const handleEditOpen = (values: editCategoryType) => {
     setEditingData({ ...values, id: values.id });
@@ -168,10 +169,16 @@ export const Category: FC = () => {
         <BasicSearchPartUI
           handleSearch={handleSearch}
           id="category-search"
-          additionalSearch={<SearchWithRegionCityUI form={searchForm} />}
+          additionalSearch={
+            <SearchWithRegionCityUI
+              form={searchForm}
+              setIsSearchBtnDisable={setIsSearchBtnDisable}
+            />
+          }
           additionalParams={{
             search: searchParams.get(CategorySubCategoryEnums.categorySearch),
           }}
+          isSearchBtnDisable={isSearchBtnDisable}
         />
       }
       modalPart={
