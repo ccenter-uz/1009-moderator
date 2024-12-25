@@ -1,4 +1,5 @@
 import { Flex, Form } from "antd";
+import { createSchemaFieldRule } from "antd-zod";
 import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
@@ -25,6 +26,8 @@ import {
 } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
+
+import { AreaCreateFormDtoSchema } from "../model/dto";
 
 export interface valueProps {
   index: string;
@@ -55,7 +58,9 @@ export const ManageAreaPage: FC = () => {
   const [_, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [form] = Form.useForm<valueProps>();
+  const rule = createSchemaFieldRule(AreaCreateFormDtoSchema);
   const { data, isLoading } = useGetAreasQuery({ ...returnAllParams() });
+
   const [deleteArea] = useDeleteAreaMutation();
   const [updateArea] = useUpdateAreaMutation();
   const [createArea] = useCreateAreaMutation();
@@ -172,10 +177,10 @@ export const ManageAreaPage: FC = () => {
             loading={isLoading}
             open={isOpen}
             onClose={onClose}
-            headerInputs={<Address3Inputs form={form} />}
-            ruInputs={<NameInputsRu />}
-            uzInputs={<NameInputsUz />}
-            uzCyrillicInputs={<NameInputsCyrill />}
+            headerInputs={<Address3Inputs form={form} rule={rule} />}
+            ruInputs={<NameInputsRu rule={rule} />}
+            uzInputs={<NameInputsUz rule={rule} />}
+            uzCyrillicInputs={<NameInputsCyrill rule={rule} />}
             formId={"manage-area"}
           />
         </Form>

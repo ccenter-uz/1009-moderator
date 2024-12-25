@@ -1,5 +1,6 @@
 import { Flex, Form } from "antd";
 import { AnyObject } from "antd/es/_util/type";
+import { createSchemaFieldRule } from "antd-zod";
 import { t } from "i18next";
 import { FC, useEffect, useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
@@ -30,6 +31,7 @@ import { useDisclosure } from "@shared/lib/hooks";
 import { ItableBasicData } from "@shared/types";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
 
+import { CategoryCreateFormDtoSchema } from "../model/dto";
 import { CategorySubCategoryEnums, editCategoryType } from "../model/types";
 
 export const Category: FC = () => {
@@ -44,6 +46,7 @@ export const Category: FC = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [form] = Form.useForm();
   const [searchForm] = Form.useForm();
+  const rule = createSchemaFieldRule(CategoryCreateFormDtoSchema);
   const { data, isLoading } = useGetCategoriesQuery({
     page,
     limit,
@@ -185,10 +188,10 @@ export const Category: FC = () => {
             loading={isLoading}
             open={isOpen}
             onClose={onClose}
-            headerInputs={<Address2Inputs form={form} />}
-            ruInputs={<SingleNameRu />}
-            uzInputs={<SingleNameUz />}
-            uzCyrillicInputs={<SingleNameCyrill />}
+            headerInputs={<Address2Inputs form={form} rule={rule} />}
+            ruInputs={<SingleNameRu rule={rule} />}
+            uzInputs={<SingleNameUz rule={rule} />}
+            uzCyrillicInputs={<SingleNameCyrill rule={rule} />}
             formId={"manage-category"}
           />
         </Form>

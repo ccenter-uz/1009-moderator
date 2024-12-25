@@ -1,4 +1,5 @@
 import { Flex, Form } from "antd";
+import { createSchemaFieldRule } from "antd-zod";
 import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
@@ -25,6 +26,8 @@ import {
 } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
+
+import { DistrictCreateFormDtoSchema } from "../module/dto";
 
 interface valueProps {
   index: string;
@@ -53,6 +56,7 @@ export const ManageDistrictPage: FC = () => {
   const [_, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [form] = Form.useForm<valueProps>();
+  const rule = createSchemaFieldRule(DistrictCreateFormDtoSchema);
   const { data, isLoading } = useGetDistrictsQuery({ ...returnAllParams() });
   const [deleteDistrict] = useDeleteDistrictMutation();
   const [createDistrict] = useCreateDistrictMutation();
@@ -171,10 +175,12 @@ export const ManageDistrictPage: FC = () => {
               loading={isLoading}
               open={isOpen}
               onClose={onClose}
-              headerInputs={<Address2Inputs withIndex form={form} />}
-              ruInputs={<NameInputsRu />}
-              uzInputs={<NameInputsUz />}
-              uzCyrillicInputs={<NameInputsCyrill />}
+              headerInputs={
+                <Address2Inputs withIndex form={form} rule={rule} />
+              }
+              ruInputs={<NameInputsRu rule={rule} />}
+              uzInputs={<NameInputsUz rule={rule} />}
+              uzCyrillicInputs={<NameInputsCyrill rule={rule} />}
               formId={"modal-add-edit"}
             />
           </Form>

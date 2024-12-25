@@ -1,5 +1,6 @@
 import { Row, Col, Select, Form, Input, FormInstance } from "antd";
 import { AnyObject } from "antd/es/_util/type";
+import { Rule } from "antd/es/form";
 import i18next from "i18next";
 import { FC, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -14,12 +15,13 @@ import { GET_ALL_ACTIVE_STATUS, resetFieldsValue } from "@shared/lib/helpers";
 type Props = {
   withIndex?: boolean;
   form: FormInstance;
+  rule: Rule;
 };
 
 // REGION AND CITY IS ANYOBJECT CAUSE CANNOT FIND PROPER TYPE
 
 export const Address2Inputs: FC<Props> = (props) => {
-  const { withIndex, form } = props;
+  const { withIndex, form, rule } = props;
   const { t } = useTranslation();
   const { data: dataRegions, isLoading: isLoadingRegions } = useGetRegionsQuery(
     {
@@ -50,14 +52,24 @@ export const Address2Inputs: FC<Props> = (props) => {
     <Row gutter={8}>
       {withIndex && (
         <Col span={8}>
-          <Form.Item name={"index"} label={t("index")} layout="vertical">
+          <Form.Item
+            name={"index"}
+            rules={[rule]}
+            label={t("index")}
+            layout="vertical"
+          >
             <Input type="text" placeholder={t("index")} />
           </Form.Item>
         </Col>
       )}
 
       <Col span={8}>
-        <Form.Item name={"region"} label={t("region")} layout="vertical">
+        <Form.Item
+          name={"region"}
+          rules={[rule]}
+          label={t("region")}
+          layout="vertical"
+        >
           <Select
             options={
               dataRegions?.data.map((region: AnyObject) => ({
@@ -73,7 +85,12 @@ export const Address2Inputs: FC<Props> = (props) => {
         </Form.Item>
       </Col>
       <Col span={8}>
-        <Form.Item name={"city"} label={t("city")} layout="vertical">
+        <Form.Item
+          name={"city"}
+          rules={[rule]}
+          label={t("city")}
+          layout="vertical"
+        >
           <Select
             options={
               dataCities?.data.map((city: AnyObject) => ({

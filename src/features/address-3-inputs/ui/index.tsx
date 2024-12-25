@@ -1,5 +1,6 @@
-import { Row, Col, Input, Select, Form, FormInstance } from "antd";
+import { Row, Col, Select, Form, FormInstance, InputNumber } from "antd";
 import { AnyObject } from "antd/es/_util/type";
+import { Rule } from "antd/es/form";
 import i18next from "i18next";
 import { FC, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -14,10 +15,11 @@ import { GET_ALL_ACTIVE_STATUS, resetFieldsValue } from "@shared/lib/helpers";
 
 interface Props {
   form: FormInstance;
+  rule: Rule;
 }
 
 export const Address3Inputs: FC<Props> = (props) => {
-  const { form } = props;
+  const { form, rule } = props;
   const { t } = useTranslation();
   const { data: dataRegions, isLoading: isLoadingRegions } = useGetRegionsQuery(
     {
@@ -71,12 +73,26 @@ export const Address3Inputs: FC<Props> = (props) => {
   return (
     <Row gutter={8}>
       <Col xs={24} sm={12} md={12} lg={12} xl={5}>
-        <Form.Item name={"index"} label={t("index")} layout="vertical">
-          <Input type="text" placeholder={t("index")} />
+        <Form.Item
+          name={"index"}
+          rules={[rule]}
+          label={t("index")}
+          layout="vertical"
+        >
+          <InputNumber
+            style={{ width: "100%" }}
+            type="number"
+            placeholder={t("index")}
+          />
         </Form.Item>
       </Col>
       <Col xs={24} sm={12} md={12} lg={12} xl={6}>
-        <Form.Item name={"region"} label={t("region")} layout="vertical">
+        <Form.Item
+          name={"region"}
+          rules={[rule]}
+          label={t("region")}
+          layout="vertical"
+        >
           <Select
             allowClear
             options={
@@ -93,7 +109,12 @@ export const Address3Inputs: FC<Props> = (props) => {
         </Form.Item>
       </Col>
       <Col xs={24} sm={12} md={12} lg={12} xl={6}>
-        <Form.Item name={"city"} label={t("city")} layout="vertical">
+        <Form.Item
+          name={"city"}
+          rules={[rule]}
+          label={t("city")}
+          layout="vertical"
+        >
           <Select
             allowClear
             options={
@@ -110,7 +131,12 @@ export const Address3Inputs: FC<Props> = (props) => {
         </Form.Item>
       </Col>
       <Col xs={24} sm={12} md={12} lg={12} xl={6}>
-        <Form.Item name={"district"} label={t("district")} layout="vertical">
+        <Form.Item
+          name={"district"}
+          rules={[rule]}
+          label={t("district")}
+          layout="vertical"
+        >
           <Select
             allowClear
             placeholder={t("district")}
