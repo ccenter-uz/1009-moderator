@@ -107,7 +107,8 @@ export const OrgEditPage: FC = () => {
       dispatch(setImages(fourthStepData.images));
     }
   };
-  const next = () => {
+  const next = async () => {
+    await form.validateFields();
     setCurrent(current + 1);
     localStorage.setItem(STEPS_EDIT_DATA.CURRENT, JSON.stringify(current + 1));
     // STORE STEPS DATA

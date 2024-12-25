@@ -137,18 +137,57 @@ export const OrgEditThirdStepUI: FC = () => {
           <Form.Item name={"account"} label={t("account")}>
             <Input placeholder={t("account")} />
           </Form.Item>
-          <Form.Item name={"mail"} label={t("email")}>
+          <Form.Item
+            name={"mail"}
+            label={t("email")}
+            rules={[
+              {
+                required: true,
+                type: "email",
+                message: t("invalid-email"),
+              },
+            ]}
+          >
             <Input placeholder={t("email")} />
           </Form.Item>
-          <Form.Item name={"index"} label={t("index")}>
+          <Form.Item
+            name={"index"}
+            label={t("index")}
+            rules={[
+              {
+                required: true,
+                message: t("must-be-number"),
+                type: "number",
+                transform: (value) => Number(value),
+              },
+            ]}
+          >
             <Input placeholder={t("index")} />
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item name={"inn"} label={t("tin")}>
+          <Form.Item
+            name={"inn"}
+            label={t("tin")}
+            rules={[
+              {
+                required: true,
+                message: t("required-field"),
+              },
+            ]}
+          >
             <Input placeholder={t("tin")} />
           </Form.Item>
-          <Form.Item name={"bankNumber"} label={t("bank_number")}>
+          <Form.Item
+            name={"bankNumber"}
+            label={t("bank_number")}
+            rules={[
+              {
+                required: true,
+                message: t("required-field"),
+              },
+            ]}
+          >
             <Input placeholder={t("bank_number")} />
           </Form.Item>
         </Col>
