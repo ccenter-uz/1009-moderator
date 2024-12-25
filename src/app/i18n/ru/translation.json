@@ -198,5 +198,7 @@
   "invalid-email": "Неверный адрес электронной почты",
   "invalid-phone": "Неверный номер телефона",
   "must-be-number": "Должно быть числом",
-  "invalid-password": "Неверный пароль"
+  "invalid-password": "Неверный пароль",
+  "allowed": "Разрешено",
+  "not-allowed": "Не разрешено"
 }

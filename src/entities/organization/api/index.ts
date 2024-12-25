@@ -45,8 +45,6 @@ export const organizationApi = baseApi.injectEndpoints({
         method: API_METHODS.POST,
         body,
       }),
-
-      invalidatesTags: ["Organizations"],
     }),
 
     // UPDATE
@@ -56,7 +54,6 @@ export const organizationApi = baseApi.injectEndpoints({
         method: API_METHODS.PUT,
         body,
       }),
-      invalidatesTags: ["Organizations"],
     }),
 
     // DELETE

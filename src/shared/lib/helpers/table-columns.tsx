@@ -1,7 +1,9 @@
+import { Tooltip } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
 import i18next from "i18next";
+import { FaLock, FaLockOpen } from "react-icons/fa";
 
 import { setColorByStatus } from "./fns";
 
@@ -403,6 +405,17 @@ export const phoneColumns: searchColType = [
     key: "isSecret",
     width: 80,
     align: "center",
+    render: (text: boolean) => {
+      return text ? (
+        <Tooltip title={i18next.t("allowed")}>
+          <FaLock color="grey" />
+        </Tooltip>
+      ) : (
+        <Tooltip title={i18next.t("not-allowed")}>
+          <FaLockOpen color="grey" />
+        </Tooltip>
+      );
+    },
   },
   {
     title: i18next.t("phone"),
