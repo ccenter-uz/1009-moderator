@@ -1,4 +1,5 @@
 import { Button, Flex, Form, Input, Modal, Select } from "antd";
+import { AnyObject } from "antd/es/_util/type";
 import { FC, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -32,7 +33,7 @@ export const UserAddEditModalUI: FC<Props> = (props) => {
   const [createUser, { isLoading: isLoadingCreate }] = useCreateUserMutation();
   const [updateUser] = useUpdateUserMutation();
   const selectOption = useMemo(() => {
-    return data?.data.map((item: { id: string; name: string }) => ({
+    return data?.data.map((item: AnyObject) => ({
       value: item.id,
       label: item.name,
     }));

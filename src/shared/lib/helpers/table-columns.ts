@@ -3,39 +3,42 @@ import { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
 import i18next from "i18next";
 
+import { setColorByStatus } from "./fns";
+
 type searchColType = ColumnsType<AnyObject> | undefined;
 
-export const columnsForAddress: {
-  title: string;
-  dataIndex: string;
-  key: string;
-  align?: "left" | "center" | "right";
-  render?: (t: string, record: { id: number | string }) => JSX.Element;
-}[] = [
+export const columnsForAddress = [
   {
     title: i18next.t("name"),
     dataIndex: "name",
     key: "name",
+    render: (text: { [key: string]: string }) => text[i18next.language],
   },
   {
     title: i18next.t("old_name"),
-    dataIndex: "old_name",
-    key: "old_name",
+    dataIndex: "oldName",
+    key: "oldName",
+    render: (text: { [key: string]: string }) => text[i18next.language],
   },
   {
     title: i18next.t("new_name"),
-    dataIndex: "new_name",
-    key: "new_name",
+    dataIndex: "newName",
+    key: "newName",
+    render: (text: { [key: string]: string }) => text[i18next.language],
   },
   {
     title: i18next.t("region"),
     dataIndex: "region",
     key: "region",
+    render: (text: { name: { [key: string]: string } }) =>
+      text?.name[i18next.language],
   },
   {
     title: i18next.t("city"),
     dataIndex: "city",
     key: "city",
+    render: (text: { name: { [key: string]: string } }) =>
+      text?.name[i18next.language],
   },
   {
     title: i18next.t("district"),
@@ -48,100 +51,170 @@ export const columnsForAddress: {
     key: "index",
   },
   {
+    title: i18next.t("status"),
+    dataIndex: "status",
+    key: "status",
+    render: (text: number) => setColorByStatus(status[text]),
+  },
+  {
     title: i18next.t("update_date"),
-    dataIndex: "updated_date",
-    key: "updated_date",
+    dataIndex: "updatedAt",
+    key: "updatedAt",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
   },
   {
     title: i18next.t("employee"),
-    dataIndex: "employee",
-    key: "employee",
+    dataIndex: "staffNumber",
+    key: "staffNumber",
   },
 ];
 
-export const columnsForForBasicTable: {
-  title: string;
-  dataIndex: string;
-  key: string;
-}[] = [
+export const columnsForForBasicTable = [
   {
     title: i18next.t("name"),
     dataIndex: "name",
     key: "name",
   },
   {
+    title: i18next.t("createdAt"),
+    dataIndex: "createdAt",
+    key: "createdAt",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+  },
+  {
     title: i18next.t("update_date"),
-    dataIndex: "updated_date",
-    key: "updated_date",
+    dataIndex: "updatedAt",
+    key: "updatedAt",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+  },
+  {
+    title: i18next.t("deletedAt"),
+    dataIndex: "deletedAt",
+    key: "deletedAt",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+  },
+  {
+    title: i18next.t("status"),
+    dataIndex: "status",
+    key: "status",
+    render: (text: number) => setColorByStatus(status[text]),
   },
   {
     title: i18next.t("employee"),
-    dataIndex: "employee",
-    key: "employee",
+    dataIndex: "staffNumber",
+    key: "staffNumber",
   },
 ];
-
-export const columnsWithRegions: {
-  title: string;
-  dataIndex: string;
-  key: string;
-}[] = [
+export const columnsForPhoneTypeTable = [
   {
     title: i18next.t("name"),
     dataIndex: "name",
     key: "name",
+    render: (text: { [key: string]: string }) => text[i18next.language],
+  },
+  {
+    title: i18next.t("createdAt"),
+    dataIndex: "createdAt",
+    key: "createdAt",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+  },
+  {
+    title: i18next.t("update_date"),
+    dataIndex: "updatedAt",
+    key: "updatedAt",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+  },
+  {
+    title: i18next.t("deletedAt"),
+    dataIndex: "deletedAt",
+    key: "deletedAt",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+  },
+  {
+    title: i18next.t("status"),
+    dataIndex: "status",
+    key: "status",
+    render: (text: number) => setColorByStatus(status[text]),
+  },
+  {
+    title: i18next.t("employee"),
+    dataIndex: "staffNumber",
+    key: "staffNumber",
+  },
+];
+
+export const columnsWithRegions = [
+  {
+    title: i18next.t("name"),
+    dataIndex: "name",
+    key: "name",
+    render: (text: { [key: string]: string }) => text[i18next.language],
   },
   {
     title: i18next.t("region"),
     dataIndex: "region",
     key: "region",
+    render: (text: { name: { [key: string]: string } }) =>
+      text?.name[i18next.language],
   },
   {
     title: i18next.t("city"),
     dataIndex: "city",
     key: "city",
+    render: (text: { name: { [key: string]: string } }) =>
+      text?.name[i18next.language],
+  },
+  {
+    title: i18next.t("status"),
+    dataIndex: "status",
+    key: "status",
+    render: (text: number) => setColorByStatus(status[text]),
   },
   {
     title: i18next.t("update_date"),
-    dataIndex: "updated_date",
-    key: "updated_date",
+    dataIndex: "updatedAt",
+    key: "updatedAt",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
   },
   {
     title: i18next.t("employee"),
-    dataIndex: "employee",
-    key: "employee",
+    dataIndex: "staffNumber",
+    key: "staffNumber",
   },
 ];
 
-export const columnsWithAddressAndNamings: {
-  title: string;
-  dataIndex: string;
-  key: string;
-}[] = [
+export const columnsWithAddressAndNamings = [
   {
     title: i18next.t("name"),
     dataIndex: "name",
     key: "name",
+    render: (text: { [key: string]: string }) => text[i18next.language],
   },
   {
     title: i18next.t("old_name"),
-    dataIndex: "old_name",
-    key: "old_name",
+    dataIndex: "oldName",
+    key: "oldName",
+    render: (text: { [key: string]: string }) => text[i18next.language],
   },
   {
     title: i18next.t("new_name"),
-    dataIndex: "new_name",
-    key: "new_name",
+    dataIndex: "newName",
+    key: "newName",
+    render: (text: { [key: string]: string }) => text[i18next.language],
   },
   {
     title: i18next.t("region"),
     dataIndex: "region",
     key: "region",
+    render: (text: { name: { [key: string]: string } }) =>
+      text?.name[i18next.language],
   },
   {
     title: i18next.t("city"),
     dataIndex: "city",
     key: "city",
+    render: (text: { name: { [key: string]: string } }) =>
+      text?.name[i18next.language],
   },
   {
     title: i18next.t("index"),
@@ -149,54 +222,118 @@ export const columnsWithAddressAndNamings: {
     key: "index",
   },
   {
+    title: i18next.t("status"),
+    dataIndex: "status",
+    key: "status",
+    render: (text: number) => setColorByStatus(status[text]),
+  },
+  {
     title: i18next.t("update_date"),
-    dataIndex: "updated_date",
-    key: "updated_date",
+    dataIndex: "updatedAt",
+    key: "updatedAt",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
   },
   {
     title: i18next.t("employee"),
-    dataIndex: "employee",
-    key: "employee",
+    dataIndex: "staffNumber",
+    key: "staffNumber",
   },
 ];
 
-export const columnsForCategories: {
-  title: string;
-  dataIndex: string;
-  key: string;
-}[] = [
+export const columnsForCategories = [
   {
     title: i18next.t("name_ru"),
-    dataIndex: "name_ru",
-    key: "name_ru",
+    dataIndex: "name",
+    key: "name",
+    render: (text: { ru: string }) => text.ru,
   },
   {
     title: i18next.t("name_uz"),
-    dataIndex: "name_uz",
-    key: "name_uz",
+    dataIndex: "name",
+    key: "name",
+    render: (text: { uz: string }) => text.uz,
   },
   {
     title: i18next.t("name_uzcyrill"),
-    dataIndex: "name_cyrill",
-    key: "name_cyrill",
+    dataIndex: "name",
+    key: "name",
+    render: (text: { cy: string }) => text.cy,
+  },
+  {
+    title: i18next.t("region"),
+    dataIndex: "region",
+    key: "region",
+    render: (text: { name: { [key: string]: string } }) =>
+      text?.name[i18next.language],
+  },
+  {
+    title: i18next.t("city"),
+    dataIndex: "city",
+    key: "city",
+    render: (text: { name: { [key: string]: string } }) =>
+      text?.name[i18next.language],
+  },
+  {
+    title: i18next.t("status"),
+    dataIndex: "status",
+    key: "status",
+    render: (text: number) => setColorByStatus(status[text]),
   },
   {
     title: i18next.t("update_date"),
-    dataIndex: "updated_date",
-    key: "updated_date",
+    dataIndex: "updatedAt",
+    key: "updatedAt",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
   },
   {
     title: i18next.t("employee"),
-    dataIndex: "employee",
-    key: "employee",
+    dataIndex: "staffNumber",
+    key: "staffNumber",
+  },
+];
+export const columnsForCategoriesTu = [
+  {
+    title: i18next.t("name_ru"),
+    dataIndex: "name",
+    key: "name",
+    render: (text: { ru: string }) => text.ru,
+  },
+  {
+    title: i18next.t("name_uz"),
+    dataIndex: "name",
+    key: "name",
+    render: (text: { uz: string }) => text.uz,
+  },
+  {
+    title: i18next.t("name_uzcyrill"),
+    dataIndex: "name",
+    key: "name",
+    render: (text: { cy: string }) => text.cy,
+  },
+  {
+    title: i18next.t("status"),
+    dataIndex: "status",
+    key: "status",
+    render: (text: number) => setColorByStatus(status[text]),
+  },
+  {
+    title: i18next.t("update_date"),
+    dataIndex: "updatedAt",
+    key: "updatedAt",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+  },
+  {
+    title: i18next.t("employee"),
+    dataIndex: "staffNumber",
+    key: "staffNumber",
   },
 ];
 
 export const subCategoryColumns: searchColType = [
   {
     title: i18next.t("sub-category-tu"),
-    dataIndex: "sub-category-tu",
-    key: "sub-category-tu",
+    dataIndex: "subCategory-tu",
+    key: "subCategory-tu",
   },
 ];
 
@@ -210,14 +347,14 @@ export const attrColumns: searchColType = [
   {
     width: 150,
     title: i18next.t("sub-category"),
-    dataIndex: "sub-category",
-    key: "sub-category",
+    dataIndex: "subCategory",
+    key: "subCategory",
   },
   {
     width: 100,
     title: i18next.t("main-org"),
-    dataIndex: "main-org",
-    key: "main-org",
+    dataIndex: "mainOrg",
+    key: "mainOrg",
   },
   {
     width: 60,
@@ -225,6 +362,8 @@ export const attrColumns: searchColType = [
     title: i18next.t("region"),
     dataIndex: "region",
     key: "region",
+    render: (text: { name: { [key: string]: string } }) =>
+      text?.name[i18next.language],
   },
   {
     width: 60,
@@ -232,6 +371,8 @@ export const attrColumns: searchColType = [
     title: i18next.t("city"),
     dataIndex: "city",
     key: "city",
+    render: (text: { name: { [key: string]: string } }) =>
+      text?.name[i18next.language],
   },
   {
     width: 60,
@@ -265,8 +406,8 @@ export const phoneColumns: searchColType = [
   },
   {
     title: i18next.t("phone-type"),
-    dataIndex: "phone-type",
-    key: "phone-type",
+    dataIndex: "phoneType",
+    key: "phoneType",
     width: 200,
     align: "center",
   },
@@ -275,13 +416,15 @@ export const phoneColumns: searchColType = [
 export const searchModalColumns: searchColType = [
   {
     title: i18next.t("name_uz"),
-    dataIndex: "name_uz",
-    key: "name_uz",
+    dataIndex: "name",
+    key: "name",
+    render: (text: { [key: string]: string }) => text.uz,
   },
   {
     title: i18next.t("name_ru"),
-    dataIndex: "name_ru",
-    key: "name_ru",
+    dataIndex: "name",
+    key: "name",
+    render: (text: { [key: string]: string }) => text.ru,
   },
 ];
 
@@ -321,7 +464,7 @@ export const usersTableColumns = [
     title: i18next.t("status"),
     dataIndex: "status",
     key: "status",
-    render: (text: number) => status[text],
+    render: (text: number) => setColorByStatus(status[text]),
   },
   {
     title: i18next.t("createdAt"),
@@ -353,7 +496,7 @@ export const rolesTableColumns = [
     title: i18next.t("status"),
     dataIndex: "status",
     key: "status",
-    render: (text: number) => status[text],
+    render: (text: number) => setColorByStatus(status[text]),
   },
   {
     title: i18next.t("createdAt"),

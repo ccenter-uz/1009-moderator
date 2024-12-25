@@ -52,6 +52,7 @@ import {
   operatorPermissionsByRole,
 } from "./permissions-by-role";
 import { getLocalStorage } from "../helpers";
+import { ManageSegmentsAsync } from "@pages/manage-segments";
 
 function BubbleError() {
   const error = useRouteError();
@@ -194,6 +195,14 @@ const childRoutes = [
         icon: <MdOutlineManageAccounts />,
         path: "roles",
         element: <ManageRolesAsync />,
+      },
+      {
+        key: "/manage/segments",
+        name: "/manage/segments",
+        label: <Link to="/manage/segments">{i18next.t("segments")}</Link>,
+        icon: <MdOutlineManageAccounts />,
+        path: "segments",
+        element: <ManageSegmentsAsync />,
       },
       {
         key: "/manage/product-services",

@@ -11,6 +11,7 @@ type Props = {
   title: string;
   searchPart: JSX.Element;
   add?: () => void;
+  isAddBtnDisable?: boolean;
   modalPart?: JSX.Element;
   columns: AnyObject[];
   data: AnyObject[];
@@ -18,6 +19,8 @@ type Props = {
   rowSelect?: boolean;
   onRowSelect?: (record: AnyObject) => void;
   loading?: boolean;
+  pageName?: string;
+  limitName?: string;
 };
 
 export const ManageWrapperBox: FC<Props> = (props) => {
@@ -26,15 +29,19 @@ export const ManageWrapperBox: FC<Props> = (props) => {
     searchPart,
     modalPart,
     add,
+    isAddBtnDisable,
     columns = [],
     data = [],
     totalItems = 0,
     rowSelect,
     onRowSelect,
     loading,
+    pageName = "page",
+    limitName = "limit",
   } = props;
-  const { page, pageSize, pageSizeOptions, setPage, setPageSize } =
-    usePaginate();
+  const { page, pageSize, pageSizeOptions, setPage, setPageSize } = usePaginate(
+    { pageName, limitName },
+  );
   const { t } = useTranslation();
   const [selectedRowKey, setSelectedRowKey] = useState<string>("");
 
@@ -48,7 +55,12 @@ export const ManageWrapperBox: FC<Props> = (props) => {
       <div className="manage-wrapper-box__search">{searchPart}</div>
       {add && (
         <div className="manage-wrapper-box__add">
-          <Button type="primary" icon={<FaPlus />} onClick={add}>
+          <Button
+            type="primary"
+            icon={<FaPlus />}
+            onClick={add}
+            disabled={isAddBtnDisable}
+          >
             {t("add")}
           </Button>
         </div>
@@ -59,7 +71,7 @@ export const ManageWrapperBox: FC<Props> = (props) => {
           size="small"
           bordered
           onRow={(record) => ({
-            onDoubleClick: () => {
+            onClick: () => {
               rowSelect &&
                 (onRowSelect && onRowSelect(record),
                 setSelectedRowKey(record.key));

@@ -1,6 +1,6 @@
 export type getUsersType = {
   result: {
-    data: { id: string }[];
+    data: { id: string; name: string }[];
     totalDocs: number;
   };
 };
