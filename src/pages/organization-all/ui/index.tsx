@@ -8,9 +8,12 @@ import { useGetOrganizationsQuery } from "@entities/organization";
 import { returnAllParams } from "@shared/lib/helpers";
 
 export const OrgAllPage: FC = () => {
-  const { data, isLoading } = useGetOrganizationsQuery({
-    ...returnAllParams(),
-  });
+  const { data, isLoading } = useGetOrganizationsQuery(
+    {
+      ...returnAllParams(),
+    },
+    { refetchOnMountOrArgChange: true },
+  );
 
   return (
     <div>

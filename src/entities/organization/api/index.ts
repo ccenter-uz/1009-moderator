@@ -9,11 +9,15 @@ import { getOrganizationType } from "../model/types";
 export const organizationApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getOrganizations: build.query({
-      query: (params) => ({
-        url: API_MAP.ORGANIZATION_ALL,
-        method: API_METHODS.GET,
-        params,
-      }),
+      query: (params) => {
+        console.log("params", params);
+
+        return {
+          url: API_MAP.ORGANIZATION_ALL,
+          method: API_METHODS.GET,
+          params,
+        };
+      },
 
       providesTags: ["Organizations"],
       transformResponse: (response: getOrganizationType) => {
