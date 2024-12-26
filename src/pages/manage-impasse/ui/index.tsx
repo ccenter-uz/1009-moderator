@@ -21,6 +21,7 @@ import { NameInputsUz } from "@entities/name-inputs-uz";
 
 import {
   columnsForAddress,
+  getZodRequiredKeys,
   notificationResponse,
   returnAllParams,
 } from "@shared/lib/helpers";
@@ -59,6 +60,7 @@ export const ManageImpassePage: FC = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [form] = Form.useForm<valueProps>();
   const formRule = createSchemaFieldRule(ImpasseCreateFormDtoSchema);
+  const formRequiredField = getZodRequiredKeys(ImpasseCreateFormDtoSchema);
   const { data, isLoading } = useGetImpassesQuery({ ...returnAllParams() });
   const [deleteImpasse] = useDeleteImpasseMutation();
   const [updateImpasse] = useUpdateImpasseMutation();
@@ -177,10 +179,31 @@ export const ManageImpassePage: FC = () => {
               loading={isLoading}
               open={isOpen}
               onClose={onClose}
-              headerInputs={<Address3Inputs form={form} rule={formRule} />}
-              ruInputs={<NameInputsRu rule={formRule} />}
-              uzInputs={<NameInputsUz rule={formRule} />}
-              uzCyrillicInputs={<NameInputsCyrill rule={formRule} />}
+              headerInputs={
+                <Address3Inputs
+                  form={form}
+                  rule={formRule}
+                  requiredFields={formRequiredField}
+                />
+              }
+              ruInputs={
+                <NameInputsRu
+                  rule={formRule}
+                  requiredFields={formRequiredField}
+                />
+              }
+              uzInputs={
+                <NameInputsUz
+                  rule={formRule}
+                  requiredFields={formRequiredField}
+                />
+              }
+              uzCyrillicInputs={
+                <NameInputsCyrill
+                  rule={formRule}
+                  requiredFields={formRequiredField}
+                />
+              }
               formId={"manage-impasse"}
             />
           </Form>

@@ -21,6 +21,7 @@ import { NameInputsUz } from "@entities/name-inputs-uz";
 
 import {
   columnsWithAddressAndNamings,
+  getZodRequiredKeys,
   notificationResponse,
   returnAllParams,
 } from "@shared/lib/helpers";
@@ -57,6 +58,7 @@ export const ManageDistrictPage: FC = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [form] = Form.useForm<valueProps>();
   const formRule = createSchemaFieldRule(DistrictCreateFormDtoSchema);
+  const formRequiredField = getZodRequiredKeys(DistrictCreateFormDtoSchema);
   const { data, isLoading } = useGetDistrictsQuery({ ...returnAllParams() });
   const [deleteDistrict] = useDeleteDistrictMutation();
   const [createDistrict] = useCreateDistrictMutation();
@@ -176,11 +178,31 @@ export const ManageDistrictPage: FC = () => {
               open={isOpen}
               onClose={onClose}
               headerInputs={
-                <Address2Inputs withIndex form={form} rule={formRule} />
+                <Address2Inputs
+                  withIndex
+                  form={form}
+                  rule={formRule}
+                  requiredFields={formRequiredField}
+                />
               }
-              ruInputs={<NameInputsRu rule={formRule} />}
-              uzInputs={<NameInputsUz rule={formRule} />}
-              uzCyrillicInputs={<NameInputsCyrill rule={formRule} />}
+              ruInputs={
+                <NameInputsRu
+                  rule={formRule}
+                  requiredFields={formRequiredField}
+                />
+              }
+              uzInputs={
+                <NameInputsUz
+                  rule={formRule}
+                  requiredFields={formRequiredField}
+                />
+              }
+              uzCyrillicInputs={
+                <NameInputsCyrill
+                  rule={formRule}
+                  requiredFields={formRequiredField}
+                />
+              }
               formId={"modal-add-edit"}
             />
           </Form>

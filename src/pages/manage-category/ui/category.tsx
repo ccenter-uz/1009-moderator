@@ -23,6 +23,7 @@ import { SingleNameUz } from "@entities/single-name-uz";
 
 import {
   columnsForCategories,
+  getZodRequiredKeys,
   notificationResponse,
   returnAllParams,
   STATUS,
@@ -47,6 +48,7 @@ export const Category: FC = () => {
   const [form] = Form.useForm();
   const [searchForm] = Form.useForm();
   const formRule = createSchemaFieldRule(CategoryCreateFormDtoSchema);
+  const formRequiredField = getZodRequiredKeys(CategoryCreateFormDtoSchema);
   const { data, isLoading } = useGetCategoriesQuery({
     page,
     limit,
@@ -188,10 +190,31 @@ export const Category: FC = () => {
             loading={isLoading}
             open={isOpen}
             onClose={onClose}
-            headerInputs={<Address2Inputs form={form} rule={formRule} />}
-            ruInputs={<SingleNameRu rule={formRule} />}
-            uzInputs={<SingleNameUz rule={formRule} />}
-            uzCyrillicInputs={<SingleNameCyrill rule={formRule} />}
+            headerInputs={
+              <Address2Inputs
+                form={form}
+                rule={formRule}
+                requiredFields={formRequiredField}
+              />
+            }
+            ruInputs={
+              <SingleNameRu
+                rule={formRule}
+                requiredFields={formRequiredField}
+              />
+            }
+            uzInputs={
+              <SingleNameUz
+                rule={formRule}
+                requiredFields={formRequiredField}
+              />
+            }
+            uzCyrillicInputs={
+              <SingleNameCyrill
+                rule={formRule}
+                requiredFields={formRequiredField}
+              />
+            }
             formId={"manage-category"}
           />
         </Form>

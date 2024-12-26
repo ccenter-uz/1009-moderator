@@ -20,6 +20,7 @@ import { SingleNameUz } from "@entities/single-name-uz";
 
 import {
   columnsForCategories,
+  getZodRequiredKeys,
   notificationResponse,
   returnAllParams,
   STATUS,
@@ -36,6 +37,7 @@ export const SubCategory: FC = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [form] = Form.useForm();
   const formRule = createSchemaFieldRule(CategoryCreateFormDtoSchema);
+  const formRequiredField = getZodRequiredKeys(CategoryCreateFormDtoSchema);
   const {
     [CategorySubCategoryEnums.subCategoryPage]: page,
     [CategorySubCategoryEnums.subCategoryLimit]: limit,
@@ -185,9 +187,24 @@ export const SubCategory: FC = () => {
             loading={isLoading}
             open={isOpen}
             onClose={onClose}
-            ruInputs={<SingleNameRu rule={formRule} />}
-            uzInputs={<SingleNameUz rule={formRule} />}
-            uzCyrillicInputs={<SingleNameCyrill rule={formRule} />}
+            ruInputs={
+              <SingleNameRu
+                rule={formRule}
+                requiredFields={formRequiredField}
+              />
+            }
+            uzInputs={
+              <SingleNameUz
+                rule={formRule}
+                requiredFields={formRequiredField}
+              />
+            }
+            uzCyrillicInputs={
+              <SingleNameCyrill
+                rule={formRule}
+                requiredFields={formRequiredField}
+              />
+            }
             formId={"manage-sub-category"}
           />
         </Form>

@@ -5,20 +5,24 @@ import { useTranslation } from "react-i18next";
 
 interface IProps {
   rule: Rule;
+  requiredFields?: string[];
 }
 
-export const SingleNameRu: FC<IProps> = ({ rule }) => {
+const FORM_ITEM = "name_ru";
+
+export const SingleNameRu: FC<IProps> = ({ rule, requiredFields = [] }) => {
   const { t } = useTranslation();
   return (
     <Row gutter={8}>
       <Col span={24}>
         <Form.Item
-          name={"name_ru"}
+          name={FORM_ITEM}
           rules={[rule]}
-          label={t("name-ru")}
+          required={requiredFields.includes(FORM_ITEM)}
+          label={t(FORM_ITEM)}
           layout="vertical"
         >
-          <Input type="text" placeholder={t("name-ru")} />
+          <Input type="text" placeholder={t(FORM_ITEM)} />
         </Form.Item>
       </Col>
     </Row>
