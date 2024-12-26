@@ -46,7 +46,7 @@ export const Category: FC = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [form] = Form.useForm();
   const [searchForm] = Form.useForm();
-  const rule = createSchemaFieldRule(CategoryCreateFormDtoSchema);
+  const formRule = createSchemaFieldRule(CategoryCreateFormDtoSchema);
   const { data, isLoading } = useGetCategoriesQuery({
     page,
     limit,
@@ -188,10 +188,10 @@ export const Category: FC = () => {
             loading={isLoading}
             open={isOpen}
             onClose={onClose}
-            headerInputs={<Address2Inputs form={form} rule={rule} />}
-            ruInputs={<SingleNameRu rule={rule} />}
-            uzInputs={<SingleNameUz rule={rule} />}
-            uzCyrillicInputs={<SingleNameCyrill rule={rule} />}
+            headerInputs={<Address2Inputs form={form} rule={formRule} />}
+            ruInputs={<SingleNameRu rule={formRule} />}
+            uzInputs={<SingleNameUz rule={formRule} />}
+            uzCyrillicInputs={<SingleNameCyrill rule={formRule} />}
             formId={"manage-category"}
           />
         </Form>

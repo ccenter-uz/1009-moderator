@@ -52,3 +52,10 @@ export const FormAddressFieldsSchema = z.object({
     .int()
     .optional(),
 });
+
+export const FormSingleFieldSchema = z.object({
+  name: z.string({
+    invalid_type_error: t("form.invalid", { field: "" }),
+    required_error: t("form.required", { field: "" }),
+  }),
+});

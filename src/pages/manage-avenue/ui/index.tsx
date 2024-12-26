@@ -58,7 +58,7 @@ export const ManageAvenuePage: FC = () => {
   const [_, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [form] = Form.useForm<valueProps>();
-  const rule = createSchemaFieldRule(AvenueCreateFormDtoSchema);
+  const formRule = createSchemaFieldRule(AvenueCreateFormDtoSchema);
 
   const { data, isLoading } = useGetAvenuesQuery({ ...returnAllParams() });
   const [deleteAvenue] = useDeleteAvenueMutation();
@@ -178,10 +178,10 @@ export const ManageAvenuePage: FC = () => {
               loading={isLoading}
               open={isOpen}
               onClose={onClose}
-              headerInputs={<Address3Inputs form={form} rule={rule} />}
-              ruInputs={<NameInputsRu rule={rule} />}
-              uzInputs={<NameInputsUz rule={rule} />}
-              uzCyrillicInputs={<NameInputsCyrill rule={rule} />}
+              headerInputs={<Address3Inputs form={form} rule={formRule} />}
+              ruInputs={<NameInputsRu rule={formRule} />}
+              uzInputs={<NameInputsUz rule={formRule} />}
+              uzCyrillicInputs={<NameInputsCyrill rule={formRule} />}
               formId={"manage-avenue"}
             />
           </Form>

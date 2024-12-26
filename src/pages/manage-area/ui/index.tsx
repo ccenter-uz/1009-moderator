@@ -58,7 +58,7 @@ export const ManageAreaPage: FC = () => {
   const [_, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [form] = Form.useForm<valueProps>();
-  const rule = createSchemaFieldRule(AreaCreateFormDtoSchema);
+  const formRule = createSchemaFieldRule(AreaCreateFormDtoSchema);
   const { data, isLoading } = useGetAreasQuery({ ...returnAllParams() });
 
   const [deleteArea] = useDeleteAreaMutation();
@@ -177,10 +177,10 @@ export const ManageAreaPage: FC = () => {
             loading={isLoading}
             open={isOpen}
             onClose={onClose}
-            headerInputs={<Address3Inputs form={form} rule={rule} />}
-            ruInputs={<NameInputsRu rule={rule} />}
-            uzInputs={<NameInputsUz rule={rule} />}
-            uzCyrillicInputs={<NameInputsCyrill rule={rule} />}
+            headerInputs={<Address3Inputs form={form} rule={formRule} />}
+            ruInputs={<NameInputsRu rule={formRule} />}
+            uzInputs={<NameInputsUz rule={formRule} />}
+            uzCyrillicInputs={<NameInputsCyrill rule={formRule} />}
             formId={"manage-area"}
           />
         </Form>

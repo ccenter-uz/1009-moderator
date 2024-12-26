@@ -35,7 +35,7 @@ export const SubCategory: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [form] = Form.useForm();
-  const rule = createSchemaFieldRule(CategoryCreateFormDtoSchema);
+  const formRule = createSchemaFieldRule(CategoryCreateFormDtoSchema);
   const {
     [CategorySubCategoryEnums.subCategoryPage]: page,
     [CategorySubCategoryEnums.subCategoryLimit]: limit,
@@ -185,9 +185,9 @@ export const SubCategory: FC = () => {
             loading={isLoading}
             open={isOpen}
             onClose={onClose}
-            ruInputs={<SingleNameRu rule={rule} />}
-            uzInputs={<SingleNameUz rule={rule} />}
-            uzCyrillicInputs={<SingleNameCyrill rule={rule} />}
+            ruInputs={<SingleNameRu rule={formRule} />}
+            uzInputs={<SingleNameUz rule={formRule} />}
+            uzCyrillicInputs={<SingleNameCyrill rule={formRule} />}
             formId={"manage-sub-category"}
           />
         </Form>

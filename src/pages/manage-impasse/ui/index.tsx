@@ -1,4 +1,5 @@
 import { Flex, Form } from "antd";
+import { createSchemaFieldRule } from "antd-zod";
 import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
@@ -25,6 +26,8 @@ import {
 } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
+
+import { ImpasseCreateFormDtoSchema } from "../model/dto";
 
 export interface valueProps {
   index: string;
@@ -55,6 +58,7 @@ export const ManageImpassePage: FC = () => {
   const [_, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [form] = Form.useForm<valueProps>();
+  const formRule = createSchemaFieldRule(ImpasseCreateFormDtoSchema);
   const { data, isLoading } = useGetImpassesQuery({ ...returnAllParams() });
   const [deleteImpasse] = useDeleteImpasseMutation();
   const [updateImpasse] = useUpdateImpasseMutation();
@@ -173,10 +177,10 @@ export const ManageImpassePage: FC = () => {
               loading={isLoading}
               open={isOpen}
               onClose={onClose}
-              headerInputs={<Address3Inputs form={form} />}
-              ruInputs={<NameInputsRu />}
-              uzInputs={<NameInputsUz />}
-              uzCyrillicInputs={<NameInputsCyrill />}
+              headerInputs={<Address3Inputs form={form} rule={formRule} />}
+              ruInputs={<NameInputsRu rule={formRule} />}
+              uzInputs={<NameInputsUz rule={formRule} />}
+              uzCyrillicInputs={<NameInputsCyrill rule={formRule} />}
               formId={"manage-impasse"}
             />
           </Form>

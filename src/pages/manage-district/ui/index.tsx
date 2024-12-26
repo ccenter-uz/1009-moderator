@@ -27,7 +27,7 @@ import {
 import { useDisclosure } from "@shared/lib/hooks";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
 
-import { DistrictCreateFormDtoSchema } from "../module/dto";
+import { DistrictCreateFormDtoSchema } from "../model/dto";
 
 interface valueProps {
   index: string;
@@ -56,7 +56,7 @@ export const ManageDistrictPage: FC = () => {
   const [_, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [form] = Form.useForm<valueProps>();
-  const rule = createSchemaFieldRule(DistrictCreateFormDtoSchema);
+  const formRule = createSchemaFieldRule(DistrictCreateFormDtoSchema);
   const { data, isLoading } = useGetDistrictsQuery({ ...returnAllParams() });
   const [deleteDistrict] = useDeleteDistrictMutation();
   const [createDistrict] = useCreateDistrictMutation();
@@ -176,11 +176,11 @@ export const ManageDistrictPage: FC = () => {
               open={isOpen}
               onClose={onClose}
               headerInputs={
-                <Address2Inputs withIndex form={form} rule={rule} />
+                <Address2Inputs withIndex form={form} rule={formRule} />
               }
-              ruInputs={<NameInputsRu rule={rule} />}
-              uzInputs={<NameInputsUz rule={rule} />}
-              uzCyrillicInputs={<NameInputsCyrill rule={rule} />}
+              ruInputs={<NameInputsRu rule={formRule} />}
+              uzInputs={<NameInputsUz rule={formRule} />}
+              uzCyrillicInputs={<NameInputsCyrill rule={formRule} />}
               formId={"modal-add-edit"}
             />
           </Form>
