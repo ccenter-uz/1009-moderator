@@ -15,7 +15,7 @@ i18next.use(initReactI18next).init({
     uz: {
       translation: translationUz,
     },
-    uzc: {
+    cy: {
       translation: translationUzc,
     },
   },

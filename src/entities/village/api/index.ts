@@ -69,6 +69,7 @@ export const areaApi = baseApi.injectEndpoints({
 
 export const {
   useGetVillagesQuery,
+  useLazyGetVillagesQuery,
   useCreateVillageMutation,
   useUpdateVillageMutation,
   useDeleteVillageMutation,

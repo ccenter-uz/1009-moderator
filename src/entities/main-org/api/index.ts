@@ -63,6 +63,7 @@ export const mainOrgApi = baseApi.injectEndpoints({
 
 export const {
   useGetMainOrgQuery,
+  useLazyGetMainOrgQuery,
   useUpdateMainOrgMutation,
   useCreateMainOrgMutation,
   useDeleteMainOrgMutation,
