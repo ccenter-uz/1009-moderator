@@ -5,8 +5,8 @@ import {
   FormLanguageFiledsSchema,
 } from "@shared/types";
 
-export const AvenueCreateFormDtoSchema = FormLanguageFiledsSchema.merge(
+export const StreetCreateFormDtoSchema = FormLanguageFiledsSchema.merge(
   FormAddressFieldsSchema,
 );
 
-export type AvenueCreateDto = z.infer<typeof AvenueCreateFormDtoSchema>;
+export type StreetCreateDto = z.infer<typeof StreetCreateFormDtoSchema>;

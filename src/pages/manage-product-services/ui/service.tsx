@@ -1,4 +1,5 @@
 import { Flex, Form } from "antd";
+import { createSchemaFieldRule } from "antd-zod";
 import { t } from "i18next";
 import { FC, useEffect, useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
@@ -20,6 +21,7 @@ import { SingleNameUz } from "@entities/single-name-uz";
 import {
   columnsForCategories,
   columnsForCategoriesTu,
+  getZodRequiredKeys,
   notificationResponse,
   returnAllParams,
 } from "@shared/lib/helpers";
@@ -27,12 +29,17 @@ import { useDisclosure } from "@shared/lib/hooks";
 import { ItableBasicData } from "@shared/types";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
 
+import { ProductServicesCreateFormDtoSchema } from "../model/dto";
 import { editServiceType, ProductServicesEnum } from "../model/types";
 
 export const Service: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [form] = Form.useForm();
+  const formRule = createSchemaFieldRule(ProductServicesCreateFormDtoSchema);
+  const formRequiredField = getZodRequiredKeys(
+    ProductServicesCreateFormDtoSchema,
+  );
   const {
     [ProductServicesEnum.servicePage]: page,
     [ProductServicesEnum.serviceLimit]: limit,
@@ -168,9 +175,24 @@ export const Service: FC = () => {
             loading={isLoading}
             open={isOpen}
             onClose={onClose}
-            ruInputs={<SingleNameRu />}
-            uzInputs={<SingleNameUz />}
-            uzCyrillicInputs={<SingleNameCyrill />}
+            ruInputs={
+              <SingleNameRu
+                rule={formRule}
+                requiredFields={formRequiredField}
+              />
+            }
+            uzInputs={
+              <SingleNameUz
+                rule={formRule}
+                requiredFields={formRequiredField}
+              />
+            }
+            uzCyrillicInputs={
+              <SingleNameCyrill
+                rule={formRule}
+                requiredFields={formRequiredField}
+              />
+            }
             formId={"manage-sub-category-tu"}
           />
         </Form>

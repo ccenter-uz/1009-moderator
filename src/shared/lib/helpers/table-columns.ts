@@ -151,6 +151,13 @@ export const columnsWithRegions = [
     render: (text: { [key: string]: string }) => text[i18next.language],
   },
   {
+    title: i18next.t("nearby-category"),
+    dataIndex: "nearbyCategory",
+    key: "nearbyCategory",
+    render: (text: { name: { [key: string]: string } }) =>
+      text?.name[i18next.language],
+  },
+  {
     title: i18next.t("region"),
     dataIndex: "region",
     key: "region",
