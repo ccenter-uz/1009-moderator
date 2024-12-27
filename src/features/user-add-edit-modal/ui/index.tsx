@@ -1,15 +1,5 @@
-import {
-  Button,
-  Flex,
-  Form,
-  Input,
-  Modal,
-  Select,
-  Tooltip,
-  Typography,
-} from "antd";
+import { Button, Flex, Form, Input, Modal, Select } from "antd";
 import { AnyObject } from "antd/es/_util/type";
-import { Rule } from "antd/es/form";
 import { createSchemaFieldRule } from "antd-zod";
 import { FC, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
@@ -123,22 +113,18 @@ export const UserAddEditModalUI: FC<Props> = (props) => {
           rules={[rule]}
           required={requiredFields.includes(FORM_FIELDS_NAME.phoneNumber)}
           label={t("phone")}
+          tooltip={t("phone-useful-info")}
         >
           <Input disabled={isLoadingCreate} />
-          <Tooltip title={t("phone-useful-info")}>
-            <Typography.Link>{t("need-help")}</Typography.Link>
-          </Tooltip>
         </Form.Item>
         <Form.Item
           name={FORM_FIELDS_NAME.password}
           rules={[rule]}
           required={requiredFields.includes(FORM_FIELDS_NAME.password)}
           label={t("password")}
+          tooltip={t("password-useful-info")}
         >
           <Input disabled={isLoadingCreate} />
-          <Tooltip title={t("password-useful-info")}>
-            <Typography.Link>{t("need-help")}</Typography.Link>
-          </Tooltip>
         </Form.Item>
         <Form.Item
           name={FORM_FIELDS_NAME.numericId}
