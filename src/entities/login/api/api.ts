@@ -14,7 +14,7 @@ import {
   setLocalStorage,
 } from "@shared/lib/helpers";
 
-import { errorLoginType, successLoginType } from "../model/types";
+import { successLoginType } from "../model/types";
 
 export const loginApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
@@ -28,6 +28,10 @@ export const loginApi = baseApi.injectEndpoints({
         if (response.result) {
           if (response.result.accessToken) {
             setCookie("access_token", response.result.accessToken);
+            localStorage.setItem(
+              "access_token",
+              JSON.stringify(response.result.accessToken),
+            );
           }
 
           if (response.result.permissions) {

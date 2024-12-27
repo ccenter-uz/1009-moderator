@@ -7,7 +7,12 @@ import {
 import { notification } from "antd";
 import i18next from "i18next";
 
-import { deleteCookie, getCookie, RESPONSE_STATUS } from "@shared/lib/helpers";
+import {
+  deleteCookie,
+  getLocalStorage,
+  removeLocalStorage,
+  RESPONSE_STATUS,
+} from "@shared/lib/helpers";
 import { RootState } from "@shared/types/store";
 
 const baseUrl = import.meta.env.VITE_APP_BASE_URL;
@@ -29,7 +34,8 @@ const baseQuery = async (
 
     prepareHeaders: (headers, { getState }) => {
       const token =
-        (getState() as RootState).auth?.token || getCookie("access_token");
+        (getState() as RootState).auth?.token ||
+        getLocalStorage("access_token");
       if (token) {
         headers.set("authorization", `Bearer ${token}`);
       }
@@ -55,7 +61,7 @@ const baseQuery = async (
   ) {
     // Redirect to the login page
     deleteCookie("access_token");
-
+    removeLocalStorage("access_token");
     window.location.href = "/login";
     notification.error({
       message: i18next.t("unauthorized"),

@@ -3,6 +3,8 @@ import { FC, startTransition } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { clearLocalStorage } from "@shared/lib/helpers";
+
 function deleteAllCookies() {
   const cookies = document.cookie.split(";");
 
@@ -21,6 +23,7 @@ export const LogoutUI: FC = () => {
     const clearStoragePromise = new Promise((resolve) => {
       window.localStorage.clear();
       deleteAllCookies();
+      clearLocalStorage();
       resolve(true);
     });
 

@@ -18,7 +18,7 @@ import {
 import { SingleName } from "@entities/single-name";
 
 import {
-  columnsForForBasicTable,
+  columnsWithSingleName,
   getZodRequiredKeys,
   notificationResponse,
   returnAllParams,
@@ -79,7 +79,7 @@ export const ManageNearbyCategoryPage: FC = () => {
   };
 
   const columns = [
-    ...columnsForForBasicTable,
+    ...columnsWithSingleName,
     {
       flex: 0.5,
       title: "Действия",

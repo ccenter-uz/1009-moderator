@@ -46,6 +46,8 @@ export const columnsForAddress = [
     title: i18next.t("district"),
     dataIndex: "district",
     key: "district",
+    render: (text: { name: { [key: string]: string } }) =>
+      text?.name[i18next.language],
   },
   {
     title: i18next.t("index"),
@@ -77,6 +79,37 @@ export const columnsForForBasicTable = [
     dataIndex: "name",
     key: "name",
     render: (text: { [key: string]: string }) => text[i18next.language],
+  },
+  {
+    title: i18next.t("createdAt"),
+    dataIndex: "createdAt",
+    key: "createdAt",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+  },
+  {
+    title: i18next.t("update_date"),
+    dataIndex: "updatedAt",
+    key: "updatedAt",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+  },
+  {
+    title: i18next.t("deletedAt"),
+    dataIndex: "deletedAt",
+    key: "deletedAt",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+  },
+  {
+    title: i18next.t("status"),
+    dataIndex: "status",
+    key: "status",
+    render: (text: number) => setColorByStatus(status[text]),
+  },
+];
+export const columnsWithSingleName = [
+  {
+    title: i18next.t("name"),
+    dataIndex: "name",
+    key: "name",
   },
   {
     title: i18next.t("createdAt"),
@@ -150,10 +183,9 @@ export const columnsWithRegions = [
   },
   {
     title: i18next.t("nearby-category"),
-    dataIndex: "nearbyCategory",
-    key: "nearbyCategory",
-    render: (text: { name: { [key: string]: string } }) =>
-      text?.name[i18next.language],
+    dataIndex: "category",
+    key: "category",
+    render: (text: { name: string }) => text?.name,
   },
   {
     title: i18next.t("region"),
