@@ -76,6 +76,7 @@ export const columnsForForBasicTable = [
     title: i18next.t("name"),
     dataIndex: "name",
     key: "name",
+    render: (text: { [key: string]: string }) => text[i18next.language],
   },
   {
     title: i18next.t("createdAt"),
@@ -100,11 +101,6 @@ export const columnsForForBasicTable = [
     dataIndex: "status",
     key: "status",
     render: (text: number) => setColorByStatus(status[text]),
-  },
-  {
-    title: i18next.t("employee"),
-    dataIndex: "staffNumber",
-    key: "staffNumber",
   },
 ];
 export const columnsForPhoneTypeTable = [
