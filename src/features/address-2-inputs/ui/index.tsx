@@ -1,5 +1,6 @@
 import { Row, Col, Select, Form, Input, FormInstance } from "antd";
 import { AnyObject } from "antd/es/_util/type";
+import { Rule } from "antd/es/form";
 import i18next from "i18next";
 import { FC, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -14,12 +15,20 @@ import { GET_ALL_ACTIVE_STATUS, resetFieldsValue } from "@shared/lib/helpers";
 type Props = {
   withIndex?: boolean;
   form: FormInstance;
+  rule: Rule;
+  requiredFields?: string[];
+};
+
+const FORM_FIELDS = {
+  region: "region",
+  city: "city",
+  index: "index",
 };
 
 // REGION AND CITY IS ANYOBJECT CAUSE CANNOT FIND PROPER TYPE
 
 export const Address2Inputs: FC<Props> = (props) => {
-  const { withIndex, form } = props;
+  const { withIndex, form, rule, requiredFields = [] } = props;
   const { t } = useTranslation();
   const { data: dataRegions, isLoading: isLoadingRegions } = useGetRegionsQuery(
     {
@@ -40,24 +49,36 @@ export const Address2Inputs: FC<Props> = (props) => {
   }, []);
 
   useEffect(() => {
-    if (form.getFieldValue("region")) {
-      onSelectRegion(form.getFieldValue("region"));
+    if (form.getFieldValue(FORM_FIELDS.region)) {
+      onSelectRegion(form.getFieldValue(FORM_FIELDS.region));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [form.getFieldValue("region")]);
+  }, [form.getFieldValue(FORM_FIELDS.region)]);
 
   return (
     <Row gutter={8}>
       {withIndex && (
         <Col span={8}>
-          <Form.Item name={"index"} label={t("index")} layout="vertical">
-            <Input type="text" placeholder={t("index")} />
+          <Form.Item
+            name={FORM_FIELDS.index}
+            rules={[rule]}
+            required={requiredFields.includes(FORM_FIELDS.index)}
+            label={t(FORM_FIELDS.index)}
+            layout="vertical"
+          >
+            <Input type="text" placeholder={t(FORM_FIELDS.index)} />
           </Form.Item>
         </Col>
       )}
 
       <Col span={8}>
-        <Form.Item name={"region"} label={t("region")} layout="vertical">
+        <Form.Item
+          name={FORM_FIELDS.region}
+          rules={[rule]}
+          required={requiredFields.includes(FORM_FIELDS.region)}
+          label={t(FORM_FIELDS.region)}
+          layout="vertical"
+        >
           <Select
             options={
               dataRegions?.data.map((region: AnyObject) => ({
@@ -65,15 +86,20 @@ export const Address2Inputs: FC<Props> = (props) => {
                 value: region.id,
               })) || []
             }
-            placeholder={t("region")}
-            onChange={() => resetFieldsValue(form, ["city"])}
+            placeholder={t(FORM_FIELDS.region)}
+            onChange={() => resetFieldsValue(form, [FORM_FIELDS.city])}
             onSelect={onSelectRegion}
             loading={isLoadingRegions}
           />
         </Form.Item>
       </Col>
       <Col span={8}>
-        <Form.Item name={"city"} label={t("city")} layout="vertical">
+        <Form.Item
+          name={FORM_FIELDS.city}
+          rules={[rule]}
+          label={t(FORM_FIELDS.city)}
+          layout="vertical"
+        >
           <Select
             options={
               dataCities?.data.map((city: AnyObject) => ({
@@ -81,7 +107,7 @@ export const Address2Inputs: FC<Props> = (props) => {
                 value: city.id,
               })) || []
             }
-            placeholder={t("city")}
+            placeholder={t(FORM_FIELDS.city)}
             loading={isLoadingCities}
           />
         </Form.Item>

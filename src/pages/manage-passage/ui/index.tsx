@@ -1,4 +1,5 @@
 import { Flex, Form } from "antd";
+import { createSchemaFieldRule } from "antd-zod";
 import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
@@ -20,11 +21,14 @@ import {
 
 import {
   columnsForAddress,
+  getZodRequiredKeys,
   notificationResponse,
   returnAllParams,
 } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
+
+import { PassgeCreateFormDtoSchema } from "../model/dto";
 
 export interface valueProps {
   index: string;
@@ -55,6 +59,8 @@ export const ManagePassagePage: FC = () => {
   const [_, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [form] = Form.useForm<valueProps>();
+  const formRule = createSchemaFieldRule(PassgeCreateFormDtoSchema);
+  const formRequiredField = getZodRequiredKeys(PassgeCreateFormDtoSchema);
   const { data, isLoading } = useGetPassagesQuery({ ...returnAllParams() });
   const [deletePassage] = useDeletePassageMutation();
   const [updatePassage] = useUpdatePassageMutation();
@@ -175,10 +181,31 @@ export const ManagePassagePage: FC = () => {
               loading={isLoading}
               open={isOpen}
               onClose={onClose}
-              headerInputs={<Address3Inputs form={form} />}
-              ruInputs={<NameInputsRu />}
-              uzInputs={<NameInputsUz />}
-              uzCyrillicInputs={<NameInputsCyrill />}
+              headerInputs={
+                <Address3Inputs
+                  form={form}
+                  rule={formRule}
+                  requiredFields={formRequiredField}
+                />
+              }
+              ruInputs={
+                <NameInputsRu
+                  rule={formRule}
+                  requiredFields={formRequiredField}
+                />
+              }
+              uzInputs={
+                <NameInputsUz
+                  rule={formRule}
+                  requiredFields={formRequiredField}
+                />
+              }
+              uzCyrillicInputs={
+                <NameInputsCyrill
+                  rule={formRule}
+                  requiredFields={formRequiredField}
+                />
+              }
               formId={"modal-add-edit"}
             />
           </Form>
