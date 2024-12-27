@@ -1,4 +1,4 @@
-import { Button, Divider, Flex, Form, Steps } from "antd";
+import { Button, Divider, Flex, Form, notification, Steps } from "antd";
 import i18next from "i18next";
 import { CSSProperties, FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -15,7 +15,16 @@ import {
 } from "@widgets/org-add-second-step";
 import { OrgAddThirdStepUI, setPhoneData } from "@widgets/org-add-third-step";
 
-import { SEND_BODY, STEPS_DATA, STEPS_ENUM } from "@shared/lib/helpers";
+import { useCreateOrganizationMutation } from "@entities/organization";
+
+import {
+  getDayOffsCheckbox,
+  notificationResponse,
+  removeLocalStorage,
+  SEND_BODY,
+  STEPS_DATA,
+  STEPS_ENUM,
+} from "@shared/lib/helpers";
 import { RootState } from "@shared/types";
 
 const items = [
@@ -47,6 +56,7 @@ const contentStyle: CSSProperties = {
 export const OrgAddPage: FC = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const [createOrganization] = useCreateOrganizationMutation();
   const [form] = Form.useForm();
   const { data: categoryTu } = useSelector(
     ({ useAddOrgFirstStepSlice }: RootState) => useAddOrgFirstStepSlice,
@@ -64,24 +74,26 @@ export const OrgAddPage: FC = () => {
     Number(localStorage.getItem("currentStep")) || 0,
   );
 
-  const next = () => {
+  const next = async () => {
+    await form.validateFields();
     setCurrent(current + 1);
     localStorage.setItem("currentStep", JSON.stringify(current + 1));
     // STORE STEPS DATA
     if (current === STEPS_ENUM.firstStep) {
       const firstStepData = {
         ...form.getFieldsValue(STEPS_DATA.FIRST_FORMDATA),
-        "category-tu": categoryTu,
+        categoryTu: categoryTu,
       };
       localStorage.setItem("firstStepData", JSON.stringify(firstStepData));
     } else if (current === STEPS_ENUM.secondStep) {
       const secondStepData = {
         ...form.getFieldsValue(STEPS_DATA.SECOND_FORMDATA),
-        orientir: orientirData,
+        nearbees: orientirData,
       };
       localStorage.setItem("secondStepData", JSON.stringify(secondStepData));
     } else if (current === STEPS_ENUM.thirdStep) {
       const thirdStepData = {
+        ...form.getFieldsValue(STEPS_DATA.THIRD_FORMDATA),
         phone: phoneData,
       };
       localStorage.setItem("thirdStepData", JSON.stringify(thirdStepData));
@@ -94,39 +106,66 @@ export const OrgAddPage: FC = () => {
   };
 
   const onSubmit = async () => {
+    const formData = new FormData();
+
     const body = {
       ...form.getFieldsValue(SEND_BODY),
-      payment_type: {
-        cash: form.getFieldValue("all_type")
+      index: Number(form.getFieldValue("index")),
+      paymentTypes: {
+        cash: form.getFieldValue("allType")
           ? true
-          : form.getFieldValue("cash"),
-        terminal: form.getFieldValue("all_type")
+          : form.getFieldValue("cash") ?? false,
+        terminal: form.getFieldValue("allType")
           ? true
-          : form.getFieldValue("terminal"),
-        trasnfer: form.getFieldValue("all_type")
+          : form.getFieldValue("terminal") ?? false,
+        transfer: form.getFieldValue("allType")
           ? true
-          : form.getFieldValue("trasnfer"),
-        all_type: form.getFieldValue("all_type"),
+          : form.getFieldValue("transfer") ?? false,
       },
-      worktime: {
-        dayoffs: form.getFieldValue("dayoffs"),
-        "worktime-from": form.getFieldValue("worktime-from"),
-        "worktime-to": form.getFieldValue("worktime-to"),
-        "lunch-from": form.getFieldValue("lunch-from"),
-        "lunch-to": form.getFieldValue("lunch-to"),
+      workTime: {
+        dayoffs: getDayOffsCheckbox(form),
+        worktimeFrom: form.getFieldValue("worktimeFrom"),
+        worktimeTo: form.getFieldValue("worktimeTo"),
+        lunchFrom: form.getFieldValue("lunchFrom"),
+        lunchTo: form.getFieldValue("lunchTo"),
       },
       transport: {
         bus: form.getFieldValue("bus"),
-        "micro-bus": form.getFieldValue("micro-bus"),
-        "metro-station": form.getFieldValue("metro-station"),
+        microBus: form.getFieldValue("microBus"),
+        metroStation: form.getFieldValue("metroStation"),
       },
-      "category-tu": categoryTu,
-      orientir: orientirData,
-      phone: phoneData,
-      images,
+      productService: { productServices: categoryTu },
+      nearby: {
+        nearbees: orientirData,
+      },
+      phone: { phones: phoneData },
     };
+    for (const key in body) {
+      formData.append(key, JSON.stringify(body[key]));
+    }
+    for (let i = 0; i < images.length; i++) {
+      formData.append("photos", images[i]);
+    }
 
-    console.log(body, "body");
+    const response = await createOrganization(formData);
+
+    notificationResponse(response, t);
+  };
+
+  const onClearAllData = () => {
+    removeLocalStorage("firstStepData");
+    removeLocalStorage("secondStepData");
+    removeLocalStorage("thirdStepData");
+    removeLocalStorage("currentStep");
+    form.resetFields();
+    dispatch(setCategoryData([]));
+    dispatch(setOrientirData([]));
+    dispatch(setPhoneData([]));
+    notification.success({
+      message: t("erased"),
+      placement: "bottomRight",
+      duration: 1,
+    });
   };
 
   useEffect(() => {
@@ -136,12 +175,12 @@ export const OrgAddPage: FC = () => {
     const thirdStepData = localStorage.getItem("thirdStepData");
     if (firstStepData) {
       form.setFieldsValue(JSON.parse(firstStepData)),
-        dispatch(setCategoryData(JSON.parse(firstStepData)["category-tu"]));
+        dispatch(setCategoryData(JSON.parse(firstStepData)?.categoryTu));
     }
 
     if (secondStepData) {
       form.setFieldsValue(JSON.parse(secondStepData)),
-        dispatch(setOrientirData(JSON.parse(secondStepData)?.orientir));
+        dispatch(setOrientirData(JSON.parse(secondStepData)?.nearbees));
     }
     if (thirdStepData) {
       form.setFieldsValue(JSON.parse(thirdStepData)),
@@ -162,6 +201,9 @@ export const OrgAddPage: FC = () => {
       </div>
       <Divider />
       <Flex align="center" justify="end" gap={8} style={{ marginTop: 24 }}>
+        <Button style={{ margin: "0 8px" }} onClick={onClearAllData}>
+          {t("erase-all")}
+        </Button>
         {current > 0 && (
           <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
             {t("previous")}

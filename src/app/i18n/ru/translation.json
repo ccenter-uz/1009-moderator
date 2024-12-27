@@ -185,7 +185,20 @@
   "success": "Успешно",
   "unauthorized": "Незарегистрированный пользователь",
   "segments": "Сегменты",
-
+  "erase-all": "Сбросить все",
+  "erased": "Сброшено",
+  "monday": "Понедельник",
+  "tuesday": "Вторник",
+  "wednesday": "Среда",
+  "thursday": "Четверг",
+  "friday": "Пятница",
+  "saturday": "Суббота",
+  "sunday": "Воскресенье",
+  "required-field": "Обязательное поле",
+  "invalid-email": "Неверный адрес электронной почты",
+  "invalid-phone": "Неверный номер телефона",
+  "must-be-number": "Должно быть числом",
+  "invalid-password": "Неверный пароль",
   "form": {
     "required": "Обязательное поле {{field}}",
     "invalid": "Неверный формат {{field}}"

@@ -2,6 +2,7 @@ import { notification } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import DOMPurify from "dompurify";
 import i18next from "i18next";
+import { ReactNode } from "react";
 
 export const returnAllParams = () => {
   const params = new URLSearchParams(window.location.search);
@@ -83,14 +84,19 @@ export const clearCookie = () => {
 export const notificationResponse = (
   res: AnyObject,
   t: (arg0: string) => string,
-  onClose: () => void,
+  onClose?: () => void,
 ) => {
   if (res.data.status >= 200 && res.data.status < 300) {
     notification.success({
       message: t("success"),
       placement: "bottomRight",
     });
-    onClose();
+    onClose && onClose();
+  } else {
+    notification.error({
+      message: t("error"),
+      placement: "bottomRight",
+    });
   }
 };
 
@@ -105,4 +111,22 @@ export const setColorByStatus = (status: string) => {
     default:
       return null;
   }
+};
+
+export const renderLabelSelect = ({ label }: { label: string | ReactNode }) => {
+  if (label == undefined) {
+    return "";
+  }
+  return label;
+};
+export const getDayOffsCheckbox = (form: AnyObject) => {
+  const dayOffs = [];
+  form.getFieldValue("monday") && dayOffs.push("monday");
+  form.getFieldValue("tuesday") && dayOffs.push("tuesday");
+  form.getFieldValue("wednesday") && dayOffs.push("wednesday");
+  form.getFieldValue("thursday") && dayOffs.push("thursday");
+  form.getFieldValue("friday") && dayOffs.push("friday");
+  form.getFieldValue("saturday") && dayOffs.push("saturday");
+  form.getFieldValue("sunday") && dayOffs.push("sunday");
+  return dayOffs;
 };
