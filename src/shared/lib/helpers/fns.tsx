@@ -24,7 +24,7 @@ export const getLocalStorage = (localName: string) => {
   return JSON.parse(localStorage.getItem(localName) as string);
 };
 
-export const setLocalStorage = (localName: string, data: any) => {
+export const setLocalStorage = (localName: string, data: AnyObject) => {
   localStorage.setItem(localName, JSON.stringify(data));
 };
 
@@ -188,13 +188,24 @@ export const clearEditStepStorage = () => {
   localStorage.removeItem(STEPS_EDIT_DATA.EDIT_ID);
 };
 
+const PRODUCT_FILED_NAMES = ["ProductServices", "ProductServicesVersion"];
+const NEARBEES_FILED_NAMES = ["Nearbees", "NearbeesVersion"];
+const PHONE_FILED_NAMES = ["Phone", "PhoneVersion"];
+const PICTURE_FILED_NAMES = ["Picture", "PictureVersion"];
+const PAYMENT_TYPES_FILED_NAMES = ["PaymentTypes", "PaymentTypesVersion"];
+
+function getDynamicPropKey(record: AnyObject, names: string[]) {
+  return Object.keys(record).find((item) => names.includes(item)) as string;
+}
+
 export const handleEditLocalDatas = (record: AnyObject) => {
   // First step
+  const productName = getDynamicPropKey(record, PRODUCT_FILED_NAMES);
   const firstEditStep = {
     ...getStepsValueByKey(STEPS_DATA.FIRST_FORMDATA, record),
     segmentId: record.segment?.id,
     categoryId: record.category?.id,
-    categoryTu: record.ProductServices?.map((item: AnyObject) => ({
+    categoryTu: record[productName]?.map((item: AnyObject) => ({
       key: item.id,
       productServiceCategoryId: item.ProductServiceCategory?.id,
       productServiceSubCategoryId: item.ProductServiceSubCategory?.id,
@@ -204,8 +215,8 @@ export const handleEditLocalDatas = (record: AnyObject) => {
         item.ProductServiceSubCategory?.name[i18next.language],
     })),
   };
-
   // Second step
+  const nearbyName = getDynamicPropKey(record, NEARBEES_FILED_NAMES);
   const secondEditStep = {
     ...getStepsValueByKey(STEPS_DATA.SECOND_FORMDATA, record),
     areaId: record.area?.id,
@@ -217,7 +228,7 @@ export const handleEditLocalDatas = (record: AnyObject) => {
     impasseId: record.impasse?.id,
     villageId: record.village?.id,
     laneId: record.lane?.id,
-    nearbees: record.Nearbees?.map((item: AnyObject) => ({
+    nearbees: record[nearbyName]?.map((item: AnyObject) => ({
       key: item.Nearby?.id,
       nearbyId: item.Nearby?.id,
       nearbyCategoryId: item?.NearbyCategory?.id,
@@ -227,9 +238,10 @@ export const handleEditLocalDatas = (record: AnyObject) => {
   };
 
   // Third step
+  const phoneName = getDynamicPropKey(record, PHONE_FILED_NAMES);
   const thirdEditStep = {
     ...getStepsValueByKey(STEPS_DATA.THIRD_FORMDATA, record),
-    phone: record.Phone?.map((item: AnyObject) => ({
+    phone: record[phoneName]?.map((item: AnyObject) => ({
       ...item,
       key: item.id,
       phone: item.phone,
@@ -239,15 +251,17 @@ export const handleEditLocalDatas = (record: AnyObject) => {
   };
 
   // Fourth step
+  const paymentName = getDynamicPropKey(record, PAYMENT_TYPES_FILED_NAMES);
+  const pictureName = getDynamicPropKey(record, PICTURE_FILED_NAMES);
   const fourthEditStep = {
     ...getStepsValueByKey(STEPS_DATA.FOURTH_FORMDATA, record),
     allType:
-      record.PaymentTypes[0].Cash &&
-      record.PaymentTypes[0].Terminal &&
-      record.PaymentTypes[0].Transfer,
-    cash: record.PaymentTypes[0].Cash,
-    terminal: record.PaymentTypes[0].Terminal,
-    transfer: record.PaymentTypes[0].Transfer,
+      record[paymentName][0].Cash &&
+      record[paymentName][0].Terminal &&
+      record[paymentName][0].Transfer,
+    cash: record[paymentName][0].Cash,
+    terminal: record[paymentName][0].Terminal,
+    transfer: record[paymentName][0].Transfer,
     worktimeFrom: record.workTime.worktimeFrom,
     worktimeTo: record.workTime.worktimeTo,
     lunchFrom: record.workTime.lunchFrom,
@@ -256,7 +270,7 @@ export const handleEditLocalDatas = (record: AnyObject) => {
     bus: record.transport.bus,
     microBus: record.transport.microBus,
     metroStation: record.transport.metroStation,
-    images: record.Picture,
+    images: record[pictureName],
   };
 
   setLocalStorage(STEPS_EDIT_DATA.FIRST, firstEditStep);
