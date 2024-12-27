@@ -61,10 +61,12 @@ export const Product: FC = () => {
   const handleSearch = ({ search }: { search: string }) => {
     const previousParams = returnAllParams();
 
-    setSearchParams({
-      ...previousParams,
-      [ProductServicesEnum.productSearch]: search,
-    });
+    if (search || search === "") {
+      setSearchParams({
+        ...previousParams,
+        [ProductServicesEnum.productSearch]: search,
+      });
+    }
   };
 
   const handleSubmit = async (values: ItableBasicData) => {

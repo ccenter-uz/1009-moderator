@@ -13,6 +13,7 @@ type Props = {
   additionalSearch?: JSX.Element;
   id?: string;
   additionalParams?: unknown | AnyObject;
+  isSearchBtnDisable?: boolean;
 };
 
 export const BasicSearchPartUI: FC<Props> = (props) => {
@@ -22,6 +23,7 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
     additionalSearch,
     id = "basic-search",
     additionalParams,
+    isSearchBtnDisable,
   } = props;
   const [form] = Form.useForm();
   const { t } = useTranslation();
@@ -56,7 +58,7 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
         </Form.Item>
         <Button
           loading={loading}
-          disabled={loading}
+          disabled={loading || isSearchBtnDisable}
           htmlType="submit"
           form={id}
           type="primary"

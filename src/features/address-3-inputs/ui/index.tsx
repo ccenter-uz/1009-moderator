@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Row, Col, Input, Select, Form, FormInstance } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import i18next from "i18next";
@@ -40,7 +41,6 @@ export const Address3Inputs: FC<Props> = (props) => {
       all: GET_ALL_ACTIVE_STATUS.all,
       status: GET_ALL_ACTIVE_STATUS.active,
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onSelectCity = useCallback((value: string) => {
@@ -50,22 +50,18 @@ export const Address3Inputs: FC<Props> = (props) => {
       all: GET_ALL_ACTIVE_STATUS.all,
       status: GET_ALL_ACTIVE_STATUS.active,
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (form.getFieldValue("region")) {
       onSelectRegion(form.getFieldValue("region"));
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.getFieldValue("region")]);
 
   useEffect(() => {
     if (form.getFieldValue("city")) {
       onSelectCity(form.getFieldValue("city"));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.getFieldValue("city")]);
 
   return (
