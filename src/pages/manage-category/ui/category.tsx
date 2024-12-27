@@ -1,5 +1,6 @@
 import { Flex, Form } from "antd";
 import { AnyObject } from "antd/es/_util/type";
+import { createSchemaFieldRule } from "antd-zod";
 import { t } from "i18next";
 import { FC, useEffect, useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
@@ -22,6 +23,7 @@ import { SingleNameUz } from "@entities/single-name-uz";
 
 import {
   columnsForCategories,
+  getZodRequiredKeys,
   notificationResponse,
   returnAllParams,
   STATUS,
@@ -30,6 +32,7 @@ import { useDisclosure } from "@shared/lib/hooks";
 import { ItableBasicData } from "@shared/types";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
 
+import { CategoryCreateFormDtoSchema } from "../model/dto";
 import { CategorySubCategoryEnums, editCategoryType } from "../model/types";
 
 export const Category: FC = () => {
@@ -44,6 +47,8 @@ export const Category: FC = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [form] = Form.useForm();
   const [searchForm] = Form.useForm();
+  const formRule = createSchemaFieldRule(CategoryCreateFormDtoSchema);
+  const formRequiredField = getZodRequiredKeys(CategoryCreateFormDtoSchema);
   const { data, isLoading } = useGetCategoriesQuery({
     page,
     limit,
@@ -206,10 +211,31 @@ export const Category: FC = () => {
             loading={isLoading}
             open={isOpen}
             onClose={onClose}
-            headerInputs={<Address2Inputs form={form} />}
-            ruInputs={<SingleNameRu />}
-            uzInputs={<SingleNameUz />}
-            uzCyrillicInputs={<SingleNameCyrill />}
+            headerInputs={
+              <Address2Inputs
+                form={form}
+                rule={formRule}
+                requiredFields={formRequiredField}
+              />
+            }
+            ruInputs={
+              <SingleNameRu
+                rule={formRule}
+                requiredFields={formRequiredField}
+              />
+            }
+            uzInputs={
+              <SingleNameUz
+                rule={formRule}
+                requiredFields={formRequiredField}
+              />
+            }
+            uzCyrillicInputs={
+              <SingleNameCyrill
+                rule={formRule}
+                requiredFields={formRequiredField}
+              />
+            }
             formId={"manage-category"}
           />
         </Form>

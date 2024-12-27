@@ -1,5 +1,6 @@
 import { Button, Flex, Form, Input, Modal, Select } from "antd";
 import { AnyObject } from "antd/es/_util/type";
+import { createSchemaFieldRule } from "antd-zod";
 import { FC, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -9,7 +10,9 @@ import {
   useUpdateUserMutation,
 } from "@entities/users";
 
-import { notificationResponse } from "@shared/lib/helpers";
+import { getZodRequiredKeys, notificationResponse } from "@shared/lib/helpers";
+
+import { UserCreateSchema } from "../model/dto";
 
 type FormValues = {
   id?: string | number;
@@ -25,17 +28,27 @@ type Props = {
   record: FormValues | null;
 };
 
+const FORM_FIELDS_NAME = {
+  fullName: "fullName",
+  phoneNumber: "phoneNumber",
+  password: "password",
+  numericId: "numericId",
+  roleId: "roleId",
+};
+
 export const UserAddEditModalUI: FC<Props> = (props) => {
   const { open, onClose, record } = props;
   const { t } = useTranslation();
   const [form] = Form.useForm();
+  const rule = createSchemaFieldRule(UserCreateSchema);
+  const requiredFields = getZodRequiredKeys(UserCreateSchema);
   const { data, isLoading } = useGetRolesQuery({});
   const [createUser, { isLoading: isLoadingCreate }] = useCreateUserMutation();
   const [updateUser] = useUpdateUserMutation();
   const selectOption = useMemo(() => {
     return data?.data.map((item: AnyObject) => ({
       value: item.id,
-      label: item.name,
+      label: item.name[0].toUpperCase() + item.name.slice(1),
     }));
   }, [data]);
 
@@ -79,19 +92,46 @@ export const UserAddEditModalUI: FC<Props> = (props) => {
         layout="vertical"
         form={form}
       >
-        <Form.Item name="roleId" label={t("role")}>
+        <Form.Item
+          name={FORM_FIELDS_NAME.roleId}
+          rules={[rule]}
+          required={requiredFields.includes(FORM_FIELDS_NAME.roleId)}
+          label={t("role")}
+        >
           <Select options={selectOption} loading={isLoadingCreate} />
         </Form.Item>
-        <Form.Item name="fullName" label={t("full-name")}>
+        <Form.Item
+          name={FORM_FIELDS_NAME.fullName}
+          rules={[rule]}
+          required={requiredFields.includes(FORM_FIELDS_NAME.fullName)}
+          label={t("full-name")}
+        >
           <Input disabled={isLoadingCreate} />
         </Form.Item>
-        <Form.Item name="phoneNumber" label={t("phone")}>
+        <Form.Item
+          name={FORM_FIELDS_NAME.phoneNumber}
+          rules={[rule]}
+          required={requiredFields.includes(FORM_FIELDS_NAME.phoneNumber)}
+          label={t("phone")}
+          tooltip={t("phone-useful-info")}
+        >
           <Input disabled={isLoadingCreate} />
         </Form.Item>
-        <Form.Item name="password" label={t("password")}>
+        <Form.Item
+          name={FORM_FIELDS_NAME.password}
+          rules={[rule]}
+          required={requiredFields.includes(FORM_FIELDS_NAME.password)}
+          label={t("password")}
+          tooltip={t("password-useful-info")}
+        >
           <Input disabled={isLoadingCreate} />
         </Form.Item>
-        <Form.Item name="numericId" label={t("user-number")}>
+        <Form.Item
+          name={FORM_FIELDS_NAME.numericId}
+          rules={[rule]}
+          required={requiredFields.includes(FORM_FIELDS_NAME.numericId)}
+          label={t("user-number")}
+        >
           <Input disabled={isLoadingCreate} />
         </Form.Item>
         <Flex align="center" gap={8} justify="end">

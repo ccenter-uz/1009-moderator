@@ -1,5 +1,6 @@
 import { Flex, Form } from "antd";
 import { AnyObject } from "antd/es/_util/type";
+import { createSchemaFieldRule } from "antd-zod";
 import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
@@ -20,12 +21,15 @@ import { SingleNameUz } from "@entities/single-name-uz";
 
 import {
   columnsForPhoneTypeTable,
+  getZodRequiredKeys,
   notificationResponse,
   returnAllParams,
 } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { ItableBasicData } from "@shared/types";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
+
+import { PhoneTypeCreateFormDtoSchema } from "../model/dto";
 
 interface ImanagePhoneTypeValues {
   name: { ru: string; uz: string; cy: string };
@@ -38,6 +42,8 @@ export const ManagePhoneTypesPage: FC = () => {
   const [_, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [form] = Form.useForm<ItableBasicData>();
+  const formRule = createSchemaFieldRule(PhoneTypeCreateFormDtoSchema);
+  const formRequiredField = getZodRequiredKeys(PhoneTypeCreateFormDtoSchema);
   const { data, isLoading } = useGetPhoneTypeQuery({
     ...returnAllParams(),
   });
@@ -137,9 +143,24 @@ export const ManagePhoneTypesPage: FC = () => {
               loading={isLoading}
               open={isOpen}
               onClose={onClose}
-              ruInputs={<SingleNameRu />}
-              uzInputs={<SingleNameUz />}
-              uzCyrillicInputs={<SingleNameCyrill />}
+              ruInputs={
+                <SingleNameRu
+                  rule={formRule}
+                  requiredFields={formRequiredField}
+                />
+              }
+              uzInputs={
+                <SingleNameUz
+                  rule={formRule}
+                  requiredFields={formRequiredField}
+                />
+              }
+              uzCyrillicInputs={
+                <SingleNameCyrill
+                  rule={formRule}
+                  requiredFields={formRequiredField}
+                />
+              }
               formId={"modal-add-edit"}
             />
           </Form>
