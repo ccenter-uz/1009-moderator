@@ -1,4 +1,7 @@
+
 import { FC, useEffect } from "react";
+import { AnyObject } from "antd/es/_util/type";
+import { FC, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { SearchPartUI } from "@widgets/search-part";
@@ -10,17 +13,20 @@ import { returnAllParams } from "@shared/lib/helpers";
 
 export const OrgAllPage: FC = () => {
   const [searchParams] = useSearchParams();
+  const [searchValues, setSearchValues] = useState<AnyObject | null>(null);
   const { data, isLoading, refetch } = useGetOrganizationsQuery({
     ...returnAllParams(),
+    ...searchValues,
   });
 
   useEffect(() => {
     refetch();
-  }, [searchParams]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams, searchValues]);
 
   return (
     <div>
-      <SearchPartUI />
+      <SearchPartUI setSearchValues={setSearchValues} />
       <SearchTableUI
         data={data?.data || []}
         totalItems={data?.total || 0}

@@ -538,6 +538,7 @@ export const rolesTableColumns = [
   },
 ];
 
+
 export const unconfirmedTableColumns = [
   {
     title: i18next.t("code"),
@@ -575,3 +576,4 @@ export const unconfirmedTableColumns = [
     key: "staffNumber",
   },
 ];
+
