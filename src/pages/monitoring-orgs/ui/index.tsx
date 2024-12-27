@@ -8,7 +8,7 @@ import { ManageWrapperBox } from "@shared/ui";
 export const MonitoringOrgsUI: FC = () => {
   const { t } = useTranslation();
 
-  const onSearch = (search: string) => {
+  const onSearch = ({ search }: { search: string }) => {
     console.log(search, "search");
   };
 

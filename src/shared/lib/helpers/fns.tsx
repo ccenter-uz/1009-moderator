@@ -24,7 +24,8 @@ export const getLocalStorage = (localName: string) => {
   return JSON.parse(localStorage.getItem(localName) as string);
 };
 
-export const setLocalStorage = (localName: string, data: AnyObject) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const setLocalStorage = (localName: string, data: any) => {
   localStorage.setItem(localName, JSON.stringify(data));
 };
 
