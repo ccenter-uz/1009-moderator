@@ -97,6 +97,7 @@ export const Address2Inputs: FC<Props> = (props) => {
         <Form.Item
           name={FORM_FIELDS.city}
           rules={[rule]}
+          required={requiredFields.includes(FORM_FIELDS.region)}
           label={t(FORM_FIELDS.city)}
           layout="vertical"
         >
