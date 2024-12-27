@@ -1,4 +1,5 @@
 import { Flex, Form } from "antd";
+import { createSchemaFieldRule } from "antd-zod";
 import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
@@ -20,11 +21,14 @@ import { NameInputsUz } from "@entities/name-inputs-uz";
 
 import {
   columnsWithAddressAndNamings,
+  getZodRequiredKeys,
   notificationResponse,
   returnAllParams,
 } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
+
+import { DistrictCreateFormDtoSchema } from "../model/dto";
 
 interface valueProps {
   index: string;
@@ -53,6 +57,8 @@ export const ManageDistrictPage: FC = () => {
   const [_, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [form] = Form.useForm<valueProps>();
+  const formRule = createSchemaFieldRule(DistrictCreateFormDtoSchema);
+  const formRequiredField = getZodRequiredKeys(DistrictCreateFormDtoSchema);
   const { data, isLoading } = useGetDistrictsQuery({ ...returnAllParams() });
   const [deleteDistrict] = useDeleteDistrictMutation();
   const [createDistrict] = useCreateDistrictMutation();
@@ -82,7 +88,9 @@ export const ManageDistrictPage: FC = () => {
 
   const handleSearch = ({ search }: { search: string }) => {
     const previousParams = returnAllParams();
-    setSearchParams({ ...previousParams, search });
+    if (search || search == "") {
+      setSearchParams({ ...previousParams, search });
+    }
   };
 
   const handleSubmit = async (values: valueProps) => {
@@ -171,10 +179,32 @@ export const ManageDistrictPage: FC = () => {
               loading={isLoading}
               open={isOpen}
               onClose={onClose}
-              headerInputs={<Address2Inputs withIndex form={form} />}
-              ruInputs={<NameInputsRu />}
-              uzInputs={<NameInputsUz />}
-              uzCyrillicInputs={<NameInputsCyrill />}
+              headerInputs={
+                <Address2Inputs
+                  withIndex
+                  form={form}
+                  rule={formRule}
+                  requiredFields={formRequiredField}
+                />
+              }
+              ruInputs={
+                <NameInputsRu
+                  rule={formRule}
+                  requiredFields={formRequiredField}
+                />
+              }
+              uzInputs={
+                <NameInputsUz
+                  rule={formRule}
+                  requiredFields={formRequiredField}
+                />
+              }
+              uzCyrillicInputs={
+                <NameInputsCyrill
+                  rule={formRule}
+                  requiredFields={formRequiredField}
+                />
+              }
               formId={"modal-add-edit"}
             />
           </Form>

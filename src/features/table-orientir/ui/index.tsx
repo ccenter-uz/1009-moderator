@@ -89,7 +89,7 @@ export const TableOrientirUI: FC<Props> = (props) => {
       {
         ...selectedNearbyCategory[0],
         ...selectedNearby[0],
-        description,
+        description: description !== "" ? description : "-",
         colId: Date.now(),
       },
     ];

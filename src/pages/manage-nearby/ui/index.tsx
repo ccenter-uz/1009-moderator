@@ -1,5 +1,6 @@
-import { Flex, Form, Select } from "antd";
+import { Col, Flex, Form, Select } from "antd";
 import { AnyObject } from "antd/es/_util/type";
+import { createSchemaFieldRule } from "antd-zod";
 import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
@@ -23,11 +24,14 @@ import { SingleNameUz } from "@entities/single-name-uz";
 import {
   columnsWithRegions,
   GET_ALL_ACTIVE_STATUS,
+  getZodRequiredKeys,
   notificationResponse,
   returnAllParams,
 } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
+
+import { NearbyCreateFormDtoSchema } from "../model/dto";
 
 interface valueProps {
   region: string;
@@ -47,6 +51,8 @@ export const ManageNearbyPage: FC = () => {
   const [_, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [form] = Form.useForm();
+  const formRule = createSchemaFieldRule(NearbyCreateFormDtoSchema);
+  const formRequiredField = getZodRequiredKeys(NearbyCreateFormDtoSchema);
   const { data, isLoading } = useGetNearbyQuery({
     ...returnAllParams(),
   });
@@ -61,7 +67,10 @@ export const ManageNearbyPage: FC = () => {
   const [editingData, setEditingData] = useState<valueProps | null>(null);
   const [nearbyCategoryId, setNearbyCategoryId] = useState<
     string | number | boolean
-  >(false);
+  >(true);
+  const [modalNearbyCategoryId, setModalNearbyCategoryId] = useState<
+    string | number | boolean
+  >(true);
 
   const handleEditOpen = (values: valueProps) => {
     const editingBody = {
@@ -79,18 +88,20 @@ export const ManageNearbyPage: FC = () => {
 
   const handleSearch = ({ search }: { search: string }) => {
     const previousParams = returnAllParams();
-    setSearchParams({ ...previousParams, search });
+    if (search || search == "") {
+      setSearchParams({ ...previousParams, search });
+    }
   };
 
   const handleCategorySelect = (value: string | number) => {
     setNearbyCategoryId(value);
     const params = returnAllParams();
-    setSearchParams({ ...params, categoryId: String(value) });
+    setSearchParams({ ...params, nearbyCategoryId: String(value) });
   };
   const handleSubmit = async (values: valueProps) => {
     const body = {
       id: editingData?.id,
-      nearbyCategoryId,
+      nearbyCategoryId: modalNearbyCategoryId,
       regionId: values.region,
       cityId: values.city,
       name: {
@@ -99,6 +110,7 @@ export const ManageNearbyPage: FC = () => {
         cy: values.name_cyrill,
       },
     };
+
     const request = editingData ? updateNearby : createNearby;
 
     const response = await request(body);
@@ -140,6 +152,10 @@ export const ManageNearbyPage: FC = () => {
       },
     },
   ];
+
+  const handleModalCategorySelect = (value: string | number) => {
+    setModalNearbyCategoryId(value);
+  };
 
   return (
     <div>
@@ -184,10 +200,51 @@ export const ManageNearbyPage: FC = () => {
               loading={isLoading}
               open={isOpen}
               onClose={onClose}
-              headerInputs={<Address2Inputs form={form} />}
-              ruInputs={<SingleNameRu />}
-              uzInputs={<SingleNameUz />}
-              uzCyrillicInputs={<SingleNameCyrill />}
+              headerInputs={
+                <>
+                  <Form.Item
+                    name={"nearby-category"}
+                    label={t("nearby-category")}
+                    rules={[formRule]}
+                    required={formRequiredField.includes("nearby-category")}
+                    layout="vertical"
+                  >
+                    <Select
+                      allowClear
+                      onSelect={handleModalCategorySelect}
+                      placeholder={t("nearby-category")}
+                      loading={isLoadingCategory}
+                      options={dataCategory?.data.map((item: AnyObject) => ({
+                        label: item.name,
+                        value: item.id,
+                      }))}
+                    />
+                  </Form.Item>
+                  <Address2Inputs
+                    form={form}
+                    rule={formRule}
+                    requiredFields={formRequiredField}
+                  />
+                </>
+              }
+              ruInputs={
+                <SingleNameRu
+                  rule={formRule}
+                  requiredFields={formRequiredField}
+                />
+              }
+              uzInputs={
+                <SingleNameUz
+                  rule={formRule}
+                  requiredFields={formRequiredField}
+                />
+              }
+              uzCyrillicInputs={
+                <SingleNameCyrill
+                  rule={formRule}
+                  requiredFields={formRequiredField}
+                />
+              }
               formId={"modal-add-edit"}
             />
           </Form>

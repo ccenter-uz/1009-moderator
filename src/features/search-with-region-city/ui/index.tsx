@@ -1,7 +1,15 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Flex, FormInstance, Select, Form } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import i18next from "i18next";
-import { FC, useCallback, useEffect } from "react";
+import {
+  Dispatch,
+  FC,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -9,14 +17,15 @@ import {
   useLazyGetCitiesQuery,
 } from "@entities/region-city";
 
-import { GET_ALL_ACTIVE_STATUS } from "@shared/lib/helpers";
+import { GET_ALL_ACTIVE_STATUS, resetFieldsValue } from "@shared/lib/helpers";
 
 interface Props {
   form: FormInstance;
+  setIsSearchBtnDisable?: Dispatch<SetStateAction<boolean>>;
 }
 
 export const SearchWithRegionCityUI: FC<Props> = (props) => {
-  const { form } = props;
+  const { form, setIsSearchBtnDisable } = props;
   const { t } = useTranslation();
   const { data: dataRegions, isLoading: isLoadingRegions } = useGetRegionsQuery(
     {
@@ -26,6 +35,7 @@ export const SearchWithRegionCityUI: FC<Props> = (props) => {
   );
   const [trigger, { data: dataCities, isLoading: isLoadingCities }] =
     useLazyGetCitiesQuery();
+  const [regionValue, setRegionValue] = useState<number>();
 
   const onSelectRegion = useCallback((value: string) => {
     trigger({
@@ -33,8 +43,38 @@ export const SearchWithRegionCityUI: FC<Props> = (props) => {
       all: GET_ALL_ACTIVE_STATUS.all,
       status: GET_ALL_ACTIVE_STATUS.active,
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const onSelectCity = useCallback((value: string | undefined) => {
+    if (value) {
+      trigger({
+        cityId: value,
+        all: GET_ALL_ACTIVE_STATUS.all,
+        status: GET_ALL_ACTIVE_STATUS.active,
+      });
+    }
+  }, []);
+
+  const onRegionSelectChange = (value: string) => {
+    setRegionValue(+value);
+    if (value === "0") {
+      setIsSearchBtnDisable?.(false);
+    } else {
+      setIsSearchBtnDisable?.(true);
+    }
+
+    resetFieldsValue(form, ["city_id"]);
+  };
+
+  useEffect(() => {
+    if (regionValue == 0) {
+      setIsSearchBtnDisable?.(false);
+    }
+  }, [regionValue]);
+
+  const onCitySelectChange = (value: string | undefined) => {
+    setIsSearchBtnDisable?.(value === undefined ? true : false);
+  };
 
   useEffect(() => {
     if (form.getFieldValue("region_id")) {
@@ -52,13 +92,19 @@ export const SearchWithRegionCityUI: FC<Props> = (props) => {
           style={{ marginBottom: 0, flex: 1 }}
         >
           <Select
-            options={
-              dataRegions?.data.map((region: AnyObject) => ({
+            options={[
+              {
+                id: 0,
+                label: t("all"),
+                value: 0,
+              },
+              ...(dataRegions?.data.map((region: AnyObject) => ({
                 label: region.name[i18next.language],
                 value: region.id,
-              })) || []
-            }
+              })) || []),
+            ]}
             placeholder={t("region")}
+            onChange={onRegionSelectChange}
             onSelect={onSelectRegion}
             loading={isLoadingRegions}
             allowClear
@@ -77,6 +123,8 @@ export const SearchWithRegionCityUI: FC<Props> = (props) => {
               })) || []
             }
             placeholder={t("city")}
+            onChange={onCitySelectChange}
+            onSelect={onSelectCity}
             loading={isLoadingCities}
             allowClear
           />

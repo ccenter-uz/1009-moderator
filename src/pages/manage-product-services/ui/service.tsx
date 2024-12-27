@@ -1,4 +1,5 @@
 import { Flex, Form } from "antd";
+import { createSchemaFieldRule } from "antd-zod";
 import { t } from "i18next";
 import { FC, useEffect, useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
@@ -20,6 +21,7 @@ import { SingleNameUz } from "@entities/single-name-uz";
 import {
   columnsForCategories,
   columnsForCategoriesTu,
+  getZodRequiredKeys,
   notificationResponse,
   returnAllParams,
 } from "@shared/lib/helpers";
@@ -27,12 +29,17 @@ import { useDisclosure } from "@shared/lib/hooks";
 import { ItableBasicData } from "@shared/types";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
 
+import { ProductServicesCreateFormDtoSchema } from "../model/dto";
 import { editServiceType, ProductServicesEnum } from "../model/types";
 
 export const Service: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [form] = Form.useForm();
+  const formRule = createSchemaFieldRule(ProductServicesCreateFormDtoSchema);
+  const formRequiredField = getZodRequiredKeys(
+    ProductServicesCreateFormDtoSchema,
+  );
   const {
     [ProductServicesEnum.servicePage]: page,
     [ProductServicesEnum.serviceLimit]: limit,
@@ -43,6 +50,8 @@ export const Service: FC = () => {
   const [updateSubCategory] = useUpdateSubCategoryMutation();
   const [deleteSubCategory] = useDeleteSubCategoryMutation();
   const [editingData, setEditingData] = useState<editServiceType | null>(null);
+
+  const [isAddBtnDisable, setIsAddBtnDisable] = useState<boolean>(true);
 
   const handleEditOpen = (values: editServiceType) => {
     setEditingData({ ...values, id: values.id });
@@ -57,10 +66,12 @@ export const Service: FC = () => {
   const handleSearch = ({ search }: { search: string }) => {
     const previousParams = returnAllParams();
 
-    setSearchParams({
-      ...previousParams,
-      [ProductServicesEnum.serviceSearch]: search,
-    });
+    if (search || search === "") {
+      setSearchParams({
+        ...previousParams,
+        [ProductServicesEnum.serviceSearch]: search,
+      });
+    }
   };
 
   const handleSubmit = async (serviceData: ItableBasicData) => {
@@ -122,6 +133,8 @@ export const Service: FC = () => {
   ];
 
   useEffect(() => {
+    const hasParamsServiceId = searchParams.has(ProductServicesEnum.productId);
+    setIsAddBtnDisable(!hasParamsServiceId);
     if (searchParams.has(ProductServicesEnum.productId)) {
       trigger({
         page: Number(page) || 1,
@@ -143,6 +156,7 @@ export const Service: FC = () => {
       columns={columns}
       data={data?.data || []}
       add={onAdd}
+      isAddBtnDisable={isAddBtnDisable}
       searchPart={
         <BasicSearchPartUI
           id={"service-search"}
@@ -150,6 +164,7 @@ export const Service: FC = () => {
           additionalParams={{
             search: searchParams.get(ProductServicesEnum.serviceSearch),
           }}
+          isSearchBtnDisable={isAddBtnDisable}
         />
       }
       modalPart={
@@ -163,9 +178,24 @@ export const Service: FC = () => {
             loading={isLoading}
             open={isOpen}
             onClose={onClose}
-            ruInputs={<SingleNameRu />}
-            uzInputs={<SingleNameUz />}
-            uzCyrillicInputs={<SingleNameCyrill />}
+            ruInputs={
+              <SingleNameRu
+                rule={formRule}
+                requiredFields={formRequiredField}
+              />
+            }
+            uzInputs={
+              <SingleNameUz
+                rule={formRule}
+                requiredFields={formRequiredField}
+              />
+            }
+            uzCyrillicInputs={
+              <SingleNameCyrill
+                rule={formRule}
+                requiredFields={formRequiredField}
+              />
+            }
             formId={"manage-sub-category-tu"}
           />
         </Form>
