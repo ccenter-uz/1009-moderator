@@ -1,4 +1,5 @@
 import { Flex, Form } from "antd";
+import { AnyObject } from "antd/es/_util/type";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
@@ -13,7 +14,9 @@ import {
   useGetSegmentsQuery,
   useUpdateSegmentMutation,
 } from "@entities/segments";
-import { SingleName } from "@entities/single-name";
+import { SingleNameCyrill } from "@entities/single-name-cyrill";
+import { SingleNameRu } from "@entities/single-name-ru";
+import { SingleNameUz } from "@entities/single-name-uz";
 
 import {
   columnsForForBasicTable,
@@ -35,10 +38,19 @@ export const ManageSegmentsPage = () => {
   const [deleteSegment] = useDeleteSegmentMutation();
   const [createSegment] = useCreateSegmentMutation();
   const [updateSegment] = useUpdateSegmentMutation();
-  const [editingData, setEditingData] = useState<ItableBasicData | null>(null);
-  const handleEditOpen = (values: ItableBasicData) => {
+  const [editingData, setEditingData] = useState<AnyObject | null>(null);
+  const handleEditOpen = (values: {
+    name: { uz: string; ru: string; cy: string };
+    id: string | number;
+  }) => {
     setEditingData({ ...values, id: values.id });
-    form.setFieldsValue(values);
+    const body = {
+      name_uz: values.name.uz,
+      name_ru: values.name.ru,
+      name_cyrill: values.name.cy,
+      id: values.id,
+    };
+    form.setFieldsValue({ ...body });
     onOpen();
   };
 
@@ -49,7 +61,11 @@ export const ManageSegmentsPage = () => {
 
   const handleSubmit = async (values: ItableBasicData) => {
     const body = {
-      ...values,
+      name: {
+        uz: values.name_uz,
+        ru: values.name_ru,
+        cy: values.name_cyrill,
+      },
       id: editingData?.id,
     };
     const request = editingData ? updateSegment : createSegment;
@@ -64,6 +80,7 @@ export const ManageSegmentsPage = () => {
   const handleAdd = () => {
     onOpen();
     setEditingData(null);
+    form.resetFields();
   };
 
   const columns = [
@@ -114,7 +131,9 @@ export const ManageSegmentsPage = () => {
               loading={isLoading}
               open={isOpen}
               onClose={onClose}
-              singleInputs={<SingleName />}
+              ruInputs={<SingleNameRu />}
+              uzInputs={<SingleNameUz />}
+              uzCyrillicInputs={<SingleNameCyrill />}
               formId={"manage-segments"}
             />
           </Form>
