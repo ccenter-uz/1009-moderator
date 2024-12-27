@@ -1,7 +1,7 @@
 {
   "name": "1009-moderator",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "scripts": {
     "dev": "vite --host",
     "build": "tsc && vite build",
