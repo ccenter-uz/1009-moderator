@@ -1,5 +1,6 @@
 import { Flex, Form } from "antd";
 import { AnyObject } from "antd/es/_util/type";
+import { createSchemaFieldRule } from "antd-zod";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
@@ -20,6 +21,7 @@ import { SingleNameUz } from "@entities/single-name-uz";
 
 import {
   columnsForForBasicTable,
+  getZodRequiredKeys,
   notificationResponse,
   returnAllParams,
 } from "@shared/lib/helpers";
@@ -27,11 +29,15 @@ import { useDisclosure } from "@shared/lib/hooks";
 import { ItableBasicData } from "@shared/types";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
 
+import { SegmentCreateFormDtoSchema } from "../model/dto";
+
 export const ManageSegmentsPage = () => {
   const { t } = useTranslation();
   const [_, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [form] = Form.useForm();
+  const formRule = createSchemaFieldRule(SegmentCreateFormDtoSchema);
+  const formRequiredField = getZodRequiredKeys(SegmentCreateFormDtoSchema);
   const { data, isLoading } = useGetSegmentsQuery({
     ...returnAllParams(),
   });
@@ -91,7 +97,13 @@ export const ManageSegmentsPage = () => {
       key: "action",
       dataIndex: "action",
       align: "center",
-      render: (text: string, record: ItableBasicData & { status: number }) => {
+      render: (
+        text: string,
+        record: ItableBasicData & {
+          status: number;
+          name: { uz: string; ru: string; cy: string };
+        },
+      ) => {
         if (record.status === 1) {
           return (
             <Flex justify="center" align="center" gap={8}>
@@ -131,9 +143,24 @@ export const ManageSegmentsPage = () => {
               loading={isLoading}
               open={isOpen}
               onClose={onClose}
-              ruInputs={<SingleNameRu />}
-              uzInputs={<SingleNameUz />}
-              uzCyrillicInputs={<SingleNameCyrill />}
+              ruInputs={
+                <SingleNameRu
+                  rule={formRule}
+                  requiredFields={formRequiredField}
+                />
+              }
+              uzInputs={
+                <SingleNameUz
+                  rule={formRule}
+                  requiredFields={formRequiredField}
+                />
+              }
+              uzCyrillicInputs={
+                <SingleNameCyrill
+                  rule={formRule}
+                  requiredFields={formRequiredField}
+                />
+              }
               formId={"manage-segments"}
             />
           </Form>
