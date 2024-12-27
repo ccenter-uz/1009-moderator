@@ -1,5 +1,6 @@
-import { Row, Col, Input, Select, Form, FormInstance } from "antd";
+import { Row, Col, Select, Form, FormInstance, InputNumber } from "antd";
 import { AnyObject } from "antd/es/_util/type";
+import { Rule } from "antd/es/form";
 import i18next from "i18next";
 import { FC, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -14,10 +15,19 @@ import { GET_ALL_ACTIVE_STATUS, resetFieldsValue } from "@shared/lib/helpers";
 
 interface Props {
   form: FormInstance;
+  rule: Rule;
+  requiredFields?: string[];
 }
 
+export const FORM_FIELDS = {
+  index: "index",
+  region: "region",
+  city: "city",
+  district: "district",
+};
+
 export const Address3Inputs: FC<Props> = (props) => {
-  const { form } = props;
+  const { form, rule, requiredFields = [] } = props;
   const { t } = useTranslation();
   const { data: dataRegions, isLoading: isLoadingRegions } = useGetRegionsQuery(
     {
@@ -45,7 +55,7 @@ export const Address3Inputs: FC<Props> = (props) => {
 
   const onSelectCity = useCallback((value: string) => {
     triggerDistrict({
-      regionId: form.getFieldValue("region"),
+      regionId: form.getFieldValue(FORM_FIELDS.region),
       cityId: value,
       all: GET_ALL_ACTIVE_STATUS.all,
       status: GET_ALL_ACTIVE_STATUS.active,
@@ -54,29 +64,45 @@ export const Address3Inputs: FC<Props> = (props) => {
   }, []);
 
   useEffect(() => {
-    if (form.getFieldValue("region")) {
-      onSelectRegion(form.getFieldValue("region"));
+    if (form.getFieldValue(FORM_FIELDS.region)) {
+      onSelectRegion(form.getFieldValue(FORM_FIELDS.region));
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [form.getFieldValue("region")]);
+  }, [form.getFieldValue(FORM_FIELDS.region)]);
 
   useEffect(() => {
-    if (form.getFieldValue("city")) {
-      onSelectCity(form.getFieldValue("city"));
+    if (form.getFieldValue(FORM_FIELDS.city)) {
+      onSelectCity(form.getFieldValue(FORM_FIELDS.city));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [form.getFieldValue("city")]);
+  }, [form.getFieldValue(FORM_FIELDS.city)]);
 
   return (
     <Row gutter={8}>
       <Col xs={24} sm={12} md={12} lg={12} xl={5}>
-        <Form.Item name={"index"} label={t("index")} layout="vertical">
-          <Input type="text" placeholder={t("index")} />
+        <Form.Item
+          name={FORM_FIELDS.index}
+          rules={[rule]}
+          required={requiredFields.includes(FORM_FIELDS.index)}
+          label={t(FORM_FIELDS.index)}
+          layout="vertical"
+        >
+          <InputNumber
+            style={{ width: "100%" }}
+            type="number"
+            placeholder={t(FORM_FIELDS.index)}
+          />
         </Form.Item>
       </Col>
       <Col xs={24} sm={12} md={12} lg={12} xl={6}>
-        <Form.Item name={"region"} label={t("region")} layout="vertical">
+        <Form.Item
+          name={FORM_FIELDS.region}
+          rules={[rule]}
+          required={requiredFields.includes(FORM_FIELDS.region)}
+          label={t(FORM_FIELDS.region)}
+          layout="vertical"
+        >
           <Select
             allowClear
             options={
@@ -85,15 +111,23 @@ export const Address3Inputs: FC<Props> = (props) => {
                 value: region.id,
               })) || []
             }
-            placeholder={t("region")}
-            onChange={() => resetFieldsValue(form, ["city", "district"])}
+            placeholder={t(FORM_FIELDS.region)}
+            onChange={() =>
+              resetFieldsValue(form, [FORM_FIELDS.city, FORM_FIELDS.district])
+            }
             onSelect={onSelectRegion}
             loading={isLoadingRegions}
           />
         </Form.Item>
       </Col>
       <Col xs={24} sm={12} md={12} lg={12} xl={6}>
-        <Form.Item name={"city"} label={t("city")} layout="vertical">
+        <Form.Item
+          name={FORM_FIELDS.city}
+          rules={[rule]}
+          required={requiredFields.includes(FORM_FIELDS.city)}
+          label={t(FORM_FIELDS.city)}
+          layout="vertical"
+        >
           <Select
             allowClear
             options={
@@ -102,18 +136,24 @@ export const Address3Inputs: FC<Props> = (props) => {
                 value: city.id,
               })) || []
             }
-            placeholder={t("city")}
-            onChange={() => resetFieldsValue(form, ["district"])}
+            placeholder={t(FORM_FIELDS.city)}
+            onChange={() => resetFieldsValue(form, [FORM_FIELDS.district])}
             onSelect={onSelectCity}
             loading={isLoadingCities}
           />
         </Form.Item>
       </Col>
       <Col xs={24} sm={12} md={12} lg={12} xl={6}>
-        <Form.Item name={"district"} label={t("district")} layout="vertical">
+        <Form.Item
+          name={FORM_FIELDS.district}
+          rules={[rule]}
+          required={requiredFields.includes(FORM_FIELDS.district)}
+          label={t(FORM_FIELDS.district)}
+          layout="vertical"
+        >
           <Select
             allowClear
-            placeholder={t("district")}
+            placeholder={t(FORM_FIELDS.district)}
             options={
               dataDistrict?.data.map((passage: AnyObject) => ({
                 label: passage.name[i18next.language],

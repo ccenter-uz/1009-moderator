@@ -65,3 +65,7 @@ img {
   margin-bottom: 1em;
   border-radius: 4px;
 }
+
+.borderr {
+  border: 1px solid red;
+}
