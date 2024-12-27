@@ -64,12 +64,30 @@ export const OrgAddFourthStepUI: FC = () => {
             <Col span={24}>
               <Row gutter={16}>
                 <Col span={6}>
-                  <Form.Item name={"worktimeFrom"} label={t("from")}>
+                  <Form.Item
+                    name={"worktimeFrom"}
+                    label={t("from")}
+                    rules={[
+                      {
+                        required: true,
+                        message: t("required-field"),
+                      },
+                    ]}
+                  >
                     <Input type="time" />
                   </Form.Item>
                 </Col>
                 <Col span={6}>
-                  <Form.Item name={"worktimeTo"} label={t("to")}>
+                  <Form.Item
+                    name={"worktimeTo"}
+                    label={t("to")}
+                    rules={[
+                      {
+                        required: true,
+                        message: t("required-field"),
+                      },
+                    ]}
+                  >
                     <Input type="time" />
                   </Form.Item>
                 </Col>
@@ -85,12 +103,30 @@ export const OrgAddFourthStepUI: FC = () => {
             <Col span={24}>
               <Row gutter={16}>
                 <Col span={6}>
-                  <Form.Item name={"lunchFrom"} label={t("from")}>
+                  <Form.Item
+                    name={"lunchFrom"}
+                    label={t("from")}
+                    rules={[
+                      {
+                        required: true,
+                        message: t("required-field"),
+                      },
+                    ]}
+                  >
                     <Input type="time" />
                   </Form.Item>
                 </Col>
                 <Col span={6}>
-                  <Form.Item name={"lunchTo"} label={t("to")}>
+                  <Form.Item
+                    name={"lunchTo"}
+                    label={t("to")}
+                    rules={[
+                      {
+                        required: true,
+                        message: t("required-field"),
+                      },
+                    ]}
+                  >
                     <Input type="time" />
                   </Form.Item>
                 </Col>
@@ -157,7 +193,16 @@ export const OrgAddFourthStepUI: FC = () => {
           </Row>
         </Col>
         <Col span={12}>
-          <Form.Item name={"description"} label={t("description")}>
+          <Form.Item
+            name={"description"}
+            label={t("description")}
+            rules={[
+              {
+                required: true,
+                message: t("required-field"),
+              },
+            ]}
+          >
             <Input.TextArea />
           </Form.Item>
           <Form.Item name={"bus"} label={`${t("bus")} №`}>

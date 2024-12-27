@@ -74,7 +74,8 @@ export const OrgAddPage: FC = () => {
     Number(localStorage.getItem("currentStep")) || 0,
   );
 
-  const next = () => {
+  const next = async () => {
+    await form.validateFields();
     setCurrent(current + 1);
     localStorage.setItem("currentStep", JSON.stringify(current + 1));
     // STORE STEPS DATA
@@ -138,16 +139,14 @@ export const OrgAddPage: FC = () => {
         nearbees: orientirData,
       },
       phone: { phones: phoneData },
-      // REMOVE-THEN
-      sectionId: 1,
-      clientId: 1,
     };
     for (const key in body) {
       formData.append(key, JSON.stringify(body[key]));
     }
-    formData.append("photos", images);
+    for (let i = 0; i < images.length; i++) {
+      formData.append("photos", images[i]);
+    }
 
-    console.log(body, "body");
     const response = await createOrganization(formData);
 
     notificationResponse(response, t);

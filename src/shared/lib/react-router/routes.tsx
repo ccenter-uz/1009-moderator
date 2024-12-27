@@ -197,11 +197,11 @@ const childRoutes = [
         element: <ManageRolesAsync />,
       },
       {
-        key: "/manage/segments",
-        name: "/manage/segments",
-        label: <Link to="/manage/segments">{i18next.t("segments")}</Link>,
+        key: "/manage/segment",
+        name: "/manage/segment",
+        label: <Link to="/manage/segment">{i18next.t("segments")}</Link>,
         icon: <MdOutlineManageAccounts />,
-        path: "segments",
+        path: "segment",
         element: <ManageSegmentsAsync />,
       },
       {

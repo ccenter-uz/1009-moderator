@@ -1,4 +1,6 @@
 import { Flex, Form } from "antd";
+import { AnyObject } from "antd/es/_util/type";
+import { createSchemaFieldRule } from "antd-zod";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
@@ -13,10 +15,13 @@ import {
   useGetSegmentsQuery,
   useUpdateSegmentMutation,
 } from "@entities/segments";
-import { SingleName } from "@entities/single-name";
+import { SingleNameCyrill } from "@entities/single-name-cyrill";
+import { SingleNameRu } from "@entities/single-name-ru";
+import { SingleNameUz } from "@entities/single-name-uz";
 
 import {
   columnsForForBasicTable,
+  getZodRequiredKeys,
   notificationResponse,
   returnAllParams,
 } from "@shared/lib/helpers";
@@ -24,21 +29,34 @@ import { useDisclosure } from "@shared/lib/hooks";
 import { ItableBasicData } from "@shared/types";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
 
+import { SegmentCreateFormDtoSchema } from "../model/dto";
+
 export const ManageSegmentsPage = () => {
   const { t } = useTranslation();
   const [_, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [form] = Form.useForm();
+  const formRule = createSchemaFieldRule(SegmentCreateFormDtoSchema);
+  const formRequiredField = getZodRequiredKeys(SegmentCreateFormDtoSchema);
   const { data, isLoading } = useGetSegmentsQuery({
     ...returnAllParams(),
   });
   const [deleteSegment] = useDeleteSegmentMutation();
   const [createSegment] = useCreateSegmentMutation();
   const [updateSegment] = useUpdateSegmentMutation();
-  const [editingData, setEditingData] = useState<ItableBasicData | null>(null);
-  const handleEditOpen = (values: ItableBasicData) => {
+  const [editingData, setEditingData] = useState<AnyObject | null>(null);
+  const handleEditOpen = (values: {
+    name: { uz: string; ru: string; cy: string };
+    id: string | number;
+  }) => {
     setEditingData({ ...values, id: values.id });
-    form.setFieldsValue(values);
+    const body = {
+      name_uz: values.name.uz,
+      name_ru: values.name.ru,
+      name_cyrill: values.name.cy,
+      id: values.id,
+    };
+    form.setFieldsValue({ ...body });
     onOpen();
   };
 
@@ -49,7 +67,11 @@ export const ManageSegmentsPage = () => {
 
   const handleSubmit = async (values: ItableBasicData) => {
     const body = {
-      ...values,
+      name: {
+        uz: values.name_uz,
+        ru: values.name_ru,
+        cy: values.name_cyrill,
+      },
       id: editingData?.id,
     };
     const request = editingData ? updateSegment : createSegment;
@@ -64,6 +86,7 @@ export const ManageSegmentsPage = () => {
   const handleAdd = () => {
     onOpen();
     setEditingData(null);
+    form.resetFields();
   };
 
   const columns = [
@@ -74,7 +97,13 @@ export const ManageSegmentsPage = () => {
       key: "action",
       dataIndex: "action",
       align: "center",
-      render: (text: string, record: ItableBasicData & { status: number }) => {
+      render: (
+        text: string,
+        record: ItableBasicData & {
+          status: number;
+          name: { uz: string; ru: string; cy: string };
+        },
+      ) => {
         if (record.status === 1) {
           return (
             <Flex justify="center" align="center" gap={8}>
@@ -114,7 +143,24 @@ export const ManageSegmentsPage = () => {
               loading={isLoading}
               open={isOpen}
               onClose={onClose}
-              singleInputs={<SingleName />}
+              ruInputs={
+                <SingleNameRu
+                  rule={formRule}
+                  requiredFields={formRequiredField}
+                />
+              }
+              uzInputs={
+                <SingleNameUz
+                  rule={formRule}
+                  requiredFields={formRequiredField}
+                />
+              }
+              uzCyrillicInputs={
+                <SingleNameCyrill
+                  rule={formRule}
+                  requiredFields={formRequiredField}
+                />
+              }
               formId={"manage-segments"}
             />
           </Form>

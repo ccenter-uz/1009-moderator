@@ -74,6 +74,7 @@ export const columnsForForBasicTable = [
     title: i18next.t("name"),
     dataIndex: "name",
     key: "name",
+    render: (text: { [key: string]: string }) => text[i18next.language],
   },
   {
     title: i18next.t("createdAt"),
@@ -98,11 +99,6 @@ export const columnsForForBasicTable = [
     dataIndex: "status",
     key: "status",
     render: (text: number) => setColorByStatus(status[text]),
-  },
-  {
-    title: i18next.t("employee"),
-    dataIndex: "staffNumber",
-    key: "staffNumber",
   },
 ];
 export const columnsForPhoneTypeTable = [
@@ -149,6 +145,13 @@ export const columnsWithRegions = [
     dataIndex: "name",
     key: "name",
     render: (text: { [key: string]: string }) => text[i18next.language],
+  },
+  {
+    title: i18next.t("nearby-category"),
+    dataIndex: "nearbyCategory",
+    key: "nearbyCategory",
+    render: (text: { name: { [key: string]: string } }) =>
+      text?.name[i18next.language],
   },
   {
     title: i18next.t("region"),
@@ -450,17 +453,13 @@ export const usersTableColumns = [
     title: i18next.t("role"),
     dataIndex: "role",
     key: "role",
-    render: (text: { name: string }) => text.name,
+    render: (text: { name: string }) =>
+      text.name[0].toUpperCase() + text.name.slice(1),
   },
   {
     title: i18next.t("phone"),
     dataIndex: "phoneNumber",
     key: "phoneNumber",
-  },
-  {
-    title: i18next.t("password"),
-    dataIndex: "password",
-    key: "password",
   },
   {
     title: i18next.t("user-number"),
@@ -498,6 +497,7 @@ export const rolesTableColumns = [
     title: i18next.t("name"),
     dataIndex: "name",
     key: "name",
+    render: (text: string) => text[0].toUpperCase() + text.slice(1),
   },
   {
     title: i18next.t("status"),
