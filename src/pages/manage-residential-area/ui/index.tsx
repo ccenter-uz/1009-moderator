@@ -93,7 +93,9 @@ export const ManageResidentialAreaPage: FC = () => {
   };
   const handleSearch = ({ search }: { search: string }) => {
     const previousParams = returnAllParams();
-    setSearchParams({ ...previousParams, search });
+    if (search || search === "") {
+      setSearchParams({ ...previousParams, search });
+    }
   };
 
   const handleSubmit = async (values: valueProps) => {

@@ -88,7 +88,7 @@ export const ManageNearbyPage: FC = () => {
 
   const handleSearch = ({ search }: { search: string }) => {
     const previousParams = returnAllParams();
-    if (search) {
+    if (search || search == "") {
       setSearchParams({ ...previousParams, search });
     }
   };

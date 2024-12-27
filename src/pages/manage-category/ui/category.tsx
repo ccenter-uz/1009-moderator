@@ -60,6 +60,7 @@ export const Category: FC = () => {
   const [createCategory] = useCreateCategoryMutation();
   const [updateCategory] = useUpdateCategoryMutation();
   const [editingData, setEditingData] = useState<editCategoryType | null>(null);
+  const [isSearchBtnDisable, setIsSearchBtnDisable] = useState<boolean>(true);
 
   const handleEditOpen = (values: editCategoryType) => {
     setEditingData({ ...values, id: values.id });
@@ -74,16 +75,30 @@ export const Category: FC = () => {
   };
 
   const handleSearch = ({ search }: { search: string }) => {
-    const previousParams = returnAllParams();
+    //  If region id is 0, it resets the search params, otherwise it updates the search params with region id, city id and search query.
 
-    setSearchParams({
-      ...previousParams,
-      [CategorySubCategoryEnums.categorySearch]: search || "",
-      [CategorySubCategoryEnums.regionId]:
-        searchForm.getFieldValue("region_id") || "",
-      [CategorySubCategoryEnums.cityId]:
-        searchForm.getFieldValue("city_id") || "",
-    });
+    const previousParams = returnAllParams();
+    const regionId = searchForm.getFieldValue("region_id");
+    const cityId = searchForm.getFieldValue("city_id");
+
+    if (regionId === 0) {
+      const previousParamsCopy = JSON.parse(JSON.stringify(previousParams));
+      delete previousParamsCopy[CategorySubCategoryEnums.regionId];
+      delete previousParamsCopy[CategorySubCategoryEnums.cityId];
+      // delete previousParamsCopy[CategorySubCategoryEnums.categorySearch];
+
+      setSearchParams({
+        ...previousParamsCopy,
+        [CategorySubCategoryEnums.categorySearch]: search || "",
+      });
+    } else {
+      setSearchParams({
+        ...previousParams,
+        [CategorySubCategoryEnums.categorySearch]: search || "",
+        [CategorySubCategoryEnums.regionId]: regionId,
+        [CategorySubCategoryEnums.cityId]: cityId,
+      });
+    }
   };
   const handleSubmit = async (
     values: ItableBasicData & { region: number; city: number },
@@ -173,10 +188,16 @@ export const Category: FC = () => {
         <BasicSearchPartUI
           handleSearch={handleSearch}
           id="category-search"
-          additionalSearch={<SearchWithRegionCityUI form={searchForm} />}
+          additionalSearch={
+            <SearchWithRegionCityUI
+              form={searchForm}
+              setIsSearchBtnDisable={setIsSearchBtnDisable}
+            />
+          }
           additionalParams={{
             search: searchParams.get(CategorySubCategoryEnums.categorySearch),
           }}
+          isSearchBtnDisable={isSearchBtnDisable}
         />
       }
       modalPart={
