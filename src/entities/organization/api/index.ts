@@ -1,3 +1,5 @@
+import { AnyObject } from "antd/es/_util/type";
+
 import { baseApi } from "@shared/api";
 import { API_MAP, API_METHODS } from "@shared/lib/helpers";
 
@@ -16,7 +18,7 @@ export const organizationApi = baseApi.injectEndpoints({
       providesTags: ["Organizations"],
       transformResponse: (response: getOrganizationType) => {
         return {
-          data: response?.result?.data.map((item: { id: string }) => ({
+          data: response?.result?.data.map((item) => ({
             ...item,
             key: item.id,
           })),
@@ -51,7 +53,7 @@ export const organizationApi = baseApi.injectEndpoints({
     // UPDATE
     updateOrganization: build.mutation({
       query: (body) => ({
-        url: `${API_MAP.UPDATE_ORGANIZATION}/${body.id}`,
+        url: `${API_MAP.UPDATE_ORGANIZATION}/${JSON.parse(body.get("id"))}`,
         method: API_METHODS.PUT,
         body,
       }),

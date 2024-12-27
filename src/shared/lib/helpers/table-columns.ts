@@ -335,8 +335,8 @@ export const columnsForCategoriesTu = [
 export const subCategoryColumns: searchColType = [
   {
     title: i18next.t("sub-category-tu"),
-    dataIndex: "subCategory-tu",
-    key: "subCategory-tu",
+    dataIndex: "ProductServiceSubCategory",
+    key: "ProductServiceSubCategory",
   },
 ];
 
@@ -346,18 +346,23 @@ export const attrColumns: searchColType = [
     title: i18next.t("category"),
     dataIndex: "category",
     key: "category",
+    render: (text: { name: { [key: string]: string } }) =>
+      text?.name[i18next.language],
   },
   {
     width: 150,
     title: i18next.t("sub-category"),
-    dataIndex: "subCategory",
-    key: "subCategory",
+    dataIndex: "subcategory",
+    key: "subcategory",
+    render: (text: { name: { [key: string]: string } }) =>
+      text?.name[i18next.language],
   },
   {
     width: 100,
     title: i18next.t("main-org"),
-    dataIndex: "mainOrg",
-    key: "mainOrg",
+    dataIndex: "mainorganization",
+    key: "mainorganization",
+    render: (text: { name: string }) => text.name,
   },
   {
     width: 60,
@@ -383,6 +388,8 @@ export const attrColumns: searchColType = [
     title: i18next.t("district"),
     dataIndex: "district",
     key: "district",
+    render: (text: { name: { [key: string]: string } }) =>
+      text?.name[i18next.language],
   },
   {
     width: 150,
@@ -395,8 +402,8 @@ export const attrColumns: searchColType = [
 export const phoneColumns: searchColType = [
   {
     title: i18next.t("secret"),
-    dataIndex: "secret",
-    key: "secret",
+    dataIndex: "isSecret",
+    key: "isSecret",
     width: 80,
     align: "center",
   },

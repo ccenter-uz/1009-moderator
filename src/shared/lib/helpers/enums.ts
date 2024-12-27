@@ -50,3 +50,12 @@ export const enum STATUS {
   INACTIVE = 0,
   ALL = 2,
 }
+
+export const enum STEPS_EDIT_DATA {
+  FIRST = "firstStepDataEdit",
+  SECOND = "secondStepDataEdit",
+  THIRD = "thirdStepDataEdit",
+  FOURTH = "fourthStepDataEdit",
+  CURRENT = "currentStepEdit",
+  EDIT_ID = "editingOrgId",
+}
