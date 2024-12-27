@@ -1,9 +1,7 @@
-import { AnyObject } from "antd/es/_util/type";
-
 import { baseApi } from "@shared/api";
 import { API_MAP, API_METHODS } from "@shared/lib/helpers";
 
-import { setOrganization } from "../model/Slicer";
+import { setOrganization, setUnconfirmedOrganization } from "../model/Slicer";
 import { getOrganizationType } from "../model/types";
 
 export const organizationApi = baseApi.injectEndpoints({
@@ -38,6 +36,37 @@ export const organizationApi = baseApi.injectEndpoints({
       },
     }),
 
+    // GET-UNCONFIRMED
+    getUnconfirmedOrganizations: build.query({
+      query: (params) => ({
+        url: API_MAP.UNCONFIRMED_ORGANIZATION_ALL,
+        method: API_METHODS.GET,
+        params,
+      }),
+      providesTags: ["UnconfirmedOrganizations"],
+      transformResponse: (response: getOrganizationType) => {
+        return {
+          data: response?.result?.data.map((item) => ({
+            ...item,
+            id: Number(item.id),
+            key: item.id,
+          })),
+          total: response?.result?.totalDocs,
+        };
+      },
+      async onQueryStarted(args, { dispatch, queryFulfilled }) {
+        const { data } = await queryFulfilled;
+
+        dispatch(
+          setUnconfirmedOrganization(
+            data?.data?.map((item: { id: number }) => ({
+              ...item,
+              key: item.id,
+            })),
+          ),
+        );
+      },
+    }),
     // CREATE
     createOrganization: build.mutation({
       query: (body) => ({
@@ -64,12 +93,24 @@ export const organizationApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Organizations"],
     }),
+
+    // CHECK
+    checkOrganization: build.mutation({
+      query: (body) => ({
+        url: `${API_MAP.CHECK_ORGANIZATION}/${body.id}`,
+        method: API_METHODS.PUT,
+        body,
+      }),
+      invalidatesTags: ["UnconfirmedOrganizations"],
+    }),
   }),
 });
 
 export const {
+  useGetUnconfirmedOrganizationsQuery,
   useGetOrganizationsQuery,
   useCreateOrganizationMutation,
   useUpdateOrganizationMutation,
   useDeleteOrganizationMutation,
+  useCheckOrganizationMutation,
 } = organizationApi;
