@@ -14,7 +14,6 @@ export const organizationApi = baseApi.injectEndpoints({
         method: API_METHODS.GET,
         params,
       }),
-
       providesTags: ["Organizations"],
       transformResponse: (response: getOrganizationType) => {
         return {
@@ -46,8 +45,6 @@ export const organizationApi = baseApi.injectEndpoints({
         method: API_METHODS.POST,
         body,
       }),
-
-      invalidatesTags: ["Organizations"],
     }),
 
     // UPDATE
@@ -57,7 +54,6 @@ export const organizationApi = baseApi.injectEndpoints({
         method: API_METHODS.PUT,
         body,
       }),
-      invalidatesTags: ["Organizations"],
     }),
 
     // DELETE

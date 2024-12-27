@@ -199,6 +199,8 @@
   "invalid-phone": "Неверный номер телефона",
   "must-be-number": "Должно быть числом",
   "invalid-password": "Неверный пароль",
+  "allowed": "Разрешено",
+  "not-allowed": "Не разрешено",
   "form": {
     "required": "Обязательное поле {{field}}",
     "invalid": "Неверный формат {{field}}"

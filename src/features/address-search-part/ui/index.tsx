@@ -1,117 +1,123 @@
-import { Row, Col, Form, Select, FormInstance } from "antd";
+import { Row, FormInstance } from "antd";
 import i18next from "i18next";
-import { FC } from "react";
-import { useTranslation } from "react-i18next";
+import { FC, useEffect, useState } from "react";
 
+import { useLazyGetNearbyQuery } from "@entities/nearby";
+import { useLazyGetVillagesQuery } from "@entities/village";
+
+import { useDisclosure } from "@shared/lib/hooks";
 import { SingleInputWithModalUI } from "@shared/ui/single-input-with-modal";
 
-/**
- * AddressSearchPartUI
- *
- * This component is used to display address search part in the search widget
- * of the Manage pages.
- *
- * It has the following functionality:
- *
- * - Displays a select for region
- * - Displays a SingleInputWithModalUI for city
- * - Displays a SingleInputWithModalUI for district
- * - Displays a SingleInputWithModalUI for village
- * - Displays a SingleInputWithModalUI for address-sprav
- * - Displays a SingleInputWithModalUI for nearby
- *
- * It takes the following props:
- *
- * - `form`: The form instance from antd.
- *
- * @param {Object} props - The props of the component.
- * @param {FormInstance} props.form - The form instance from antd.
- *
- * @returns {JSX.Element} - The JSX element of the component.
- */
+import { AddressThreeSearchPartUI } from "./address";
 
 type Props = {
   form: FormInstance;
 };
 
-// singleInputWithModal: {
-//      name:-> name for select,
-//      label:-> label for select,
-//      dataFetcher: () => [{}] -> function to fetch data from server and return array of objects corresponding to columns,
-//      columns: [] -> columns for table inside modal,
-//      searchHref: -> href for search input inside modal,
-//   },
-
-const mocks = {
-  singleInputWithModal: {
-    name: "name",
-    label: "label",
-    dataFetcher: () => [{ name: "Мобильный", key: 1, id: 1 }],
-    columns: [
-      {
-        title: i18next.t("city"),
-        dataIndex: "name",
-        key: "name",
-      },
-    ],
-    searchHref: "/search",
+const villageColumns = [
+  {
+    title: i18next.t("name"),
+    dataIndex: "name",
+    key: "name",
+    render: (text: { [key: string]: string }) => text[i18next.language],
   },
-};
+];
+
+const nearbyColumns = [
+  {
+    title: i18next.t("name"),
+    dataIndex: "name",
+    key: "name",
+    render: (text: { [key: string]: string }) => text[i18next.language],
+  },
+];
 
 export const AddressSearchPartUI: FC<Props> = (props) => {
   const { form } = props;
-  const { t } = useTranslation();
+  const {
+    isOpen: isOpenVillage,
+    onOpen: onOpenVillage,
+    onClose: onCloseVillage,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenNearby,
+    onOpen: onOpenNearby,
+    onClose: onCloseNearby,
+  } = useDisclosure();
+
+  // FETCHERS
+  const [triggerVillage, { data: dataVillage, isLoading: loadingVillage }] =
+    useLazyGetVillagesQuery();
+  const [triggerNearby, { data: dataNearby, isLoading: loadingNearby }] =
+    useLazyGetNearbyQuery();
+  // PAGINATIONS
+  const [villagePagination, setVillagePagination] = useState({
+    page: 1,
+    limit: 10,
+  });
+  const [nearbyPagination, setNearbyPagination] = useState({
+    page: 1,
+    limit: 10,
+  });
+  // SEARCH_VALUES
+  const [searchValueVillage, setSearchValueVillage] = useState("");
+  const [searchValueNearby, setSearchValueNearby] = useState("");
+
+  useEffect(() => {
+    if (isOpenVillage) {
+      triggerVillage({
+        page: villagePagination.page,
+        limit: villagePagination.limit,
+        search: searchValueVillage,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [villagePagination, searchValueVillage, isOpenVillage]);
+
+  useEffect(() => {
+    if (isOpenNearby) {
+      triggerNearby({
+        page: nearbyPagination.page,
+        limit: nearbyPagination.limit,
+        search: searchValueNearby,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nearbyPagination, searchValueNearby, isOpenNearby]);
 
   return (
     <Row>
-      <Col span={24}>
-        <Form.Item
-          name="region"
-          label={t("region")}
-          style={{ marginBottom: 10 }}
-        >
-          <Select options={[]} allowClear />
-        </Form.Item>
-      </Col>
+      <AddressThreeSearchPartUI form={form} />
+
       <SingleInputWithModalUI
+        columns={villageColumns}
+        isOpen={isOpenVillage}
+        onOpen={onOpenVillage}
+        onClose={onCloseVillage}
+        loading={loadingVillage}
+        totalItems={dataVillage?.total || 0}
+        data={dataVillage?.data || []}
         form={form}
-        name={"city"}
-        label={"city"}
-        dataFetcher={mocks.singleInputWithModal.dataFetcher}
-        searchHref={mocks.singleInputWithModal.searchHref}
-        columns={mocks.singleInputWithModal.columns}
-      />
-      <SingleInputWithModalUI
-        form={form}
-        name={"district"}
-        label={"district"}
-        dataFetcher={mocks.singleInputWithModal.dataFetcher}
-        searchHref={mocks.singleInputWithModal.searchHref}
-        columns={mocks.singleInputWithModal.columns}
-      />
-      <SingleInputWithModalUI
-        form={form}
-        name={"village"}
+        name={"villageId"}
         label={"village"}
-        dataFetcher={mocks.singleInputWithModal.dataFetcher}
-        searchHref={mocks.singleInputWithModal.searchHref}
-        columns={mocks.singleInputWithModal.columns}
+        pagination={villagePagination}
+        setPagination={setVillagePagination}
+        setSearchValue={setSearchValueVillage}
       />
       <SingleInputWithModalUI
+        columns={nearbyColumns}
+        isOpen={isOpenNearby}
+        onOpen={onOpenNearby}
+        onClose={onCloseNearby}
+        loading={loadingNearby}
+        totalItems={dataNearby?.total || 0}
+        data={dataNearby?.data || []}
         form={form}
-        name={"address-sprav"}
-        label={"address-sprav"}
-        dataFetcher={mocks.singleInputWithModal.dataFetcher}
-        searchHref={mocks.singleInputWithModal.searchHref}
-        columns={mocks.singleInputWithModal.columns}
-      />
-      <SingleInputWithModalUI
-        form={form}
-        name={"nearby"}
+        name={"nearbyId"}
         label={"nearby"}
-        dataFetcher={mocks.singleInputWithModal.dataFetcher}
-        searchHref={mocks.singleInputWithModal.searchHref}
-        columns={mocks.singleInputWithModal.columns}
+        pagination={nearbyPagination}
+        setPagination={setNearbyPagination}
+        setSearchValue={setSearchValueNearby}
       />
     </Row>
   );

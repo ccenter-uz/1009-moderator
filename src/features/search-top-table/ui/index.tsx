@@ -9,6 +9,8 @@ import Swal from "sweetalert2";
 
 import { DeleteTableItemUI } from "@features/delete-table-item";
 
+import { useDeleteOrganizationMutation } from "@entities/organization";
+
 import {
   clearEditStepStorage,
   getEditingStepStorageValues,
@@ -39,6 +41,7 @@ export const SearchTopTable: FC<Props> = (props) => {
   });
   const navigate = useNavigate();
   const [selectedRowKeys, setSelectedRowKeys] = useState<number>(0);
+  const [deleteOrganization] = useDeleteOrganizationMutation();
 
   const checkExistId = (record: AnyObject) => {
     const { editingId, firstStepData } = getEditingStepStorageValues();
@@ -133,7 +136,7 @@ export const SearchTopTable: FC<Props> = (props) => {
             />
           </Can>
           <Can i="delete">
-            <DeleteTableItemUI fetch={() => null} />
+            <DeleteTableItemUI fetch={() => deleteOrganization(record.id)} />
           </Can>
         </Flex>
       ),
