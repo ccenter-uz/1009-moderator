@@ -1,5 +1,6 @@
 import { Flex, Form } from "antd";
 import { AnyObject } from "antd/es/_util/type";
+import { createSchemaFieldRule } from "antd-zod";
 import { t } from "i18next";
 import { FC, useEffect, useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
@@ -22,6 +23,7 @@ import { SingleNameUz } from "@entities/single-name-uz";
 
 import {
   columnsForCategories,
+  getZodRequiredKeys,
   notificationResponse,
   returnAllParams,
   STATUS,
@@ -30,6 +32,7 @@ import { useDisclosure } from "@shared/lib/hooks";
 import { ItableBasicData } from "@shared/types";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
 
+import { CategoryCreateFormDtoSchema } from "../model/dto";
 import { CategorySubCategoryEnums, editCategoryType } from "../model/types";
 
 export const Category: FC = () => {
@@ -44,6 +47,8 @@ export const Category: FC = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [form] = Form.useForm();
   const [searchForm] = Form.useForm();
+  const formRule = createSchemaFieldRule(CategoryCreateFormDtoSchema);
+  const formRequiredField = getZodRequiredKeys(CategoryCreateFormDtoSchema);
   const { data, isLoading } = useGetCategoriesQuery({
     page,
     limit,
@@ -55,6 +60,7 @@ export const Category: FC = () => {
   const [createCategory] = useCreateCategoryMutation();
   const [updateCategory] = useUpdateCategoryMutation();
   const [editingData, setEditingData] = useState<editCategoryType | null>(null);
+  const [isSearchBtnDisable, setIsSearchBtnDisable] = useState<boolean>(true);
 
   const handleEditOpen = (values: editCategoryType) => {
     setEditingData({ ...values, id: values.id });
@@ -69,16 +75,30 @@ export const Category: FC = () => {
   };
 
   const handleSearch = ({ search }: { search: string }) => {
-    const previousParams = returnAllParams();
+    //  If region id is 0, it resets the search params, otherwise it updates the search params with region id, city id and search query.
 
-    setSearchParams({
-      ...previousParams,
-      [CategorySubCategoryEnums.categorySearch]: search || "",
-      [CategorySubCategoryEnums.regionId]:
-        searchForm.getFieldValue("region_id") || "",
-      [CategorySubCategoryEnums.cityId]:
-        searchForm.getFieldValue("city_id") || "",
-    });
+    const previousParams = returnAllParams();
+    const regionId = searchForm.getFieldValue("region_id");
+    const cityId = searchForm.getFieldValue("city_id");
+
+    if (regionId === 0) {
+      const previousParamsCopy = JSON.parse(JSON.stringify(previousParams));
+      delete previousParamsCopy[CategorySubCategoryEnums.regionId];
+      delete previousParamsCopy[CategorySubCategoryEnums.cityId];
+      // delete previousParamsCopy[CategorySubCategoryEnums.categorySearch];
+
+      setSearchParams({
+        ...previousParamsCopy,
+        [CategorySubCategoryEnums.categorySearch]: search || "",
+      });
+    } else {
+      setSearchParams({
+        ...previousParams,
+        [CategorySubCategoryEnums.categorySearch]: search || "",
+        [CategorySubCategoryEnums.regionId]: regionId,
+        [CategorySubCategoryEnums.cityId]: cityId,
+      });
+    }
   };
   const handleSubmit = async (
     values: ItableBasicData & { region: number; city: number },
@@ -168,10 +188,16 @@ export const Category: FC = () => {
         <BasicSearchPartUI
           handleSearch={handleSearch}
           id="category-search"
-          additionalSearch={<SearchWithRegionCityUI form={searchForm} />}
+          additionalSearch={
+            <SearchWithRegionCityUI
+              form={searchForm}
+              setIsSearchBtnDisable={setIsSearchBtnDisable}
+            />
+          }
           additionalParams={{
             search: searchParams.get(CategorySubCategoryEnums.categorySearch),
           }}
+          isSearchBtnDisable={isSearchBtnDisable}
         />
       }
       modalPart={
@@ -185,10 +211,31 @@ export const Category: FC = () => {
             loading={isLoading}
             open={isOpen}
             onClose={onClose}
-            headerInputs={<Address2Inputs form={form} />}
-            ruInputs={<SingleNameRu />}
-            uzInputs={<SingleNameUz />}
-            uzCyrillicInputs={<SingleNameCyrill />}
+            headerInputs={
+              <Address2Inputs
+                form={form}
+                rule={formRule}
+                requiredFields={formRequiredField}
+              />
+            }
+            ruInputs={
+              <SingleNameRu
+                rule={formRule}
+                requiredFields={formRequiredField}
+              />
+            }
+            uzInputs={
+              <SingleNameUz
+                rule={formRule}
+                requiredFields={formRequiredField}
+              />
+            }
+            uzCyrillicInputs={
+              <SingleNameCyrill
+                rule={formRule}
+                requiredFields={formRequiredField}
+              />
+            }
             formId={"manage-category"}
           />
         </Form>

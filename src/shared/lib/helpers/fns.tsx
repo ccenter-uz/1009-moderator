@@ -223,6 +223,7 @@ export const handleEditLocalDatas = (record: AnyObject) => {
       nearbyCategoryId: item?.NearbyCategory?.id,
       nearbyCategoryName: item?.NearbyCategory?.name,
       nearbyName: item.Nearby?.name[i18next.language],
+      description: item?.description,
     })),
   };
 

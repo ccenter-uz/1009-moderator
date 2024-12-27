@@ -11,6 +11,7 @@ type Props = {
   title: string;
   searchPart: JSX.Element;
   add?: () => void;
+  isAddBtnDisable?: boolean;
   modalPart?: JSX.Element;
   columns: AnyObject[];
   data: AnyObject[];
@@ -28,6 +29,7 @@ export const ManageWrapperBox: FC<Props> = (props) => {
     searchPart,
     modalPart,
     add,
+    isAddBtnDisable,
     columns = [],
     data = [],
     totalItems = 0,
@@ -53,7 +55,12 @@ export const ManageWrapperBox: FC<Props> = (props) => {
       <div className="manage-wrapper-box__search">{searchPart}</div>
       {add && (
         <div className="manage-wrapper-box__add">
-          <Button type="primary" icon={<FaPlus />} onClick={add}>
+          <Button
+            type="primary"
+            icon={<FaPlus />}
+            onClick={add}
+            disabled={isAddBtnDisable}
+          >
             {t("add")}
           </Button>
         </div>

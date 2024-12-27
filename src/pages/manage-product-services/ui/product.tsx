@@ -1,5 +1,6 @@
 import { Flex, Form } from "antd";
 import { AnyObject } from "antd/es/_util/type";
+import { createSchemaFieldRule } from "antd-zod";
 import { t } from "i18next";
 import { FC, memo, useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
@@ -20,6 +21,7 @@ import { SingleNameUz } from "@entities/single-name-uz";
 
 import {
   columnsForCategoriesTu,
+  getZodRequiredKeys,
   notificationResponse,
   returnAllParams,
 } from "@shared/lib/helpers";
@@ -27,6 +29,7 @@ import { useDisclosure } from "@shared/lib/hooks";
 import { ItableBasicData } from "@shared/types";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
 
+import { ProductServicesCreateFormDtoSchema } from "../model/dto";
 import { editProductType, ProductServicesEnum } from "../model/types";
 
 export const Product: FC = () => {
@@ -38,6 +41,10 @@ export const Product: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [form] = Form.useForm();
+  const formRule = createSchemaFieldRule(ProductServicesCreateFormDtoSchema);
+  const formRequiredField = getZodRequiredKeys(
+    ProductServicesCreateFormDtoSchema,
+  );
   const { data, isLoading } = useGetProductsQuery({
     page,
     limit,
@@ -61,10 +68,12 @@ export const Product: FC = () => {
   const handleSearch = ({ search }: { search: string }) => {
     const previousParams = returnAllParams();
 
-    setSearchParams({
-      ...previousParams,
-      [ProductServicesEnum.productSearch]: search,
-    });
+    if (search || search === "") {
+      setSearchParams({
+        ...previousParams,
+        [ProductServicesEnum.productSearch]: search,
+      });
+    }
   };
 
   const handleSubmit = async (values: ItableBasicData) => {
@@ -158,9 +167,24 @@ export const Product: FC = () => {
             loading={isLoading}
             open={isOpen}
             onClose={onClose}
-            ruInputs={<SingleNameRu />}
-            uzInputs={<SingleNameUz />}
-            uzCyrillicInputs={<SingleNameCyrill />}
+            ruInputs={
+              <SingleNameRu
+                rule={formRule}
+                requiredFields={formRequiredField}
+              />
+            }
+            uzInputs={
+              <SingleNameUz
+                rule={formRule}
+                requiredFields={formRequiredField}
+              />
+            }
+            uzCyrillicInputs={
+              <SingleNameCyrill
+                rule={formRule}
+                requiredFields={formRequiredField}
+              />
+            }
             formId={"manage-category-tu"}
           />
         </Form>
