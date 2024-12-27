@@ -2,22 +2,6 @@ import { Row, Col, Input, Form, Checkbox } from "antd";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
 
-/**
- * ContactSearchPartUI
- *
- * This component is used to display contact search part in the search widget
- * of the Manage pages.
- *
- * It has the following functionality:
- *
- * - Displays a input for phone
- * - Displays a checkbox for search by phone
- *
- * It takes no props.
- *
- * @returns {JSX.Element} - The JSX element of the component.
- */
-
 export const ContactSearchPartUI: FC = () => {
   const { t } = useTranslation();
 
@@ -29,21 +13,7 @@ export const ContactSearchPartUI: FC = () => {
         </Form.Item>
       </Col>
       <Col span={24}>
-        <Form.Item
-          name="old_phone"
-          label={t("old_phone")}
-          style={{ marginBottom: 10 }}
-        >
-          <Input type="text" placeholder={t("old_phone")} allowClear />
-        </Form.Item>
-      </Col>
-      <Col span={24}>
         <Row gutter={24}>
-          <Col span={12}>
-            <Form.Item name="atc" label={t("atc")} style={{ marginBottom: 10 }}>
-              <Input type="text" placeholder={t("atc")} allowClear />
-            </Form.Item>
-          </Col>
           <Col span={12}>
             <Form.Item
               name="kvartal"
@@ -77,7 +47,7 @@ export const ContactSearchPartUI: FC = () => {
         <Row gutter={24}>
           <Col span={8}>
             <Form.Item
-              name="belong-abonent"
+              name="belongAbonent"
               label={t("belong-abonent")}
               style={{ marginBottom: 10 }}
               valuePropName="checked"
@@ -107,17 +77,7 @@ export const ContactSearchPartUI: FC = () => {
           </Col>
           <Col span={12}>
             <Form.Item
-              name="no-phone-abonent"
-              label={t("no-phone-abonent")}
-              style={{ marginBottom: 10 }}
-              valuePropName="checked"
-            >
-              <Checkbox />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item
-              name="no-bounded"
+              name="noBounded"
               label={t("no-bounded")}
               style={{ marginBottom: 10 }}
               valuePropName="checked"

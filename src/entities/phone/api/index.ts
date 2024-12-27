@@ -69,6 +69,7 @@ export const phoneTypeApi = baseApi.injectEndpoints({
 
 export const {
   useGetPhoneTypeQuery,
+  useLazyGetPhoneTypeQuery,
   useCreatePhoneTypeMutation,
   useUpdatePhoneTypeMutation,
   useDeletePhoneTypeMutation,
