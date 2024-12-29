@@ -1,4 +1,4 @@
-import { Row, Col, Select, Form, Input, FormInstance } from "antd";
+import { Row, Col, Select, Form, FormInstance, InputNumber } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { Rule } from "antd/es/form";
 import i18next from "i18next";
@@ -66,7 +66,11 @@ export const Address2Inputs: FC<Props> = (props) => {
             label={t(FORM_FIELDS.index)}
             layout="vertical"
           >
-            <Input type="text" placeholder={t(FORM_FIELDS.index)} />
+            <InputNumber
+              style={{ width: "100%" }}
+              type="number"
+              placeholder={t(FORM_FIELDS.index)}
+            />
           </Form.Item>
         </Col>
       )}
