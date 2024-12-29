@@ -19,7 +19,6 @@ import { SingleNameRu } from "@entities/single-name-ru";
 import { SingleNameUz } from "@entities/single-name-uz";
 
 import {
-  columnsForCategories,
   columnsForCategoriesTu,
   getZodRequiredKeys,
   notificationResponse,
@@ -58,7 +57,7 @@ export const Service: FC = () => {
     form.setFieldsValue({
       name_uz: values.name.uz,
       name_ru: values.name.ru,
-      name_cyrill: values.name.cy,
+      name_uzcyrill: values.name.cy,
     });
     onOpen();
   };
@@ -79,7 +78,7 @@ export const Service: FC = () => {
       name: {
         ru: serviceData.name_ru,
         uz: serviceData.name_uz,
-        cy: serviceData.name_cyrill,
+        cy: serviceData.name_uzcyrill,
       },
     };
 
