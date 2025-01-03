@@ -19,7 +19,7 @@ export const ChangeLng: FC = () => {
           label: "Uzb",
         },
         {
-          value: "uzc",
+          value: "cy",
           label: "Узб",
         },
       ]}

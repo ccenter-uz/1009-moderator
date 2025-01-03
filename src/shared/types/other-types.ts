@@ -32,4 +32,6 @@ export type ItableBasicData = {
 export type ItableWithRegions = ItableBasicData & {
   region: string;
   city: string;
+  status?: number;
+  staffNumber?: string | number;
 };

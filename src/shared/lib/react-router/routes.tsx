@@ -47,8 +47,12 @@ import { MonitoringUserAsync } from "@pages/monitoring-user";
 import { MonitoringOrgsAsync } from "@pages/monitoring-orgs";
 import { MonitoringTransactionsAsync } from "@pages/monitoring-transaction";
 import { ManageRolesAsync } from "@pages/manage-roles";
-import { moderatorPermissionsByRole } from "./permissions-by-role";
+import {
+  moderatorPermissionsByRole,
+  operatorPermissionsByRole,
+} from "./permissions-by-role";
 import { getLocalStorage } from "../helpers";
+import { ManageSegmentsAsync } from "@pages/manage-segments";
 
 function BubbleError() {
   const error = useRouteError();
@@ -191,6 +195,14 @@ const childRoutes = [
         icon: <MdOutlineManageAccounts />,
         path: "roles",
         element: <ManageRolesAsync />,
+      },
+      {
+        key: "/manage/segment",
+        name: "/manage/segment",
+        label: <Link to="/manage/segment">{i18next.t("segments")}</Link>,
+        icon: <MdOutlineManageAccounts />,
+        path: "segment",
+        element: <ManageSegmentsAsync />,
       },
       {
         key: "/manage/product-services",
@@ -360,7 +372,9 @@ export const routesPath = [
     errorElement: <BubbleError />,
     children: getAccessibleChildRoutes(
       childRoutes,
-      getLocalStorage("user").permissions_pathname,
+      getLocalStorage("user")
+        ? getLocalStorage("user")?.permissions_pathname
+        : operatorPermissionsByRole,
     ),
   },
   {

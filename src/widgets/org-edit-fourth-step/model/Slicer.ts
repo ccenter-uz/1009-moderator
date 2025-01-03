@@ -1,8 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { UploadFile } from "antd";
 
-const initialState: { data: UploadFile[] } = {
+const initialState: {
+  data: UploadFile[];
+  pictures: { id: number | string }[];
+} = {
   data: [],
+  pictures: [],
 };
 
 export const useEditOrgFourthStepSlice = createSlice({
@@ -12,8 +16,11 @@ export const useEditOrgFourthStepSlice = createSlice({
     setData: (state, action) => {
       state.data = action.payload;
     },
+    setPictures: (state, action) => {
+      state.pictures = action.payload;
+    },
   },
 });
 
-export const { setData } = useEditOrgFourthStepSlice.actions;
+export const { setData, setPictures } = useEditOrgFourthStepSlice.actions;
 export default useEditOrgFourthStepSlice.reducer;

@@ -3,28 +3,27 @@ import { FC } from "react";
 import "./style.css";
 import { useTranslation } from "react-i18next";
 import { FaLock, FaUser } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 
-import { setCookie, setLocalStorage } from "@shared/lib/helpers";
-import { moderatorPermissionsByRole } from "@shared/lib/react-router";
+import { usePostLoginMutation } from "@entities/login";
 
 export const LoginPage: FC = () => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
-  const navigate = useNavigate();
+  const [postLogin, { isLoading }] = usePostLoginMutation();
 
-  const onLogin = (values: { phone: string; password: string }) => {
-    console.log(values, "values");
-    setCookie("access_token", "true");
-    form.resetFields();
-    setLocalStorage("user", moderatorPermissionsByRole);
-    navigate("/");
+  const onLogin = async (values: { phoneNumber: string; password: string }) => {
+    const { data } = await postLogin(values);
+
+    if (data) {
+      form.resetFields();
+      window.location.href = "/";
+    }
   };
 
   return (
     <Form onFinish={onLogin} id="login" form={form}>
       <Flex vertical className="login-box">
-        <Form.Item name="phone">
+        <Form.Item name="phoneNumber">
           <Input
             prefix={<FaUser />}
             placeholder="Номер телефона"
@@ -38,7 +37,12 @@ export const LoginPage: FC = () => {
             className="login-input"
           />
         </Form.Item>
-        <Button className="login-btn" htmlType="submit">
+        <Button
+          className="login-btn"
+          htmlType="submit"
+          loading={isLoading}
+          form="login"
+        >
           {t("login")}
         </Button>
         <Typography.Text className="forgot-password">

@@ -1,5 +1,5 @@
 import { AnyObject } from "antd/es/_util/type";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import "./style.css";
 import { FaPlus } from "react-icons/fa";
@@ -7,35 +7,14 @@ import { useDispatch } from "react-redux";
 
 import { ImageWithDelete } from "@entities/image-with-delete";
 
-/**
- * UploadUI
- *
- * This component is used to upload images in the Manage pages.
- *
- * It has the following functionality:
- *
- * - Displays all images that were uploaded.
- * - Allows the user to upload new images.
- * - Allows the user to delete existing images.
- *
- * It takes the following props:
- *
- * - `setData`: The function from the redux to set the data.
- * - `data`: The array of images that were already uploaded.
- *
- * @param {Object} props - The props of the component.
- * @param {function} props.setData - The function from the redux to set the data.
- * @param {Array} props.data - The array of images that were already uploaded.
- *
- * @returns {JSX.Element} - The JSX element of the component.
- */
 type Props = {
   setData: any;
   data: AnyObject[];
+  setPictures?: any;
 };
 
 export const UploadUI: FC<Props> = (props) => {
-  const { setData, data } = props;
+  const { setData, data, setPictures } = props;
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const [fileList, setFileList] = useState<Blob[] | AnyObject[]>(data || []);
@@ -49,15 +28,30 @@ export const UploadUI: FC<Props> = (props) => {
   };
 
   const onRemove = (file: AnyObject) => {
-    setFileList(fileList.filter((f) => f !== file));
+    if (file.link) {
+      const filteredData = fileList.filter((f) => f.id !== file.id);
+      dispatch(setData(filteredData));
+      dispatch(setPictures(filteredData));
+    } else {
+      const filteredData = fileList.filter((f) => f !== file);
+      dispatch(setData(filteredData));
+    }
   };
+
+  useEffect(() => {
+    setFileList(data);
+  }, [data]);
 
   return (
     <div className="upload">
-      {fileList?.map((file) => (
+      {fileList?.map((file: AnyObject) => (
         <ImageWithDelete
           key={file?.name}
-          src={URL?.createObjectURL(new Blob([file as Blob]))}
+          src={
+            file.link
+              ? file.link
+              : URL?.createObjectURL(new Blob([file as Blob]))
+          }
           alt={file.name}
           onDelete={() => onRemove(file)}
         />

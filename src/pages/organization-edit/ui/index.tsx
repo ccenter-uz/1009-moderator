@@ -4,8 +4,7 @@ import i18next from "i18next";
 import { CSSProperties, FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
-import Swal from "sweetalert2";
+import { useParams } from "react-router-dom";
 
 import {
   OrgEditFirstStepUI,
@@ -18,7 +17,18 @@ import {
 } from "@widgets/org-edit-second-step";
 import { OrgEditThirdStepUI, setPhoneData } from "@widgets/org-edit-third-step";
 
-import { SEND_BODY, STEPS_DATA, STEPS_ENUM } from "@shared/lib/helpers";
+import { useUpdateOrganizationMutation } from "@entities/organization";
+
+import {
+  getDayOffsCheckbox,
+  getEditingStepStorageValues,
+  notificationResponse,
+  SEND_BODY,
+  setDatyOffsCheckbox,
+  STEPS_DATA,
+  STEPS_EDIT_DATA,
+  STEPS_ENUM,
+} from "@shared/lib/helpers";
 import { RootState } from "@shared/types";
 
 // STEPS
@@ -48,155 +58,12 @@ const items = [
 const contentStyle: CSSProperties = {
   margin: "16px",
 };
-// MOCK
-const mock: AnyObject = {
-  abonent: "abonent123",
-  "org-name": "org-name",
-  category: "category",
-  "sub-category": "sub-category",
-  "main-org": "main-org",
-  secret: "secret",
-  segment: "segment",
-  manager: "manager",
-  region: "region",
-  city: "city",
-  village: "village",
-  district: "district",
-  manage: "manage",
-  "residential-area": "residential-area",
-  area: "area",
-  kvartal: "kvartal",
-  street: "street",
-  lane: "lane",
-  passage: "passage",
-  impasse: "impasse",
-  address: "address",
-  home: "home",
-  apartment: "apartment",
-  account: "account",
-  email: "email",
-  index: "index",
-  tin: "tin",
-  bank_number: "bank_number",
-  description: "description",
-  bus: "bus",
-  "micro-bus": "micro-bus",
-  "metro-station": "metro-station",
-  "worktime-from": "09:00",
-  "worktime-to": "18:00",
-  "lunch-from": "12:00",
-  "lunch-to": "13:00",
-  dayoffs: "Yakshanba",
-  payment_type: {
-    cash: true,
-    terminal: true,
-    transfer: false,
-    all_type: true,
-  },
-  "category-tu": [
-    {
-      id: 1,
-      key: 1,
-      label: "Подраздел  Т/У 1.1",
-      value: "sub-category-tu 1.1",
-      "category-tu": "Раздел Т/У",
-      "sub-category-tu": "Подраздел  Т/У 1.1",
-    },
-  ],
-  orientir: [
-    {
-      id: 1,
-      key: 1,
-      label: "Ориентир 1.1",
-      nearby: "nearby",
-      "nearby-category": "Категория ориентир 1",
-      value: "",
-      description: "description",
-    },
-  ],
-  phone: [
-    {
-      id: 1,
-      key: 1,
-      label: "Телефон 1.1",
-      phone: "phone",
-      "phone-type": "phone-type",
-      value: "value",
-      secret: true,
-    },
-    {
-      id: 2,
-      key: 2,
-      label: "Телефон 1.2",
-      phone: "phone",
-      "phone-type": "phone-type",
-      value: "value",
-      secret: false,
-    },
-  ],
-  images: [],
-};
-// HANDY-FN
-const mockReducer = (data: string[]) => {
-  return data.reduce(
-    (acc, fieldName) => ({
-      ...acc,
-      [fieldName]: mock[fieldName],
-    }),
-    {},
-  );
-};
-const clearStorage = () => {
-  localStorage.removeItem(STEPS_EDIT_DATA.FIRST);
-  localStorage.removeItem(STEPS_EDIT_DATA.SECOND);
-  localStorage.removeItem(STEPS_EDIT_DATA.THIRD);
-  localStorage.removeItem(STEPS_EDIT_DATA.FOURTH);
-  localStorage.removeItem(STEPS_EDIT_DATA.CURRENT);
-  localStorage.removeItem(STEPS_EDIT_DATA.EDIT_ID);
-};
-const getStorageValues = () => {
-  const firstStepData = JSON.parse(
-    localStorage.getItem(STEPS_EDIT_DATA.FIRST) as string,
-  );
-  const secondStepData = JSON.parse(
-    localStorage.getItem(STEPS_EDIT_DATA.SECOND) as string,
-  );
-  const thirdStepData = JSON.parse(
-    localStorage.getItem(STEPS_EDIT_DATA.THIRD) as string,
-  );
-  const fourthStepData = JSON.parse(
-    localStorage.getItem(STEPS_EDIT_DATA.FOURTH) as string,
-  );
-  const currentStep = JSON.parse(
-    localStorage.getItem(STEPS_EDIT_DATA.CURRENT) as string,
-  );
-  const editingId = JSON.parse(
-    localStorage.getItem(STEPS_EDIT_DATA.EDIT_ID) as string,
-  );
-  return {
-    firstStepData,
-    secondStepData,
-    thirdStepData,
-    fourthStepData,
-    currentStep,
-    editingId,
-  };
-};
-// ENUM
-const enum STEPS_EDIT_DATA {
-  FIRST = "firstStepDataEdit",
-  SECOND = "secondStepDataEdit",
-  THIRD = "thirdStepDataEdit",
-  FOURTH = "fourthStepDataEdit",
-  CURRENT = "currentStepEdit",
-  EDIT_ID = "editingOrgId",
-}
 
 export const OrgEditPage: FC = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const { id } = useParams();
   const dispatch = useDispatch();
+  const [updateOrganization] = useUpdateOrganizationMutation();
   const [form] = Form.useForm();
   const { data: categoryTu } = useSelector(
     ({ useEditOrgFirstStepSlice }: RootState) => useEditOrgFirstStepSlice,
@@ -207,94 +74,47 @@ export const OrgEditPage: FC = () => {
   const { data: phoneData } = useSelector(
     ({ useEditOrgThirdStepSlice }: RootState) => useEditOrgThirdStepSlice,
   );
-  const { data: images } = useSelector(
+  const { data: images, pictures } = useSelector(
     ({ useEditOrgFourthStepSlice }: RootState) => useEditOrgFourthStepSlice,
   );
   const [current, setCurrent] = useState(
     Number(localStorage.getItem(STEPS_EDIT_DATA.CURRENT)) || 0,
   );
 
-  const checkExistId = () => {
-    const { editingId, firstStepData } = getStorageValues();
-
-    if (editingId && Number(id) !== Number(editingId)) {
-      Swal.fire({
-        icon: "warning",
-        title: t("oops"),
-        text: `${t("you-were-editing")} ${firstStepData?.abonent}, ${t(
-          "do-you-want-to-continue-or-reset-before-data",
-        )} ${firstStepData?.abonent} ?`,
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: t("continue"),
-        cancelButtonText: t("reset"),
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate(`/orgs/edit/${editingId}`, { replace: true });
-        } else if (
-          !result.isConfirmed &&
-          result.isDismissed &&
-          !!result.dismiss
-        ) {
-          clearStorage();
-          setCurrent(STEPS_ENUM.firstStep);
-        }
-        initializeFormValues();
-      });
-    }
-    initializeFormValues();
-  };
   const initializeFormValues = () => {
     const { firstStepData, secondStepData, thirdStepData, fourthStepData } =
-      getStorageValues();
+      getEditingStepStorageValues();
 
     if (firstStepData) {
       form.setFieldsValue(firstStepData);
-      dispatch(setCategoryData(firstStepData["category-tu"]));
-    } else {
-      const firstStepDefaultValues = mockReducer(STEPS_DATA.FIRST_FORMDATA);
-      form.setFieldsValue(firstStepDefaultValues);
-      dispatch(setCategoryData(mock["category-tu"]));
+      dispatch(setCategoryData(firstStepData.categoryTu));
     }
-
     if (secondStepData) {
       form.setFieldsValue(secondStepData);
-      dispatch(setOrientirData(secondStepData.orientir));
-    } else {
-      const secondStepDefaultValues = mockReducer(STEPS_DATA.SECOND_FORMDATA);
-      form.setFieldsValue(secondStepDefaultValues);
-      dispatch(setOrientirData(mock.orientir));
+      dispatch(setOrientirData(secondStepData.nearbees));
     }
-
     if (thirdStepData) {
       form.setFieldsValue(thirdStepData);
       dispatch(setPhoneData(thirdStepData.phone));
-    } else {
-      const thirdStepDefaultValues = mockReducer(STEPS_DATA.THIRD_FORMDATA);
-      form.setFieldsValue(thirdStepDefaultValues);
-      dispatch(setPhoneData(mock.phone));
     }
-
     if (fourthStepData) {
-      form.setFieldsValue(fourthStepData);
+      const dayOffs = setDatyOffsCheckbox(form, fourthStepData.dayoffs);
+      form.setFieldsValue({
+        ...fourthStepData,
+        dayOffs,
+      });
       dispatch(setImages(fourthStepData.images));
-    } else {
-      const fourthStepDefaultValues = mockReducer(STEPS_DATA.FOURTH_FORMDATA);
-      form.setFieldsValue(fourthStepDefaultValues);
-      dispatch(setImages(mock.images));
     }
   };
-  const next = () => {
+  const next = async () => {
+    await form.validateFields();
     setCurrent(current + 1);
     localStorage.setItem(STEPS_EDIT_DATA.CURRENT, JSON.stringify(current + 1));
     // STORE STEPS DATA
     if (current === STEPS_ENUM.firstStep) {
       const firstStepData = {
         ...form.getFieldsValue(STEPS_DATA.FIRST_FORMDATA),
-        "category-tu": categoryTu,
+        categoryTu,
       };
       localStorage.setItem(
         STEPS_EDIT_DATA.FIRST,
@@ -304,7 +124,7 @@ export const OrgEditPage: FC = () => {
     } else if (current === STEPS_ENUM.secondStep) {
       const secondStepData = {
         ...form.getFieldsValue(STEPS_DATA.SECOND_FORMDATA),
-        orientir: orientirData,
+        nearbees: orientirData,
       };
       localStorage.setItem(
         STEPS_EDIT_DATA.SECOND,
@@ -326,38 +146,70 @@ export const OrgEditPage: FC = () => {
     localStorage.setItem(STEPS_EDIT_DATA.CURRENT, JSON.stringify(current - 1));
   };
   const onSubmit = async () => {
+    const formData = new FormData();
+
     const body = {
       ...form.getFieldsValue(SEND_BODY),
-      payment_type: {
-        cash: form.getFieldValue("cash"),
-        terminal: form.getFieldValue("terminal"),
-        transfer: form.getFieldValue("transfer"),
-        all_type: form.getFieldValue("all_type"),
+      id,
+      paymentTypes: {
+        cash: form.getFieldValue("allType") ? true : form.getFieldValue("cash"),
+        terminal: form.getFieldValue("allType")
+          ? true
+          : form.getFieldValue("terminal"),
+        transfer: form.getFieldValue("allType")
+          ? true
+          : form.getFieldValue("transfer"),
       },
-      worktime: {
-        dayoffs: form.getFieldValue("dayoffs"),
-        "worktime-from": form.getFieldValue("worktime-from"),
-        "worktime-to": form.getFieldValue("worktime-to"),
-        "lunch-from": form.getFieldValue("lunch-from"),
-        "lunch-to": form.getFieldValue("lunch-to"),
+      workTime: {
+        dayoffs: getDayOffsCheckbox(form),
+        worktimeFrom: form.getFieldValue("worktimeFrom"),
+        worktimeTo: form.getFieldValue("worktimeTo"),
+        lunchFrom: form.getFieldValue("lunchFrom"),
+        lunchTo: form.getFieldValue("lunchTo"),
       },
       transport: {
         bus: form.getFieldValue("bus"),
-        "micro-bus": form.getFieldValue("micro-bus"),
-        "metro-station": form.getFieldValue("metro-station"),
+        microBus: form.getFieldValue("microBus"),
+        metroStation: form.getFieldValue("metroStation"),
       },
-      "category-tu": categoryTu,
-      orientir: orientirData,
-      phone: phoneData,
-      images,
+      productService: { productServices: categoryTu },
+      nearby: {
+        nearbees: orientirData,
+      },
+      phone: {
+        phones: phoneData.map((item: AnyObject) => ({
+          key: item.id,
+          phone: item.phone,
+          phoneTypeId: item.phoneTypeId,
+          isSecret: item.isSecret,
+        })),
+      },
+      picture: {
+        pictures:
+          pictures.length !== 0
+            ? pictures
+            : images.map((item: AnyObject) => ({
+                link: item.link,
+              })),
+      },
     };
+    for (const key in body) {
+      formData.append(key, JSON.stringify(body[key]));
+    }
+    for (let i = 0; i < images.length; i++) {
+      if (!images[i].link) {
+        formData.append("photos", images[i]);
+      }
+    }
 
-    clearStorage();
-    console.log(body, "body-edit");
+    const response = await updateOrganization(formData);
+
+    notificationResponse(response, t);
   };
 
   useEffect(() => {
-    checkExistId();
+    initializeFormValues();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

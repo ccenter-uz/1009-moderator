@@ -9,104 +9,48 @@ import {
   Popconfirm,
 } from "antd";
 import { AnyObject } from "antd/es/_util/type";
-import { t } from "i18next";
+import i18next, { t } from "i18next";
 import { FC, useState } from "react";
 import { FaTrashAlt } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 
-/**
- * TableCategoryServicesUI
- *
- * This component is used to display a table with category and services,
- * and has the following functionality:
- *
- * - Displays a table with columns for category and services
- * - Allows to add new category and service
- * - Allows to delete existing category and service
- * - Allows to edit existing category and service
- *
- * It takes the following props:
- *
- * - `data`: The data to display in the table.
- * - `setData`: The function to call when the data in the table changes.
- *
- * @param {Object} props - The props of the component.
- * @param {AnyObject[]} props.data - The data to display in the table.
- * @param {Function} props.setData - The function to call when the data in the
- *   table changes.
- *
- * @returns {JSX.Element} - The JSX element of the component.
- */
+import {
+  useGetProductsQuery,
+  useLazyGetSubCategoryQuery,
+} from "@entities/product-services";
+
+import { allActives } from "@shared/lib/helpers";
 
 type Props = {
   data: AnyObject[];
   setData: any;
 };
 
-// MOCKS
-const mocks = {
-  categoryOptions: [
-    {
-      id: 1,
-      key: 1,
-      label: "Раздел Т/У",
-      value: "category-tu",
-      "category-tu": "Раздел Т/У",
-    },
-    {
-      id: 2,
-      key: 2,
-      label: "Раздел Т/У 2",
-      value: "category-tu 2",
-      "category-tu": "Раздел Т/У 2",
-    },
-  ],
-  subCategoryOptions: [
-    {
-      id: 1,
-      key: 1,
-      label: "Подраздел  Т/У 1.1",
-      value: "sub-category-tu 1.1",
-      "sub-category-tu": "Подраздел  Т/У 1.1",
-    },
-    {
-      id: 2,
-      key: 2,
-      label: "Подраздел  Т/У 1.2",
-      value: "sub-category-tu 1.2",
-      "sub-category-tu": "Подраздел  Т/У 1.2",
-    },
-  ],
-  columns: [
-    {
-      title: t("category-tu"),
-      dataIndex: "category-tu",
-      key: "category-tu",
-    },
-    {
-      title: t("sub-category-tu"),
-      dataIndex: "sub-category-tu",
-      key: "sub-category-tu",
-    },
-  ],
-};
-
 export const TableCategoryServices: FC<Props> = (props) => {
   const { data, setData } = props;
   const dispatch = useDispatch();
+  const { data: categoryTuOptions, isLoading: isLoadingCategoryTu } =
+    useGetProductsQuery(allActives);
+  const [
+    triggerSubcategoryTu,
+    { data: subcategoryTuOptions, isLoading: isLoadingSubcategoryTu },
+  ] = useLazyGetSubCategoryQuery();
   const [selectedCategory, setSelectedCategory] = useState<AnyObject[]>([]);
   const [selectedSubCategory, setSelectedSubCategory] = useState<AnyObject[]>(
     [],
   );
-  const [categoryOptions, setCategoryOptions] = useState<AnyObject[]>(
-    mocks.categoryOptions,
-  );
-  const [subCategoryOptions, setSubCategoryOptions] = useState<
-    AnyObject[] | []
-  >([]);
 
-  const overColumns = [
-    ...mocks.columns,
+  const columns = [
+    {
+      title: t("category-tu"),
+      dataIndex: "productServiceCategoryName",
+      key: "productServiceCategoryName",
+    },
+    {
+      title: t("sub-category-tu"),
+      dataIndex: "productServiceSubCategoryName",
+      key: "productServiceSubCategoryName",
+    },
     {
       title: t("action"),
       dataIndex: "action",
@@ -148,13 +92,30 @@ export const TableCategoryServices: FC<Props> = (props) => {
     setSelectedCategory([]);
   };
 
-  const onSelectCategory = (value: string, option: AnyObject | unknown) => {
-    setSelectedCategory([option as AnyObject]);
-    setSubCategoryOptions(mocks.subCategoryOptions);
+  const onSelectCategory = (
+    value: string,
+    option: { value: string | number; label: string },
+  ) => {
+    setSelectedCategory([
+      {
+        productServiceCategoryId: value,
+        productServiceCategoryName: option.label,
+      },
+    ]);
+
+    triggerSubcategoryTu({ categoryId: value, ...allActives });
   };
 
-  const onSelectSubCategory = (value: string, option: AnyObject | unknown) => {
-    setSelectedSubCategory([option as AnyObject]);
+  const onSelectSubCategory = (
+    value: string,
+    option: { value: string | number; label: string },
+  ) => {
+    setSelectedSubCategory([
+      {
+        productServiceSubCategoryId: value,
+        productServiceSubCategoryName: option.label,
+      },
+    ]);
   };
 
   return (
@@ -165,27 +126,42 @@ export const TableCategoryServices: FC<Props> = (props) => {
       <Row gutter={16} align={"middle"}>
         <Col span={11}>
           <Flex align="center" gap={8}>
-            <label htmlFor="category-tu">{t("category-tu")}</label>
+            <label htmlFor="productServiceCategoryId">{t("category-tu")}</label>
             <Select
               showSearch
-              id="category-tu"
-              value={selectedCategory[0]?.value}
-              onChange={onSelectCategory}
-              options={categoryOptions}
+              id="productServiceCategoryId"
+              value={selectedCategory[0]?.productServiceCategoryId}
+              onSelect={onSelectCategory}
+              allowClear
+              disabled={isLoadingCategoryTu}
+              options={
+                categoryTuOptions?.data.map((item: AnyObject) => ({
+                  value: item.id,
+                  label: item.name[i18next.language],
+                })) || []
+              }
               style={{ flex: 1 }}
             />
           </Flex>
         </Col>
         <Col span={11}>
           <Flex align="center" gap={8}>
-            <label htmlFor="sub-category-tu">{t("sub-category-tu")}</label>
+            <label htmlFor="productServiceSubCategoryId">
+              {t("sub-category-tu")}
+            </label>
             <Select
-              disabled={subCategoryOptions.length === 0}
               showSearch
-              id="sub-category-tu"
-              value={selectedSubCategory[0]?.value}
-              onChange={onSelectSubCategory}
-              options={subCategoryOptions ?? []}
+              id="productServiceSubCategoryId"
+              value={selectedSubCategory[0]?.productServiceSubCategoryId}
+              onSelect={onSelectSubCategory}
+              allowClear
+              disabled={isLoadingSubcategoryTu}
+              options={
+                subcategoryTuOptions?.data.map((item: AnyObject) => ({
+                  value: item.id,
+                  label: item.name[i18next.language],
+                })) || []
+              }
               style={{ flex: 1 }}
             />
           </Flex>
@@ -203,7 +179,7 @@ export const TableCategoryServices: FC<Props> = (props) => {
 
       <Table
         bordered
-        columns={overColumns}
+        columns={columns}
         dataSource={data}
         pagination={false}
         scroll={{ y: 300 }}

@@ -1,91 +1,201 @@
 import { Flex, Form } from "antd";
+import { createSchemaFieldRule } from "antd-zod";
 import { t } from "i18next";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
+import { useSearchParams } from "react-router-dom";
 
 import { BasicSearchPartUI } from "@features/basic-search-part";
 import { DeleteTableItemUI } from "@features/delete-table-item";
 
+import {
+  useCreateSubCategoryMutation,
+  useDeleteSubCategoryMutation,
+  useLazyGetSubCategoryQuery,
+  useUpdateSubCategoryMutation,
+} from "@entities/product-services";
 import { SingleNameCyrill } from "@entities/single-name-cyrill";
 import { SingleNameRu } from "@entities/single-name-ru";
 import { SingleNameUz } from "@entities/single-name-uz";
 
-import { columnsForCategories } from "@shared/lib/helpers";
+import {
+  columnsForCategoriesTu,
+  getZodRequiredKeys,
+  notificationResponse,
+  returnAllParams,
+} from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { ItableBasicData } from "@shared/types";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
 
-type Props = {
-  data: ItableBasicData[];
-};
+import { ProductServicesCreateFormDtoSchema } from "../model/dto";
+import { editServiceType, ProductServicesEnum } from "../model/types";
 
-export const Service: FC<Props> = (props) => {
-  const { data } = props;
-  const [form] = Form.useForm();
+export const Service: FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [form] = Form.useForm();
+  const formRule = createSchemaFieldRule(ProductServicesCreateFormDtoSchema);
+  const formRequiredField = getZodRequiredKeys(
+    ProductServicesCreateFormDtoSchema,
+  );
+  const {
+    [ProductServicesEnum.servicePage]: page,
+    [ProductServicesEnum.serviceLimit]: limit,
+    [ProductServicesEnum.serviceSearch]: search,
+  } = returnAllParams();
+  const [trigger, { data, isLoading }] = useLazyGetSubCategoryQuery();
+  const [createSubCategory] = useCreateSubCategoryMutation();
+  const [updateSubCategory] = useUpdateSubCategoryMutation();
+  const [deleteSubCategory] = useDeleteSubCategoryMutation();
+  const [editingData, setEditingData] = useState<editServiceType | null>(null);
 
-  const overColumns = [
-    ...columnsForCategories,
-    {
-      flex: 0.5,
-      title: "Действия",
-      key: "action",
-      dataIndex: "action",
-      align: "center",
-      render: (text: string, record: ItableBasicData) => (
-        <Flex justify="center" align="center" gap={8}>
-          <FaPencilAlt
-            color="grey"
-            fontSize={16}
-            cursor={"pointer"}
-            title={t("edit")}
-            onClick={() => onEditOpen(record)}
-          />
-          <DeleteTableItemUI id={record.id} href={"/delete"} />
-        </Flex>
-      ),
-    },
-  ];
+  const [isAddBtnDisable, setIsAddBtnDisable] = useState<boolean>(true);
 
-  const onEditOpen = (values: ItableBasicData) => {
-    form.setFieldsValue(values);
+  const handleEditOpen = (values: editServiceType) => {
+    setEditingData({ ...values, id: values.id });
+    form.setFieldsValue({
+      name_uz: values.name.uz,
+      name_ru: values.name.ru,
+      name_uzcyrill: values.name.cy,
+    });
     onOpen();
   };
 
-  const onSearch = (value: string) => {
-    console.log(value, "search");
+  const handleSearch = ({ search }: { search: string }) => {
+    const previousParams = returnAllParams();
+
+    if (search || search === "") {
+      setSearchParams({
+        ...previousParams,
+        [ProductServicesEnum.serviceSearch]: search,
+      });
+    }
   };
 
-  const onSubmit = (values: ItableBasicData) => {
-    console.log(values, "add-edit");
+  const handleSubmit = async (serviceData: ItableBasicData) => {
+    const serviceBody = {
+      name: {
+        ru: serviceData.name_ru,
+        uz: serviceData.name_uz,
+        cy: serviceData.name_uzcyrill,
+      },
+    };
+
+    const request =
+      editingData?.id != null ? updateSubCategory : createSubCategory;
+
+    const response = await request({
+      ...serviceBody,
+      id: editingData?.id,
+      productServiceCategoryId: Number(
+        searchParams.get(ProductServicesEnum.productId),
+      ),
+    });
+
+    notificationResponse(response, t, onClose);
     form.resetFields();
     onClose();
   };
 
+  const onAdd = () => {
+    onOpen();
+    setEditingData(null);
+    form.resetFields();
+  };
+
+  const columns = [
+    ...columnsForCategoriesTu,
+    {
+      flex: 0.5,
+      title: t("action"),
+      key: "action",
+      dataIndex: "action",
+      align: "center",
+      render: (text: string, record: editServiceType) => {
+        if (record.status === 1) {
+          return (
+            <Flex justify="center" align="center" gap={8}>
+              <FaPencilAlt
+                color="grey"
+                fontSize={16}
+                cursor={"pointer"}
+                title={t("edit")}
+                onClick={() => handleEditOpen(record)}
+              />
+              <DeleteTableItemUI fetch={() => deleteSubCategory(record.id)} />
+            </Flex>
+          );
+        }
+      },
+    },
+  ];
+
+  useEffect(() => {
+    const hasParamsServiceId = searchParams.has(ProductServicesEnum.productId);
+    setIsAddBtnDisable(!hasParamsServiceId);
+    if (searchParams.has(ProductServicesEnum.productId)) {
+      trigger({
+        page: Number(page) || 1,
+        limit: Number(limit) || 10,
+        search,
+        categoryId: Number(searchParams.get(ProductServicesEnum.productId)),
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams.get(ProductServicesEnum.productId), search, page, limit]);
+
   return (
     <ManageWrapperBox
-      totalItems={0}
+      loading={isLoading}
+      totalItems={data?.total || 0}
       title={t("sub-category-tu")}
-      columns={overColumns}
-      data={data}
-      add={onOpen}
-      searchPart={<BasicSearchPartUI handleSearch={onSearch} />}
+      pageName={ProductServicesEnum.servicePage}
+      limitName={ProductServicesEnum.serviceLimit}
+      columns={columns}
+      data={data?.data || []}
+      add={onAdd}
+      isAddBtnDisable={isAddBtnDisable}
+      searchPart={
+        <BasicSearchPartUI
+          id={"service-search"}
+          handleSearch={handleSearch}
+          additionalParams={{
+            search: searchParams.get(ProductServicesEnum.serviceSearch),
+          }}
+          isSearchBtnDisable={isAddBtnDisable}
+        />
+      }
       modalPart={
         <Form
           form={form}
-          onFinish={onSubmit}
-          id="modal-add-edit"
+          onFinish={handleSubmit}
+          id="manage-sub-category-tu"
           className="manage-sub-category-tu"
         >
           <ModalAddEdit
-            loading={loading}
+            loading={isLoading}
             open={isOpen}
             onClose={onClose}
-            ruInputs={<SingleNameRu />}
-            uzInputs={<SingleNameUz />}
-            uzCyrillicInputs={<SingleNameCyrill />}
-            formId={"modal-add-edit"}
+            ruInputs={
+              <SingleNameRu
+                rule={formRule}
+                requiredFields={formRequiredField}
+              />
+            }
+            uzInputs={
+              <SingleNameUz
+                rule={formRule}
+                requiredFields={formRequiredField}
+              />
+            }
+            uzCyrillicInputs={
+              <SingleNameCyrill
+                rule={formRule}
+                requiredFields={formRequiredField}
+              />
+            }
+            formId={"manage-sub-category-tu"}
           />
         </Form>
       }

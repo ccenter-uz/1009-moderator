@@ -1,54 +1,134 @@
 import { Flex, Form, Select } from "antd";
+import { AnyObject } from "antd/es/_util/type";
+import { createSchemaFieldRule } from "antd-zod";
 import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
+import { useSearchParams } from "react-router-dom";
 
-import { BasicSearchPartUI } from "@features/basic-search-part";
+import { Address2Inputs } from "@features/address-2-inputs";
 import { DeleteTableItemUI } from "@features/delete-table-item";
+import { NearbyPageSearchUI } from "@features/nearby-page-search";
 
-import { Address2Inputs } from "@entities/address-2-inputs";
+import {
+  useCreateNearbyMutation,
+  useDeleteNearbyMutation,
+  useGetNearbyCategoryQuery,
+  useGetNearbyQuery,
+  useUpdateNearbyMutation,
+} from "@entities/nearby";
 import { SingleNameCyrill } from "@entities/single-name-cyrill";
 import { SingleNameRu } from "@entities/single-name-ru";
 import { SingleNameUz } from "@entities/single-name-uz";
 
-import { columnsWithRegions } from "@shared/lib/helpers";
+import {
+  columnsWithRegions,
+  GET_ALL_ACTIVE_STATUS,
+  getZodRequiredKeys,
+  notificationResponse,
+  returnAllParams,
+} from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
-import { ItableWithRegions } from "@shared/types";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
+
+import { NearbyCreateFormDtoSchema } from "../model/dto";
+
+interface valueProps {
+  region: string;
+  city: string;
+  name_uz: string;
+  name_ru: string;
+  name_uzcyrill: string;
+  id?: number;
+  status?: number;
+  regionId?: string;
+  cityId?: string;
+  name: { uz: string; ru: string; cy: string };
+  nearbyCategoryId?: string;
+}
+
 export const ManageNearbyPage: FC = () => {
   const { t } = useTranslation();
+  const [_, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const [form] = Form.useForm<ItableWithRegions>();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [form] = Form.useForm();
+  const formRule = createSchemaFieldRule(NearbyCreateFormDtoSchema);
+  const formRequiredField = getZodRequiredKeys(NearbyCreateFormDtoSchema);
+  const { data, isLoading } = useGetNearbyQuery({
+    ...returnAllParams(),
+  });
+  const { data: dataCategory, isLoading: isLoadingCategory } =
+    useGetNearbyCategoryQuery({
+      all: GET_ALL_ACTIVE_STATUS.all,
+      status: GET_ALL_ACTIVE_STATUS.active,
+    });
+  const [deleteNearby] = useDeleteNearbyMutation();
+  const [createNearby] = useCreateNearbyMutation();
+  const [updateNearby] = useUpdateNearbyMutation();
+  const [editingData, setEditingData] = useState<valueProps | null>(null);
+  const [nearbyCategoryId, setNearbyCategoryId] = useState<
+    string | number | boolean
+  >(true);
+  const [modalNearbyCategoryId, setModalNearbyCategoryId] = useState<
+    string | number | boolean
+  >(true);
 
-  const data: ItableWithRegions[] = [
-    {
-      id: 1,
-      key: "1",
-      name_ru: "John Brown",
-      region: "Москва",
-      city: "Москва",
-      updated_date: "2022-01-01",
-      employee: "10032",
-    },
-  ];
-
-  const onEditOpen = (values: ItableWithRegions) => {
-    form.setFieldsValue(values);
+  const handleEditOpen = (values: valueProps) => {
+    const editingBody = {
+      id: values.id,
+      region: values.regionId,
+      city: values.cityId,
+      name_uz: values.name.uz,
+      name_ru: values.name.ru,
+      name_uzcyrill: values.name.cy,
+      "nearby-category": values.nearbyCategoryId,
+    };
+    setEditingData({ ...values, id: values.id });
+    form.setFieldsValue(editingBody);
     onOpen();
   };
 
-  const onSearch = (value: string) => {
-    console.log(value, "search");
+  const handleSearch = ({ search }: { search: string }) => {
+    const previousParams = returnAllParams();
+    if (search || search == "") {
+      setSearchParams({ ...previousParams, search });
+    }
   };
 
-  const onSubmit = (values: ItableWithRegions) => {
-    console.log(values, "add-edit");
+  const handleCategorySelect = (value: string | number) => {
+    setNearbyCategoryId(value);
+    const params = returnAllParams();
+    setSearchParams({ ...params, nearbyCategoryId: String(value) });
+  };
+  const handleSubmit = async (values: valueProps) => {
+    const body = {
+      id: editingData?.id,
+      nearbyCategoryId: modalNearbyCategoryId,
+      regionId: values.region,
+      cityId: values.city,
+      name: {
+        uz: values.name_uz,
+        ru: values.name_ru,
+        cy: values.name_uzcyrill,
+      },
+    };
+
+    const request = editingData ? updateNearby : createNearby;
+
+    const response = await request(body);
+
+    notificationResponse(response, t, onClose);
     form.resetFields();
     onClose();
   };
 
-  const overColumns = [
+  const handleAdd = () => {
+    setEditingData(null);
+    form.resetFields();
+    onOpen();
+  };
+
+  const columns = [
     ...columnsWithRegions,
     {
       flex: 0.5,
@@ -56,39 +136,57 @@ export const ManageNearbyPage: FC = () => {
       key: "action",
       dataIndex: "action",
       align: "center",
-      render: (text: string, record: ItableWithRegions) => (
-        <Flex justify="center" align="center" gap={8}>
-          <FaPencilAlt
-            color="grey"
-            fontSize={16}
-            cursor={"pointer"}
-            title={t("edit")}
-            onClick={() => onEditOpen(record)}
-          />
-          <DeleteTableItemUI id={record.id} href={"/delete"} />
-        </Flex>
-      ),
+      render: (text: string, record: valueProps) => {
+        if (record.status === 1) {
+          return (
+            <Flex justify="center" align="center" gap={8}>
+              <FaPencilAlt
+                color="grey"
+                fontSize={16}
+                cursor={"pointer"}
+                title={t("edit")}
+                onClick={() => handleEditOpen(record)}
+              />
+              <DeleteTableItemUI fetch={() => deleteNearby(record.id)} />
+            </Flex>
+          );
+        }
+      },
     },
   ];
+
+  const handleModalCategorySelect = (value: string | number) => {
+    setModalNearbyCategoryId(value);
+  };
 
   return (
     <div>
       <ManageWrapperBox
-        totalItems={0}
+        loading={isLoading}
+        totalItems={data?.total || 0}
         title={t("nearby")}
-        columns={overColumns}
-        data={data}
-        add={onOpen}
+        columns={columns}
+        data={data?.data || []}
+        add={nearbyCategoryId ? handleAdd : undefined}
         searchPart={
-          <BasicSearchPartUI
-            handleSearch={onSearch}
+          <NearbyPageSearchUI
+            handleSearch={handleSearch}
             additionalSearch={
               <Form.Item
                 name={"nearby-category"}
                 label={t("nearby-category")}
                 style={{ marginBottom: 0, flex: 1 }}
               >
-                <Select options={[{ label: "1", value: "1" }]} />
+                {/* AnyObject cause cannot find proper type */}
+                <Select
+                  allowClear
+                  onSelect={handleCategorySelect}
+                  loading={isLoadingCategory}
+                  options={dataCategory?.data.map((item: AnyObject) => ({
+                    label: item.name,
+                    value: item.id,
+                  }))}
+                />
               </Form.Item>
             }
           />
@@ -96,18 +194,59 @@ export const ManageNearbyPage: FC = () => {
         modalPart={
           <Form
             form={form}
-            onFinish={onSubmit}
+            onFinish={handleSubmit}
             id="modal-add-edit"
             className="manage-nearby"
           >
             <ModalAddEdit
-              loading={loading}
+              loading={isLoading}
               open={isOpen}
               onClose={onClose}
-              headerInputs={<Address2Inputs />}
-              ruInputs={<SingleNameRu />}
-              uzInputs={<SingleNameUz />}
-              uzCyrillicInputs={<SingleNameCyrill />}
+              headerInputs={
+                <>
+                  <Form.Item
+                    name={"nearby-category"}
+                    label={t("nearby-category")}
+                    rules={[formRule]}
+                    required={formRequiredField.includes("nearby-category")}
+                    layout="vertical"
+                  >
+                    <Select
+                      allowClear
+                      onSelect={handleModalCategorySelect}
+                      placeholder={t("nearby-category")}
+                      loading={isLoadingCategory}
+                      options={dataCategory?.data.map((item: AnyObject) => ({
+                        label: item.name,
+                        value: item.id,
+                      }))}
+                    />
+                  </Form.Item>
+                  <Address2Inputs
+                    form={form}
+                    rule={formRule}
+                    requiredFields={formRequiredField}
+                  />
+                </>
+              }
+              ruInputs={
+                <SingleNameRu
+                  rule={formRule}
+                  requiredFields={formRequiredField}
+                />
+              }
+              uzInputs={
+                <SingleNameUz
+                  rule={formRule}
+                  requiredFields={formRequiredField}
+                />
+              }
+              uzCyrillicInputs={
+                <SingleNameCyrill
+                  rule={formRule}
+                  requiredFields={formRequiredField}
+                />
+              }
               formId={"modal-add-edit"}
             />
           </Form>
