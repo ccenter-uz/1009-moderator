@@ -38,12 +38,13 @@ interface valueProps {
   city: string;
   name_uz: string;
   name_ru: string;
-  name_cyrill: string;
+  name_uzcyrill: string;
   id?: number;
   status?: number;
   regionId?: string;
   cityId?: string;
   name: { uz: string; ru: string; cy: string };
+  nearbyCategoryId?: string;
 }
 
 export const ManageNearbyPage: FC = () => {
@@ -79,7 +80,8 @@ export const ManageNearbyPage: FC = () => {
       city: values.cityId,
       name_uz: values.name.uz,
       name_ru: values.name.ru,
-      name_cyrill: values.name.cy,
+      name_uzcyrill: values.name.cy,
+      "nearby-category": values.nearbyCategoryId,
     };
     setEditingData({ ...values, id: values.id });
     form.setFieldsValue(editingBody);
@@ -107,7 +109,7 @@ export const ManageNearbyPage: FC = () => {
       name: {
         uz: values.name_uz,
         ru: values.name_ru,
-        cy: values.name_cyrill,
+        cy: values.name_uzcyrill,
       },
     };
 

@@ -53,7 +53,7 @@ export const ManageSegmentsPage = () => {
     const body = {
       name_uz: values.name.uz,
       name_ru: values.name.ru,
-      name_cyrill: values.name.cy,
+      name_uzcyrill: values.name.cy,
       id: values.id,
     };
     form.setFieldsValue({ ...body });
@@ -70,7 +70,7 @@ export const ManageSegmentsPage = () => {
       name: {
         uz: values.name_uz,
         ru: values.name_ru,
-        cy: values.name_cyrill,
+        cy: values.name_uzcyrill,
       },
       id: editingData?.id,
     };

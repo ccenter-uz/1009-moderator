@@ -14,40 +14,40 @@ export const columnsForAddress = [
     title: i18next.t("name"),
     dataIndex: "name",
     key: "name",
-    render: (text: { [key: string]: string }) => text[i18next.language],
+    render: (text: { [key: string]: string }) => text?.[i18next.language],
   },
   {
     title: i18next.t("old_name"),
     dataIndex: "oldName",
     key: "oldName",
-    render: (text: { [key: string]: string }) => text[i18next.language],
+    render: (text: { [key: string]: string }) => text?.[i18next.language],
   },
   {
     title: i18next.t("new_name"),
     dataIndex: "newName",
     key: "newName",
-    render: (text: { [key: string]: string }) => text[i18next.language],
+    render: (text: { [key: string]: string }) => text?.[i18next.language],
   },
   {
     title: i18next.t("region"),
     dataIndex: "region",
     key: "region",
     render: (text: { name: { [key: string]: string } }) =>
-      text?.name[i18next.language],
+      text?.name?.[i18next.language],
   },
   {
     title: i18next.t("city"),
     dataIndex: "city",
     key: "city",
     render: (text: { name: { [key: string]: string } }) =>
-      text?.name[i18next.language],
+      text?.name?.[i18next.language],
   },
   {
     title: i18next.t("district"),
     dataIndex: "district",
     key: "district",
     render: (text: { name: { [key: string]: string } }) =>
-      text?.name[i18next.language],
+      text?.name?.[i18next.language],
   },
   {
     title: i18next.t("index"),

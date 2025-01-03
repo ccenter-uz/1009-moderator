@@ -56,7 +56,7 @@ export const ManagePhoneTypesPage: FC = () => {
     const editingBody = {
       name_ru: values.name.ru,
       name_uz: values.name.uz,
-      name_cyrill: values.name.cy,
+      name_uzcyrill: values.name.cy,
       id: editingData?.id,
     };
     setEditingData({ ...values, id: values.id });
@@ -76,7 +76,7 @@ export const ManagePhoneTypesPage: FC = () => {
       name: {
         ru: values.name_ru,
         uz: values.name_uz,
-        cy: values.name_cyrill,
+        cy: values.name_uzcyrill,
       },
       id: editingData?.id,
     };

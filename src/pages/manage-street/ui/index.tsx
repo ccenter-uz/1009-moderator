@@ -40,10 +40,10 @@ export interface valueProps {
   name_uzcyrill: string;
   old_name_uz: string;
   old_name_ru: string;
-  old_name_uzcyrill: string;
+  old_name_cyrill: string;
   new_name_uz: string;
   new_name_ru: string;
-  new_name_uzcyrill: string;
+  new_name_cyrill: string;
   id?: number;
   status?: number;
   regionId?: string;
@@ -79,13 +79,11 @@ export const ManageStreetPage: FC = () => {
       name_uzcyrill: values.name.cy,
       old_name_uz: values.oldName.uz,
       old_name_ru: values.oldName.ru,
-      old_name_uzcyrill: values.oldName.cy,
+      old_name_cyrill: values.oldName.cy,
       new_name_uz: values.newName.uz,
       new_name_ru: values.newName.ru,
-      new_name_uzcyrill: values.newName.cy,
+      new_name_cyrill: values.newName.cy,
     };
-
-    console.log(values, "values");
 
     setEditingData({ ...values, id: values.id });
     form.setFieldsValue(editingBody);
@@ -113,12 +111,12 @@ export const ManageStreetPage: FC = () => {
       oldName: {
         uz: values.old_name_uz,
         ru: values.old_name_ru,
-        cy: values.old_name_uzcyrill,
+        cy: values.old_name_cyrill,
       },
       newName: {
         uz: values.new_name_uz,
         ru: values.new_name_ru,
-        cy: values.new_name_uzcyrill,
+        cy: values.new_name_cyrill,
       },
     };
     const request = editingData ? updateStreet : createStreet;

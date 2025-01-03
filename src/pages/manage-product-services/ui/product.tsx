@@ -60,7 +60,7 @@ export const Product: FC = () => {
     form.setFieldsValue({
       name_uz: values.name.uz,
       name_ru: values.name.ru,
-      name_cyrill: values.name.cy,
+      name_uzcyrill: values.name.cy,
     });
     onOpen();
   };
@@ -81,7 +81,7 @@ export const Product: FC = () => {
       name: {
         ru: values.name_ru,
         uz: values.name_uz,
-        cy: values.name_cyrill,
+        cy: values.name_uzcyrill,
       },
       id: editingData?.id,
     };

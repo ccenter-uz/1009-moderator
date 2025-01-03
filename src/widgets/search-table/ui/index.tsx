@@ -1,7 +1,7 @@
 import { Divider } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import i18next from "i18next";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { SearchTopTable } from "@features/search-top-table";
@@ -16,12 +16,14 @@ interface Props {
   data: AnyObject[] | [];
   totalItems: number;
   isLoading: boolean;
+  setRef: (ref: HTMLElement) => void;
 }
 
 export const SearchTableUI: FC<Props> = (props) => {
-  const { data, totalItems, isLoading } = props;
+  const { data, totalItems, isLoading, setRef } = props;
   const { t } = useTranslation();
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const tableRef = useRef<HTMLDivElement>(null);
   const [attrData, setAttrData] = useState<AnyObject[]>([]);
   const [phonesData, setPhonesData] = useState<AnyObject[]>([]);
   const [subCategoryData, setSubCategoryData] = useState<AnyObject[]>([]);
@@ -54,22 +56,28 @@ export const SearchTableUI: FC<Props> = (props) => {
     }
   }, [attrData]);
 
+  useEffect(() => {
+    setRef(tableRef.current as HTMLElement);
+  }, [tableRef, setRef]);
+
   return (
     <>
-      <SearchTopTable
-        data={data}
-        totalItems={totalItems}
-        isLoading={isLoading}
-        setAttrData={setAttrData}
-        phonesData={phonesData}
-        onOpen={onOpen}
-      />
-      <Divider />
-      <SearchBottomTable
-        attrData={attrData}
-        subCategoryData={subCategoryData}
-      />
-      <MoreModalUI open={isOpen} onClose={onClose} title={t("abonent")} />
+      <div ref={tableRef}>
+        <SearchTopTable
+          data={data}
+          totalItems={totalItems}
+          isLoading={isLoading}
+          setAttrData={setAttrData}
+          phonesData={phonesData}
+          onOpen={onOpen}
+        />
+        <Divider />
+        <SearchBottomTable
+          attrData={attrData}
+          subCategoryData={subCategoryData}
+        />
+        <MoreModalUI open={isOpen} onClose={onClose} title={t("abonent")} />
+      </div>
     </>
   );
 };

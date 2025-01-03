@@ -59,7 +59,7 @@ export const SubCategory: FC = () => {
     form.setFieldsValue({
       name_uz: values.name.uz,
       name_ru: values.name.ru,
-      name_cyrill: values.name.cy,
+      name_uzcyrill: values.name.cy,
     });
     onOpen();
   };
@@ -78,7 +78,7 @@ export const SubCategory: FC = () => {
       name: {
         ru: serviceData.name_ru,
         uz: serviceData.name_uz,
-        cy: serviceData.name_cyrill,
+        cy: serviceData.name_uzcyrill,
       },
     };
 

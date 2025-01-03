@@ -1,5 +1,5 @@
 import { AnyObject } from "antd/es/_util/type";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { SearchPartUI } from "@widgets/search-part";
@@ -10,6 +10,7 @@ import { useGetOrganizationsQuery } from "@entities/organization";
 import { returnAllParams } from "@shared/lib/helpers";
 
 export const OrgAllPage: FC = () => {
+  const [searchTableRef, setSearchTableRef] = useState<HTMLElement>();
   const [searchParams] = useSearchParams();
   const [searchValues, setSearchValues] = useState<AnyObject | null>(null);
   const { data, isLoading, refetch } = useGetOrganizationsQuery({
@@ -24,8 +25,12 @@ export const OrgAllPage: FC = () => {
 
   return (
     <div>
-      <SearchPartUI setSearchValues={setSearchValues} />
+      <SearchPartUI
+        setSearchValues={setSearchValues}
+        searchTableRef={searchTableRef}
+      />
       <SearchTableUI
+        setRef={setSearchTableRef}
         data={data?.data || []}
         totalItems={data?.total || 0}
         isLoading={isLoading}
