@@ -11,15 +11,19 @@ import { ContactSearchPartUI } from "@features/contact-search-part";
 
 type Props = {
   setSearchValues: Dispatch<SetStateAction<AnyObject | null>>;
+  searchTableRef?: HTMLElement | null;
 };
 
 export const SearchPartUI: FC<Props> = (props) => {
-  const { setSearchValues } = props;
+  const { setSearchValues, searchTableRef } = props;
   const { t } = useTranslation();
   const [form] = Form.useForm();
 
   const onSubmit = (values: AnyObject) => {
     setSearchValues(values);
+    console.log(searchTableRef, "searchTableRef");
+
+    searchTableRef?.scrollIntoView({ behavior: "smooth" });
   };
 
   const onCancel = () => {
