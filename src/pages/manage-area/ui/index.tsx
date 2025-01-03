@@ -119,6 +119,7 @@ export const ManageAreaPage: FC = () => {
         cy: values.new_name_cyrill,
       },
     };
+
     const request = editingData ? updateArea : createArea;
 
     const response = await request(body);
