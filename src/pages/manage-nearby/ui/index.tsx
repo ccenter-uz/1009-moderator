@@ -26,6 +26,7 @@ import {
   GET_ALL_ACTIVE_STATUS,
   getZodRequiredKeys,
   notificationResponse,
+  renderLabelSelect,
   returnAllParams,
 } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
@@ -67,8 +68,8 @@ export const ManageNearbyPage: FC = () => {
   const [updateNearby] = useUpdateNearbyMutation();
   const [editingData, setEditingData] = useState<valueProps | null>(null);
   const [nearbyCategoryId, setNearbyCategoryId] = useState<
-    string | number | boolean
-  >(true);
+    string | number | null
+  >(null);
   const [modalNearbyCategoryId, setModalNearbyCategoryId] = useState<
     string | number | boolean
   >(true);
@@ -89,16 +90,17 @@ export const ManageNearbyPage: FC = () => {
   };
 
   const handleSearch = ({ search }: { search: string }) => {
-    const previousParams = returnAllParams();
-    if (search || search == "") {
-      setSearchParams({ ...previousParams, search });
-    }
+    setSearchParams({
+      nearbyCategoryId: String(nearbyCategoryId ?? ""),
+      search: search ?? "",
+    });
   };
 
   const handleCategorySelect = (value: string | number) => {
     setNearbyCategoryId(value);
-    const params = returnAllParams();
-    setSearchParams({ ...params, nearbyCategoryId: String(value) });
+  };
+  const handleClearCategory = () => {
+    setNearbyCategoryId(null);
   };
   const handleSubmit = async (values: valueProps) => {
     const body = {
@@ -167,7 +169,7 @@ export const ManageNearbyPage: FC = () => {
         title={t("nearby")}
         columns={columns}
         data={data?.data || []}
-        add={nearbyCategoryId ? handleAdd : undefined}
+        add={handleAdd}
         searchPart={
           <NearbyPageSearchUI
             handleSearch={handleSearch}
@@ -179,7 +181,9 @@ export const ManageNearbyPage: FC = () => {
               >
                 {/* AnyObject cause cannot find proper type */}
                 <Select
+                  labelRender={renderLabelSelect}
                   allowClear
+                  onClear={handleClearCategory}
                   onSelect={handleCategorySelect}
                   loading={isLoadingCategory}
                   options={dataCategory?.data.map((item: AnyObject) => ({
