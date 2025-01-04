@@ -91,7 +91,7 @@ export const ManageNearbyPage: FC = () => {
 
   const handleSearch = ({ search }: { search: string }) => {
     setSearchParams({
-      nearbyCategoryId: String(nearbyCategoryId ?? ""),
+      nearbyCategoryId: String(nearbyCategoryId ?? undefined),
       search: search ?? "",
     });
   };
