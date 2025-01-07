@@ -1,6 +1,8 @@
-import { Row, Col, Input, Form } from "antd";
+import { Row, Col, Input, Form, Tag } from "antd";
 import { Rule } from "antd/es/form";
-import { FC } from "react";
+import Typography from "antd/es/typography";
+import { cyrillicToLatin } from "lotin-kirill";
+import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 interface IProps {
@@ -8,10 +10,13 @@ interface IProps {
   requiredFields?: string[];
 }
 
+const { Paragraph } = Typography;
+
 const FORM_ITEM = "name_uzcyrill";
 
 export const SingleNameCyrill: FC<IProps> = ({ rule, requiredFields = [] }) => {
   const { t } = useTranslation();
+  const [value, setValue] = useState("");
 
   return (
     <Row gutter={8}>
@@ -23,7 +28,25 @@ export const SingleNameCyrill: FC<IProps> = ({ rule, requiredFields = [] }) => {
           label={t(FORM_ITEM)}
           layout="vertical"
         >
-          <Input type="text" placeholder={t(FORM_ITEM)} />
+          <Input
+            type="text"
+            placeholder={t(FORM_ITEM)}
+            onChange={(e) => setValue(e.target.value)}
+          />
+          {value && (
+            <Paragraph
+              style={{ marginTop: "8px" }}
+              copyable={{ text: cyrillicToLatin(value) }}
+            >
+              Ўзб → {`O'zb`}:
+              <Tag
+                color="green"
+                style={{ marginLeft: "4px", padding: "2px 6px" }}
+              >
+                {cyrillicToLatin(value)}
+              </Tag>
+            </Paragraph>
+          )}
         </Form.Item>
       </Col>
     </Row>

@@ -1,6 +1,7 @@
-import { Row, Col, Input, Form } from "antd";
+import { Row, Col, Input, Form, Typography, Tag } from "antd";
 import { Rule } from "antd/es/form";
-import { FC } from "react";
+import { latinToCyrillic } from "lotin-kirill";
+import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 interface IProps {
@@ -8,10 +9,13 @@ interface IProps {
   requiredFields?: string[];
 }
 
+const { Paragraph } = Typography;
 const FORM_ITEM = "name_uz";
 
 export const SingleNameUz: FC<IProps> = ({ rule, requiredFields = [] }) => {
   const { t } = useTranslation();
+  const [value, setValue] = useState("");
+
   return (
     <Row gutter={8}>
       <Col span={24}>
@@ -22,7 +26,25 @@ export const SingleNameUz: FC<IProps> = ({ rule, requiredFields = [] }) => {
           label={t(FORM_ITEM)}
           layout="vertical"
         >
-          <Input type="text" placeholder={t(FORM_ITEM)} />
+          <Input
+            type="text"
+            placeholder={t(FORM_ITEM)}
+            onChange={(e) => setValue(e.target.value)}
+          />
+          {value && (
+            <Paragraph
+              style={{ marginTop: "8px" }}
+              copyable={{ text: latinToCyrillic(value) }}
+            >
+              {`O'zb`} → Ўзб:{" "}
+              <Tag
+                color="green"
+                style={{ marginLeft: "4px", padding: "2px 6px" }}
+              >
+                {latinToCyrillic(value)}
+              </Tag>
+            </Paragraph>
+          )}
         </Form.Item>
       </Col>
     </Row>
