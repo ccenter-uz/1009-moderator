@@ -220,5 +220,6 @@
   "from-operators": "От операторов",
   "inactive": "Неактивные",
   "reason-why-rejecting?": "Причина отказа?",
-  "reason": "Причина"
+  "reason": "Причина",
+  "type": "Тип"
 }
