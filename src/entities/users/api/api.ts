@@ -6,6 +6,7 @@ import { getRolesType, getUsersType } from "../model/types";
 
 export const usersApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
+    // GET-USERS
     getUsers: build.query({
       query: (params) => ({ url: API_MAP.USERS, params }),
       providesTags: ["Users"],
@@ -31,6 +32,7 @@ export const usersApi = baseApi.injectEndpoints({
         );
       },
     }),
+    // GET-ROLES
     getRoles: build.query({
       query: (params) => ({ url: API_MAP.ROLES, params }),
       providesTags: ["Roles"],
@@ -56,6 +58,7 @@ export const usersApi = baseApi.injectEndpoints({
         );
       },
     }),
+    // CREATE-USER
     createUser: build.mutation({
       query: (body) => ({
         url: API_MAP.CREATE_USER,
@@ -65,6 +68,7 @@ export const usersApi = baseApi.injectEndpoints({
 
       invalidatesTags: ["Users"],
     }),
+    // UPDATE-USER
     updateUser: build.mutation({
       query: (body) => ({
         url: `${API_MAP.UPDATE_USER}/${body.userId}`,
@@ -73,10 +77,19 @@ export const usersApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Users"],
     }),
+    // DELETE-USER
     deleteUser: build.mutation({
       query: (id) => ({
         url: `${API_MAP.DELETE_USER}/${id}`,
         method: API_METHODS.DELETE,
+      }),
+      invalidatesTags: ["Users"],
+    }),
+    // RESTORE-USER
+    restoreUser: build.mutation({
+      query: (id) => ({
+        url: `${API_MAP.RESTORE_USER}/${id}/restore`,
+        method: API_METHODS.PUT,
       }),
       invalidatesTags: ["Users"],
     }),
@@ -89,4 +102,5 @@ export const {
   useCreateUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,
+  useRestoreUserMutation,
 } = usersApi;

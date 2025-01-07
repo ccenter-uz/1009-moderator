@@ -3,12 +3,13 @@ import i18next from "i18next";
 import { FC } from "react";
 import { FaMap, FaRegNewspaper, FaWikipediaW } from "react-icons/fa";
 import { LuDollarSign } from "react-icons/lu";
-import { RxFrame } from "react-icons/rx";
 import { TiWeatherPartlySunny } from "react-icons/ti";
 
 import "./style.css";
 import { ChangeLng } from "@features/change-lng";
 import { LogoutUI } from "@features/logout";
+
+import { LogoSvg } from "@shared/ui";
 
 const links = [
   {
@@ -54,8 +55,7 @@ export const HeaderUI: FC = () => {
       <div className="sic" aria-label="Sic" title="Sic">
         {/* LOGO */}
         <div className="sic__logo">
-          <RxFrame fontSize={22} />
-          <h1>Sic page</h1>
+          <LogoSvg />
         </div>
         {/* USEFUL LINKS */}
         <div className="sic__useful-links">

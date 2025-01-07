@@ -1,8 +1,9 @@
-import { Flex, Form } from "antd";
+import { Flex, Form, Tooltip } from "antd";
 import { createSchemaFieldRule } from "antd-zod";
 import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
+import { MdRestore } from "react-icons/md";
 import { useSearchParams } from "react-router-dom";
 
 import { Address3Inputs } from "@features/address-3-inputs";
@@ -16,6 +17,7 @@ import {
   useCreateStreetMutation,
   useDeleteStreetMutation,
   useGetStreetsQuery,
+  useRestoreStreetMutation,
   useUpdateStreetMutation,
 } from "@entities/street";
 
@@ -24,6 +26,7 @@ import {
   getZodRequiredKeys,
   notificationResponse,
   returnAllParams,
+  STATUS,
 } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
@@ -65,6 +68,7 @@ export const ManageStreetPage: FC = () => {
   const [deleteStreet] = useDeleteStreetMutation();
   const [updateStreet] = useUpdateStreetMutation();
   const [createStreet] = useCreateStreetMutation();
+  const [restoreStreet] = useRestoreStreetMutation();
   const [editingData, setEditingData] = useState<valueProps | null>(null);
 
   const handleEditOpen = (values: valueProps) => {
@@ -143,7 +147,7 @@ export const ManageStreetPage: FC = () => {
       dataIndex: "action",
       align: "center",
       render: (text: string, record: valueProps) => {
-        if (record.status === 1) {
+        if (record.status === STATUS.ACTIVE) {
           return (
             <Flex justify="center" align="center" gap={8}>
               <FaPencilAlt
@@ -155,6 +159,17 @@ export const ManageStreetPage: FC = () => {
               />
               <DeleteTableItemUI fetch={() => deleteStreet(record.id)} />
             </Flex>
+          );
+        } else if (record.status === STATUS.INACTIVE) {
+          return (
+            <Tooltip title={t("restore")}>
+              <MdRestore
+                color="grey"
+                cursor={"pointer"}
+                size={20}
+                onClick={() => restoreStreet(record.id)}
+              />
+            </Tooltip>
           );
         }
       },

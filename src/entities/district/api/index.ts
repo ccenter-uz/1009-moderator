@@ -6,6 +6,7 @@ import { getDistrictsType } from "../model/types";
 
 export const districtApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
+    // GET-DISTRICT
     getDistricts: build.query({
       query: (params) => ({
         url: API_MAP.DISTRICT_ALL,
@@ -35,6 +36,7 @@ export const districtApi = baseApi.injectEndpoints({
         );
       },
     }),
+    // CREATE-DISTRICT
     createDistrict: build.mutation({
       query: (body) => ({
         url: API_MAP.CREATE_DISTRICT,
@@ -44,6 +46,7 @@ export const districtApi = baseApi.injectEndpoints({
 
       invalidatesTags: ["Districts"],
     }),
+    // UPDATE-DISTRICT
     updateDistrict: build.mutation({
       query: (body) => ({
         url: `${API_MAP.UPDATE_DISTRICT}/${body.id}`,
@@ -52,10 +55,19 @@ export const districtApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Districts"],
     }),
+    // DELETE-DISTRICT
     deleteDistrict: build.mutation({
       query: (id) => ({
         url: `${API_MAP.DELETE_DISTRICT}/${id}`,
         method: API_METHODS.DELETE,
+      }),
+      invalidatesTags: ["Districts"],
+    }),
+    // RESTORE-DISTRICT
+    restoreDistrict: build.mutation({
+      query: (id) => ({
+        url: `${API_MAP.RESTORE_DISTRICT}/${id}/restore`,
+        method: API_METHODS.PUT,
       }),
       invalidatesTags: ["Districts"],
     }),
@@ -68,4 +80,5 @@ export const {
   useCreateDistrictMutation,
   useDeleteDistrictMutation,
   useUpdateDistrictMutation,
+  useRestoreDistrictMutation,
 } = districtApi;

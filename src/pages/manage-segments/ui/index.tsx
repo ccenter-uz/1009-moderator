@@ -1,9 +1,10 @@
-import { Flex, Form } from "antd";
+import { Flex, Form, Tooltip } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { createSchemaFieldRule } from "antd-zod";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
+import { MdRestore } from "react-icons/md";
 import { useSearchParams } from "react-router-dom";
 
 import { BasicSearchPartUI } from "@features/basic-search-part";
@@ -13,6 +14,7 @@ import {
   useCreateSegmentMutation,
   useDeleteSegmentMutation,
   useGetSegmentsQuery,
+  useRestoreSegmentMutation,
   useUpdateSegmentMutation,
 } from "@entities/segments";
 import { SingleNameCyrill } from "@entities/single-name-cyrill";
@@ -24,6 +26,7 @@ import {
   getZodRequiredKeys,
   notificationResponse,
   returnAllParams,
+  STATUS,
 } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { ItableBasicData } from "@shared/types";
@@ -44,6 +47,7 @@ export const ManageSegmentsPage = () => {
   const [deleteSegment] = useDeleteSegmentMutation();
   const [createSegment] = useCreateSegmentMutation();
   const [updateSegment] = useUpdateSegmentMutation();
+  const [restoreSegment] = useRestoreSegmentMutation();
   const [editingData, setEditingData] = useState<AnyObject | null>(null);
   const handleEditOpen = (values: {
     name: { uz: string; ru: string; cy: string };
@@ -104,7 +108,7 @@ export const ManageSegmentsPage = () => {
           name: { uz: string; ru: string; cy: string };
         },
       ) => {
-        if (record.status === 1) {
+        if (record.status === STATUS.ACTIVE) {
           return (
             <Flex justify="center" align="center" gap={8}>
               <FaPencilAlt
@@ -116,6 +120,17 @@ export const ManageSegmentsPage = () => {
               />
               <DeleteTableItemUI fetch={() => deleteSegment(record.id)} />
             </Flex>
+          );
+        } else if (record.status === STATUS.INACTIVE) {
+          return (
+            <Tooltip title={t("restore")}>
+              <MdRestore
+                color="grey"
+                cursor={"pointer"}
+                size={20}
+                onClick={() => restoreSegment(record.id)}
+              />
+            </Tooltip>
           );
         }
       },

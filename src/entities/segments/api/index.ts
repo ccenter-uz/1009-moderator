@@ -65,6 +65,15 @@ export const SegmentsApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Segments"],
     }),
+
+    // RESTORE-SEGMENT
+    restoreSegment: builder.mutation({
+      query: (id) => ({
+        url: `${API_MAP.RESTORE_SEGMENT}/${id}/restore`,
+        method: API_METHODS.PUT,
+      }),
+      invalidatesTags: ["Segments"],
+    }),
   }),
 });
 
@@ -73,4 +82,5 @@ export const {
   useCreateSegmentMutation,
   useUpdateSegmentMutation,
   useDeleteSegmentMutation,
+  useRestoreSegmentMutation,
 } = SegmentsApi;

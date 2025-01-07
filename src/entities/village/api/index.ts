@@ -64,6 +64,15 @@ export const areaApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Villages"],
     }),
+
+    // RESTORE-VILLAGE
+    restoreVillage: builder.mutation({
+      query: (id) => ({
+        url: `${API_MAP.RESTORE_VILLAGE}/${id}/restore`,
+        method: API_METHODS.PUT,
+      }),
+      invalidatesTags: ["Villages"],
+    }),
   }),
 });
 
@@ -73,4 +82,5 @@ export const {
   useCreateVillageMutation,
   useUpdateVillageMutation,
   useDeleteVillageMutation,
+  useRestoreVillageMutation,
 } = areaApi;

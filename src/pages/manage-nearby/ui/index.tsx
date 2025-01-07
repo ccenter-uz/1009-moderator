@@ -1,9 +1,10 @@
-import { Flex, Form, Select } from "antd";
+import { Flex, Form, Select, Tooltip } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { createSchemaFieldRule } from "antd-zod";
 import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
+import { MdRestore } from "react-icons/md";
 import { useSearchParams } from "react-router-dom";
 
 import { Address2Inputs } from "@features/address-2-inputs";
@@ -15,6 +16,7 @@ import {
   useDeleteNearbyMutation,
   useGetNearbyCategoryQuery,
   useGetNearbyQuery,
+  useRestoreNearbyMutation,
   useUpdateNearbyMutation,
 } from "@entities/nearby";
 import { SingleNameCyrill } from "@entities/single-name-cyrill";
@@ -28,6 +30,7 @@ import {
   notificationResponse,
   renderLabelSelect,
   returnAllParams,
+  STATUS,
 } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
@@ -66,6 +69,7 @@ export const ManageNearbyPage: FC = () => {
   const [deleteNearby] = useDeleteNearbyMutation();
   const [createNearby] = useCreateNearbyMutation();
   const [updateNearby] = useUpdateNearbyMutation();
+  const [restoreNearby] = useRestoreNearbyMutation();
   const [editingData, setEditingData] = useState<valueProps | null>(null);
   const [nearbyCategoryId, setNearbyCategoryId] = useState<
     string | number | null
@@ -139,7 +143,7 @@ export const ManageNearbyPage: FC = () => {
       dataIndex: "action",
       align: "center",
       render: (text: string, record: valueProps) => {
-        if (record.status === 1) {
+        if (record.status === STATUS.ACTIVE) {
           return (
             <Flex justify="center" align="center" gap={8}>
               <FaPencilAlt
@@ -151,6 +155,17 @@ export const ManageNearbyPage: FC = () => {
               />
               <DeleteTableItemUI fetch={() => deleteNearby(record.id)} />
             </Flex>
+          );
+        } else if (record.status === STATUS.INACTIVE) {
+          return (
+            <Tooltip title={t("restore")}>
+              <MdRestore
+                color="grey"
+                cursor={"pointer"}
+                size={20}
+                onClick={() => restoreNearby(record.id)}
+              />
+            </Tooltip>
           );
         }
       },

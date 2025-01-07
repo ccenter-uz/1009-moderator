@@ -1,8 +1,9 @@
-import { Flex, Form } from "antd";
+import { Flex, Form, Tooltip } from "antd";
 import { createSchemaFieldRule } from "antd-zod";
 import { t } from "i18next";
 import { FC, useEffect, useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
+import { MdRestore } from "react-icons/md";
 import { useSearchParams } from "react-router-dom";
 
 import { BasicSearchPartUI } from "@features/basic-search-part";
@@ -12,6 +13,7 @@ import {
   useCreateSubCategoryMutation,
   useDeleteSubCategoryMutation,
   useLazyGetSubCategoryQuery,
+  useRestoreSubCategoryMutation,
   useUpdateSubCategoryMutation,
 } from "@entities/product-services";
 import { SingleNameCyrill } from "@entities/single-name-cyrill";
@@ -48,6 +50,7 @@ export const Service: FC = () => {
   const [createSubCategory] = useCreateSubCategoryMutation();
   const [updateSubCategory] = useUpdateSubCategoryMutation();
   const [deleteSubCategory] = useDeleteSubCategoryMutation();
+  const [restoreService] = useRestoreSubCategoryMutation();
   const [editingData, setEditingData] = useState<editServiceType | null>(null);
 
   const [isAddBtnDisable, setIsAddBtnDisable] = useState<boolean>(true);
@@ -125,6 +128,17 @@ export const Service: FC = () => {
               />
               <DeleteTableItemUI fetch={() => deleteSubCategory(record.id)} />
             </Flex>
+          );
+        } else if (record.status === 0) {
+          return (
+            <Tooltip title={t("restore")}>
+              <MdRestore
+                color="grey"
+                cursor={"pointer"}
+                size={20}
+                onClick={() => restoreService(record.id)}
+              />
+            </Tooltip>
           );
         }
       },

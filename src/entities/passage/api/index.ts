@@ -63,6 +63,15 @@ export const passageApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Passages"],
     }),
+
+    // RESTORE-PASSAGE
+    restorePassage: build.mutation({
+      query: (id) => ({
+        url: `${API_MAP.RESTORE_PASSAGE}/${id}/restore`,
+        method: API_METHODS.PUT,
+      }),
+      invalidatesTags: ["Passages"],
+    }),
   }),
 });
 
@@ -72,4 +81,5 @@ export const {
   useCreatePassageMutation,
   useUpdatePassageMutation,
   useDeletePassageMutation,
+  useRestorePassageMutation,
 } = passageApi;

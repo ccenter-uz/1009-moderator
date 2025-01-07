@@ -1,9 +1,10 @@
-import { Flex, Form } from "antd";
+import { Flex, Form, Tooltip } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { createSchemaFieldRule } from "antd-zod";
 import { t } from "i18next";
 import { FC, memo, useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
+import { MdRestore } from "react-icons/md";
 import { useSearchParams } from "react-router-dom";
 
 import { BasicSearchPartUI } from "@features/basic-search-part";
@@ -13,6 +14,7 @@ import {
   useCreateProductMutation,
   useDeleteProductMutation,
   useGetProductsQuery,
+  useRestoreProductMutation,
   useUpdateProductMutation,
 } from "@entities/product-services";
 import { SingleNameCyrill } from "@entities/single-name-cyrill";
@@ -24,6 +26,7 @@ import {
   getZodRequiredKeys,
   notificationResponse,
   returnAllParams,
+  STATUS,
 } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { ItableBasicData } from "@shared/types";
@@ -53,6 +56,7 @@ export const Product: FC = () => {
   const [deleteProduct] = useDeleteProductMutation();
   const [createProduct] = useCreateProductMutation();
   const [updateProduct] = useUpdateProductMutation();
+  const [restoreProduct] = useRestoreProductMutation();
   const [editingData, setEditingData] = useState<editProductType | null>(null);
 
   const handleEditOpen = (values: editProductType) => {
@@ -117,7 +121,7 @@ export const Product: FC = () => {
       dataIndex: "action",
       align: "center",
       render: (text: string, record: editProductType) => {
-        if (record.status === 1) {
+        if (record.status === STATUS.ACTIVE) {
           return (
             <Flex justify="center" align="center" gap={8}>
               <FaPencilAlt
@@ -129,6 +133,17 @@ export const Product: FC = () => {
               />
               <DeleteTableItemUI fetch={() => deleteProduct(record.id)} />
             </Flex>
+          );
+        } else if (record.status === STATUS.INACTIVE) {
+          return (
+            <Tooltip title={t("restore")}>
+              <MdRestore
+                color="grey"
+                cursor={"pointer"}
+                size={20}
+                onClick={() => restoreProduct(record.id)}
+              />
+            </Tooltip>
           );
         }
       },

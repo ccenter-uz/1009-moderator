@@ -64,6 +64,15 @@ export const laneApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Lanes"],
     }),
+
+    // RESTORE-LANE
+    restoreLane: builder.mutation({
+      query: (id) => ({
+        url: `${API_MAP.RESTORE_LANE}/${id}/restore`,
+        method: API_METHODS.PUT,
+      }),
+      invalidatesTags: ["Lanes"],
+    }),
   }),
 });
 
@@ -72,4 +81,5 @@ export const {
   useCreateLaneMutation,
   useUpdateLaneMutation,
   useDeleteLaneMutation,
+  useRestoreLaneMutation,
 } = laneApi;

@@ -64,6 +64,15 @@ export const impasseApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Impasses"],
     }),
+
+    // RESTORE-IMPASSE
+    restoreImpasse: builder.mutation({
+      query: (id) => ({
+        url: `${API_MAP.RESTORE_IMPASSE}/${id}/restore`,
+        method: API_METHODS.PUT,
+      }),
+      invalidatesTags: ["Impasses"],
+    }),
   }),
 });
 
@@ -72,4 +81,5 @@ export const {
   useCreateImpasseMutation,
   useUpdateImpasseMutation,
   useDeleteImpasseMutation,
+  useRestoreImpasseMutation,
 } = impasseApi;
