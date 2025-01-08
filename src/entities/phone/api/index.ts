@@ -64,6 +64,15 @@ export const phoneTypeApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["PhoneType"],
     }),
+
+    // RESTORE-PHONE-TYPE
+    restorePhoneType: build.mutation({
+      query: (id) => ({
+        url: `${API_MAP.RESTORE_PHONE}/${id}/restore`,
+        method: API_METHODS.PUT,
+      }),
+      invalidatesTags: ["PhoneType"],
+    }),
   }),
 });
 
@@ -73,4 +82,5 @@ export const {
   useCreatePhoneTypeMutation,
   useUpdatePhoneTypeMutation,
   useDeletePhoneTypeMutation,
+  useRestorePhoneTypeMutation,
 } = phoneTypeApi;

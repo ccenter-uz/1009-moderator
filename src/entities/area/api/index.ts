@@ -64,6 +64,15 @@ export const areaApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Areas"],
     }),
+
+    // RESTORE-AREA
+    restoreArea: builder.mutation({
+      query: (id) => ({
+        url: `${API_MAP.RESTORE_AREA}/${id}/restore`,
+        method: API_METHODS.PUT,
+      }),
+      invalidatesTags: ["Areas"],
+    }),
   }),
 });
 
@@ -72,4 +81,5 @@ export const {
   useCreateAreaMutation,
   useUpdateAreaMutation,
   useDeleteAreaMutation,
+  useRestoreAreaMutation,
 } = areaApi;

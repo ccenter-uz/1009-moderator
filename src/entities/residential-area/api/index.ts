@@ -64,6 +64,15 @@ export const residentialAreaApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["ResidentialArea"],
     }),
+
+    // RESTORE-RESIDENTIAL-AREA
+    restoreResidentialArea: build.mutation({
+      query: (id) => ({
+        url: `${API_MAP.RESTORE_RESIDENTIAL_AREA}/${id}/restore`,
+        method: API_METHODS.PUT,
+      }),
+      invalidatesTags: ["ResidentialArea"],
+    }),
   }),
 });
 
@@ -72,4 +81,5 @@ export const {
   useCreateResidentialAreaMutation,
   useUpdateResidentialAreaMutation,
   useDeleteResidentialAreaMutation,
+  useRestoreResidentialAreaMutation,
 } = residentialAreaApi;

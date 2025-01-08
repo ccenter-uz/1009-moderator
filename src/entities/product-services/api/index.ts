@@ -64,6 +64,14 @@ export const productServiceApi = baseApi.injectEndpoints({
       invalidatesTags: ["Products"],
     }),
 
+    // RESTORE_CATEGORY
+    restoreProduct: build.mutation({
+      query: (id) => ({
+        url: `${API_MAP.RESTORE_PRODUCT_SERVICE_CATEGORY}/${id}/restore`,
+        method: API_METHODS.PUT,
+      }),
+      invalidatesTags: ["Products"],
+    }),
     // GET_SUBCATEGORY
     getSubCategory: build.query({
       query: (params) => ({
@@ -93,6 +101,7 @@ export const productServiceApi = baseApi.injectEndpoints({
         );
       },
     }),
+
     // CREATE_SUBCATEGORY
     createSubCategory: build.mutation({
       query: (body) => ({
@@ -121,6 +130,15 @@ export const productServiceApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Products-subcategory"],
     }),
+
+    // RESTORE_SUBCATEGORY
+    restoreSubCategory: build.mutation({
+      query: (id) => ({
+        url: `${API_MAP.RESTORE_PRODUCT_SERVICE_SUB_CATEGORY}/${id}/restore`,
+        method: API_METHODS.PUT,
+      }),
+      invalidatesTags: ["Products-subcategory"],
+    }),
   }),
 });
 
@@ -135,4 +153,6 @@ export const {
   useCreateSubCategoryMutation,
   useUpdateSubCategoryMutation,
   useDeleteSubCategoryMutation,
+  useRestoreProductMutation,
+  useRestoreSubCategoryMutation,
 } = productServiceApi;

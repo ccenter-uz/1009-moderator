@@ -1,6 +1,7 @@
-import { Button, Flex, Table, Tooltip } from "antd";
+import { Button, Flex, Form, Modal, Table, Tooltip } from "antd";
 import { AnyObject } from "antd/es/_util/type";
-import { FC } from "react";
+import TextArea from "antd/es/input/TextArea";
+import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaCheck, FaPen } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
@@ -24,7 +25,7 @@ import {
   STEPS_ENUM,
   unconfirmedTableColumns,
 } from "@shared/lib/helpers";
-import { usePaginate } from "@shared/lib/hooks";
+import { useDisclosure, usePaginate } from "@shared/lib/hooks";
 
 enum TYPE_AND_STATUS {
   TYPE_CONFIRM = "confirm",
@@ -36,7 +37,10 @@ enum TYPE_AND_STATUS {
 export const OrgUnconfirmedPage: FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [form] = Form.useForm();
   const [_, setSearchParams] = useSearchParams();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [rejectingId, setRejectingId] = useState<number>(0);
   const { page, pageSize, pageSizeOptions, setPage, setPageSize } = usePaginate(
     { pageName: "page", limitName: "limit" },
   );
@@ -45,7 +49,11 @@ export const OrgUnconfirmedPage: FC = () => {
   });
   const [checkOrganization] = useCheckOrganizationMutation();
 
-  const handleCheckOrganization = (id: number, type: string) => {
+  const handleCheckOrganization = (
+    id: number,
+    type: string,
+    description?: string,
+  ) => {
     if (type === TYPE_AND_STATUS.TYPE_CONFIRM) {
       return checkOrganization({
         id,
@@ -53,9 +61,26 @@ export const OrgUnconfirmedPage: FC = () => {
       });
     }
     if (type === TYPE_AND_STATUS.TYPE_REJECT) {
-      return checkOrganization({ id, status: TYPE_AND_STATUS.STATUS_REJECTED });
+      return checkOrganization({
+        id,
+        status: TYPE_AND_STATUS.STATUS_REJECTED,
+        description,
+      });
     }
   };
+
+  const handleRejectOrganization = ({
+    description,
+  }: {
+    description: string;
+  }) => {
+    handleCheckOrganization(
+      rejectingId,
+      TYPE_AND_STATUS.TYPE_REJECT,
+      description,
+    );
+  };
+
   const checkExistId = (record: AnyObject) => {
     const { editingId, firstStepData } = getEditingStepStorageValues();
 
@@ -115,12 +140,9 @@ export const OrgUnconfirmedPage: FC = () => {
             </Tooltip>
             <Tooltip title={t("reject")}>
               <Button
-                onClick={() =>
-                  handleCheckOrganization(
-                    record.id,
-                    TYPE_AND_STATUS.TYPE_REJECT,
-                  )
-                }
+                onClick={() => {
+                  onOpen(), setRejectingId(record.id);
+                }}
                 style={{
                   color: "crimson",
                   borderColor: "crimson",
@@ -181,6 +203,27 @@ export const OrgUnconfirmedPage: FC = () => {
           }}
         />
       </Flex>
+      <Modal
+        title={t("reject")}
+        open={isOpen}
+        onCancel={onClose}
+        okButtonProps={{ htmlType: "submit", form: "reject-form" }}
+      >
+        <Form
+          form={form}
+          onFinish={handleRejectOrganization}
+          id="reject-form"
+          layout="vertical"
+        >
+          <Form.Item
+            name={"description"}
+            label={t("reason-why-rejecting?")}
+            rules={[{ required: true, message: t("required-field") }]}
+          >
+            <TextArea placeholder={t("reason")} rows={6} />
+          </Form.Item>
+        </Form>
+      </Modal>
     </>
   );
 };

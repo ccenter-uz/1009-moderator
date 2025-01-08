@@ -8,7 +8,7 @@ import {
   OrgAddFirstStepUI,
   setCategoryData,
 } from "@widgets/org-add-first-step";
-import { OrgAddFourthStepUI } from "@widgets/org-add-fourth-step";
+import { OrgAddFourthStepUI, setImages } from "@widgets/org-add-fourth-step";
 import {
   OrgAddSecondStepUI,
   setOrientirData,
@@ -168,6 +168,22 @@ export const OrgAddPage: FC = () => {
     });
   };
 
+  const onClearCurrentStep = () => {
+    if (current === STEPS_ENUM.firstStep) {
+      form.resetFields(STEPS_DATA.FIRST_FORMDATA);
+      dispatch(setCategoryData([]));
+    } else if (current === STEPS_ENUM.secondStep) {
+      form.resetFields(STEPS_DATA.SECOND_FORMDATA);
+      dispatch(setOrientirData([]));
+    } else if (current === STEPS_ENUM.thirdStep) {
+      form.resetFields(STEPS_DATA.THIRD_FORMDATA);
+      dispatch(setPhoneData([]));
+    } else if (current === STEPS_ENUM.fourthStep) {
+      form.resetFields(STEPS_DATA.FOURTH_FORMDATA);
+      dispatch(setImages([]));
+    }
+  };
+
   useEffect(() => {
     // SET-STORED-DATA-FROM-LOCAL-STORAGE
     const firstStepData = localStorage.getItem("firstStepData");
@@ -204,6 +220,7 @@ export const OrgAddPage: FC = () => {
         <Button style={{ margin: "0 8px" }} onClick={onClearAllData}>
           {t("erase-all")}
         </Button>
+        <Button onClick={onClearCurrentStep}>{t("erase-current-step")}</Button>
         {current > 0 && (
           <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
             {t("previous")}

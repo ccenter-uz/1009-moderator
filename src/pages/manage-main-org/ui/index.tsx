@@ -1,9 +1,10 @@
-import { Flex, Form } from "antd";
+import { Flex, Form, Tooltip } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { createSchemaFieldRule } from "antd-zod";
 import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
+import { MdRestore } from "react-icons/md";
 import { useSearchParams } from "react-router-dom";
 
 import { BasicSearchPartUI } from "@features/basic-search-part";
@@ -13,6 +14,7 @@ import {
   useCreateMainOrgMutation,
   useDeleteMainOrgMutation,
   useGetMainOrgQuery,
+  useRestoreMainOrgMutation,
   useUpdateMainOrgMutation,
 } from "@entities/main-org";
 import { SingleName } from "@entities/single-name";
@@ -22,6 +24,7 @@ import {
   getZodRequiredKeys,
   notificationResponse,
   returnAllParams,
+  STATUS,
 } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { ItableBasicData } from "@shared/types";
@@ -40,6 +43,7 @@ export const ManageMainOrgPage: FC = () => {
   const [deleteMainOrg] = useDeleteMainOrgMutation();
   const [createMainOrg] = useCreateMainOrgMutation();
   const [updateMainOrg] = useUpdateMainOrgMutation();
+  const [restoreMainOrg] = useRestoreMainOrgMutation();
   const [editingData, setEditingData] = useState<AnyObject | null>(null);
 
   const handleEditOpen = (values: ItableBasicData) => {
@@ -84,7 +88,7 @@ export const ManageMainOrgPage: FC = () => {
       dataIndex: "action",
       align: "center",
       render: (text: string, record: ItableBasicData & { status: number }) => {
-        if (record.status === 1) {
+        if (record.status === STATUS.ACTIVE) {
           return (
             <Flex justify="center" align="center" gap={8}>
               <FaPencilAlt
@@ -96,6 +100,17 @@ export const ManageMainOrgPage: FC = () => {
               />
               <DeleteTableItemUI fetch={() => deleteMainOrg(record.id)} />
             </Flex>
+          );
+        } else if (record.status === STATUS.INACTIVE) {
+          return (
+            <Tooltip title={t("restore")}>
+              <MdRestore
+                color="grey"
+                cursor={"pointer"}
+                size={20}
+                onClick={() => restoreMainOrg(record.id)}
+              />
+            </Tooltip>
           );
         }
       },

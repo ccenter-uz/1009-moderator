@@ -106,14 +106,6 @@ const childRoutes = [
     ],
   },
   {
-    key: "/statistics",
-    name: "/statistics",
-    label: <Link to="/statistics">{i18next.t("statistics")}</Link>,
-    icon: <IoStatsChart />,
-    path: "statistics",
-    element: "Hello statistics",
-  },
-  {
     key: "/additional",
     name: "/additional",
     label: <Link to="/additional">{i18next.t("additional")}</Link>,

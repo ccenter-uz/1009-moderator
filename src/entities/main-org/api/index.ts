@@ -6,6 +6,7 @@ import { getMainOrgType } from "../model/types";
 
 export const mainOrgApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    // GET-MAIN-ORG
     getMainOrg: builder.query({
       query: (params) => ({
         url: API_MAP.MAIN_ORGANIZATION_ALL,
@@ -35,6 +36,8 @@ export const mainOrgApi = baseApi.injectEndpoints({
         );
       },
     }),
+
+    // UPDATE-MAIN-ORG
     updateMainOrg: builder.mutation({
       query: (body) => ({
         url: `${API_MAP.UPDATE_MAIN_ORGANIZATION}/${body.id}`,
@@ -43,6 +46,7 @@ export const mainOrgApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["MainOrg"],
     }),
+    // CREATE-MAIN-ORG
     createMainOrg: builder.mutation({
       query: (body) => ({
         url: API_MAP.CREATE_MAIN_ORGANIZATION,
@@ -51,10 +55,21 @@ export const mainOrgApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["MainOrg"],
     }),
+
+    // DELETE-MAIN-ORG
     deleteMainOrg: builder.mutation({
       query: (id) => ({
         url: `${API_MAP.DELETE_MAIN_ORGANIZATION}/${id}`,
         method: API_METHODS.DELETE,
+      }),
+      invalidatesTags: ["MainOrg"],
+    }),
+
+    // RESTORE-MAIN-ORG
+    restoreMainOrg: builder.mutation({
+      query: (id) => ({
+        url: `${API_MAP.RESTORE_MAIN_ORGANIZATION}/${id}/restore`,
+        method: API_METHODS.PUT,
       }),
       invalidatesTags: ["MainOrg"],
     }),
@@ -67,4 +82,5 @@ export const {
   useUpdateMainOrgMutation,
   useCreateMainOrgMutation,
   useDeleteMainOrgMutation,
+  useRestoreMainOrgMutation,
 } = mainOrgApi;

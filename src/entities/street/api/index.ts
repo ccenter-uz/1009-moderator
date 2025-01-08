@@ -64,6 +64,15 @@ export const streetApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Streets"],
     }),
+
+    // RESTORE
+    restoreStreet: builder.mutation({
+      query: (id) => ({
+        url: `${API_MAP.RESTORE_STREET}/${id}/restore`,
+        method: API_METHODS.PUT,
+      }),
+      invalidatesTags: ["Streets"],
+    }),
   }),
 });
 
@@ -72,4 +81,5 @@ export const {
   useCreateStreetMutation,
   useUpdateStreetMutation,
   useDeleteStreetMutation,
+  useRestoreStreetMutation,
 } = streetApi;

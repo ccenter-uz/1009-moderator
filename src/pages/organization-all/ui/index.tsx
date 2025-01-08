@@ -1,5 +1,5 @@
 import { AnyObject } from "antd/es/_util/type";
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { SearchPartUI } from "@widgets/search-part";

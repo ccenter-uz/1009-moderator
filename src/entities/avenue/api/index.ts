@@ -64,6 +64,15 @@ export const avenueApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Avenues"],
     }),
+
+    // RESTORE-AVENUE
+    restoreAvenue: builder.mutation({
+      query: (id) => ({
+        url: `${API_MAP.RESTORE_AVENUE}/${id}/restore`,
+        method: API_METHODS.PUT,
+      }),
+      invalidatesTags: ["Avenues"],
+    }),
   }),
 });
 
@@ -72,4 +81,5 @@ export const {
   useCreateAvenueMutation,
   useUpdateAvenueMutation,
   useDeleteAvenueMutation,
+  useRestoreAvenueMutation,
 } = avenueApi;

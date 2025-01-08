@@ -64,6 +64,14 @@ export const CategorySubCategoryApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Categories"],
     }),
+    // RESTORE-CATEGORY
+    restoreCategory: build.mutation({
+      query: (id) => ({
+        url: `${API_MAP.RESTORE_CATEGORY}/${id}/restore`,
+        method: API_METHODS.PUT,
+      }),
+      invalidatesTags: ["Categories"],
+    }),
 
     // GET-SUBCATEGORY
     getSubCategories: build.query({
@@ -124,6 +132,15 @@ export const CategorySubCategoryApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["SubCategories"],
     }),
+
+    // RESTORE-SUBCATEGORY
+    restoreSubCategories: build.mutation({
+      query: (id) => ({
+        url: `${API_MAP.RESTORE_SUB_CATEGORY}/${id}/restore`,
+        method: API_METHODS.PUT,
+      }),
+      invalidatesTags: ["SubCategories"],
+    }),
   }),
 });
 
@@ -137,4 +154,6 @@ export const {
   useCreateSubCategoriesMutation,
   useUpdateSubCategoriesMutation,
   useDeleteSubCategoriesMutation,
+  useRestoreCategoryMutation,
+  useRestoreSubCategoriesMutation,
 } = CategorySubCategoryApi;

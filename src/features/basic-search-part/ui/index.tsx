@@ -3,6 +3,7 @@ import { AnyObject } from "antd/es/_util/type";
 import { FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { FaSearch } from "react-icons/fa";
+import { MdClear } from "react-icons/md";
 import { useSearchParams } from "react-router-dom";
 
 import { returnAllParams } from "@shared/lib/helpers";
@@ -28,6 +29,11 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
   const [form] = Form.useForm();
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
+
+  const handleReset = () => {
+    form.resetFields();
+    handleSearch({ search: "" });
+  };
 
   useEffect(() => {
     const params = returnAllParams();
@@ -65,6 +71,14 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
           icon={<FaSearch />}
         >
           {t("search")}
+        </Button>
+        <Button
+          loading={loading}
+          disabled={loading || isSearchBtnDisable}
+          onClick={handleReset}
+          icon={<MdClear />}
+        >
+          {t("reset")}
         </Button>
       </Flex>
     </Form>
