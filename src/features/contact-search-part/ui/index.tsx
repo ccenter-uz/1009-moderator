@@ -1,6 +1,18 @@
-import { Row, Col, Input, Form, Checkbox } from "antd";
+import { Row, Col, Input, Form, Checkbox, Select } from "antd";
+import i18next from "i18next";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
+
+const statusOptions = [
+  {
+    value: 0,
+    label: i18next.t("inactive"),
+  },
+  {
+    value: 1,
+    label: i18next.t("active"),
+  },
+];
 
 export const ContactSearchPartUI: FC = () => {
   const { t } = useTranslation();
@@ -75,14 +87,23 @@ export const ContactSearchPartUI: FC = () => {
               <Checkbox />
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col span={8}>
             <Form.Item
-              name="noBounded"
-              label={t("no-bounded")}
+              name="fromOperators"
+              label={t("from-operators")}
               style={{ marginBottom: 10 }}
               valuePropName="checked"
             >
               <Checkbox />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name="status"
+              label={t("status")}
+              style={{ marginBottom: 10 }}
+            >
+              <Select options={statusOptions} allowClear />
             </Form.Item>
           </Col>
         </Row>

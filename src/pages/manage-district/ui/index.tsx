@@ -1,8 +1,9 @@
-import { Flex, Form } from "antd";
+import { Flex, Form, Tooltip } from "antd";
 import { createSchemaFieldRule } from "antd-zod";
 import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
+import { MdRestore } from "react-icons/md";
 import { useSearchParams } from "react-router-dom";
 
 import { Address2Inputs } from "@features/address-2-inputs";
@@ -13,6 +14,7 @@ import {
   useCreateDistrictMutation,
   useDeleteDistrictMutation,
   useGetDistrictsQuery,
+  useRestoreDistrictMutation,
   useUpdateDistrictMutation,
 } from "@entities/district";
 import { NameInputsCyrill } from "@entities/name-inputs-cyrill";
@@ -24,6 +26,7 @@ import {
   getZodRequiredKeys,
   notificationResponse,
   returnAllParams,
+  STATUS,
 } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
@@ -63,6 +66,7 @@ export const ManageDistrictPage: FC = () => {
   const [deleteDistrict] = useDeleteDistrictMutation();
   const [createDistrict] = useCreateDistrictMutation();
   const [updateDistrict] = useUpdateDistrictMutation();
+  const [restoreDistrict] = useRestoreDistrictMutation();
   const [editingData, setEditingData] = useState<valueProps | null>(null);
 
   const handleEditOpen = (values: valueProps) => {
@@ -140,7 +144,7 @@ export const ManageDistrictPage: FC = () => {
       dataIndex: "action",
       align: "center",
       render: (text: string, record: valueProps) => {
-        if (record.status === 1) {
+        if (record.status === STATUS.ACTIVE) {
           return (
             <Flex justify="center" align="center" gap={8}>
               <FaPencilAlt
@@ -152,6 +156,17 @@ export const ManageDistrictPage: FC = () => {
               />
               <DeleteTableItemUI fetch={() => deleteDistrict(record.id)} />
             </Flex>
+          );
+        } else if (record.status === STATUS.INACTIVE) {
+          return (
+            <Tooltip title={t("restore")}>
+              <MdRestore
+                color="grey"
+                cursor={"pointer"}
+                size={20}
+                onClick={() => restoreDistrict(record.id)}
+              />
+            </Tooltip>
           );
         }
       },

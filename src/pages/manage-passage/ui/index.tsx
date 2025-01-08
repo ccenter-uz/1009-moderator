@@ -1,8 +1,9 @@
-import { Flex, Form } from "antd";
+import { Flex, Form, Tooltip } from "antd";
 import { createSchemaFieldRule } from "antd-zod";
 import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
+import { MdRestore } from "react-icons/md";
 import { useSearchParams } from "react-router-dom";
 
 import { Address3Inputs } from "@features/address-3-inputs";
@@ -16,6 +17,7 @@ import {
   useCreatePassageMutation,
   useDeletePassageMutation,
   useGetPassagesQuery,
+  useRestorePassageMutation,
   useUpdatePassageMutation,
 } from "@entities/passage";
 
@@ -24,6 +26,7 @@ import {
   getZodRequiredKeys,
   notificationResponse,
   returnAllParams,
+  STATUS,
 } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
@@ -65,6 +68,7 @@ export const ManagePassagePage: FC = () => {
   const [deletePassage] = useDeletePassageMutation();
   const [updatePassage] = useUpdatePassageMutation();
   const [createPassage] = useCreatePassageMutation();
+  const [restorePassage] = useRestorePassageMutation();
   const [editingData, setEditingData] = useState<valueProps | null>(null);
 
   const handleEditOpen = (values: valueProps) => {
@@ -142,7 +146,7 @@ export const ManagePassagePage: FC = () => {
       dataIndex: "action",
       align: "center",
       render: (text: string, record: valueProps) => {
-        if (record.status === 1) {
+        if (record.status === STATUS.ACTIVE) {
           return (
             <Flex justify="center" align="center" gap={8}>
               <FaPencilAlt
@@ -154,6 +158,17 @@ export const ManagePassagePage: FC = () => {
               />
               <DeleteTableItemUI fetch={() => deletePassage(record.id)} />
             </Flex>
+          );
+        } else if (record.status === STATUS.INACTIVE) {
+          return (
+            <Tooltip title={t("restore")}>
+              <MdRestore
+                color="grey"
+                cursor={"pointer"}
+                size={20}
+                onClick={() => restorePassage(record.id)}
+              />
+            </Tooltip>
           );
         }
       },

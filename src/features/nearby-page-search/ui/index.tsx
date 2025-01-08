@@ -2,6 +2,7 @@ import { Button, Flex, Form, Input } from "antd";
 import { FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { FaSearch } from "react-icons/fa";
+import { MdClear } from "react-icons/md";
 import { useSearchParams } from "react-router-dom";
 
 import { returnAllParams } from "@shared/lib/helpers";
@@ -9,7 +10,7 @@ import { returnAllParams } from "@shared/lib/helpers";
 type Props = {
   handleSearch: (values: {
     search: string;
-    category_id: string | number;
+    nearbyCategoryId: string | number;
   }) => void;
   loading?: boolean;
   additionalSearch?: JSX.Element;
@@ -27,14 +28,17 @@ export const NearbyPageSearchUI: FC<Props> = (props) => {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
 
+  const handleReset = () => {
+    form.resetFields();
+    handleSearch({ search: "", nearbyCategoryId: "" });
+  };
+
   useEffect(() => {
     const params = returnAllParams();
-    if (params.categoryId) {
-      form.setFieldsValue({
-        ...params,
-        "nearby-category": Number(params.categoryId),
-      });
-    }
+    form.setFieldsValue({
+      ...params,
+      "nearby-category": Number(params.nearbyCategoryId),
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
@@ -59,6 +63,14 @@ export const NearbyPageSearchUI: FC<Props> = (props) => {
           icon={<FaSearch />}
         >
           {t("search")}
+        </Button>
+        <Button
+          loading={loading}
+          disabled={loading}
+          onClick={handleReset}
+          icon={<MdClear />}
+        >
+          {t("reset")}
         </Button>
       </Flex>
     </Form>

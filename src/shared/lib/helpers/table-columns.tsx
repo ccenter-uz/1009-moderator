@@ -606,4 +606,9 @@ export const unconfirmedTableColumns = [
     dataIndex: "staffNumber",
     key: "staffNumber",
   },
+  {
+    title: i18next.t("type"),
+    dataIndex: "action",
+    key: "action",
+  },
 ];

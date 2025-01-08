@@ -21,7 +21,6 @@ export const SearchPartUI: FC<Props> = (props) => {
 
   const onSubmit = (values: AnyObject) => {
     setSearchValues(values);
-    console.log(searchTableRef, "searchTableRef");
 
     searchTableRef?.scrollIntoView({ behavior: "smooth" });
   };

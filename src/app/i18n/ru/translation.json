@@ -215,5 +215,11 @@
   "allowed": "Разрешено",
   "not-allowed": "Не разрешено",
   "confirm": "Подтвердить",
-  "reject": "Отклонить"
+  "reject": "Отклонить",
+  "erase-current-step": "Сбросить текущий шаг",
+  "from-operators": "От операторов",
+  "inactive": "Неактивные",
+  "reason-why-rejecting?": "Причина отказа?",
+  "reason": "Причина",
+  "type": "Тип"
 }

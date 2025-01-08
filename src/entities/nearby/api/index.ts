@@ -65,6 +65,15 @@ export const nearbyApi = baseApi.injectEndpoints({
       invalidatesTags: ["NearbyCategory"],
     }),
 
+    // RESTORE-CATEGORY
+    restoreNearbyCategory: build.mutation({
+      query: (id) => ({
+        url: `${API_MAP.RESTORE_NEARBY_CATEGORY}/${id}/restore`,
+        method: API_METHODS.PUT,
+      }),
+      invalidatesTags: ["NearbyCategory"],
+    }),
+
     // GET-NEARBY
     getNearby: build.query({
       query: (params) => ({
@@ -124,6 +133,15 @@ export const nearbyApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Nearby"],
     }),
+
+    // RESTORE-NEARBY
+    restoreNearby: build.mutation({
+      query: (id) => ({
+        url: `${API_MAP.RESTORE_NEARBY}/${id}/restore`,
+        method: API_METHODS.PUT,
+      }),
+      invalidatesTags: ["Nearby"],
+    }),
   }),
 });
 
@@ -137,4 +155,6 @@ export const {
   useUpdateNearbyMutation,
   useDeleteNearbyCategoryMutation,
   useDeleteNearbyMutation,
+  useRestoreNearbyCategoryMutation,
+  useRestoreNearbyMutation,
 } = nearbyApi;
