@@ -20,6 +20,7 @@ import {
   renderLabelSelect,
 } from "@shared/lib/helpers";
 import { RootState } from "@shared/types";
+import { ParagraphBold } from "@shared/ui/paragraph-bold";
 
 import { setData } from "../model/Slicer";
 
@@ -66,7 +67,7 @@ export const OrgAddFirstStepUI: FC = () => {
         <Col span={12}>
           <Form.Item
             name={"name"}
-            label={t("abonent")}
+            label={<ParagraphBold>{t("abonent")}</ParagraphBold>}
             rules={[
               {
                 required: true,
@@ -78,7 +79,7 @@ export const OrgAddFirstStepUI: FC = () => {
           </Form.Item>
           <Form.Item
             name={"legalName"}
-            label={t("org-name")}
+            label={<ParagraphBold>{t("org-name")}</ParagraphBold>}
             rules={[
               {
                 required: true,
@@ -90,7 +91,7 @@ export const OrgAddFirstStepUI: FC = () => {
           </Form.Item>
           <Form.Item
             name={"categoryId"}
-            label={t("category")}
+            label={<ParagraphBold>{t("category")}</ParagraphBold>}
             rules={[
               {
                 required: true,
@@ -113,7 +114,7 @@ export const OrgAddFirstStepUI: FC = () => {
           </Form.Item>
           <Form.Item
             name={"subCategoryId"}
-            label={t("sub-category")}
+            label={<ParagraphBold>{t("sub-category")}</ParagraphBold>}
             rules={[
               {
                 required: true,
@@ -137,7 +138,7 @@ export const OrgAddFirstStepUI: FC = () => {
         <Col span={12}>
           <Form.Item
             name={"mainOrganizationId"}
-            label={t("main-org")}
+            label={<ParagraphBold>{t("main-org")}</ParagraphBold>}
             rules={[
               {
                 required: true,
@@ -158,7 +159,7 @@ export const OrgAddFirstStepUI: FC = () => {
           </Form.Item>
           <Form.Item
             name={"secret"}
-            label={t("Секрет")}
+            label={<ParagraphBold>{t("Секрет")}</ParagraphBold>}
             rules={[
               {
                 required: true,
@@ -170,13 +171,7 @@ export const OrgAddFirstStepUI: FC = () => {
           </Form.Item>
           <Form.Item
             name={"segmentId"}
-            label={t("segment")}
-            rules={[
-              {
-                required: true,
-                message: t("required-field"),
-              },
-            ]}
+            label={<ParagraphBold>{t("segment")}</ParagraphBold>}
           >
             <Select
               placeholder={t("segment")}
@@ -191,13 +186,7 @@ export const OrgAddFirstStepUI: FC = () => {
           </Form.Item>
           <Form.Item
             name={"manager"}
-            label={t("manager")}
-            rules={[
-              {
-                required: true,
-                message: t("required-field"),
-              },
-            ]}
+            label={<ParagraphBold>{t("manager")}</ParagraphBold>}
           >
             <Input type="text" placeholder={t("manager")} allowClear />
           </Form.Item>

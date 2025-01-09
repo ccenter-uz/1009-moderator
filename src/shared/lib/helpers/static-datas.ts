@@ -42,6 +42,10 @@ export const STEPS_DATA = {
     "lunchFrom",
     "lunchTo",
     "dayoffs",
+    "allDay",
+    "noDayoffs",
+    "allType",
+    "withoutLunch",
   ],
 };
 

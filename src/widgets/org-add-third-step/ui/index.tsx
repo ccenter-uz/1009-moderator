@@ -22,6 +22,7 @@ import { useGetPhoneTypeQuery } from "@entities/phone";
 
 import { GET_ALL_ACTIVE_STATUS } from "@shared/lib/helpers";
 import { RootState } from "@shared/types";
+import { ParagraphBold } from "@shared/ui/paragraph-bold";
 
 import { setData } from "../model/Slicer";
 
@@ -135,33 +136,21 @@ export const OrgAddThirdStepUI: FC = () => {
     <Flex vertical gap={16}>
       <Row gutter={24}>
         <Col span={12}>
-          <Form.Item name={"account"} label={t("account")}>
+          <Form.Item
+            name={"account"}
+            label={<ParagraphBold>{t("account")}</ParagraphBold>}
+          >
             <Input placeholder={t("account")} />
           </Form.Item>
           <Form.Item
             name={"mail"}
-            label={t("email")}
-            rules={[
-              {
-                required: true,
-                type: "email",
-                message: t("invalid-email"),
-              },
-            ]}
+            label={<ParagraphBold>{t("email")}</ParagraphBold>}
           >
             <Input placeholder={t("email")} />
           </Form.Item>
           <Form.Item
             name={"index"}
-            label={t("index")}
-            rules={[
-              {
-                required: true,
-                message: t("must-be-number"),
-                type: "number",
-                transform: (value) => Number(value),
-              },
-            ]}
+            label={<ParagraphBold>{t("index")}</ParagraphBold>}
           >
             <Input placeholder={t("index")} />
           </Form.Item>
@@ -169,25 +158,13 @@ export const OrgAddThirdStepUI: FC = () => {
         <Col span={12}>
           <Form.Item
             name={"inn"}
-            label={t("tin")}
-            rules={[
-              {
-                required: true,
-                message: t("required-field"),
-              },
-            ]}
+            label={<ParagraphBold>{t("tin")}</ParagraphBold>}
           >
             <Input placeholder={t("tin")} />
           </Form.Item>
           <Form.Item
             name={"bankNumber"}
-            label={t("bank_number")}
-            rules={[
-              {
-                required: true,
-                message: t("required-field"),
-              },
-            ]}
+            label={<ParagraphBold>{t("bank_number")}</ParagraphBold>}
           >
             <Input placeholder={t("bank_number")} />
           </Form.Item>
@@ -230,7 +207,7 @@ export const OrgAddThirdStepUI: FC = () => {
         </Col>
         <Col span={2}>
           <Button
-            disabled={phone?.length < 11}
+            disabled={phone?.length < 3}
             type="primary"
             onClick={addSubCategory}
           >

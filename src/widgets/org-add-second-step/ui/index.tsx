@@ -27,6 +27,7 @@ import {
   renderLabelSelect,
 } from "@shared/lib/helpers";
 import { RootState } from "@shared/types";
+import { ParagraphBold } from "@shared/ui/paragraph-bold";
 
 import { setData } from "../model/Slicer";
 
@@ -99,7 +100,7 @@ export const OrgAddSecondStepUI: FC = () => {
         <Col span={8}>
           <Form.Item
             name={"regionId"}
-            label={t("region")}
+            label={<ParagraphBold>{t("region")}</ParagraphBold>}
             rules={[
               {
                 required: true,
@@ -122,7 +123,7 @@ export const OrgAddSecondStepUI: FC = () => {
           </Form.Item>
           <Form.Item
             name={"cityId"}
-            label={t("city")}
+            label={<ParagraphBold>{t("city")}</ParagraphBold>}
             rules={[
               {
                 required: true,
@@ -143,7 +144,10 @@ export const OrgAddSecondStepUI: FC = () => {
               placeholder={t("city")}
             />
           </Form.Item>
-          <Form.Item name={"districtId"} label={t("district")}>
+          <Form.Item
+            name={"districtId"}
+            label={<ParagraphBold>{t("district")}</ParagraphBold>}
+          >
             <Select
               labelRender={renderLabelSelect}
               loading={isLoadingDistrict}
@@ -156,7 +160,10 @@ export const OrgAddSecondStepUI: FC = () => {
               placeholder={t("district")}
             />
           </Form.Item>
-          <Form.Item name={"villageId"} label={t("village")}>
+          <Form.Item
+            name={"villageId"}
+            label={<ParagraphBold>{t("village")}</ParagraphBold>}
+          >
             <Select
               labelRender={renderLabelSelect}
               loading={isLoadingVillage}
@@ -169,7 +176,10 @@ export const OrgAddSecondStepUI: FC = () => {
               placeholder={t("village")}
             />
           </Form.Item>
-          <Form.Item name={"avenueId"} label={t("avenue")}>
+          <Form.Item
+            name={"avenueId"}
+            label={<ParagraphBold>{t("avenue")}</ParagraphBold>}
+          >
             <Select
               labelRender={renderLabelSelect}
               loading={isLoadingAvenue}
@@ -182,7 +192,10 @@ export const OrgAddSecondStepUI: FC = () => {
               placeholder={t("avenue")}
             />
           </Form.Item>
-          <Form.Item name={"residentialId"} label={t("residential-area")}>
+          <Form.Item
+            name={"residentialId"}
+            label={<ParagraphBold>{t("residential-area")}</ParagraphBold>}
+          >
             <Select
               labelRender={renderLabelSelect}
               loading={isLoadingResidentialArea}
@@ -197,7 +210,10 @@ export const OrgAddSecondStepUI: FC = () => {
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item name={"areaId"} label={t("area")}>
+          <Form.Item
+            name={"areaId"}
+            label={<ParagraphBold>{t("area")}</ParagraphBold>}
+          >
             <Select
               labelRender={renderLabelSelect}
               loading={isLoadingArea}
@@ -210,10 +226,16 @@ export const OrgAddSecondStepUI: FC = () => {
               placeholder={t("area")}
             />
           </Form.Item>
-          <Form.Item name={"kvartal"} label={t("kvartal")}>
+          <Form.Item
+            name={"kvartal"}
+            label={<ParagraphBold>{t("kvartal")}</ParagraphBold>}
+          >
             <Input type="text" placeholder={t("kvartal")} allowClear />
           </Form.Item>
-          <Form.Item name={"streetId"} label={t("street")}>
+          <Form.Item
+            name={"streetId"}
+            label={<ParagraphBold>{t("street")}</ParagraphBold>}
+          >
             <Select
               labelRender={renderLabelSelect}
               loading={isLoadingStreet}
@@ -226,7 +248,10 @@ export const OrgAddSecondStepUI: FC = () => {
               placeholder={t("street")}
             />
           </Form.Item>
-          <Form.Item name={"laneId"} label={t("lane")}>
+          <Form.Item
+            name={"laneId"}
+            label={<ParagraphBold>{t("lane")}</ParagraphBold>}
+          >
             <Select
               labelRender={renderLabelSelect}
               loading={isLoadingLane}
@@ -239,7 +264,10 @@ export const OrgAddSecondStepUI: FC = () => {
               placeholder={t("lane")}
             />
           </Form.Item>
-          <Form.Item name={"passageId"} label={t("passage")}>
+          <Form.Item
+            name={"passageId"}
+            label={<ParagraphBold>{t("passage")}</ParagraphBold>}
+          >
             <Select
               labelRender={renderLabelSelect}
               loading={isLoadingPassage}
@@ -252,7 +280,10 @@ export const OrgAddSecondStepUI: FC = () => {
               placeholder={t("passage")}
             />
           </Form.Item>
-          <Form.Item name={"impasseId"} label={t("impasse")}>
+          <Form.Item
+            name={"impasseId"}
+            label={<ParagraphBold>{t("impasse")}</ParagraphBold>}
+          >
             <Select
               labelRender={renderLabelSelect}
               loading={isLoadingImpasse}
@@ -269,7 +300,7 @@ export const OrgAddSecondStepUI: FC = () => {
         <Col span={8}>
           <Form.Item
             name={"address"}
-            label={t("address")}
+            label={<ParagraphBold>{t("address")}</ParagraphBold>}
             rules={[
               {
                 required: true,
@@ -279,12 +310,15 @@ export const OrgAddSecondStepUI: FC = () => {
           >
             <Input type="text" placeholder={t("address")} allowClear />
           </Form.Item>
-          <Form.Item name={"home"} label={t("home")}>
+          <Form.Item
+            name={"home"}
+            label={<ParagraphBold>{t("home")}</ParagraphBold>}
+          >
             <Input type="text" placeholder={t("home")} allowClear />
           </Form.Item>
           <Form.Item
             name={"apartment"}
-            label={t("apartment")}
+            label={<ParagraphBold>{t("apartment")}</ParagraphBold>}
             rules={[
               {
                 required: true,

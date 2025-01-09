@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { UploadUI } from "@features/upload";
 
 import { RootState } from "@shared/types";
+import { ParagraphBold } from "@shared/ui/paragraph-bold";
 
 import { setData, setPictures } from "../model/Slicer";
 
@@ -15,6 +16,9 @@ export const OrgEditFourthStepUI: FC = () => {
     ({ useEditOrgFourthStepSlice }: RootState) => useEditOrgFourthStepSlice,
   );
   const [allCheck, setAllCheck] = useState<boolean>(false);
+  const [allDay, setAllDay] = useState<boolean>(false);
+  const [withoutLunch, setWithoutLunch] = useState<boolean>(false);
+  const [noDayoffs, setNoDayoffs] = useState<boolean>(false);
 
   return (
     <>
@@ -28,13 +32,6 @@ export const OrgEditFourthStepUI: FC = () => {
             {t("payment_type")}
           </Typography.Title>
           <Flex align="center" gap={14}>
-            <Form.Item
-              name="allType"
-              label={t("all_type")}
-              valuePropName="checked"
-            >
-              <Checkbox onChange={(e) => setAllCheck(e.target.checked)} />
-            </Form.Item>
             <Form.Item
               name={"terminal"}
               label={t("terminal")}
@@ -51,6 +48,17 @@ export const OrgEditFourthStepUI: FC = () => {
               valuePropName="checked"
             >
               <Checkbox disabled={allCheck} />
+            </Form.Item>
+            <Form.Item
+              name="allType"
+              label={
+                <ParagraphBold style={{ color: "red" }}>
+                  {t("all_type")}
+                </ParagraphBold>
+              }
+              valuePropName="checked"
+            >
+              <Checkbox onChange={(e) => setAllCheck(e.target.checked)} />
             </Form.Item>
           </Flex>
           <Row gutter={16}>
@@ -74,7 +82,7 @@ export const OrgEditFourthStepUI: FC = () => {
                       },
                     ]}
                   >
-                    <Input type="time" />
+                    <Input type="time" disabled={allDay} />
                   </Form.Item>
                 </Col>
                 <Col span={6}>
@@ -88,7 +96,16 @@ export const OrgEditFourthStepUI: FC = () => {
                       },
                     ]}
                   >
-                    <Input type="time" />
+                    <Input type="time" disabled={allDay} />
+                  </Form.Item>
+                </Col>
+                <Col span={6}>
+                  <Form.Item
+                    name={"allDay"}
+                    label={t("allDay")}
+                    valuePropName="checked"
+                  >
+                    <Checkbox onChange={(e) => setAllDay(e.target.checked)} />
                   </Form.Item>
                 </Col>
               </Row>
@@ -108,12 +125,12 @@ export const OrgEditFourthStepUI: FC = () => {
                     label={t("from")}
                     rules={[
                       {
-                        required: true,
+                        required: !withoutLunch,
                         message: t("required-field"),
                       },
                     ]}
                   >
-                    <Input type="time" />
+                    <Input type="time" disabled={withoutLunch} />
                   </Form.Item>
                 </Col>
                 <Col span={6}>
@@ -122,12 +139,27 @@ export const OrgEditFourthStepUI: FC = () => {
                     label={t("to")}
                     rules={[
                       {
-                        required: true,
+                        required: !withoutLunch,
                         message: t("required-field"),
                       },
                     ]}
                   >
-                    <Input type="time" />
+                    <Input type="time" disabled={withoutLunch} />
+                  </Form.Item>
+                </Col>
+                <Col span={6}>
+                  <Form.Item
+                    name={"withoutLunch"}
+                    label={
+                      <ParagraphBold style={{ color: "red" }}>
+                        {t("withoutLunch")}
+                      </ParagraphBold>
+                    }
+                    valuePropName="checked"
+                  >
+                    <Checkbox
+                      onChange={(e) => setWithoutLunch(e.target.checked)}
+                    />
                   </Form.Item>
                 </Col>
               </Row>
@@ -138,80 +170,113 @@ export const OrgEditFourthStepUI: FC = () => {
               >
                 {t("dayoffs")}
               </Typography.Title>
-              <Flex align="center" gap={14}>
-                <Form.Item
-                  name={"monday"}
-                  label={t("monday")}
-                  valuePropName="checked"
-                >
-                  <Checkbox />
-                </Form.Item>
-                <Form.Item
-                  name={"tuesday"}
-                  label={t("tuesday")}
-                  valuePropName="checked"
-                >
-                  <Checkbox />
-                </Form.Item>
-                <Form.Item
-                  name={"wednesday"}
-                  label={t("wednesday")}
-                  valuePropName="checked"
-                >
-                  <Checkbox />
-                </Form.Item>
-                <Form.Item
-                  name={"thursday"}
-                  label={t("thursday")}
-                  valuePropName="checked"
-                >
-                  <Checkbox />
-                </Form.Item>
-                <Form.Item
-                  name={"friday"}
-                  label={t("friday")}
-                  valuePropName="checked"
-                >
-                  <Checkbox />
-                </Form.Item>
-                <Form.Item
-                  name={"saturday"}
-                  label={t("saturday")}
-                  valuePropName="checked"
-                >
-                  <Checkbox />
-                </Form.Item>
-                <Form.Item
-                  name={"sunday"}
-                  label={t("sunday")}
-                  valuePropName="checked"
-                >
-                  <Checkbox />
-                </Form.Item>
-              </Flex>
+              <Row gutter={16}>
+                <Col span={24}>
+                  <Form.Item
+                    name={"noDayoffs"}
+                    label={
+                      <ParagraphBold style={{ color: "red" }}>
+                        {t("noDayoffs")}
+                      </ParagraphBold>
+                    }
+                    valuePropName="checked"
+                    style={{ marginBottom: 0 }}
+                  >
+                    <Checkbox
+                      onChange={(e) => setNoDayoffs(e.target.checked)}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col>
+                  <Form.Item
+                    name={"monday"}
+                    label={t("monday")}
+                    valuePropName="checked"
+                  >
+                    <Checkbox disabled={noDayoffs} />
+                  </Form.Item>
+                </Col>
+                <Col>
+                  <Form.Item
+                    name={"tuesday"}
+                    label={t("tuesday")}
+                    valuePropName="checked"
+                  >
+                    <Checkbox disabled={noDayoffs} />
+                  </Form.Item>
+                </Col>
+                <Col>
+                  <Form.Item
+                    name={"wednesday"}
+                    label={t("wednesday")}
+                    valuePropName="checked"
+                  >
+                    <Checkbox disabled={noDayoffs} />
+                  </Form.Item>
+                </Col>
+                <Col>
+                  <Form.Item
+                    name={"thursday"}
+                    label={t("thursday")}
+                    valuePropName="checked"
+                  >
+                    <Checkbox disabled={noDayoffs} />
+                  </Form.Item>
+                </Col>
+                <Col>
+                  <Form.Item
+                    name={"friday"}
+                    label={t("friday")}
+                    valuePropName="checked"
+                  >
+                    <Checkbox disabled={noDayoffs} />
+                  </Form.Item>
+                </Col>
+                <Col>
+                  <Form.Item
+                    name={"saturday"}
+                    label={t("saturday")}
+                    valuePropName="checked"
+                  >
+                    <Checkbox disabled={noDayoffs} />
+                  </Form.Item>
+                </Col>
+                <Col>
+                  <Form.Item
+                    name={"sunday"}
+                    label={t("sunday")}
+                    valuePropName="checked"
+                  >
+                    <Checkbox disabled={noDayoffs} />
+                  </Form.Item>
+                </Col>
+              </Row>
             </Col>
           </Row>
         </Col>
         <Col span={12}>
           <Form.Item
             name={"description"}
-            label={t("description")}
-            rules={[
-              {
-                required: true,
-                message: t("required-field"),
-              },
-            ]}
+            label={<ParagraphBold>{t("description")}</ParagraphBold>}
           >
             <Input.TextArea />
           </Form.Item>
-          <Form.Item name={"bus"} label={`${t("bus")} №`}>
+          <Form.Item
+            name={"bus"}
+            label={<ParagraphBold>{`${t("bus")} №`}</ParagraphBold>}
+          >
             <Input placeholder={t("bus")} />
           </Form.Item>
-          <Form.Item name={"microBus"} label={`${t("micro-bus")} №`}>
+          <Form.Item
+            name={"microBus"}
+            label={<ParagraphBold>{`${t("micro-bus")} №`}</ParagraphBold>}
+          >
             <Input placeholder={t("micro-bus")} />
           </Form.Item>
-          <Form.Item name={"metroStation"} label={t("metro-station")}>
+          <Form.Item
+            name={"metroStation"}
+            label={<ParagraphBold>{t("metro-station")}</ParagraphBold>}
+          >
             <Input placeholder={t("metro-station")} />
           </Form.Item>
         </Col>

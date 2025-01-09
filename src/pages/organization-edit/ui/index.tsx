@@ -162,10 +162,21 @@ export const OrgEditPage: FC = () => {
       },
       workTime: {
         dayoffs: getDayOffsCheckbox(form),
-        worktimeFrom: form.getFieldValue("worktimeFrom"),
-        worktimeTo: form.getFieldValue("worktimeTo"),
-        lunchFrom: form.getFieldValue("lunchFrom"),
-        lunchTo: form.getFieldValue("lunchTo"),
+        worktimeFrom: form.getFieldValue("allDay")
+          ? null
+          : form.getFieldValue("worktimeFrom"),
+        worktimeTo: form.getFieldValue("allDay")
+          ? null
+          : form.getFieldValue("worktimeTo"),
+        allDay: form.getFieldValue("allDay"),
+        noDayoffs: form.getFieldValue("noDayoffs"),
+        withoutLunch: form.getFieldValue("withoutLunch"),
+        lunchFrom: form.getFieldValue("withoutLunch")
+          ? null
+          : form.getFieldValue("lunchFrom"),
+        lunchTo: form.getFieldValue("withoutLunch")
+          ? null
+          : form.getFieldValue("lunchTo"),
       },
       transport: {
         bus: form.getFieldValue("bus"),
@@ -218,7 +229,19 @@ export const OrgEditPage: FC = () => {
       form.resetFields(STEPS_DATA.THIRD_FORMDATA);
       dispatch(setPhoneData([]));
     } else if (current === STEPS_ENUM.fourthStep) {
-      form.resetFields(STEPS_DATA.FOURTH_FORMDATA);
+      form.resetFields([
+        ...STEPS_DATA.FOURTH_FORMDATA,
+        "cash",
+        "terminal",
+        "transfer",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday",
+      ]);
       dispatch(setImages([]));
     }
   };

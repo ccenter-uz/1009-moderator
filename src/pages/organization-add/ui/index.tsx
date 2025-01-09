@@ -22,6 +22,7 @@ import {
   notificationResponse,
   removeLocalStorage,
   SEND_BODY,
+  setLocalStorage,
   STEPS_DATA,
   STEPS_ENUM,
 } from "@shared/lib/helpers";
@@ -124,10 +125,21 @@ export const OrgAddPage: FC = () => {
       },
       workTime: {
         dayoffs: getDayOffsCheckbox(form),
-        worktimeFrom: form.getFieldValue("worktimeFrom"),
-        worktimeTo: form.getFieldValue("worktimeTo"),
-        lunchFrom: form.getFieldValue("lunchFrom"),
-        lunchTo: form.getFieldValue("lunchTo"),
+        worktimeFrom: form.getFieldValue("allDay")
+          ? null
+          : form.getFieldValue("worktimeFrom"),
+        worktimeTo: form.getFieldValue("allDay")
+          ? null
+          : form.getFieldValue("worktimeTo"),
+        allDay: form.getFieldValue("allDay"),
+        noDayoffs: form.getFieldValue("noDayoffs"),
+        withoutLunch: form.getFieldValue("withoutLunch"),
+        lunchFrom: form.getFieldValue("withoutLunch")
+          ? null
+          : form.getFieldValue("lunchFrom"),
+        lunchTo: form.getFieldValue("withoutLunch")
+          ? null
+          : form.getFieldValue("lunchTo"),
       },
       transport: {
         bus: form.getFieldValue("bus"),
@@ -150,6 +162,10 @@ export const OrgAddPage: FC = () => {
     const response = await createOrganization(formData);
 
     notificationResponse(response, t);
+  };
+
+  const onValuesChange = (changedValues: any, allValues: any) => {
+    console.log(changedValues, allValues);
   };
 
   const onClearAllData = () => {
@@ -179,7 +195,20 @@ export const OrgAddPage: FC = () => {
       form.resetFields(STEPS_DATA.THIRD_FORMDATA);
       dispatch(setPhoneData([]));
     } else if (current === STEPS_ENUM.fourthStep) {
-      form.resetFields(STEPS_DATA.FOURTH_FORMDATA);
+      form.resetFields([
+        ...STEPS_DATA.FOURTH_FORMDATA,
+        "cash",
+        "terminal",
+        "transfer",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday",
+      ]);
+
       dispatch(setImages([]));
     }
   };
@@ -211,7 +240,12 @@ export const OrgAddPage: FC = () => {
       <Steps current={current} items={items} />
       <Divider />
       <div className="step-content" style={contentStyle}>
-        <Form onFinish={onSubmit} id="create-org-form" form={form}>
+        <Form
+          onFinish={onSubmit}
+          onValuesChange={onValuesChange}
+          id="create-org-form"
+          form={form}
+        >
           {items[current].content}
         </Form>
       </div>

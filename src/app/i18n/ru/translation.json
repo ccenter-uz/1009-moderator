@@ -221,5 +221,8 @@
   "inactive": "Неактивные",
   "reason-why-rejecting?": "Причина отказа?",
   "reason": "Причина",
-  "type": "Тип"
+  "type": "Тип",
+  "allDay": "Круглосуточно",
+  "withoutLunch": "Без обеда",
+  "noDayoffs": "Без выходных"
 }
