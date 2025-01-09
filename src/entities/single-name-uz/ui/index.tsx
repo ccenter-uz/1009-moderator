@@ -31,21 +31,21 @@ export const SingleNameUz: FC<IProps> = ({ rule, requiredFields = [] }) => {
             placeholder={t(FORM_ITEM)}
             onChange={(e) => setValue(e.target.value)}
           />
-          {value && (
-            <Paragraph
-              style={{ marginTop: "8px" }}
-              copyable={{ text: latinToCyrillic(value) }}
-            >
-              {`O'zb`} → Ўзб:{" "}
-              <Tag
-                color="green"
-                style={{ marginLeft: "4px", padding: "2px 6px" }}
-              >
-                {latinToCyrillic(value)}
-              </Tag>
-            </Paragraph>
-          )}
         </Form.Item>
+        {value && (
+          <Paragraph
+            style={{ marginTop: "8px" }}
+            copyable={{ text: latinToCyrillic(value) }}
+          >
+            {`O'zb`} → Ўзб:{" "}
+            <Tag
+              color="green"
+              style={{ marginLeft: "4px", padding: "2px 6px" }}
+            >
+              {latinToCyrillic(value)}
+            </Tag>
+          </Paragraph>
+        )}
       </Col>
     </Row>
   );

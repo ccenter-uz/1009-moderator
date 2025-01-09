@@ -33,21 +33,21 @@ export const SingleNameCyrill: FC<IProps> = ({ rule, requiredFields = [] }) => {
             placeholder={t(FORM_ITEM)}
             onChange={(e) => setValue(e.target.value)}
           />
-          {value && (
-            <Paragraph
-              style={{ marginTop: "8px" }}
-              copyable={{ text: cyrillicToLatin(value) }}
-            >
-              Ўзб → {`O'zb`}:
-              <Tag
-                color="green"
-                style={{ marginLeft: "4px", padding: "2px 6px" }}
-              >
-                {cyrillicToLatin(value)}
-              </Tag>
-            </Paragraph>
-          )}
         </Form.Item>
+        {value && (
+          <Paragraph
+            style={{ marginTop: "8px" }}
+            copyable={{ text: cyrillicToLatin(value) }}
+          >
+            Ўзб → {`O'zb`}:
+            <Tag
+              color="green"
+              style={{ marginLeft: "4px", padding: "2px 6px" }}
+            >
+              {cyrillicToLatin(value)}
+            </Tag>
+          </Paragraph>
+        )}
       </Col>
     </Row>
   );
