@@ -1,5 +1,5 @@
 import { Form, Col, Row, Checkbox, Input, Typography, Flex } from "antd";
-import { FC, useState } from "react";
+import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
@@ -12,14 +12,15 @@ import { setData } from "../model/Slicer";
 
 export const OrgAddFourthStepUI: FC = () => {
   const { t } = useTranslation();
-  const { data: fileListData } = useSelector(
+  const {
+    data: fileListData,
+    allType,
+    allDay,
+    noDayoffs,
+    withoutLunch,
+  } = useSelector(
     ({ useAddOrgFourthStepSlice }: RootState) => useAddOrgFourthStepSlice,
   );
-
-  const [allCheck, setAllCheck] = useState<boolean>(false);
-  const [allDay, setAllDay] = useState<boolean>(false);
-  const [withoutLunch, setWithoutLunch] = useState<boolean>(false);
-  const [noDayoffs, setNoDayoffs] = useState<boolean>(false);
 
   return (
     <>
@@ -38,28 +39,24 @@ export const OrgAddFourthStepUI: FC = () => {
               label={t("terminal")}
               valuePropName="checked"
             >
-              <Checkbox disabled={allCheck} />
+              <Checkbox disabled={allType} />
             </Form.Item>
             <Form.Item name={"cash"} label={t("cash")} valuePropName="checked">
-              <Checkbox disabled={allCheck} />
+              <Checkbox disabled={allType} />
             </Form.Item>
             <Form.Item
               name={"transfer"}
               label={t("transfer")}
               valuePropName="checked"
             >
-              <Checkbox disabled={allCheck} />
+              <Checkbox disabled={allType} />
             </Form.Item>
             <Form.Item
               name="allType"
-              label={
-                <ParagraphBold style={{ color: "red" }}>
-                  {t("all_type")}
-                </ParagraphBold>
-              }
+              label={<ParagraphBold>{t("all_type")}</ParagraphBold>}
               valuePropName="checked"
             >
-              <Checkbox onChange={(e) => setAllCheck(e.target.checked)} />
+              <Checkbox />
             </Form.Item>
           </Flex>
           <Row gutter={16}>
@@ -103,14 +100,10 @@ export const OrgAddFourthStepUI: FC = () => {
                 <Col span={6}>
                   <Form.Item
                     name={"allDay"}
-                    label={
-                      <ParagraphBold style={{ color: "red" }}>
-                        {t("allDay")}
-                      </ParagraphBold>
-                    }
+                    label={<ParagraphBold>{t("allDay")}</ParagraphBold>}
                     valuePropName="checked"
                   >
-                    <Checkbox onChange={(e) => setAllDay(e.target.checked)} />
+                    <Checkbox />
                   </Form.Item>
                 </Col>
               </Row>
@@ -155,16 +148,10 @@ export const OrgAddFourthStepUI: FC = () => {
                 <Col span={6}>
                   <Form.Item
                     name={"withoutLunch"}
-                    label={
-                      <ParagraphBold style={{ color: "red" }}>
-                        {t("withoutLunch")}
-                      </ParagraphBold>
-                    }
+                    label={<ParagraphBold>{t("withoutLunch")}</ParagraphBold>}
                     valuePropName="checked"
                   >
-                    <Checkbox
-                      onChange={(e) => setWithoutLunch(e.target.checked)}
-                    />
+                    <Checkbox />
                   </Form.Item>
                 </Col>
               </Row>
@@ -179,17 +166,11 @@ export const OrgAddFourthStepUI: FC = () => {
                 <Col span={24}>
                   <Form.Item
                     name={"noDayoffs"}
-                    label={
-                      <ParagraphBold style={{ color: "red" }}>
-                        {t("noDayoffs")}
-                      </ParagraphBold>
-                    }
+                    label={<ParagraphBold>{t("noDayoffs")}</ParagraphBold>}
                     valuePropName="checked"
                     style={{ marginBottom: 0 }}
                   >
-                    <Checkbox
-                      onChange={(e) => setNoDayoffs(e.target.checked)}
-                    />
+                    <Checkbox />
                   </Form.Item>
                 </Col>
                 <Col>

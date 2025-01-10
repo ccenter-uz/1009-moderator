@@ -1,7 +1,7 @@
 import { Row, Col, Input, Form, Select } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import i18next from "i18next";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
@@ -9,43 +9,24 @@ import { TableOrientirUI } from "@features/table-orientir";
 
 import { useGetAreasQuery } from "@entities/area";
 import { useGetAvenuesQuery } from "@entities/avenue";
-import { useLazyGetDistrictsQuery } from "@entities/district";
 import { useGetImpassesQuery } from "@entities/impasse";
 import { useGetLanesQuery } from "@entities/lane";
 import { useGetPassagesQuery } from "@entities/passage";
-import {
-  useGetRegionsQuery,
-  useLazyGetCitiesQuery,
-} from "@entities/region-city";
 import { useGetResidentialAreasQuery } from "@entities/residential-area";
 import { useGetStreetsQuery } from "@entities/street";
 import { useGetVillagesQuery } from "@entities/village";
 
-import {
-  allActives,
-  getLocalStorage,
-  renderLabelSelect,
-} from "@shared/lib/helpers";
+import { allActives, renderLabelSelect } from "@shared/lib/helpers";
 import { RootState } from "@shared/types";
 import { ParagraphBold } from "@shared/ui/paragraph-bold";
 
 import { setData } from "../model/Slicer";
 
 export const OrgAddSecondStepUI: FC = () => {
-  const Storage = localStorage.getItem("secondStepData");
-  const localS = getLocalStorage("secondStepData");
   const { t } = useTranslation();
   const { data } = useSelector(
     ({ useAddOrgSecondStepSlice }: RootState) => useAddOrgSecondStepSlice,
   );
-  const { data: regionData, isLoading: isLoadingRegion } =
-    useGetRegionsQuery(allActives);
-  const [triggerCities, { data: citiesData, isLoading: isLoadingCities }] =
-    useLazyGetCitiesQuery();
-  const [
-    triggerDistrict,
-    { data: districtData, isLoading: isLoadingDistrict },
-  ] = useLazyGetDistrictsQuery();
   const { data: villageData, isLoading: isLoadingVillage } =
     useGetVillagesQuery(allActives);
   const { data: avenueData, isLoading: isLoadingAvenue } =
@@ -63,103 +44,10 @@ export const OrgAddSecondStepUI: FC = () => {
   const { data: passageData, isLoading: isLoadingPassage } =
     useGetPassagesQuery(allActives);
 
-  const onChangeRegion = (value: string) => {
-    triggerCities({
-      regionId: value,
-      ...allActives,
-    });
-  };
-
-  const onChangeCity = (value: string) => {
-    triggerDistrict({
-      cityId: value,
-      ...allActives,
-    });
-  };
-
-  useEffect(() => {
-    if (Storage) {
-      const { cityId, districtId } = localS;
-      if (cityId) {
-        triggerCities({
-          ...allActives,
-        });
-      }
-      if (districtId) {
-        triggerDistrict({
-          ...allActives,
-        });
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [Storage]);
-
   return (
     <>
       <Row justify={"space-between"} gutter={24}>
         <Col span={8}>
-          <Form.Item
-            name={"regionId"}
-            label={<ParagraphBold>{t("region")}</ParagraphBold>}
-            rules={[
-              {
-                required: true,
-                message: t("required-field"),
-              },
-            ]}
-          >
-            <Select
-              labelRender={renderLabelSelect}
-              onSelect={onChangeRegion}
-              loading={isLoadingRegion}
-              options={regionData?.data.map((item: AnyObject) => ({
-                value: item.id,
-                label: item.name[i18next.language],
-              }))}
-              allowClear
-              showSearch
-              placeholder={t("region")}
-            />
-          </Form.Item>
-          <Form.Item
-            name={"cityId"}
-            label={<ParagraphBold>{t("city")}</ParagraphBold>}
-            rules={[
-              {
-                required: true,
-                message: t("required-field"),
-              },
-            ]}
-          >
-            <Select
-              labelRender={renderLabelSelect}
-              onSelect={onChangeCity}
-              loading={isLoadingCities}
-              options={citiesData?.data.map((item: AnyObject) => ({
-                value: item.id,
-                label: item.name[i18next.language],
-              }))}
-              allowClear
-              showSearch
-              placeholder={t("city")}
-            />
-          </Form.Item>
-          <Form.Item
-            name={"districtId"}
-            label={<ParagraphBold>{t("district")}</ParagraphBold>}
-          >
-            <Select
-              labelRender={renderLabelSelect}
-              loading={isLoadingDistrict}
-              options={districtData?.data.map((item: AnyObject) => ({
-                value: item.id,
-                label: item.name[i18next.language],
-              }))}
-              allowClear
-              showSearch
-              placeholder={t("district")}
-            />
-          </Form.Item>
           <Form.Item
             name={"villageId"}
             label={<ParagraphBold>{t("village")}</ParagraphBold>}
@@ -208,8 +96,6 @@ export const OrgAddSecondStepUI: FC = () => {
               placeholder={t("residential-area")}
             />
           </Form.Item>
-        </Col>
-        <Col span={8}>
           <Form.Item
             name={"areaId"}
             label={<ParagraphBold>{t("area")}</ParagraphBold>}
@@ -226,6 +112,8 @@ export const OrgAddSecondStepUI: FC = () => {
               placeholder={t("area")}
             />
           </Form.Item>
+        </Col>
+        <Col span={8}>
           <Form.Item
             name={"kvartal"}
             label={<ParagraphBold>{t("kvartal")}</ParagraphBold>}
@@ -280,6 +168,8 @@ export const OrgAddSecondStepUI: FC = () => {
               placeholder={t("passage")}
             />
           </Form.Item>
+        </Col>
+        <Col span={8}>
           <Form.Item
             name={"impasseId"}
             label={<ParagraphBold>{t("impasse")}</ParagraphBold>}
@@ -296,8 +186,6 @@ export const OrgAddSecondStepUI: FC = () => {
               placeholder={t("impasse")}
             />
           </Form.Item>
-        </Col>
-        <Col span={8}>
           <Form.Item
             name={"address"}
             label={<ParagraphBold>{t("address")}</ParagraphBold>}

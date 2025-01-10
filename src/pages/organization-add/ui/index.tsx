@@ -8,7 +8,14 @@ import {
   OrgAddFirstStepUI,
   setCategoryData,
 } from "@widgets/org-add-first-step";
-import { OrgAddFourthStepUI, setImages } from "@widgets/org-add-fourth-step";
+import {
+  OrgAddFourthStepUI,
+  setAllDay,
+  setAllType,
+  setImages,
+  setNoDayoffs,
+  setWithoutLunch,
+} from "@widgets/org-add-fourth-step";
 import {
   OrgAddSecondStepUI,
   setOrientirData,
@@ -22,34 +29,11 @@ import {
   notificationResponse,
   removeLocalStorage,
   SEND_BODY,
-  setLocalStorage,
   STEPS_DATA,
   STEPS_ENUM,
 } from "@shared/lib/helpers";
 import { RootState } from "@shared/types";
 
-const items = [
-  {
-    title: i18next.t("personal"),
-    description: i18next.t("personal_description"),
-    content: <OrgAddFirstStepUI />,
-  },
-  {
-    title: i18next.t("address"),
-    description: i18next.t("address_description"),
-    content: <OrgAddSecondStepUI />,
-  },
-  {
-    title: i18next.t("contacts"),
-    description: i18next.t("contacts_description"),
-    content: <OrgAddThirdStepUI />,
-  },
-  {
-    title: i18next.t("additional"),
-    description: i18next.t("additional_description"),
-    content: <OrgAddFourthStepUI />,
-  },
-];
 const contentStyle: CSSProperties = {
   margin: "16px",
 };
@@ -74,6 +58,30 @@ export const OrgAddPage: FC = () => {
   const [current, setCurrent] = useState(
     Number(localStorage.getItem("currentStep")) || 0,
   );
+
+  // STEPS
+  const items = [
+    {
+      title: i18next.t("personal"),
+      description: i18next.t("personal_description"),
+      content: <OrgAddFirstStepUI form={form} />,
+    },
+    {
+      title: i18next.t("address"),
+      description: i18next.t("address_description"),
+      content: <OrgAddSecondStepUI />,
+    },
+    {
+      title: i18next.t("contacts"),
+      description: i18next.t("contacts_description"),
+      content: <OrgAddThirdStepUI />,
+    },
+    {
+      title: i18next.t("additional"),
+      description: i18next.t("additional_description"),
+      content: <OrgAddFourthStepUI />,
+    },
+  ];
 
   const next = async () => {
     await form.validateFields();
@@ -113,33 +121,20 @@ export const OrgAddPage: FC = () => {
       ...form.getFieldsValue(SEND_BODY),
       index: Number(form.getFieldValue("index")),
       paymentTypes: {
-        cash: form.getFieldValue("allType")
-          ? true
-          : form.getFieldValue("cash") ?? false,
-        terminal: form.getFieldValue("allType")
-          ? true
-          : form.getFieldValue("terminal") ?? false,
-        transfer: form.getFieldValue("allType")
-          ? true
-          : form.getFieldValue("transfer") ?? false,
+        cash: form.getFieldValue("cash"),
+        terminal: form.getFieldValue("terminal"),
+        transfer: form.getFieldValue("transfer"),
+        allType: form.getFieldValue("allType"),
       },
       workTime: {
         dayoffs: getDayOffsCheckbox(form),
-        worktimeFrom: form.getFieldValue("allDay")
-          ? null
-          : form.getFieldValue("worktimeFrom"),
-        worktimeTo: form.getFieldValue("allDay")
-          ? null
-          : form.getFieldValue("worktimeTo"),
+        worktimeFrom: form.getFieldValue("worktimeFrom"),
+        worktimeTo: form.getFieldValue("worktimeTo"),
         allDay: form.getFieldValue("allDay"),
         noDayoffs: form.getFieldValue("noDayoffs"),
         withoutLunch: form.getFieldValue("withoutLunch"),
-        lunchFrom: form.getFieldValue("withoutLunch")
-          ? null
-          : form.getFieldValue("lunchFrom"),
-        lunchTo: form.getFieldValue("withoutLunch")
-          ? null
-          : form.getFieldValue("lunchTo"),
+        lunchFrom: form.getFieldValue("lunchFrom"),
+        lunchTo: form.getFieldValue("lunchTo"),
       },
       transport: {
         bus: form.getFieldValue("bus"),
@@ -164,8 +159,46 @@ export const OrgAddPage: FC = () => {
     notificationResponse(response, t);
   };
 
-  const onValuesChange = (changedValues: any, allValues: any) => {
-    console.log(changedValues, allValues);
+  const onValuesChange = (
+    _: {
+      [name: string]: boolean;
+    },
+    allValues: {
+      allDay: boolean;
+      allType: boolean;
+      noDayoffs: boolean;
+      withoutLunch: boolean;
+    },
+  ) => {
+    const { allDay, allType, noDayoffs, withoutLunch } = allValues;
+    dispatch(setAllDay(allDay));
+    dispatch(setAllType(allType));
+    dispatch(setNoDayoffs(noDayoffs));
+    dispatch(setWithoutLunch(withoutLunch));
+
+    if (withoutLunch) {
+      form.resetFields(["lunchFrom", "lunchTo"]);
+    }
+    if (allDay) {
+      form.setFieldsValue({
+        worktimeFrom: "00:00",
+        worktimeTo: "23:59",
+      });
+    }
+    if (allType) {
+      form.setFieldsValue({ cash: true, terminal: true, transfer: true });
+    }
+    if (noDayoffs) {
+      form.resetFields([
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday",
+      ]);
+    }
   };
 
   const onClearAllData = () => {
@@ -177,6 +210,10 @@ export const OrgAddPage: FC = () => {
     dispatch(setCategoryData([]));
     dispatch(setOrientirData([]));
     dispatch(setPhoneData([]));
+    dispatch(setAllDay(false));
+    dispatch(setAllType(false));
+    dispatch(setNoDayoffs(false));
+    dispatch(setWithoutLunch(false));
     notification.success({
       message: t("erased"),
       placement: "bottomRight",
@@ -208,7 +245,10 @@ export const OrgAddPage: FC = () => {
         "saturday",
         "sunday",
       ]);
-
+      dispatch(setAllDay(false));
+      dispatch(setAllType(false));
+      dispatch(setNoDayoffs(false));
+      dispatch(setWithoutLunch(false));
       dispatch(setImages([]));
     }
   };

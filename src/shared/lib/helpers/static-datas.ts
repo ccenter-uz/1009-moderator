@@ -12,12 +12,12 @@ export const STEPS_DATA = {
     "secret",
     "segmentId",
     "manager",
-  ],
-  SECOND_FORMDATA: [
     "regionId",
     "cityId",
-    "villageId",
     "districtId",
+  ],
+  SECOND_FORMDATA: [
+    "villageId",
     "residentialId",
     "areaId",
     "avenueId",

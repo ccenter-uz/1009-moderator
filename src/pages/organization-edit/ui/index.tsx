@@ -10,7 +10,14 @@ import {
   OrgEditFirstStepUI,
   setCategoryData,
 } from "@widgets/org-edit-first-step";
-import { OrgEditFourthStepUI, setImages } from "@widgets/org-edit-fourth-step";
+import {
+  OrgEditFourthStepUI,
+  setEditAllDay,
+  setEditAllType,
+  setEditNoDayoffs,
+  setEditWithoutLunch,
+  setImages,
+} from "@widgets/org-edit-fourth-step";
 import {
   OrgEditSecondStepUI,
   setOrientirData,
@@ -31,29 +38,6 @@ import {
 } from "@shared/lib/helpers";
 import { RootState } from "@shared/types";
 
-// STEPS
-const items = [
-  {
-    title: i18next.t("personal"),
-    description: i18next.t("personal_description"),
-    content: <OrgEditFirstStepUI />,
-  },
-  {
-    title: i18next.t("address"),
-    description: i18next.t("address_description"),
-    content: <OrgEditSecondStepUI />,
-  },
-  {
-    title: i18next.t("contacts"),
-    description: i18next.t("contacts_description"),
-    content: <OrgEditThirdStepUI />,
-  },
-  {
-    title: i18next.t("additional"),
-    description: i18next.t("additional_description"),
-    content: <OrgEditFourthStepUI />,
-  },
-];
 // STYLE
 const contentStyle: CSSProperties = {
   margin: "16px",
@@ -80,6 +64,30 @@ export const OrgEditPage: FC = () => {
   const [current, setCurrent] = useState(
     Number(localStorage.getItem(STEPS_EDIT_DATA.CURRENT)) || 0,
   );
+
+  // STEPS
+  const items = [
+    {
+      title: i18next.t("personal"),
+      description: i18next.t("personal_description"),
+      content: <OrgEditFirstStepUI form={form} />,
+    },
+    {
+      title: i18next.t("address"),
+      description: i18next.t("address_description"),
+      content: <OrgEditSecondStepUI />,
+    },
+    {
+      title: i18next.t("contacts"),
+      description: i18next.t("contacts_description"),
+      content: <OrgEditThirdStepUI />,
+    },
+    {
+      title: i18next.t("additional"),
+      description: i18next.t("additional_description"),
+      content: <OrgEditFourthStepUI />,
+    },
+  ];
 
   const initializeFormValues = () => {
     const { firstStepData, secondStepData, thirdStepData, fourthStepData } =
@@ -152,31 +160,20 @@ export const OrgEditPage: FC = () => {
       ...form.getFieldsValue(SEND_BODY),
       id,
       paymentTypes: {
-        cash: form.getFieldValue("allType") ? true : form.getFieldValue("cash"),
-        terminal: form.getFieldValue("allType")
-          ? true
-          : form.getFieldValue("terminal"),
-        transfer: form.getFieldValue("allType")
-          ? true
-          : form.getFieldValue("transfer"),
+        cash: form.getFieldValue("cash"),
+        terminal: form.getFieldValue("terminal"),
+        transfer: form.getFieldValue("transfer"),
+        allType: form.getFieldValue("allType"),
       },
       workTime: {
         dayoffs: getDayOffsCheckbox(form),
-        worktimeFrom: form.getFieldValue("allDay")
-          ? null
-          : form.getFieldValue("worktimeFrom"),
-        worktimeTo: form.getFieldValue("allDay")
-          ? null
-          : form.getFieldValue("worktimeTo"),
+        worktimeFrom: form.getFieldValue("worktimeFrom"),
+        worktimeTo: form.getFieldValue("worktimeTo"),
         allDay: form.getFieldValue("allDay"),
         noDayoffs: form.getFieldValue("noDayoffs"),
         withoutLunch: form.getFieldValue("withoutLunch"),
-        lunchFrom: form.getFieldValue("withoutLunch")
-          ? null
-          : form.getFieldValue("lunchFrom"),
-        lunchTo: form.getFieldValue("withoutLunch")
-          ? null
-          : form.getFieldValue("lunchTo"),
+        lunchFrom: form.getFieldValue("lunchFrom"),
+        lunchTo: form.getFieldValue("lunchTo"),
       },
       transport: {
         bus: form.getFieldValue("bus"),
@@ -217,6 +214,47 @@ export const OrgEditPage: FC = () => {
 
     notificationResponse(response, t);
   };
+  const onValuesChange = (
+    _: {
+      [name: string]: boolean;
+    },
+    allValues: {
+      allDay: boolean;
+      allType: boolean;
+      noDayoffs: boolean;
+      withoutLunch: boolean;
+    },
+  ) => {
+    const { allDay, allType, noDayoffs, withoutLunch } = allValues;
+    dispatch(setEditAllDay(allDay));
+    dispatch(setEditAllType(allType));
+    dispatch(setEditNoDayoffs(noDayoffs));
+    dispatch(setEditWithoutLunch(withoutLunch));
+
+    if (withoutLunch) {
+      form.resetFields(["lunchFrom", "lunchTo"]);
+    }
+    if (allDay) {
+      form.setFieldsValue({
+        worktimeFrom: "00:00",
+        worktimeTo: "23:59",
+      });
+    }
+    if (allType) {
+      form.setFieldsValue({ cash: true, terminal: true, transfer: true });
+    }
+    if (noDayoffs) {
+      form.resetFields([
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday",
+      ]);
+    }
+  };
 
   const onClearCurrentStep = () => {
     if (current === STEPS_ENUM.firstStep) {
@@ -242,6 +280,10 @@ export const OrgEditPage: FC = () => {
         "saturday",
         "sunday",
       ]);
+      dispatch(setEditAllDay(false));
+      dispatch(setEditAllType(false));
+      dispatch(setEditNoDayoffs(false));
+      dispatch(setEditWithoutLunch(false));
       dispatch(setImages([]));
     }
   };
@@ -257,7 +299,12 @@ export const OrgEditPage: FC = () => {
       <Steps current={current} items={items} />
       <Divider />
       <div className="step-content" style={contentStyle}>
-        <Form onFinish={onSubmit} id="edit-org-form" form={form}>
+        <Form
+          onFinish={onSubmit}
+          onValuesChange={onValuesChange}
+          id="edit-org-form"
+          form={form}
+        >
           {items[current].content}
         </Form>
       </div>
