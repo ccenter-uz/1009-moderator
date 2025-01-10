@@ -7,12 +7,18 @@ import { useTranslation } from "react-i18next";
 interface IProps {
   rule: Rule;
   requiredFields?: string[];
+  textarea?: boolean;
 }
 
 const { Paragraph } = Typography;
+const { TextArea } = Input;
 const FORM_ITEM = "name_uz";
 
-export const SingleNameUz: FC<IProps> = ({ rule, requiredFields = [] }) => {
+export const SingleNameUz: FC<IProps> = ({
+  rule,
+  requiredFields = [],
+  textarea = false,
+}) => {
   const { t } = useTranslation();
   const [value, setValue] = useState("");
 
@@ -26,11 +32,15 @@ export const SingleNameUz: FC<IProps> = ({ rule, requiredFields = [] }) => {
           label={t(FORM_ITEM)}
           layout="vertical"
         >
-          <Input
-            type="text"
-            placeholder={t(FORM_ITEM)}
-            onChange={(e) => setValue(e.target.value)}
-          />
+          {textarea ? (
+            <TextArea placeholder={t(FORM_ITEM)} />
+          ) : (
+            <Input
+              type="text"
+              placeholder={t(FORM_ITEM)}
+              onChange={(e) => setValue(e.target.value)}
+            />
+          )}
         </Form.Item>
         {value && (
           <Paragraph
