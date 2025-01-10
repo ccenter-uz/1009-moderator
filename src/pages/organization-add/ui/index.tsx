@@ -3,6 +3,7 @@ import i18next from "i18next";
 import { CSSProperties, FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import {
   OrgAddFirstStepUI,
@@ -41,7 +42,9 @@ const contentStyle: CSSProperties = {
 export const OrgAddPage: FC = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const [createOrganization] = useCreateOrganizationMutation();
+  const navigate = useNavigate();
+  const [createOrganization, { isLoading, isSuccess }] =
+    useCreateOrganizationMutation();
   const [form] = Form.useForm();
   const { data: categoryTu } = useSelector(
     ({ useAddOrgFirstStepSlice }: RootState) => useAddOrgFirstStepSlice,
@@ -157,6 +160,7 @@ export const OrgAddPage: FC = () => {
     const response = await createOrganization(formData);
 
     notificationResponse(response, t);
+    isSuccess && (onClearAllData(), navigate("/orgs/all"));
   };
 
   const onValuesChange = (
@@ -219,6 +223,7 @@ export const OrgAddPage: FC = () => {
       placement: "bottomRight",
       duration: 1,
     });
+    setCurrent(0);
   };
 
   const onClearCurrentStep = () => {
@@ -291,22 +296,37 @@ export const OrgAddPage: FC = () => {
       </div>
       <Divider />
       <Flex align="center" justify="end" gap={8} style={{ marginTop: 24 }}>
-        <Button style={{ margin: "0 8px" }} onClick={onClearAllData}>
+        <Button
+          disabled={isLoading}
+          style={{ margin: "0 8px" }}
+          onClick={onClearAllData}
+        >
           {t("erase-all")}
         </Button>
-        <Button onClick={onClearCurrentStep}>{t("erase-current-step")}</Button>
+        <Button disabled={isLoading} onClick={onClearCurrentStep}>
+          {t("erase-current-step")}
+        </Button>
         {current > 0 && (
-          <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
+          <Button
+            disabled={isLoading}
+            style={{ margin: "0 8px" }}
+            onClick={() => prev()}
+          >
             {t("previous")}
           </Button>
         )}
         {current < items.length - 1 && (
-          <Button type="primary" onClick={() => next()}>
+          <Button disabled={isLoading} type="primary" onClick={() => next()}>
             {t("next")}
           </Button>
         )}
         {current === items.length - 1 && (
-          <Button type="primary" htmlType="submit" form="create-org-form">
+          <Button
+            loading={isLoading}
+            type="primary"
+            htmlType="submit"
+            form="create-org-form"
+          >
             {t("save")}
           </Button>
         )}

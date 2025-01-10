@@ -204,6 +204,9 @@ export const handleEditLocalDatas = (record: AnyObject) => {
   const productName = getDynamicPropKey(record, PRODUCT_FILED_NAMES);
   const firstEditStep = {
     ...getStepsValueByKey(STEPS_DATA.FIRST_FORMDATA, record),
+    cityId: record.city?.id,
+    regionId: record.region?.id,
+    districtId: record.district?.id,
     segmentId: record.segment?.id,
     categoryId: record.category?.id,
     categoryTu: record[productName]?.map((item: AnyObject) => ({
@@ -222,10 +225,7 @@ export const handleEditLocalDatas = (record: AnyObject) => {
     ...getStepsValueByKey(STEPS_DATA.SECOND_FORMDATA, record),
     areaId: record.area?.id,
     avenueId: record.avenue?.id,
-    cityId: record.city?.id,
-    regionId: record.region?.id,
     streetId: record.street?.id,
-    districtId: record.district?.id,
     impasseId: record.impasse?.id,
     villageId: record.village?.id,
     laneId: record.lane?.id,

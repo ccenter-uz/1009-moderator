@@ -608,7 +608,8 @@ export const unconfirmedTableColumns = [
   },
   {
     title: i18next.t("type"),
-    dataIndex: "action",
-    key: "action",
+    dataIndex: "method",
+    key: "method",
+    render: (text: string) => i18next.t(text),
   },
 ];

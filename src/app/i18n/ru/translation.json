@@ -224,5 +224,9 @@
   "type": "Тип",
   "allDay": "Круглосуточно",
   "withoutLunch": "Без обеда",
-  "noDayoffs": "Без выходных"
+  "noDayoffs": "Без выходных",
+  "tell-about-reason": "Расскажите о причине",
+  "delete-reason": "Причина удаления",
+  "create": "Новый",
+  "update": "Редактирования"
 }

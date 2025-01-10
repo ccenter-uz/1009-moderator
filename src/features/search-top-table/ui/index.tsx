@@ -80,6 +80,22 @@ export const SearchTopTable: FC<Props> = (props) => {
     }
   };
 
+  const handleDelete = async (id: number) => {
+    const result = await Swal.fire({
+      input: "textarea",
+      inputLabel: t("delete-reason"),
+      inputPlaceholder: t("tell-about-reason"),
+      inputAttributes: {
+        "aria-label": t("tell-about-reason"),
+      },
+      showCancelButton: true,
+    });
+
+    if (result.isConfirmed && result.value) {
+      await deleteOrganization(id);
+    }
+  };
+
   const columns: ColumnsType<AnyObject> = [
     {
       title: t("code"),
@@ -136,7 +152,7 @@ export const SearchTopTable: FC<Props> = (props) => {
             />
           </Can>
           <Can i="delete">
-            <DeleteTableItemUI fetch={() => deleteOrganization(record.id)} />
+            <DeleteTableItemUI fetch={() => handleDelete(record.id)} />
           </Can>
         </Flex>
       ),

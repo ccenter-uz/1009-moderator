@@ -1,10 +1,10 @@
-import { Button, Divider, Flex, Form, Steps } from "antd";
+import { Button, Divider, Flex, Form, notification, Steps } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import i18next from "i18next";
 import { CSSProperties, FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import {
   OrgEditFirstStepUI,
@@ -30,6 +30,7 @@ import {
   getDayOffsCheckbox,
   getEditingStepStorageValues,
   notificationResponse,
+  removeLocalStorage,
   SEND_BODY,
   setDatyOffsCheckbox,
   STEPS_DATA,
@@ -47,7 +48,9 @@ export const OrgEditPage: FC = () => {
   const { t } = useTranslation();
   const { id } = useParams();
   const dispatch = useDispatch();
-  const [updateOrganization] = useUpdateOrganizationMutation();
+  const navigate = useNavigate();
+  const [updateOrganization, { isLoading, isSuccess }] =
+    useUpdateOrganizationMutation();
   const [form] = Form.useForm();
   const { data: categoryTu } = useSelector(
     ({ useEditOrgFirstStepSlice }: RootState) => useEditOrgFirstStepSlice,
@@ -213,6 +216,7 @@ export const OrgEditPage: FC = () => {
     const response = await updateOrganization(formData);
 
     notificationResponse(response, t);
+    isSuccess && (onClearAllData(), navigate("/orgs/all"));
   };
   const onValuesChange = (
     _: {
@@ -254,6 +258,27 @@ export const OrgEditPage: FC = () => {
         "sunday",
       ]);
     }
+  };
+
+  const onClearAllData = () => {
+    removeLocalStorage("firstStepDataEdit");
+    removeLocalStorage("secondStepDataEdit");
+    removeLocalStorage("thirdStepDataEdit");
+    removeLocalStorage("currentStepEdit");
+    form.resetFields();
+    dispatch(setCategoryData([]));
+    dispatch(setOrientirData([]));
+    dispatch(setPhoneData([]));
+    dispatch(setEditAllDay(false));
+    dispatch(setEditAllType(false));
+    dispatch(setEditNoDayoffs(false));
+    dispatch(setEditWithoutLunch(false));
+    notification.success({
+      message: t("erased"),
+      placement: "bottomRight",
+      duration: 1,
+    });
+    setCurrent(0);
   };
 
   const onClearCurrentStep = () => {
@@ -310,19 +335,30 @@ export const OrgEditPage: FC = () => {
       </div>
       <Divider />
       <Flex align="center" justify="end" gap={8} style={{ marginTop: 24 }}>
-        <Button onClick={onClearCurrentStep}>{t("erase-current-step")}</Button>
+        <Button disabled={isLoading} onClick={onClearCurrentStep}>
+          {t("erase-current-step")}
+        </Button>
         {current > 0 && (
-          <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
+          <Button
+            disabled={isLoading}
+            style={{ margin: "0 8px" }}
+            onClick={() => prev()}
+          >
             {t("previous")}
           </Button>
         )}
         {current < items.length - 1 && (
-          <Button type="primary" onClick={() => next()}>
+          <Button disabled={isLoading} type="primary" onClick={() => next()}>
             {t("next")}
           </Button>
         )}
         {current === items.length - 1 && (
-          <Button type="primary" htmlType="submit" form="edit-org-form">
+          <Button
+            loading={isLoading}
+            type="primary"
+            htmlType="submit"
+            form="edit-org-form"
+          >
             {t("save")}
           </Button>
         )}
