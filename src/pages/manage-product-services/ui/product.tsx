@@ -186,18 +186,21 @@ export const Product: FC = () => {
               <SingleNameRu
                 rule={formRule}
                 requiredFields={formRequiredField}
+                textarea
               />
             }
             uzInputs={
               <SingleNameUz
                 rule={formRule}
                 requiredFields={formRequiredField}
+                textarea
               />
             }
             uzCyrillicInputs={
               <SingleNameCyrill
                 rule={formRule}
                 requiredFields={formRequiredField}
+                textarea
               />
             }
             formId={"manage-category-tu"}

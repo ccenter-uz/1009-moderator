@@ -39,21 +39,21 @@ export const NameInputsCyrill: FC<IProps> = ({ rule, requiredFields = [] }) => {
             placeholder={t(FORM_ITEMS.name)}
             onChange={(el) => setName(el.target.value)}
           />
-          {name && (
-            <Paragraph
-              style={{ marginTop: "8px" }}
-              copyable={{ text: cyrillicToLatin(name) }}
-            >
-              Ўзб → {`O'zb`}:
-              <Tag
-                color="green"
-                style={{ marginLeft: "4px", padding: "2px 6px" }}
-              >
-                {cyrillicToLatin(name)}
-              </Tag>
-            </Paragraph>
-          )}
         </Form.Item>
+        {name && (
+          <Paragraph
+            style={{ marginTop: "8px" }}
+            copyable={{ text: cyrillicToLatin(name) }}
+          >
+            Ўзб → {`O'zb`}:
+            <Tag
+              color="green"
+              style={{ marginLeft: "4px", padding: "2px 6px" }}
+            >
+              {cyrillicToLatin(name)}
+            </Tag>
+          </Paragraph>
+        )}
       </Col>
       <Col xs={24} sm={12} md={12} lg={12} xl={8}>
         <Form.Item
@@ -68,21 +68,21 @@ export const NameInputsCyrill: FC<IProps> = ({ rule, requiredFields = [] }) => {
             placeholder={t(FORM_ITEMS.old_name)}
             onChange={(el) => setOldName(el.target.value)}
           />
-          {oldName && (
-            <Paragraph
-              style={{ marginTop: "8px" }}
-              copyable={{ text: cyrillicToLatin(oldName) }}
-            >
-              Ўзб → {`O'zb`}:
-              <Tag
-                color="green"
-                style={{ marginLeft: "4px", padding: "2px 6px" }}
-              >
-                {cyrillicToLatin(oldName)}
-              </Tag>
-            </Paragraph>
-          )}
         </Form.Item>
+        {oldName && (
+          <Paragraph
+            style={{ marginTop: "8px" }}
+            copyable={{ text: cyrillicToLatin(oldName) }}
+          >
+            Ўзб → {`O'zb`}:
+            <Tag
+              color="green"
+              style={{ marginLeft: "4px", padding: "2px 6px" }}
+            >
+              {cyrillicToLatin(oldName)}
+            </Tag>
+          </Paragraph>
+        )}
       </Col>
       <Col xs={24} sm={12} md={12} lg={12} xl={8}>
         <Form.Item
@@ -97,21 +97,21 @@ export const NameInputsCyrill: FC<IProps> = ({ rule, requiredFields = [] }) => {
             placeholder={t(FORM_ITEMS.new_name)}
             onChange={(el) => setNewName(el.target.value)}
           />
-          {newName && (
-            <Paragraph
-              style={{ marginTop: "8px" }}
-              copyable={{ text: cyrillicToLatin(newName) }}
-            >
-              Ўзб → {`O'zb`}:
-              <Tag
-                color="green"
-                style={{ marginLeft: "4px", padding: "2px 6px" }}
-              >
-                {cyrillicToLatin(newName)}
-              </Tag>
-            </Paragraph>
-          )}
         </Form.Item>
+        {newName && (
+          <Paragraph
+            style={{ marginTop: "8px" }}
+            copyable={{ text: cyrillicToLatin(newName) }}
+          >
+            Ўзб → {`O'zb`}:
+            <Tag
+              color="green"
+              style={{ marginLeft: "4px", padding: "2px 6px" }}
+            >
+              {cyrillicToLatin(newName)}
+            </Tag>
+          </Paragraph>
+        )}
       </Col>
     </Row>
   );
