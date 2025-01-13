@@ -1,7 +1,7 @@
 import { Row, Col, Input, Form, Select } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import i18next from "i18next";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
@@ -9,42 +9,24 @@ import { TableOrientirUI } from "@features/table-orientir";
 
 import { useGetAreasQuery } from "@entities/area";
 import { useGetAvenuesQuery } from "@entities/avenue";
-import { useLazyGetDistrictsQuery } from "@entities/district";
 import { useGetImpassesQuery } from "@entities/impasse";
 import { useGetLanesQuery } from "@entities/lane";
 import { useGetPassagesQuery } from "@entities/passage";
-import {
-  useGetRegionsQuery,
-  useLazyGetCitiesQuery,
-} from "@entities/region-city";
 import { useGetResidentialAreasQuery } from "@entities/residential-area";
 import { useGetStreetsQuery } from "@entities/street";
 import { useGetVillagesQuery } from "@entities/village";
 
-import {
-  allActives,
-  getLocalStorage,
-  renderLabelSelect,
-} from "@shared/lib/helpers";
+import { allActives, renderLabelSelect } from "@shared/lib/helpers";
 import { RootState } from "@shared/types";
+import { ParagraphBold } from "@shared/ui/paragraph-bold";
 
 import { setData } from "../model/Slicer";
 
 export const OrgEditSecondStepUI: FC = () => {
-  const Storage = localStorage.getItem("secondStepDataEdit");
-  const localS = getLocalStorage("secondStepDataEdit");
   const { t } = useTranslation();
   const { data } = useSelector(
     ({ useEditOrgSecondStepSlice }: RootState) => useEditOrgSecondStepSlice,
   );
-  const { data: regionData, isLoading: isLoadingRegion } =
-    useGetRegionsQuery(allActives);
-  const [triggerCities, { data: citiesData, isLoading: isLoadingCities }] =
-    useLazyGetCitiesQuery();
-  const [
-    triggerDistrict,
-    { data: districtData, isLoading: isLoadingDistrict },
-  ] = useLazyGetDistrictsQuery();
   const { data: villageData, isLoading: isLoadingVillage } =
     useGetVillagesQuery(allActives);
   const { data: avenueData, isLoading: isLoadingAvenue } =
@@ -62,101 +44,14 @@ export const OrgEditSecondStepUI: FC = () => {
   const { data: passageData, isLoading: isLoadingPassage } =
     useGetPassagesQuery(allActives);
 
-  const onChangeRegion = (value: string) => {
-    triggerCities({
-      regionId: value,
-      ...allActives,
-    });
-  };
-
-  const onChangeCity = (value: string) => {
-    triggerDistrict({
-      cityId: value,
-      ...allActives,
-    });
-  };
-
-  useEffect(() => {
-    if (Storage) {
-      const { cityId, districtId } = localS;
-      if (cityId) {
-        triggerCities({
-          ...allActives,
-        });
-      }
-      if (districtId) {
-        triggerDistrict({
-          ...allActives,
-        });
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [Storage]);
-
   return (
     <>
       <Row justify={"space-between"} gutter={24}>
         <Col span={8}>
           <Form.Item
-            name={"regionId"}
-            label={t("region")}
-            rules={[
-              {
-                required: true,
-                message: t("required-field"),
-              },
-            ]}
+            name={"villageId"}
+            label={<ParagraphBold>{t("village")}</ParagraphBold>}
           >
-            <Select
-              labelRender={renderLabelSelect}
-              onSelect={onChangeRegion}
-              loading={isLoadingRegion}
-              options={regionData?.data.map((item: AnyObject) => ({
-                value: item.id,
-                label: item.name[i18next.language],
-              }))}
-              allowClear
-              showSearch
-              placeholder={t("region")}
-            />
-          </Form.Item>
-          <Form.Item
-            name={"cityId"}
-            label={t("city")}
-            rules={[
-              {
-                required: true,
-                message: t("required-field"),
-              },
-            ]}
-          >
-            <Select
-              labelRender={renderLabelSelect}
-              onSelect={onChangeCity}
-              loading={isLoadingCities}
-              options={citiesData?.data.map((item: AnyObject) => ({
-                value: item.id,
-                label: item.name[i18next.language],
-              }))}
-              allowClear
-              showSearch
-              placeholder={t("city")}
-            />
-          </Form.Item>
-          <Form.Item name={"districtId"} label={t("district")}>
-            <Select
-              labelRender={renderLabelSelect}
-              loading={isLoadingDistrict}
-              options={districtData?.data.map((item: AnyObject) => ({
-                value: item.id,
-                label: item.name[i18next.language],
-              }))}
-              allowClear
-              showSearch
-              placeholder={t("district")}
-            />
-          </Form.Item>
-          <Form.Item name={"villageId"} label={t("village")}>
             <Select
               labelRender={renderLabelSelect}
               loading={isLoadingVillage}
@@ -169,7 +64,10 @@ export const OrgEditSecondStepUI: FC = () => {
               placeholder={t("village")}
             />
           </Form.Item>
-          <Form.Item name={"avenueId"} label={t("avenue")}>
+          <Form.Item
+            name={"avenueId"}
+            label={<ParagraphBold>{t("avenue")}</ParagraphBold>}
+          >
             <Select
               labelRender={renderLabelSelect}
               loading={isLoadingAvenue}
@@ -182,7 +80,10 @@ export const OrgEditSecondStepUI: FC = () => {
               placeholder={t("avenue")}
             />
           </Form.Item>
-          <Form.Item name={"residentialId"} label={t("residential-area")}>
+          <Form.Item
+            name={"residentialId"}
+            label={<ParagraphBold>{t("residential-area")}</ParagraphBold>}
+          >
             <Select
               labelRender={renderLabelSelect}
               loading={isLoadingResidentialArea}
@@ -195,9 +96,10 @@ export const OrgEditSecondStepUI: FC = () => {
               placeholder={t("residential-area")}
             />
           </Form.Item>
-        </Col>
-        <Col span={8}>
-          <Form.Item name={"areaId"} label={t("area")}>
+          <Form.Item
+            name={"areaId"}
+            label={<ParagraphBold>{t("area")}</ParagraphBold>}
+          >
             <Select
               labelRender={renderLabelSelect}
               loading={isLoadingArea}
@@ -210,10 +112,18 @@ export const OrgEditSecondStepUI: FC = () => {
               placeholder={t("area")}
             />
           </Form.Item>
-          <Form.Item name={"kvartal"} label={t("kvartal")}>
+        </Col>
+        <Col span={8}>
+          <Form.Item
+            name={"kvartal"}
+            label={<ParagraphBold>{t("kvartal")}</ParagraphBold>}
+          >
             <Input type="text" placeholder={t("kvartal")} allowClear />
           </Form.Item>
-          <Form.Item name={"streetId"} label={t("street")}>
+          <Form.Item
+            name={"streetId"}
+            label={<ParagraphBold>{t("street")}</ParagraphBold>}
+          >
             <Select
               labelRender={renderLabelSelect}
               loading={isLoadingStreet}
@@ -226,7 +136,10 @@ export const OrgEditSecondStepUI: FC = () => {
               placeholder={t("street")}
             />
           </Form.Item>
-          <Form.Item name={"laneId"} label={t("lane")}>
+          <Form.Item
+            name={"laneId"}
+            label={<ParagraphBold>{t("lane")}</ParagraphBold>}
+          >
             <Select
               labelRender={renderLabelSelect}
               loading={isLoadingLane}
@@ -239,7 +152,10 @@ export const OrgEditSecondStepUI: FC = () => {
               placeholder={t("lane")}
             />
           </Form.Item>
-          <Form.Item name={"passageId"} label={t("passage")}>
+          <Form.Item
+            name={"passageId"}
+            label={<ParagraphBold>{t("passage")}</ParagraphBold>}
+          >
             <Select
               labelRender={renderLabelSelect}
               loading={isLoadingPassage}
@@ -252,7 +168,12 @@ export const OrgEditSecondStepUI: FC = () => {
               placeholder={t("passage")}
             />
           </Form.Item>
-          <Form.Item name={"impasseId"} label={t("impasse")}>
+        </Col>
+        <Col span={8}>
+          <Form.Item
+            name={"impasseId"}
+            label={<ParagraphBold>{t("impasse")}</ParagraphBold>}
+          >
             <Select
               labelRender={renderLabelSelect}
               loading={isLoadingImpasse}
@@ -265,11 +186,9 @@ export const OrgEditSecondStepUI: FC = () => {
               placeholder={t("impasse")}
             />
           </Form.Item>
-        </Col>
-        <Col span={8}>
           <Form.Item
             name={"address"}
-            label={t("address")}
+            label={<ParagraphBold>{t("address")}</ParagraphBold>}
             rules={[
               {
                 required: true,
@@ -279,12 +198,15 @@ export const OrgEditSecondStepUI: FC = () => {
           >
             <Input type="text" placeholder={t("address")} allowClear />
           </Form.Item>
-          <Form.Item name={"home"} label={t("home")}>
+          <Form.Item
+            name={"home"}
+            label={<ParagraphBold>{t("home")}</ParagraphBold>}
+          >
             <Input type="text" placeholder={t("home")} allowClear />
           </Form.Item>
           <Form.Item
             name={"apartment"}
-            label={t("apartment")}
+            label={<ParagraphBold>{t("apartment")}</ParagraphBold>}
             rules={[
               {
                 required: true,

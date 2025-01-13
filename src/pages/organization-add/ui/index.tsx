@@ -3,12 +3,20 @@ import i18next from "i18next";
 import { CSSProperties, FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import {
   OrgAddFirstStepUI,
   setCategoryData,
 } from "@widgets/org-add-first-step";
-import { OrgAddFourthStepUI, setImages } from "@widgets/org-add-fourth-step";
+import {
+  OrgAddFourthStepUI,
+  setAllDay,
+  setAllType,
+  setImages,
+  setNoDayoffs,
+  setWithoutLunch,
+} from "@widgets/org-add-fourth-step";
 import {
   OrgAddSecondStepUI,
   setOrientirData,
@@ -27,28 +35,6 @@ import {
 } from "@shared/lib/helpers";
 import { RootState } from "@shared/types";
 
-const items = [
-  {
-    title: i18next.t("personal"),
-    description: i18next.t("personal_description"),
-    content: <OrgAddFirstStepUI />,
-  },
-  {
-    title: i18next.t("address"),
-    description: i18next.t("address_description"),
-    content: <OrgAddSecondStepUI />,
-  },
-  {
-    title: i18next.t("contacts"),
-    description: i18next.t("contacts_description"),
-    content: <OrgAddThirdStepUI />,
-  },
-  {
-    title: i18next.t("additional"),
-    description: i18next.t("additional_description"),
-    content: <OrgAddFourthStepUI />,
-  },
-];
 const contentStyle: CSSProperties = {
   margin: "16px",
 };
@@ -56,7 +42,8 @@ const contentStyle: CSSProperties = {
 export const OrgAddPage: FC = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const [createOrganization] = useCreateOrganizationMutation();
+  const navigate = useNavigate();
+  const [createOrganization, { isLoading }] = useCreateOrganizationMutation();
   const [form] = Form.useForm();
   const { data: categoryTu } = useSelector(
     ({ useAddOrgFirstStepSlice }: RootState) => useAddOrgFirstStepSlice,
@@ -73,6 +60,30 @@ export const OrgAddPage: FC = () => {
   const [current, setCurrent] = useState(
     Number(localStorage.getItem("currentStep")) || 0,
   );
+
+  // STEPS
+  const items = [
+    {
+      title: i18next.t("personal"),
+      description: i18next.t("personal_description"),
+      content: <OrgAddFirstStepUI form={form} />,
+    },
+    {
+      title: i18next.t("address"),
+      description: i18next.t("address_description"),
+      content: <OrgAddSecondStepUI />,
+    },
+    {
+      title: i18next.t("contacts"),
+      description: i18next.t("contacts_description"),
+      content: <OrgAddThirdStepUI />,
+    },
+    {
+      title: i18next.t("additional"),
+      description: i18next.t("additional_description"),
+      content: <OrgAddFourthStepUI />,
+    },
+  ];
 
   const next = async () => {
     await form.validateFields();
@@ -112,20 +123,18 @@ export const OrgAddPage: FC = () => {
       ...form.getFieldsValue(SEND_BODY),
       index: Number(form.getFieldValue("index")),
       paymentTypes: {
-        cash: form.getFieldValue("allType")
-          ? true
-          : form.getFieldValue("cash") ?? false,
-        terminal: form.getFieldValue("allType")
-          ? true
-          : form.getFieldValue("terminal") ?? false,
-        transfer: form.getFieldValue("allType")
-          ? true
-          : form.getFieldValue("transfer") ?? false,
+        cash: form.getFieldValue("cash"),
+        terminal: form.getFieldValue("terminal"),
+        transfer: form.getFieldValue("transfer"),
+        allType: form.getFieldValue("allType"),
       },
       workTime: {
         dayoffs: getDayOffsCheckbox(form),
         worktimeFrom: form.getFieldValue("worktimeFrom"),
         worktimeTo: form.getFieldValue("worktimeTo"),
+        allDay: form.getFieldValue("allDay"),
+        noDayoffs: form.getFieldValue("noDayoffs"),
+        withoutLunch: form.getFieldValue("withoutLunch"),
         lunchFrom: form.getFieldValue("lunchFrom"),
         lunchTo: form.getFieldValue("lunchTo"),
       },
@@ -150,6 +159,50 @@ export const OrgAddPage: FC = () => {
     const response = await createOrganization(formData);
 
     notificationResponse(response, t);
+
+    response?.data.status === 201 && (onClearAllData(), navigate("/orgs/all"));
+  };
+
+  const onValuesChange = (
+    _: {
+      [name: string]: boolean;
+    },
+    allValues: {
+      allDay: boolean;
+      allType: boolean;
+      noDayoffs: boolean;
+      withoutLunch: boolean;
+    },
+  ) => {
+    const { allDay, allType, noDayoffs, withoutLunch } = allValues;
+    dispatch(setAllDay(allDay));
+    dispatch(setAllType(allType));
+    dispatch(setNoDayoffs(noDayoffs));
+    dispatch(setWithoutLunch(withoutLunch));
+
+    if (withoutLunch) {
+      form.resetFields(["lunchFrom", "lunchTo"]);
+    }
+    if (allDay) {
+      form.setFieldsValue({
+        worktimeFrom: "00:00",
+        worktimeTo: "23:59",
+      });
+    }
+    if (allType) {
+      form.setFieldsValue({ cash: true, terminal: true, transfer: true });
+    }
+    if (noDayoffs) {
+      form.resetFields([
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday",
+      ]);
+    }
   };
 
   const onClearAllData = () => {
@@ -161,11 +214,17 @@ export const OrgAddPage: FC = () => {
     dispatch(setCategoryData([]));
     dispatch(setOrientirData([]));
     dispatch(setPhoneData([]));
+    dispatch(setImages([]));
+    dispatch(setAllDay(false));
+    dispatch(setAllType(false));
+    dispatch(setNoDayoffs(false));
+    dispatch(setWithoutLunch(false));
     notification.success({
       message: t("erased"),
       placement: "bottomRight",
       duration: 1,
     });
+    setCurrent(0);
   };
 
   const onClearCurrentStep = () => {
@@ -179,7 +238,23 @@ export const OrgAddPage: FC = () => {
       form.resetFields(STEPS_DATA.THIRD_FORMDATA);
       dispatch(setPhoneData([]));
     } else if (current === STEPS_ENUM.fourthStep) {
-      form.resetFields(STEPS_DATA.FOURTH_FORMDATA);
+      form.resetFields([
+        ...STEPS_DATA.FOURTH_FORMDATA,
+        "cash",
+        "terminal",
+        "transfer",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday",
+      ]);
+      dispatch(setAllDay(false));
+      dispatch(setAllType(false));
+      dispatch(setNoDayoffs(false));
+      dispatch(setWithoutLunch(false));
       dispatch(setImages([]));
     }
   };
@@ -211,28 +286,48 @@ export const OrgAddPage: FC = () => {
       <Steps current={current} items={items} />
       <Divider />
       <div className="step-content" style={contentStyle}>
-        <Form onFinish={onSubmit} id="create-org-form" form={form}>
+        <Form
+          onFinish={onSubmit}
+          onValuesChange={onValuesChange}
+          id="create-org-form"
+          form={form}
+        >
           {items[current].content}
         </Form>
       </div>
       <Divider />
       <Flex align="center" justify="end" gap={8} style={{ marginTop: 24 }}>
-        <Button style={{ margin: "0 8px" }} onClick={onClearAllData}>
+        <Button
+          disabled={isLoading}
+          style={{ margin: "0 8px" }}
+          onClick={onClearAllData}
+        >
           {t("erase-all")}
         </Button>
-        <Button onClick={onClearCurrentStep}>{t("erase-current-step")}</Button>
+        <Button disabled={isLoading} onClick={onClearCurrentStep}>
+          {t("erase-current-step")}
+        </Button>
         {current > 0 && (
-          <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
+          <Button
+            disabled={isLoading}
+            style={{ margin: "0 8px" }}
+            onClick={() => prev()}
+          >
             {t("previous")}
           </Button>
         )}
         {current < items.length - 1 && (
-          <Button type="primary" onClick={() => next()}>
+          <Button disabled={isLoading} type="primary" onClick={() => next()}>
             {t("next")}
           </Button>
         )}
         {current === items.length - 1 && (
-          <Button type="primary" htmlType="submit" form="create-org-form">
+          <Button
+            loading={isLoading}
+            type="primary"
+            htmlType="submit"
+            form="create-org-form"
+          >
             {t("save")}
           </Button>
         )}

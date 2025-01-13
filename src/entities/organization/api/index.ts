@@ -87,8 +87,8 @@ export const organizationApi = baseApi.injectEndpoints({
 
     // DELETE
     deleteOrganization: build.mutation({
-      query: (id) => ({
-        url: `${API_MAP.DELETE_ORGANIZATION}/${id}`,
+      query: (params) => ({
+        url: `${API_MAP.DELETE_ORGANIZATION}/${params.id}?deleteReason=${params?.deleteReason}`,
         method: API_METHODS.DELETE,
       }),
       invalidatesTags: ["Organizations"],
@@ -103,6 +103,15 @@ export const organizationApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["UnconfirmedOrganizations"],
     }),
+
+    // RESTORE
+    restoreOrganization: build.mutation({
+      query: (id) => ({
+        url: `${API_MAP.RESTORE_ORGANIZATION}/${id}/restore`,
+        method: API_METHODS.PUT,
+      }),
+      invalidatesTags: ["UnconfirmedOrganizations"],
+    }),
   }),
 });
 
@@ -113,4 +122,5 @@ export const {
   useUpdateOrganizationMutation,
   useDeleteOrganizationMutation,
   useCheckOrganizationMutation,
+  useRestoreOrganizationMutation,
 } = organizationApi;

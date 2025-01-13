@@ -112,6 +112,8 @@ export const setColorByStatus = (status: string) => {
       );
     case i18next.t("active"):
       return <span style={{ color: "#52c41a" }}>{i18next.t("active")}</span>;
+    case i18next.t("deleted"):
+      return <span style={{ color: "#ff4d4f" }}>{i18next.t("deleted")}</span>;
     default:
       return null;
   }
@@ -204,6 +206,9 @@ export const handleEditLocalDatas = (record: AnyObject) => {
   const productName = getDynamicPropKey(record, PRODUCT_FILED_NAMES);
   const firstEditStep = {
     ...getStepsValueByKey(STEPS_DATA.FIRST_FORMDATA, record),
+    cityId: record.city?.id,
+    regionId: record.region?.id,
+    districtId: record.district?.id,
     segmentId: record.segment?.id,
     categoryId: record.category?.id,
     categoryTu: record[productName]?.map((item: AnyObject) => ({
@@ -222,10 +227,7 @@ export const handleEditLocalDatas = (record: AnyObject) => {
     ...getStepsValueByKey(STEPS_DATA.SECOND_FORMDATA, record),
     areaId: record.area?.id,
     avenueId: record.avenue?.id,
-    cityId: record.city?.id,
-    regionId: record.region?.id,
     streetId: record.street?.id,
-    districtId: record.district?.id,
     impasseId: record.impasse?.id,
     villageId: record.village?.id,
     laneId: record.lane?.id,
@@ -269,6 +271,9 @@ export const handleEditLocalDatas = (record: AnyObject) => {
     lunchFrom: record.workTime.lunchFrom,
     lunchTo: record.workTime.lunchTo,
     dayoffs: record.workTime.dayoffs,
+    allDay: record.workTime.allDay,
+    noDayoffs: record.workTime.noDayoffs,
+    withoutLunch: record.workTime.withoutLunch,
     bus: record.transport.bus,
     microBus: record.transport.microBus,
     metroStation: record.transport.metroStation,

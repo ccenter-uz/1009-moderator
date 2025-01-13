@@ -14,9 +14,9 @@ export const LoginPage: FC = () => {
   const onLogin = async (values: { phoneNumber: string; password: string }) => {
     const { data } = await postLogin(values);
 
-    if (data) {
+    if (data?.status === 200) {
       form.resetFields();
-      window.location.href = "/";
+      window.location.href = "/dashboard";
     }
   };
 

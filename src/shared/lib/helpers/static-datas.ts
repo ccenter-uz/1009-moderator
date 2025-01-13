@@ -12,12 +12,12 @@ export const STEPS_DATA = {
     "secret",
     "segmentId",
     "manager",
-  ],
-  SECOND_FORMDATA: [
     "regionId",
     "cityId",
-    "villageId",
     "districtId",
+  ],
+  SECOND_FORMDATA: [
+    "villageId",
     "residentialId",
     "areaId",
     "avenueId",
@@ -42,6 +42,10 @@ export const STEPS_DATA = {
     "lunchFrom",
     "lunchTo",
     "dayoffs",
+    "allDay",
+    "noDayoffs",
+    "allType",
+    "withoutLunch",
   ],
 };
 
@@ -71,7 +75,7 @@ export const SEND_BODY = [
   "apartment",
   "account",
   "mail",
-  "index",
+
   "inn",
   "bankNumber",
   "description",

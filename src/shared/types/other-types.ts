@@ -21,6 +21,7 @@ export type ItableDataAddress = {
 export type ItableBasicData = {
   key: string | number;
   id: number | string;
+  name?: string;
   name_ru?: string;
   name_uz?: string;
   name_uzcyrill?: string;

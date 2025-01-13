@@ -17,12 +17,10 @@ import {
   useRestoreSegmentMutation,
   useUpdateSegmentMutation,
 } from "@entities/segments";
-import { SingleNameCyrill } from "@entities/single-name-cyrill";
-import { SingleNameRu } from "@entities/single-name-ru";
-import { SingleNameUz } from "@entities/single-name-uz";
+import { SingleName } from "@entities/single-name";
 
 import {
-  columnsForForBasicTable,
+  columnsWithSingleName,
   getZodRequiredKeys,
   notificationResponse,
   returnAllParams,
@@ -49,15 +47,10 @@ export const ManageSegmentsPage = () => {
   const [updateSegment] = useUpdateSegmentMutation();
   const [restoreSegment] = useRestoreSegmentMutation();
   const [editingData, setEditingData] = useState<AnyObject | null>(null);
-  const handleEditOpen = (values: {
-    name: { uz: string; ru: string; cy: string };
-    id: string | number;
-  }) => {
+  const handleEditOpen = (values: { name: string; id: string | number }) => {
     setEditingData({ ...values, id: values.id });
     const body = {
-      name_uz: values.name.uz,
-      name_ru: values.name.ru,
-      name_uzcyrill: values.name.cy,
+      name: values.name,
       id: values.id,
     };
     form.setFieldsValue({ ...body });
@@ -71,11 +64,7 @@ export const ManageSegmentsPage = () => {
 
   const handleSubmit = async (values: ItableBasicData) => {
     const body = {
-      name: {
-        uz: values.name_uz,
-        ru: values.name_ru,
-        cy: values.name_uzcyrill,
-      },
+      name: values.name,
       id: editingData?.id,
     };
     const request = editingData ? updateSegment : createSegment;
@@ -94,7 +83,7 @@ export const ManageSegmentsPage = () => {
   };
 
   const columns = [
-    ...columnsForForBasicTable,
+    ...columnsWithSingleName,
     {
       flex: 0.5,
       title: t("action"),
@@ -158,20 +147,8 @@ export const ManageSegmentsPage = () => {
               loading={isLoading}
               open={isOpen}
               onClose={onClose}
-              ruInputs={
-                <SingleNameRu
-                  rule={formRule}
-                  requiredFields={formRequiredField}
-                />
-              }
-              uzInputs={
-                <SingleNameUz
-                  rule={formRule}
-                  requiredFields={formRequiredField}
-                />
-              }
-              uzCyrillicInputs={
-                <SingleNameCyrill
+              singleInputs={
+                <SingleName
                   rule={formRule}
                   requiredFields={formRequiredField}
                 />

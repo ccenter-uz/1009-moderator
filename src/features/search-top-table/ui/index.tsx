@@ -1,22 +1,28 @@
-import { Row, Col, Table, Flex } from "antd";
+import { Row, Col, Table, Flex, Tooltip } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { ColumnsType } from "antd/es/table";
 import { t } from "i18next";
 import { FC, useState } from "react";
 import { FaEnvelope, FaPencilAlt } from "react-icons/fa";
+import { MdRestore } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 import { DeleteTableItemUI } from "@features/delete-table-item";
 
-import { useDeleteOrganizationMutation } from "@entities/organization";
+import {
+  useDeleteOrganizationMutation,
+  useRestoreOrganizationMutation,
+} from "@entities/organization";
 
 import {
   clearEditStepStorage,
   getEditingStepStorageValues,
   handleEditLocalDatas,
   phoneColumns,
+  setColorByStatus,
   setLocalStorage,
+  status,
   STEPS_EDIT_DATA,
   STEPS_ENUM,
 } from "@shared/lib/helpers";
@@ -42,6 +48,7 @@ export const SearchTopTable: FC<Props> = (props) => {
   const navigate = useNavigate();
   const [selectedRowKeys, setSelectedRowKeys] = useState<number>(0);
   const [deleteOrganization] = useDeleteOrganizationMutation();
+  const [restoreOrganization] = useRestoreOrganizationMutation();
 
   const checkExistId = (record: AnyObject) => {
     const { editingId, firstStepData } = getEditingStepStorageValues();
@@ -77,6 +84,27 @@ export const SearchTopTable: FC<Props> = (props) => {
     } else {
       handleEditLocalDatas(record);
       navigate(`/orgs/edit/${record.id}`);
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    const result = await Swal.fire({
+      input: "textarea",
+      inputLabel: t("delete-reason"),
+      inputPlaceholder: t("tell-about-reason"),
+      inputAttributes: {
+        "aria-label": t("tell-about-reason"),
+      },
+      showCancelButton: true,
+    });
+
+    if (result.isConfirmed && result.value) {
+      const params = {
+        id,
+        deleteReason: result.value,
+      };
+
+      await deleteOrganization(params);
     }
   };
 
@@ -119,27 +147,48 @@ export const SearchTopTable: FC<Props> = (props) => {
       key: "address",
     },
     {
+      title: t("status"),
+      dataIndex: "status",
+      key: "status",
+      render: (text: number) => setColorByStatus(status[text]),
+    },
+    {
       width: 80,
       title: t("action"),
       key: "action",
       dataIndex: "action",
       align: "center",
-      render: (text: string, record: AnyObject) => (
-        <Flex justify="center" align="center" gap={8}>
-          <Can i="update">
-            <FaPencilAlt
-              onClick={() => checkExistId(record)}
-              color="grey"
-              fontSize={16}
-              cursor={"pointer"}
-              title={t("edit")}
-            />
-          </Can>
-          <Can i="delete">
-            <DeleteTableItemUI fetch={() => deleteOrganization(record.id)} />
-          </Can>
-        </Flex>
-      ),
+      render: (text: string, record: AnyObject) => {
+        if (record.status === 1) {
+          return (
+            <Flex justify="center" align="center" gap={8}>
+              <Can i="update">
+                <FaPencilAlt
+                  onClick={() => checkExistId(record)}
+                  color="grey"
+                  fontSize={16}
+                  cursor={"pointer"}
+                  title={t("edit")}
+                />
+              </Can>
+              <Can i="delete">
+                <DeleteTableItemUI fetch={() => handleDelete(record.id)} />
+              </Can>
+            </Flex>
+          );
+        } else if (record.status === -1) {
+          return (
+            <Tooltip title={t("restore")}>
+              <MdRestore
+                color="grey"
+                cursor={"pointer"}
+                size={20}
+                onClick={() => restoreOrganization(record.id)}
+              />
+            </Tooltip>
+          );
+        }
+      },
     },
   ];
 

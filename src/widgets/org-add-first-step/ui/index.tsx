@@ -1,4 +1,4 @@
-import { Col, Form, Input, Row, Select } from "antd";
+import { Col, Form, FormInstance, Input, Row, Select } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import i18next from "i18next";
 import { FC, useEffect } from "react";
@@ -11,7 +11,12 @@ import {
   useGetCategoriesQuery,
   useLazyGetSubCategoriesQuery,
 } from "@entities/category-subcategory";
+import { useLazyGetDistrictsQuery } from "@entities/district";
 import { useGetMainOrgQuery } from "@entities/main-org";
+import {
+  useGetRegionsQuery,
+  useLazyGetCitiesQuery,
+} from "@entities/region-city";
 import { useGetSegmentsQuery } from "@entities/segments";
 
 import {
@@ -20,10 +25,16 @@ import {
   renderLabelSelect,
 } from "@shared/lib/helpers";
 import { RootState } from "@shared/types";
+import { ParagraphBold } from "@shared/ui/paragraph-bold";
 
 import { setData } from "../model/Slicer";
 
-export const OrgAddFirstStepUI: FC = () => {
+interface IProps {
+  form: FormInstance;
+}
+
+export const OrgAddFirstStepUI: FC<IProps> = (props) => {
+  const { form } = props;
   const Storage = localStorage.getItem("firstStepData");
   const localS = getLocalStorage("firstStepData");
   const { t } = useTranslation();
@@ -31,7 +42,10 @@ export const OrgAddFirstStepUI: FC = () => {
     ({ useAddOrgFirstStepSlice }: RootState) => useAddOrgFirstStepSlice,
   );
   const { data: categoryData, isLoading: isLoadingCategories } =
-    useGetCategoriesQuery(allActives);
+    useGetCategoriesQuery({
+      ...allActives,
+      cityId: form.getFieldValue("cityId"),
+    });
   const { data: mainOrgData, isLoading: isLoadingMainOrg } =
     useGetMainOrgQuery(allActives);
   const { data: segmentsData, isLoading: isLoadingSegments } =
@@ -41,12 +55,53 @@ export const OrgAddFirstStepUI: FC = () => {
     { data: subcategoryData, isLoading: isLoadingSubcategory },
   ] = useLazyGetSubCategoriesQuery();
 
+  const { data: regionData, isLoading: isLoadingRegion } =
+    useGetRegionsQuery(allActives);
+  const [triggerCities, { data: citiesData, isLoading: isLoadingCities }] =
+    useLazyGetCitiesQuery();
+  const [
+    triggerDistrict,
+    { data: districtData, isLoading: isLoadingDistrict },
+  ] = useLazyGetDistrictsQuery();
+
+  const onChangeRegion = (value: string) => {
+    triggerCities({
+      regionId: value,
+      ...allActives,
+    });
+    form.resetFields(["cityId", "districtId", "categoryId", "subCategoryId"]);
+  };
+  const onChangeCity = (value: string) => {
+    triggerDistrict({
+      cityId: value,
+      ...allActives,
+    });
+    form.resetFields(["districtId", "categoryId", "subCategoryId"]);
+  };
+
   const onChangeCategory = (value: string) => {
     trigerSubcategory({
       categoryId: value,
       ...allActives,
     });
   };
+
+  useEffect(() => {
+    if (Storage) {
+      const { cityId, districtId } = localS;
+      if (cityId) {
+        triggerCities({
+          ...allActives,
+        });
+      }
+      if (districtId) {
+        triggerDistrict({
+          ...allActives,
+        });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [Storage]);
 
   useEffect(() => {
     if (Storage) {
@@ -66,7 +121,7 @@ export const OrgAddFirstStepUI: FC = () => {
         <Col span={12}>
           <Form.Item
             name={"name"}
-            label={t("abonent")}
+            label={<ParagraphBold>{t("abonent")}</ParagraphBold>}
             rules={[
               {
                 required: true,
@@ -78,7 +133,13 @@ export const OrgAddFirstStepUI: FC = () => {
           </Form.Item>
           <Form.Item
             name={"legalName"}
-            label={t("org-name")}
+            label={<ParagraphBold>{t("org-name")}</ParagraphBold>}
+          >
+            <Input type="text" placeholder={t("org-name")} allowClear />
+          </Form.Item>
+          <Form.Item
+            name={"regionId"}
+            label={<ParagraphBold>{t("region")}</ParagraphBold>}
             rules={[
               {
                 required: true,
@@ -86,11 +147,72 @@ export const OrgAddFirstStepUI: FC = () => {
               },
             ]}
           >
-            <Input type="text" placeholder={t("org-name")} allowClear />
+            <Select
+              labelRender={renderLabelSelect}
+              onSelect={onChangeRegion}
+              loading={isLoadingRegion}
+              options={regionData?.data.map((item: AnyObject) => ({
+                value: item.id,
+                label: item.name[i18next.language],
+              }))}
+              allowClear
+              onClear={() =>
+                form.resetFields([
+                  "cityId",
+                  "districtId",
+                  "categoryId",
+                  "subCategoryId",
+                ])
+              }
+              showSearch
+              placeholder={t("region")}
+            />
+          </Form.Item>
+          <Form.Item
+            name={"cityId"}
+            label={<ParagraphBold>{t("city")}</ParagraphBold>}
+            rules={[
+              {
+                required: true,
+                message: t("required-field"),
+              },
+            ]}
+          >
+            <Select
+              labelRender={renderLabelSelect}
+              onSelect={onChangeCity}
+              loading={isLoadingCities}
+              options={citiesData?.data.map((item: AnyObject) => ({
+                value: item.id,
+                label: item.name[i18next.language],
+              }))}
+              allowClear
+              onClear={() =>
+                form.resetFields(["districtId", "categoryId", "subCategoryId"])
+              }
+              showSearch
+              placeholder={t("city")}
+            />
+          </Form.Item>
+          <Form.Item
+            name={"districtId"}
+            label={<ParagraphBold>{t("district")}</ParagraphBold>}
+          >
+            <Select
+              labelRender={renderLabelSelect}
+              loading={isLoadingDistrict}
+              options={districtData?.data.map((item: AnyObject) => ({
+                value: item.id,
+                label: item.name[i18next.language],
+              }))}
+              allowClear
+              showSearch
+              placeholder={t("district")}
+            />
           </Form.Item>
           <Form.Item
             name={"categoryId"}
-            label={t("category")}
+            label={<ParagraphBold>{t("category")}</ParagraphBold>}
             rules={[
               {
                 required: true,
@@ -111,9 +233,11 @@ export const OrgAddFirstStepUI: FC = () => {
               onSelect={onChangeCategory}
             />
           </Form.Item>
+        </Col>
+        <Col span={12}>
           <Form.Item
             name={"subCategoryId"}
-            label={t("sub-category")}
+            label={<ParagraphBold>{t("sub-category")}</ParagraphBold>}
             rules={[
               {
                 required: true,
@@ -133,11 +257,9 @@ export const OrgAddFirstStepUI: FC = () => {
               loading={isLoadingSubcategory}
             />
           </Form.Item>
-        </Col>
-        <Col span={12}>
           <Form.Item
             name={"mainOrganizationId"}
-            label={t("main-org")}
+            label={<ParagraphBold>{t("main-org")}</ParagraphBold>}
             rules={[
               {
                 required: true,
@@ -158,7 +280,7 @@ export const OrgAddFirstStepUI: FC = () => {
           </Form.Item>
           <Form.Item
             name={"secret"}
-            label={t("Секрет")}
+            label={<ParagraphBold>{t("Секрет")}</ParagraphBold>}
             rules={[
               {
                 required: true,
@@ -170,19 +292,13 @@ export const OrgAddFirstStepUI: FC = () => {
           </Form.Item>
           <Form.Item
             name={"segmentId"}
-            label={t("segment")}
-            rules={[
-              {
-                required: true,
-                message: t("required-field"),
-              },
-            ]}
+            label={<ParagraphBold>{t("segment")}</ParagraphBold>}
           >
             <Select
               placeholder={t("segment")}
               options={segmentsData?.data.map((item: AnyObject) => ({
                 value: item.id,
-                label: item.name[i18next.language],
+                label: item.name,
               }))}
               loading={isLoadingSegments}
               allowClear
@@ -191,13 +307,7 @@ export const OrgAddFirstStepUI: FC = () => {
           </Form.Item>
           <Form.Item
             name={"manager"}
-            label={t("manager")}
-            rules={[
-              {
-                required: true,
-                message: t("required-field"),
-              },
-            ]}
+            label={<ParagraphBold>{t("manager")}</ParagraphBold>}
           >
             <Input type="text" placeholder={t("manager")} allowClear />
           </Form.Item>

@@ -3,9 +3,11 @@ import i18next from "i18next";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
 
+import { getLocalStorage, ROLES } from "@shared/lib/helpers";
+
 const statusOptions = [
   {
-    value: 0,
+    value: -1,
     label: i18next.t("inactive"),
   },
   {
@@ -16,6 +18,7 @@ const statusOptions = [
 
 export const ContactSearchPartUI: FC = () => {
   const { t } = useTranslation();
+  const role = getLocalStorage("user-role");
 
   return (
     <Row>
@@ -89,7 +92,7 @@ export const ContactSearchPartUI: FC = () => {
           </Col>
           <Col span={8}>
             <Form.Item
-              name="fromOperators"
+              name="fromOperator"
               label={t("from-operators")}
               style={{ marginBottom: 10 }}
               valuePropName="checked"
@@ -97,15 +100,17 @@ export const ContactSearchPartUI: FC = () => {
               <Checkbox />
             </Form.Item>
           </Col>
-          <Col span={12}>
-            <Form.Item
-              name="status"
-              label={t("status")}
-              style={{ marginBottom: 10 }}
-            >
-              <Select options={statusOptions} allowClear />
-            </Form.Item>
-          </Col>
+          {role === ROLES.MODERATOR && (
+            <Col span={12}>
+              <Form.Item
+                name="status"
+                label={t("status")}
+                style={{ marginBottom: 10 }}
+              >
+                <Select options={statusOptions} allowClear />
+              </Form.Item>
+            </Col>
+          )}
         </Row>
       </Col>
     </Row>

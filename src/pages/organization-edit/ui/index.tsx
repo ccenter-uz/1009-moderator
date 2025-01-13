@@ -1,16 +1,23 @@
-import { Button, Divider, Flex, Form, Steps } from "antd";
+import { Button, Divider, Flex, Form, notification, Steps } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import i18next from "i18next";
 import { CSSProperties, FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import {
   OrgEditFirstStepUI,
   setCategoryData,
 } from "@widgets/org-edit-first-step";
-import { OrgEditFourthStepUI, setImages } from "@widgets/org-edit-fourth-step";
+import {
+  OrgEditFourthStepUI,
+  setEditAllDay,
+  setEditAllType,
+  setEditNoDayoffs,
+  setEditWithoutLunch,
+  setImages,
+} from "@widgets/org-edit-fourth-step";
 import {
   OrgEditSecondStepUI,
   setOrientirData,
@@ -23,6 +30,7 @@ import {
   getDayOffsCheckbox,
   getEditingStepStorageValues,
   notificationResponse,
+  removeLocalStorage,
   SEND_BODY,
   setDatyOffsCheckbox,
   STEPS_DATA,
@@ -31,29 +39,6 @@ import {
 } from "@shared/lib/helpers";
 import { RootState } from "@shared/types";
 
-// STEPS
-const items = [
-  {
-    title: i18next.t("personal"),
-    description: i18next.t("personal_description"),
-    content: <OrgEditFirstStepUI />,
-  },
-  {
-    title: i18next.t("address"),
-    description: i18next.t("address_description"),
-    content: <OrgEditSecondStepUI />,
-  },
-  {
-    title: i18next.t("contacts"),
-    description: i18next.t("contacts_description"),
-    content: <OrgEditThirdStepUI />,
-  },
-  {
-    title: i18next.t("additional"),
-    description: i18next.t("additional_description"),
-    content: <OrgEditFourthStepUI />,
-  },
-];
 // STYLE
 const contentStyle: CSSProperties = {
   margin: "16px",
@@ -63,7 +48,8 @@ export const OrgEditPage: FC = () => {
   const { t } = useTranslation();
   const { id } = useParams();
   const dispatch = useDispatch();
-  const [updateOrganization] = useUpdateOrganizationMutation();
+  const navigate = useNavigate();
+  const [updateOrganization, { isLoading }] = useUpdateOrganizationMutation();
   const [form] = Form.useForm();
   const { data: categoryTu } = useSelector(
     ({ useEditOrgFirstStepSlice }: RootState) => useEditOrgFirstStepSlice,
@@ -80,6 +66,30 @@ export const OrgEditPage: FC = () => {
   const [current, setCurrent] = useState(
     Number(localStorage.getItem(STEPS_EDIT_DATA.CURRENT)) || 0,
   );
+
+  // STEPS
+  const items = [
+    {
+      title: i18next.t("personal"),
+      description: i18next.t("personal_description"),
+      content: <OrgEditFirstStepUI form={form} />,
+    },
+    {
+      title: i18next.t("address"),
+      description: i18next.t("address_description"),
+      content: <OrgEditSecondStepUI />,
+    },
+    {
+      title: i18next.t("contacts"),
+      description: i18next.t("contacts_description"),
+      content: <OrgEditThirdStepUI />,
+    },
+    {
+      title: i18next.t("additional"),
+      description: i18next.t("additional_description"),
+      content: <OrgEditFourthStepUI />,
+    },
+  ];
 
   const initializeFormValues = () => {
     const { firstStepData, secondStepData, thirdStepData, fourthStepData } =
@@ -104,6 +114,10 @@ export const OrgEditPage: FC = () => {
         dayOffs,
       });
       dispatch(setImages(fourthStepData.images));
+      dispatch(setEditAllDay(fourthStepData.allDay));
+      dispatch(setEditAllType(fourthStepData.allType));
+      dispatch(setEditNoDayoffs(fourthStepData.noDayoffs));
+      dispatch(setEditWithoutLunch(fourthStepData.withoutLunch));
     }
   };
   const next = async () => {
@@ -151,19 +165,20 @@ export const OrgEditPage: FC = () => {
     const body = {
       ...form.getFieldsValue(SEND_BODY),
       id,
+      index: Number(form.getFieldValue("index")),
       paymentTypes: {
-        cash: form.getFieldValue("allType") ? true : form.getFieldValue("cash"),
-        terminal: form.getFieldValue("allType")
-          ? true
-          : form.getFieldValue("terminal"),
-        transfer: form.getFieldValue("allType")
-          ? true
-          : form.getFieldValue("transfer"),
+        cash: form.getFieldValue("cash"),
+        terminal: form.getFieldValue("terminal"),
+        transfer: form.getFieldValue("transfer"),
+        allType: form.getFieldValue("allType"),
       },
       workTime: {
         dayoffs: getDayOffsCheckbox(form),
         worktimeFrom: form.getFieldValue("worktimeFrom"),
         worktimeTo: form.getFieldValue("worktimeTo"),
+        allDay: form.getFieldValue("allDay"),
+        noDayoffs: form.getFieldValue("noDayoffs"),
+        withoutLunch: form.getFieldValue("withoutLunch"),
         lunchFrom: form.getFieldValue("lunchFrom"),
         lunchTo: form.getFieldValue("lunchTo"),
       },
@@ -205,6 +220,71 @@ export const OrgEditPage: FC = () => {
     const response = await updateOrganization(formData);
 
     notificationResponse(response, t);
+
+    response?.data.status === 200 && (onClearAllData(), navigate("/orgs/all"));
+  };
+  const onValuesChange = (
+    _: {
+      [name: string]: boolean;
+    },
+    allValues: {
+      allDay: boolean;
+      allType: boolean;
+      noDayoffs: boolean;
+      withoutLunch: boolean;
+    },
+  ) => {
+    const { allDay, allType, noDayoffs, withoutLunch } = allValues;
+    dispatch(setEditAllDay(allDay));
+    dispatch(setEditAllType(allType));
+    dispatch(setEditNoDayoffs(noDayoffs));
+    dispatch(setEditWithoutLunch(withoutLunch));
+
+    if (withoutLunch) {
+      form.resetFields(["lunchFrom", "lunchTo"]);
+    }
+    if (allDay) {
+      form.setFieldsValue({
+        worktimeFrom: "00:00",
+        worktimeTo: "23:59",
+      });
+    }
+    if (allType) {
+      form.setFieldsValue({ cash: true, terminal: true, transfer: true });
+    }
+    if (noDayoffs) {
+      form.resetFields([
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday",
+      ]);
+    }
+  };
+
+  const onClearAllData = () => {
+    removeLocalStorage("firstStepDataEdit");
+    removeLocalStorage("secondStepDataEdit");
+    removeLocalStorage("thirdStepDataEdit");
+    removeLocalStorage("currentStepEdit");
+    form.resetFields();
+    dispatch(setCategoryData([]));
+    dispatch(setOrientirData([]));
+    dispatch(setPhoneData([]));
+    dispatch(setImages([]));
+    dispatch(setEditAllDay(false));
+    dispatch(setEditAllType(false));
+    dispatch(setEditNoDayoffs(false));
+    dispatch(setEditWithoutLunch(false));
+    notification.success({
+      message: t("erased"),
+      placement: "bottomRight",
+      duration: 1,
+    });
+    setCurrent(0);
   };
 
   const onClearCurrentStep = () => {
@@ -218,7 +298,23 @@ export const OrgEditPage: FC = () => {
       form.resetFields(STEPS_DATA.THIRD_FORMDATA);
       dispatch(setPhoneData([]));
     } else if (current === STEPS_ENUM.fourthStep) {
-      form.resetFields(STEPS_DATA.FOURTH_FORMDATA);
+      form.resetFields([
+        ...STEPS_DATA.FOURTH_FORMDATA,
+        "cash",
+        "terminal",
+        "transfer",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday",
+      ]);
+      dispatch(setEditAllDay(false));
+      dispatch(setEditAllType(false));
+      dispatch(setEditNoDayoffs(false));
+      dispatch(setEditWithoutLunch(false));
       dispatch(setImages([]));
     }
   };
@@ -234,25 +330,41 @@ export const OrgEditPage: FC = () => {
       <Steps current={current} items={items} />
       <Divider />
       <div className="step-content" style={contentStyle}>
-        <Form onFinish={onSubmit} id="edit-org-form" form={form}>
+        <Form
+          onFinish={onSubmit}
+          onValuesChange={onValuesChange}
+          id="edit-org-form"
+          form={form}
+        >
           {items[current].content}
         </Form>
       </div>
       <Divider />
       <Flex align="center" justify="end" gap={8} style={{ marginTop: 24 }}>
-        <Button onClick={onClearCurrentStep}>{t("erase-current-step")}</Button>
+        <Button disabled={isLoading} onClick={onClearCurrentStep}>
+          {t("erase-current-step")}
+        </Button>
         {current > 0 && (
-          <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
+          <Button
+            disabled={isLoading}
+            style={{ margin: "0 8px" }}
+            onClick={() => prev()}
+          >
             {t("previous")}
           </Button>
         )}
         {current < items.length - 1 && (
-          <Button type="primary" onClick={() => next()}>
+          <Button disabled={isLoading} type="primary" onClick={() => next()}>
             {t("next")}
           </Button>
         )}
         {current === items.length - 1 && (
-          <Button type="primary" htmlType="submit" form="edit-org-form">
+          <Button
+            loading={isLoading}
+            type="primary"
+            htmlType="submit"
+            form="edit-org-form"
+          >
             {t("save")}
           </Button>
         )}
