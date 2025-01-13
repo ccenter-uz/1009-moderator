@@ -6,11 +6,17 @@ import { useTranslation } from "react-i18next";
 interface IProps {
   rule: Rule;
   requiredFields?: string[];
+  textarea?: boolean;
 }
 
 const FORM_ITEM = "name_ru";
+const { TextArea } = Input;
 
-export const SingleNameRu: FC<IProps> = ({ rule, requiredFields = [] }) => {
+export const SingleNameRu: FC<IProps> = ({
+  rule,
+  requiredFields = [],
+  textarea = false,
+}) => {
   const { t } = useTranslation();
   return (
     <Row gutter={8}>
@@ -22,7 +28,11 @@ export const SingleNameRu: FC<IProps> = ({ rule, requiredFields = [] }) => {
           label={t(FORM_ITEM)}
           layout="vertical"
         >
-          <Input type="text" placeholder={t(FORM_ITEM)} />
+          {textarea ? (
+            <TextArea placeholder={t(FORM_ITEM)} />
+          ) : (
+            <Input type="text" placeholder={t(FORM_ITEM)} />
+          )}
         </Form.Item>
       </Col>
     </Row>
