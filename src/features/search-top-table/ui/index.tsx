@@ -92,7 +92,12 @@ export const SearchTopTable: FC<Props> = (props) => {
     });
 
     if (result.isConfirmed && result.value) {
-      await deleteOrganization(id);
+      const params = {
+        id,
+        deleteReason: result.value,
+      };
+
+      await deleteOrganization(params);
     }
   };
 

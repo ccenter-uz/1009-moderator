@@ -220,7 +220,8 @@ export const OrgEditPage: FC = () => {
     const response = await updateOrganization(formData);
 
     notificationResponse(response, t);
-    isSuccess && (onClearAllData(), navigate("/orgs/all"));
+
+    response?.data.status === 200 && (onClearAllData(), navigate("/orgs/all"));
   };
   const onValuesChange = (
     _: {

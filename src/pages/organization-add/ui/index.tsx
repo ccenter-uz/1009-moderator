@@ -160,7 +160,8 @@ export const OrgAddPage: FC = () => {
     const response = await createOrganization(formData);
 
     notificationResponse(response, t);
-    isSuccess && (onClearAllData(), navigate("/orgs/all"));
+
+    response?.data.status === 201 && (onClearAllData(), navigate("/orgs/all"));
   };
 
   const onValuesChange = (
