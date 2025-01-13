@@ -105,7 +105,7 @@ export const ManagePassagePage: FC = () => {
       regionId: values.region,
       cityId: values.city,
       districtId: values.district,
-      index: +values.index,
+      index: values.index,
       name: {
         uz: values.name_uz,
         ru: values.name_ru,

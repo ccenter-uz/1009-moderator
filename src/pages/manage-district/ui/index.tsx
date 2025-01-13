@@ -102,7 +102,7 @@ export const ManageDistrictPage: FC = () => {
       id: editingData?.id,
       regionId: values.region,
       cityId: values.city,
-      index: +values.index,
+      index: values.index,
       name: {
         uz: values.name_uz,
         ru: values.name_ru,

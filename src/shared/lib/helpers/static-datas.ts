@@ -75,7 +75,7 @@ export const SEND_BODY = [
   "apartment",
   "account",
   "mail",
-
+  "index",
   "inn",
   "bankNumber",
   "description",
