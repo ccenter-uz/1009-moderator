@@ -115,6 +115,10 @@ export const OrgEditPage: FC = () => {
         dayOffs,
       });
       dispatch(setImages(fourthStepData.images));
+      dispatch(setEditAllDay(fourthStepData?.allDay));
+      dispatch(setEditAllType(fourthStepData?.allType));
+      dispatch(setEditNoDayoffs(fourthStepData?.noDayoffs));
+      dispatch(setEditWithoutLunch(fourthStepData?.withoutLunch));
     }
   };
   const next = async () => {
