@@ -13,6 +13,7 @@ import {
 } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
+import TextArea from "antd/es/input/TextArea";
 import i18next, { t } from "i18next";
 import { FC, useState } from "react";
 import { FaTrashAlt } from "react-icons/fa";
@@ -151,7 +152,7 @@ export const OrgEditThirdStepUI: FC = () => {
             name={"index"}
             label={<ParagraphBold>{t("index")}</ParagraphBold>}
           >
-            <Input type="number" placeholder={t("index")} />
+            <TextArea rows={4} placeholder={t("index")} />
           </Form.Item>
         </Col>
         <Col span={12}>

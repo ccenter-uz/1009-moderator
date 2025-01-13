@@ -1,6 +1,7 @@
-import { Row, Col, Select, Form, FormInstance, InputNumber } from "antd";
+import { Row, Col, Select, Form, FormInstance } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { Rule } from "antd/es/form";
+import TextArea from "antd/es/input/TextArea";
 import i18next from "i18next";
 import { FC, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -80,7 +81,7 @@ export const Address3Inputs: FC<Props> = (props) => {
 
   return (
     <Row gutter={8}>
-      <Col xs={24} sm={12} md={12} lg={12} xl={5}>
+      <Col xs={24} sm={12} md={12} lg={12} xl={6}>
         <Form.Item
           name={FORM_FIELDS.index}
           rules={[rule]}
@@ -88,11 +89,7 @@ export const Address3Inputs: FC<Props> = (props) => {
           label={t(FORM_FIELDS.index)}
           layout="vertical"
         >
-          <InputNumber
-            style={{ width: "100%" }}
-            type="number"
-            placeholder={t(FORM_FIELDS.index)}
-          />
+          <TextArea placeholder={t(FORM_FIELDS.index)} />
         </Form.Item>
       </Col>
       <Col xs={24} sm={12} md={12} lg={12} xl={6}>

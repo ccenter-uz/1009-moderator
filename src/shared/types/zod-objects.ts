@@ -38,11 +38,10 @@ export const FormAddressFieldsSchema = z.object({
     .int()
     .min(0),
   index: z
-    .number({
+    .string({
       invalid_type_error: t("form.invalid", { field: "" }),
       required_error: t("form.required", { field: "" }),
     })
-    .int()
     .min(0),
   district: z
     .number({

@@ -165,7 +165,6 @@ export const OrgEditPage: FC = () => {
     const body = {
       ...form.getFieldsValue(SEND_BODY),
       id,
-      index: Number(form.getFieldValue("index")),
       paymentTypes: {
         cash: form.getFieldValue("cash"),
         terminal: form.getFieldValue("terminal"),
