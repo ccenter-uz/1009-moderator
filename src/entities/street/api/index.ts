@@ -78,6 +78,7 @@ export const streetApi = baseApi.injectEndpoints({
 
 export const {
   useGetStreetsQuery,
+  useLazyGetStreetsQuery,
   useCreateStreetMutation,
   useUpdateStreetMutation,
   useDeleteStreetMutation,
