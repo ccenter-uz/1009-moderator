@@ -46,6 +46,11 @@ export const ManageMainOrgPage: FC = () => {
   const [restoreMainOrg] = useRestoreMainOrgMutation();
   const [editingData, setEditingData] = useState<AnyObject | null>(null);
 
+  const params = returnAllParams();
+  const [status, setStatus] = useState<number>(
+    params.status ? +params.status : STATUS.ACTIVE,
+  );
+
   const handleEditOpen = (values: ItableBasicData) => {
     setEditingData({ ...values, id: values.id });
     form.setFieldsValue(values);
@@ -53,9 +58,8 @@ export const ManageMainOrgPage: FC = () => {
   };
 
   const handleSearch = ({ search }: { search: string }) => {
-    const previousParams = returnAllParams();
     if (search || search == "") {
-      setSearchParams({ ...previousParams, search });
+      setSearchParams({ ...params, search, status: status.toString() });
     }
   };
 
@@ -126,7 +130,13 @@ export const ManageMainOrgPage: FC = () => {
         columns={columns}
         data={data?.data || []}
         add={handleAdd}
-        searchPart={<BasicSearchPartUI handleSearch={handleSearch} />}
+        searchPart={
+          <BasicSearchPartUI
+            handleSearch={handleSearch}
+            status={status}
+            setStatus={setStatus}
+          />
+        }
         modalPart={
           <Form
             form={form}

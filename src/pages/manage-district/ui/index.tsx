@@ -69,6 +69,10 @@ export const ManageDistrictPage: FC = () => {
   const [restoreDistrict] = useRestoreDistrictMutation();
   const [editingData, setEditingData] = useState<valueProps | null>(null);
 
+  const params = returnAllParams();
+  const [status, setStatus] = useState<number>(
+    params.status ? +params.status : STATUS.ACTIVE,
+  );
   const handleEditOpen = (values: valueProps) => {
     const editingBody = {
       id: values.id,
@@ -91,9 +95,8 @@ export const ManageDistrictPage: FC = () => {
   };
 
   const handleSearch = ({ search }: { search: string }) => {
-    const previousParams = returnAllParams();
     if (search || search == "") {
-      setSearchParams({ ...previousParams, search });
+      setSearchParams({ ...params, search, status: status.toString() });
     }
   };
 
@@ -182,7 +185,13 @@ export const ManageDistrictPage: FC = () => {
         columns={columns}
         data={data?.data || []}
         add={handleAdd}
-        searchPart={<BasicSearchPartUI handleSearch={handleSearch} />}
+        searchPart={
+          <BasicSearchPartUI
+            handleSearch={handleSearch}
+            status={status}
+            setStatus={setStatus}
+          />
+        }
         modalPart={
           <Form
             form={form}

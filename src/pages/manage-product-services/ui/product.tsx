@@ -59,6 +59,11 @@ export const Product: FC = () => {
   const [restoreProduct] = useRestoreProductMutation();
   const [editingData, setEditingData] = useState<editProductType | null>(null);
 
+  const params = returnAllParams();
+  const [status, setStatus] = useState<number>(
+    params.status ? +params.status : STATUS.ACTIVE,
+  );
+
   const handleEditOpen = (values: editProductType) => {
     setEditingData({ ...values, id: values.id });
     form.setFieldsValue({
@@ -70,12 +75,11 @@ export const Product: FC = () => {
   };
 
   const handleSearch = ({ search }: { search: string }) => {
-    const previousParams = returnAllParams();
-
     if (search || search === "") {
       setSearchParams({
-        ...previousParams,
+        ...params,
         [ProductServicesEnum.productSearch]: search,
+        status: status.toString(),
       });
     }
   };
@@ -169,6 +173,8 @@ export const Product: FC = () => {
           additionalParams={{
             search: searchParams.get(ProductServicesEnum.productSearch),
           }}
+          status={status}
+          setStatus={setStatus}
         />
       }
       modalPart={

@@ -70,6 +70,11 @@ export const ManageVillagePage: FC = () => {
   const [restoreVillage] = useRestoreVillageMutation();
   const [editingData, setEditingData] = useState<valueProps | null>(null);
 
+  const params = returnAllParams();
+  const [status, setStatus] = useState<number>(
+    params.status ? +params.status : STATUS.ACTIVE,
+  );
+
   const handleEditOpen = (values: valueProps) => {
     const editingBody = {
       id: values.id,
@@ -92,9 +97,8 @@ export const ManageVillagePage: FC = () => {
     onOpen();
   };
   const handleSearch = ({ search }: { search: string }) => {
-    const previousParams = returnAllParams();
     if (search || search == "") {
-      setSearchParams({ ...previousParams, search });
+      setSearchParams({ ...params, search, status: status.toString() });
     }
   };
 
@@ -183,7 +187,13 @@ export const ManageVillagePage: FC = () => {
         columns={columns}
         data={data?.data || []}
         add={handleAdd}
-        searchPart={<BasicSearchPartUI handleSearch={handleSearch} />}
+        searchPart={
+          <BasicSearchPartUI
+            handleSearch={handleSearch}
+            status={status}
+            setStatus={setStatus}
+          />
+        }
         modalPart={
           <Form
             form={form}

@@ -78,6 +78,11 @@ export const ManageNearbyPage: FC = () => {
     string | number | boolean
   >(true);
 
+  const params = returnAllParams();
+  const [status, setStatus] = useState<number>(
+    params.status ? +params.status : STATUS.ACTIVE,
+  );
+
   const handleEditOpen = (values: valueProps) => {
     const editingBody = {
       id: values.id,
@@ -97,6 +102,7 @@ export const ManageNearbyPage: FC = () => {
     setSearchParams({
       nearbyCategoryId: String(nearbyCategoryId ?? undefined),
       search: search ?? "",
+      status: status.toString(),
     });
   };
 

@@ -47,6 +47,11 @@ export const ManageSegmentsPage = () => {
   const [updateSegment] = useUpdateSegmentMutation();
   const [restoreSegment] = useRestoreSegmentMutation();
   const [editingData, setEditingData] = useState<AnyObject | null>(null);
+
+  const params = returnAllParams();
+  const [status, setStatus] = useState<number>(
+    params.status ? +params.status : STATUS.ACTIVE,
+  );
   const handleEditOpen = (values: { name: string; id: string | number }) => {
     setEditingData({ ...values, id: values.id });
     const body = {
@@ -58,8 +63,7 @@ export const ManageSegmentsPage = () => {
   };
 
   const handleSearch = ({ search }: { search: string }) => {
-    const previousParams = returnAllParams();
-    setSearchParams({ ...previousParams, search });
+    setSearchParams({ ...params, search, status: status.toString() });
   };
 
   const handleSubmit = async (values: ItableBasicData) => {
@@ -135,7 +139,13 @@ export const ManageSegmentsPage = () => {
         columns={columns}
         data={data?.data || []}
         add={handleAdd}
-        searchPart={<BasicSearchPartUI handleSearch={handleSearch} />}
+        searchPart={
+          <BasicSearchPartUI
+            handleSearch={handleSearch}
+            status={status}
+            setStatus={setStatus}
+          />
+        }
         modalPart={
           <Form
             form={form}

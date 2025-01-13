@@ -74,6 +74,10 @@ export const ManageResidentialAreaPage: FC = () => {
   const [restoreResidentialArea] = useRestoreResidentialAreaMutation();
   const [editingData, setEditingData] = useState<valueProps | null>(null);
 
+  const params = returnAllParams();
+  const [status, setStatus] = useState<number>(
+    params.status ? +params.status : STATUS.ACTIVE,
+  );
   const handleEditOpen = (values: valueProps) => {
     const editingBody = {
       id: values.id,
@@ -98,7 +102,7 @@ export const ManageResidentialAreaPage: FC = () => {
   const handleSearch = ({ search }: { search: string }) => {
     const previousParams = returnAllParams();
     if (search || search === "") {
-      setSearchParams({ ...previousParams, search });
+      setSearchParams({ ...previousParams, search, status: status.toString() });
     }
   };
 
@@ -189,7 +193,13 @@ export const ManageResidentialAreaPage: FC = () => {
         columns={columns}
         data={data?.data || []}
         add={handleAdd}
-        searchPart={<BasicSearchPartUI handleSearch={handleSearch} />}
+        searchPart={
+          <BasicSearchPartUI
+            handleSearch={handleSearch}
+            status={status}
+            setStatus={setStatus}
+          />
+        }
         modalPart={
           <Form
             form={form}
