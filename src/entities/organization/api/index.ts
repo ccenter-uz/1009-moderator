@@ -88,7 +88,7 @@ export const organizationApi = baseApi.injectEndpoints({
     // DELETE
     deleteOrganization: build.mutation({
       query: (params) => ({
-        url: `${API_MAP.DELETE_ORGANIZATION}/${params.id}?reason=${params?.reason}`,
+        url: `${API_MAP.DELETE_ORGANIZATION}/${params.id}?deleteReason=${params?.deleteReason}`,
         method: API_METHODS.DELETE,
       }),
       invalidatesTags: ["Organizations"],
