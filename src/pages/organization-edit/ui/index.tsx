@@ -49,8 +49,7 @@ export const OrgEditPage: FC = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [updateOrganization, { isLoading, isSuccess }] =
-    useUpdateOrganizationMutation();
+  const [updateOrganization, { isLoading }] = useUpdateOrganizationMutation();
   const [form] = Form.useForm();
   const { data: categoryTu } = useSelector(
     ({ useEditOrgFirstStepSlice }: RootState) => useEditOrgFirstStepSlice,
@@ -274,6 +273,7 @@ export const OrgEditPage: FC = () => {
     dispatch(setCategoryData([]));
     dispatch(setOrientirData([]));
     dispatch(setPhoneData([]));
+    dispatch(setImages([]));
     dispatch(setEditAllDay(false));
     dispatch(setEditAllType(false));
     dispatch(setEditNoDayoffs(false));

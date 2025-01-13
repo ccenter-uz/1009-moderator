@@ -43,8 +43,7 @@ export const OrgAddPage: FC = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [createOrganization, { isLoading, isSuccess }] =
-    useCreateOrganizationMutation();
+  const [createOrganization, { isLoading }] = useCreateOrganizationMutation();
   const [form] = Form.useForm();
   const { data: categoryTu } = useSelector(
     ({ useAddOrgFirstStepSlice }: RootState) => useAddOrgFirstStepSlice,
@@ -215,6 +214,7 @@ export const OrgAddPage: FC = () => {
     dispatch(setCategoryData([]));
     dispatch(setOrientirData([]));
     dispatch(setPhoneData([]));
+    dispatch(setImages([]));
     dispatch(setAllDay(false));
     dispatch(setAllType(false));
     dispatch(setNoDayoffs(false));
