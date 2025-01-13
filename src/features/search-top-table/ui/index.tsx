@@ -1,15 +1,19 @@
-import { Row, Col, Table, Flex } from "antd";
+import { Row, Col, Table, Flex, Tooltip } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { ColumnsType } from "antd/es/table";
 import { t } from "i18next";
 import { FC, useState } from "react";
 import { FaEnvelope, FaPencilAlt } from "react-icons/fa";
+import { MdRestore } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 import { DeleteTableItemUI } from "@features/delete-table-item";
 
-import { useDeleteOrganizationMutation } from "@entities/organization";
+import {
+  useDeleteOrganizationMutation,
+  useRestoreOrganizationMutation,
+} from "@entities/organization";
 
 import {
   clearEditStepStorage,
@@ -44,6 +48,7 @@ export const SearchTopTable: FC<Props> = (props) => {
   const navigate = useNavigate();
   const [selectedRowKeys, setSelectedRowKeys] = useState<number>(0);
   const [deleteOrganization] = useDeleteOrganizationMutation();
+  const [restoreOrganization] = useRestoreOrganizationMutation();
 
   const checkExistId = (record: AnyObject) => {
     const { editingId, firstStepData } = getEditingStepStorageValues();
@@ -153,22 +158,37 @@ export const SearchTopTable: FC<Props> = (props) => {
       key: "action",
       dataIndex: "action",
       align: "center",
-      render: (text: string, record: AnyObject) => (
-        <Flex justify="center" align="center" gap={8}>
-          <Can i="update">
-            <FaPencilAlt
-              onClick={() => checkExistId(record)}
-              color="grey"
-              fontSize={16}
-              cursor={"pointer"}
-              title={t("edit")}
-            />
-          </Can>
-          <Can i="delete">
-            <DeleteTableItemUI fetch={() => handleDelete(record.id)} />
-          </Can>
-        </Flex>
-      ),
+      render: (text: string, record: AnyObject) => {
+        if (record.status === 1) {
+          return (
+            <Flex justify="center" align="center" gap={8}>
+              <Can i="update">
+                <FaPencilAlt
+                  onClick={() => checkExistId(record)}
+                  color="grey"
+                  fontSize={16}
+                  cursor={"pointer"}
+                  title={t("edit")}
+                />
+              </Can>
+              <Can i="delete">
+                <DeleteTableItemUI fetch={() => handleDelete(record.id)} />
+              </Can>
+            </Flex>
+          );
+        } else if (record.status === -1) {
+          return (
+            <Tooltip title={t("restore")}>
+              <MdRestore
+                color="grey"
+                cursor={"pointer"}
+                size={20}
+                onClick={() => restoreOrganization(record.id)}
+              />
+            </Tooltip>
+          );
+        }
+      },
     },
   ];
 

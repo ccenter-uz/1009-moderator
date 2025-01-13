@@ -112,6 +112,8 @@ export const setColorByStatus = (status: string) => {
       );
     case i18next.t("active"):
       return <span style={{ color: "#52c41a" }}>{i18next.t("active")}</span>;
+    case i18next.t("deleted"):
+      return <span style={{ color: "#ff4d4f" }}>{i18next.t("deleted")}</span>;
     default:
       return null;
   }

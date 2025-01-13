@@ -103,6 +103,15 @@ export const organizationApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["UnconfirmedOrganizations"],
     }),
+
+    // RESTORE
+    restoreOrganization: build.mutation({
+      query: (id) => ({
+        url: `${API_MAP.RESTORE_ORGANIZATION}/${id}/restore`,
+        method: API_METHODS.PUT,
+      }),
+      invalidatesTags: ["UnconfirmedOrganizations"],
+    }),
   }),
 });
 
@@ -113,4 +122,5 @@ export const {
   useUpdateOrganizationMutation,
   useDeleteOrganizationMutation,
   useCheckOrganizationMutation,
+  useRestoreOrganizationMutation,
 } = organizationApi;

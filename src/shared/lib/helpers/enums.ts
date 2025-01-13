@@ -59,3 +59,9 @@ export const enum STEPS_EDIT_DATA {
   CURRENT = "currentStepEdit",
   EDIT_ID = "editingOrgId",
 }
+
+export const enum ROLES {
+  ADMIN = "admin",
+  MODERATOR = "moderator",
+  USER = "user",
+}

@@ -46,11 +46,15 @@ const baseQuery = async (
   const errorData: IRowResultData =
     rawResult.error?.data || rawResult.data || {};
 
-  if (errorData.error) {
-    notification.error({
-      message: `${errorData.status}: ${errorData.error.message.toUpperCase()}`,
-      placement: "bottomRight",
-    });
+  if (errorData.status !== 401 && errorData.status !== 403) {
+    if (errorData.error) {
+      notification.error({
+        message: `${
+          errorData.status
+        }: ${errorData.error.message.toUpperCase()}`,
+        placement: "bottomRight",
+      });
+    }
   }
 
   // Check for 401 and 403 Unauthorized error
@@ -62,7 +66,9 @@ const baseQuery = async (
     // Redirect to the login page
     deleteCookie("access_token");
     removeLocalStorage("access_token");
-    window.location.href = "/login";
+    if (window.location.pathname !== "/login") {
+      window.location.href = "/login";
+    }
     notification.error({
       message: i18next.t("unauthorized"),
       placement: "bottomRight",

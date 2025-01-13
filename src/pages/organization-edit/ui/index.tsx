@@ -114,10 +114,10 @@ export const OrgEditPage: FC = () => {
         dayOffs,
       });
       dispatch(setImages(fourthStepData.images));
-      dispatch(setEditAllDay(fourthStepData?.allDay));
-      dispatch(setEditAllType(fourthStepData?.allType));
-      dispatch(setEditNoDayoffs(fourthStepData?.noDayoffs));
-      dispatch(setEditWithoutLunch(fourthStepData?.withoutLunch));
+      dispatch(setEditAllDay(fourthStepData.allDay));
+      dispatch(setEditAllType(fourthStepData.allType));
+      dispatch(setEditNoDayoffs(fourthStepData.noDayoffs));
+      dispatch(setEditWithoutLunch(fourthStepData.withoutLunch));
     }
   };
   const next = async () => {
@@ -165,6 +165,7 @@ export const OrgEditPage: FC = () => {
     const body = {
       ...form.getFieldsValue(SEND_BODY),
       id,
+      index: Number(form.getFieldValue("index")),
       paymentTypes: {
         cash: form.getFieldValue("cash"),
         terminal: form.getFieldValue("terminal"),

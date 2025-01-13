@@ -152,7 +152,7 @@ export const OrgAddThirdStepUI: FC = () => {
             name={"index"}
             label={<ParagraphBold>{t("index")}</ParagraphBold>}
           >
-            <Input placeholder={t("index")} />
+            <Input type="number" placeholder={t("index")} />
           </Form.Item>
         </Col>
         <Col span={12}>

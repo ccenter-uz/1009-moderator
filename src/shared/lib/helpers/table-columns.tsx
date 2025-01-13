@@ -486,6 +486,7 @@ export const searchModalColumns: searchColType = [
 export const status: { [key: number]: string } = {
   0: i18next.t("not-active"),
   1: i18next.t("active"),
+  "-1": i18next.t("deleted"),
 };
 
 export const usersTableColumns = [

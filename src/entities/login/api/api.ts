@@ -14,7 +14,7 @@ import {
   setLocalStorage,
 } from "@shared/lib/helpers";
 
-import { successLoginType } from "../model/types";
+import { errorLoginType, successLoginType } from "../model/types";
 
 export const loginApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
@@ -40,6 +40,10 @@ export const loginApi = baseApi.injectEndpoints({
             });
           }
 
+          if (response.result.role) {
+            setLocalStorage("user-role", response.result.role);
+          }
+
           notification.success({
             message: i18next.t("success"),
             placement: "bottomRight",
@@ -48,6 +52,15 @@ export const loginApi = baseApi.injectEndpoints({
         } else {
           return null;
         }
+      },
+      transformErrorResponse: (
+        response: FetchBaseQueryError & errorLoginType,
+      ) => {
+        notification.error({
+          message: `${response.error.message.toUpperCase()}`,
+          placement: "bottomRight",
+        });
+        return response;
       },
     }),
   }),
