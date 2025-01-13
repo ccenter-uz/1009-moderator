@@ -16,7 +16,9 @@ import {
   getEditingStepStorageValues,
   handleEditLocalDatas,
   phoneColumns,
+  setColorByStatus,
   setLocalStorage,
+  status,
   STEPS_EDIT_DATA,
   STEPS_ENUM,
 } from "@shared/lib/helpers";
@@ -138,6 +140,12 @@ export const SearchTopTable: FC<Props> = (props) => {
       title: t("address"),
       dataIndex: "address",
       key: "address",
+    },
+    {
+      title: t("status"),
+      dataIndex: "status",
+      key: "status",
+      render: (text: number) => setColorByStatus(status[text]),
     },
     {
       width: 80,

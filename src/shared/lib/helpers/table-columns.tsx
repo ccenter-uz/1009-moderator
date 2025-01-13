@@ -483,7 +483,7 @@ export const searchModalColumns: searchColType = [
   },
 ];
 
-const status: { [key: number]: string } = {
+export const status: { [key: number]: string } = {
   0: i18next.t("not-active"),
   1: i18next.t("active"),
 };
