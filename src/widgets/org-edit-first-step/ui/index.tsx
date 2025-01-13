@@ -299,7 +299,7 @@ export const OrgEditFirstStepUI: FC<IProps> = (props) => {
               placeholder={t("segment")}
               options={segmentsData?.data.map((item: AnyObject) => ({
                 value: item.id,
-                label: item.name[i18next.language],
+                label: item.name,
               }))}
               loading={isLoadingSegments}
               allowClear

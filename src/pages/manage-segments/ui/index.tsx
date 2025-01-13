@@ -20,7 +20,7 @@ import {
 import { SingleName } from "@entities/single-name";
 
 import {
-  columnsForForBasicTable,
+  columnsWithSingleName,
   getZodRequiredKeys,
   notificationResponse,
   returnAllParams,
@@ -83,7 +83,7 @@ export const ManageSegmentsPage = () => {
   };
 
   const columns = [
-    ...columnsForForBasicTable,
+    ...columnsWithSingleName,
     {
       flex: 0.5,
       title: t("action"),
