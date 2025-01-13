@@ -3,6 +3,7 @@ import i18next from "i18next";
 import { FC, useEffect, useState } from "react";
 
 import { useLazyGetNearbyQuery } from "@entities/nearby";
+import { useLazyGetStreetsQuery } from "@entities/street";
 import { useLazyGetVillagesQuery } from "@entities/village";
 
 import { useDisclosure } from "@shared/lib/hooks";
@@ -14,16 +15,7 @@ type Props = {
   form: FormInstance;
 };
 
-const villageColumns = [
-  {
-    title: i18next.t("name"),
-    dataIndex: "name",
-    key: "name",
-    render: (text: { [key: string]: string }) => text[i18next.language],
-  },
-];
-
-const nearbyColumns = [
+const columns = [
   {
     title: i18next.t("name"),
     dataIndex: "name",
@@ -44,12 +36,19 @@ export const AddressSearchPartUI: FC<Props> = (props) => {
     onOpen: onOpenNearby,
     onClose: onCloseNearby,
   } = useDisclosure();
+  const {
+    isOpen: isOpenStreet,
+    onOpen: onOpenStreet,
+    onClose: onCloseStreet,
+  } = useDisclosure();
 
   // FETCHERS
   const [triggerVillage, { data: dataVillage, isLoading: loadingVillage }] =
     useLazyGetVillagesQuery();
   const [triggerNearby, { data: dataNearby, isLoading: loadingNearby }] =
     useLazyGetNearbyQuery();
+  const [triggerStreet, { data: dataStreet, isLoading: loadingStreet }] =
+    useLazyGetStreetsQuery();
   // PAGINATIONS
   const [villagePagination, setVillagePagination] = useState({
     page: 1,
@@ -59,9 +58,14 @@ export const AddressSearchPartUI: FC<Props> = (props) => {
     page: 1,
     limit: 10,
   });
+  const [streetPagination, setStreetPagination] = useState({
+    page: 1,
+    limit: 10,
+  });
   // SEARCH_VALUES
   const [searchValueVillage, setSearchValueVillage] = useState("");
   const [searchValueNearby, setSearchValueNearby] = useState("");
+  const [searchValueStreet, setSearchValueStreet] = useState("");
 
   useEffect(() => {
     if (isOpenVillage) {
@@ -85,12 +89,23 @@ export const AddressSearchPartUI: FC<Props> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nearbyPagination, searchValueNearby, isOpenNearby]);
 
+  useEffect(() => {
+    if (isOpenStreet) {
+      triggerStreet({
+        page: streetPagination.page,
+        limit: streetPagination.limit,
+        search: searchValueStreet,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [streetPagination, searchValueStreet, isOpenStreet]);
+
   return (
     <Row>
       <AddressThreeSearchPartUI form={form} />
 
       <SingleInputWithModalUI
-        columns={villageColumns}
+        columns={columns}
         isOpen={isOpenVillage}
         onOpen={onOpenVillage}
         onClose={onCloseVillage}
@@ -105,7 +120,7 @@ export const AddressSearchPartUI: FC<Props> = (props) => {
         setSearchValue={setSearchValueVillage}
       />
       <SingleInputWithModalUI
-        columns={nearbyColumns}
+        columns={columns}
         isOpen={isOpenNearby}
         onOpen={onOpenNearby}
         onClose={onCloseNearby}
@@ -118,6 +133,21 @@ export const AddressSearchPartUI: FC<Props> = (props) => {
         pagination={nearbyPagination}
         setPagination={setNearbyPagination}
         setSearchValue={setSearchValueNearby}
+      />
+      <SingleInputWithModalUI
+        columns={columns}
+        isOpen={isOpenStreet}
+        onOpen={onOpenStreet}
+        onClose={onCloseStreet}
+        loading={loadingStreet}
+        totalItems={dataStreet?.total || 0}
+        data={dataStreet?.data || []}
+        form={form}
+        name={"streetId"}
+        label={"street"}
+        pagination={streetPagination}
+        setPagination={setStreetPagination}
+        setSearchValue={setSearchValueStreet}
       />
     </Row>
   );
