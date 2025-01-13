@@ -32,18 +32,11 @@ export const SingleNameUz: FC<IProps> = ({
           label={t(FORM_ITEM)}
           layout="vertical"
         >
-          {textarea ? (
-            <TextArea
-              placeholder={t(FORM_ITEM)}
-              onChange={(e) => setValue(e.target.value)}
-            />
-          ) : (
-            <Input
-              type="text"
-              placeholder={t(FORM_ITEM)}
-              onChange={(e) => setValue(e.target.value)}
-            />
-          )}
+          <Input
+            type="text"
+            placeholder={t(FORM_ITEM)}
+            onChange={(e) => setValue(e.target.value)}
+          />
         </Form.Item>
         {value && (
           <Paragraph
