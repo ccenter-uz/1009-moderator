@@ -3,7 +3,7 @@ import { FormInstance } from "antd/es/form";
 import i18next from "i18next";
 import { FC, useState } from "react";
 
-import { useUpdateUserMutation } from "@entities/users";
+import { useUpdateMeMutation } from "@entities/users";
 
 import { notificationResponse } from "@shared/lib/helpers";
 
@@ -21,7 +21,7 @@ export const SettingsModal: FC<IProps> = (props) => {
   const { isOpen, onClose, data } = props;
   const [form] = Form.useForm();
   const [isEditable, setIsEditable] = useState<boolean>(true);
-  const [updateUser, { isLoading }] = useUpdateUserMutation();
+  const [updateMe, { isLoading }] = useUpdateMeMutation();
 
   const closeModal = () => {
     setIsEditable(true);
@@ -30,12 +30,8 @@ export const SettingsModal: FC<IProps> = (props) => {
   };
   const handleSubmit = async (values: FormInstance) => {
     console.log(values, "values");
-    const body = {
-      ...values,
-      id: data?.id,
-    };
 
-    const response = await updateUser(body);
+    const response = await updateMe(values);
 
     notificationResponse(response, i18next.t, closeModal);
   };

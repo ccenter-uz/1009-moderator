@@ -102,6 +102,17 @@ export const usersApi = baseApi.injectEndpoints({
           setLocalStorage("user-name", data?.result.fullName);
         });
       },
+      providesTags: ["Me"],
+    }),
+
+    // UPDATE-ME
+    updateMe: build.mutation({
+      query: (body) => ({
+        url: API_MAP.UPDATE_ME,
+        method: API_METHODS.PUT,
+        body,
+      }),
+      invalidatesTags: ["Me"],
     }),
   }),
 });
@@ -114,4 +125,5 @@ export const {
   useDeleteUserMutation,
   useRestoreUserMutation,
   useGetMeQuery,
+  useUpdateMeMutation,
 } = usersApi;

@@ -106,6 +106,7 @@ export const baseApi = createApi({
     "PhoneType",
     "Organizations",
     "UnconfirmedOrganizations",
+    "Me",
   ],
   endpoints: () => ({}),
 });
