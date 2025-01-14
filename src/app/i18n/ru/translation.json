@@ -235,5 +235,6 @@
   "settings": "Настройки",
   "confirmPassword": "Подтвердить пароль",
   "change": "Изменить",
-  "old-password": "Старый пароль"
+  "old-password": "Старый пароль",
+  "new-password": "Новый пароль"
 }

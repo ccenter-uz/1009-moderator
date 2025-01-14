@@ -71,7 +71,7 @@ export const usersApi = baseApi.injectEndpoints({
     // UPDATE-USER
     updateUser: build.mutation({
       query: (body) => ({
-        url: `${API_MAP.UPDATE_USER}/${body.userId}`,
+        url: `${API_MAP.UPDATE_USER}/${body.id}`,
         method: API_METHODS.PUT,
         body,
       }),
@@ -99,7 +99,7 @@ export const usersApi = baseApi.injectEndpoints({
       query: () => ({ url: API_MAP.ME }),
       onQueryStarted(args, { queryFulfilled }) {
         queryFulfilled.then(({ data }) => {
-          setLocalStorage("user-name", data?.data.fullName);
+          setLocalStorage("user-name", data?.result.fullName);
         });
       },
     }),

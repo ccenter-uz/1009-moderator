@@ -5,6 +5,8 @@ import { IoLogOut, IoSettings } from "react-icons/io5";
 
 import { LogoutLink } from "@features/logout";
 
+import { useGetMeQuery } from "@entities/users";
+
 import { getLocalStorage } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 
@@ -12,7 +14,7 @@ import { SettingsModal } from "./settings-modal";
 
 export const AvatarComponent: FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  //   const { data, isLoading } = useGetMeQuery({});
+  const { data } = useGetMeQuery({});
   const userName = getLocalStorage("user-name")
     ? getLocalStorage("user-name")?.split(" ")
     : ["Aziz", "Azizov"];
@@ -58,6 +60,7 @@ export const AvatarComponent: FC = () => {
       >
         {`${userName[0]} ${userName[1]}`}
       </h3>
+      <span style={{ color: "grey" }}>{data?.result?.role.name}</span>
       <Divider style={{ margin: "8px 0" }} />
       <Menu
         items={items}
@@ -81,7 +84,7 @@ export const AvatarComponent: FC = () => {
           {`${userName[0].slice(0, 1)}${userName[1].slice(0, 1)}`}
         </Avatar>
       </Popover>
-      <SettingsModal isOpen={isOpen} onClose={onClose} />
+      <SettingsModal isOpen={isOpen} onClose={onClose} data={data?.result} />
     </>
   );
 };
