@@ -194,13 +194,14 @@ export const ManageNearbyPage: FC = () => {
         searchPart={
           <NearbyPageSearchUI
             handleSearch={handleSearch}
+            status={status}
+            setStatus={setStatus}
             additionalSearch={
               <Form.Item
                 name={"nearby-category"}
                 label={t("nearby-category")}
                 style={{ marginBottom: 0, flex: 1 }}
               >
-                {/* AnyObject cause cannot find proper type */}
                 <Select
                   labelRender={renderLabelSelect}
                   allowClear
