@@ -1,5 +1,5 @@
 import { baseApi } from "@shared/api";
-import { API_MAP, API_METHODS } from "@shared/lib/helpers";
+import { API_MAP, API_METHODS, setLocalStorage } from "@shared/lib/helpers";
 
 import { setRoles, setUsers } from "../model/Slicer";
 import { getRolesType, getUsersType } from "../model/types";
@@ -93,6 +93,16 @@ export const usersApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Users"],
     }),
+
+    // GET-ME
+    getMe: build.query({
+      query: () => ({ url: API_MAP.ME }),
+      onQueryStarted(args, { queryFulfilled }) {
+        queryFulfilled.then(({ data }) => {
+          setLocalStorage("user-name", data?.data.fullName);
+        });
+      },
+    }),
   }),
 });
 
@@ -103,4 +113,5 @@ export const {
   useUpdateUserMutation,
   useDeleteUserMutation,
   useRestoreUserMutation,
+  useGetMeQuery,
 } = usersApi;

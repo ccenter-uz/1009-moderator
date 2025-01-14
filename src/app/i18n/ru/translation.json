@@ -230,5 +230,10 @@
   "create": "Новый",
   "update": "Редактирования",
   "deleted": "Удалено",
-  "reject-reason": "Причина отказа"
+  "reject-reason": "Причина отказа",
+  "profile": "Профиль",
+  "settings": "Настройки",
+  "confirmPassword": "Подтвердить пароль",
+  "change": "Изменить",
+  "old-password": "Старый пароль"
 }
