@@ -21,13 +21,14 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { useGetPhoneTypeQuery } from "@entities/phone";
 
-import { GET_ALL_ACTIVE_STATUS } from "@shared/lib/helpers";
+import { GET_ALL_ACTIVE_STATUS, getLocalStorage } from "@shared/lib/helpers";
 import { RootState } from "@shared/types";
 import { ParagraphBold } from "@shared/ui/paragraph-bold";
 
 import { setData } from "../model/Slicer";
 
 export const OrgAddThirdStepUI: FC = () => {
+  const role = getLocalStorage("user-role");
   const { data } = useSelector(
     ({ useAddOrgThirdStepSlice }: RootState) => useAddOrgThirdStepSlice,
   );
@@ -54,18 +55,20 @@ export const OrgAddThirdStepUI: FC = () => {
       dataIndex: "phone",
       key: "phone",
     },
-    {
-      width: 80,
-      title: t("secret"),
-      dataIndex: "isSecret",
-      key: "isSecret",
-      render: (text: string, record: AnyObject) => (
-        <Checkbox
-          checked={!!text}
-          onChange={(e: CheckboxChangeEvent) => onSecretCheck(e, record)}
-        />
-      ),
-    },
+    role === "moderator"
+      ? {
+          width: 80,
+          title: t("secret"),
+          dataIndex: "isSecret",
+          key: "isSecret",
+          render: (text: string, record: AnyObject) => (
+            <Checkbox
+              checked={!!text}
+              onChange={(e: CheckboxChangeEvent) => onSecretCheck(e, record)}
+            />
+          ),
+        }
+      : {},
     {
       title: t("action"),
       dataIndex: "action",
