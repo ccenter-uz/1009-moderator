@@ -12,6 +12,7 @@ import {
   MdOutlinePending,
   MdOutlineShoppingCart,
   MdPayments,
+  MdPending,
   MdSettings,
 } from "react-icons/md";
 import { GoOrganization } from "react-icons/go";
@@ -53,6 +54,7 @@ import {
 } from "./permissions-by-role";
 import { getLocalStorage } from "../helpers";
 import { ManageSegmentsAsync } from "@pages/manage-segments";
+import { OrgWaitingsAsync } from "@pages/organization-waitings";
 
 function BubbleError() {
   const error = useRouteError();
@@ -148,6 +150,14 @@ const childRoutes = [
         icon: <MdOutlinePending />,
         path: "unconfirmed",
         element: <OrgUnconfirmedAsync />,
+      },
+      {
+        key: "/orgs/waitings",
+        name: "/orgs/waitings",
+        label: <Link to="/orgs/waitings">{i18next.t("waitings")}</Link>,
+        icon: <MdPending />,
+        path: "waitings",
+        element: <OrgWaitingsAsync />,
       },
       {
         key: "/orgs/add",
