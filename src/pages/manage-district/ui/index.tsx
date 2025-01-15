@@ -95,8 +95,17 @@ export const ManageDistrictPage: FC = () => {
   };
 
   const handleSearch = ({ search }: { search: string }) => {
-    if (search || search == "") {
-      setSearchParams({ ...params, search, status: status.toString() });
+    let inputValue = search;
+    if (inputValue === undefined) {
+      inputValue = "";
+    }
+
+    if (inputValue || inputValue === "" || typeof status === "number") {
+      setSearchParams({
+        ...params,
+        search: inputValue.trim(),
+        status: status.toString(),
+      });
     }
   };
 

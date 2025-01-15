@@ -99,11 +99,19 @@ export const ManageNearbyPage: FC = () => {
   };
 
   const handleSearch = ({ search }: { search: string }) => {
-    setSearchParams({
-      nearbyCategoryId: String(nearbyCategoryId ?? undefined),
-      search: search ?? "",
-      status: status.toString(),
-    });
+    let inputValue = search;
+    if (inputValue === undefined) {
+      inputValue = "";
+    }
+
+    if (inputValue || inputValue === "") {
+      setSearchParams({
+        ...params,
+        nearbyCategoryId: String(nearbyCategoryId ?? undefined),
+        search: inputValue.trim().trim(),
+        status: status.toString(),
+      });
+    }
   };
 
   const handleCategorySelect = (value: string | number) => {

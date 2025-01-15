@@ -63,7 +63,18 @@ export const ManageSegmentsPage = () => {
   };
 
   const handleSearch = ({ search }: { search: string }) => {
-    setSearchParams({ ...params, search, status: status.toString() });
+    let inputValue = search;
+    if (inputValue === undefined) {
+      inputValue = "";
+    }
+
+    if (inputValue || inputValue === "") {
+      setSearchParams({
+        ...params,
+        search: inputValue.trim().trim(),
+        status: status.toString(),
+      });
+    }
   };
 
   const handleSubmit = async (values: ItableBasicData) => {

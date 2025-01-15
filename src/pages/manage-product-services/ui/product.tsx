@@ -75,10 +75,15 @@ export const Product: FC = () => {
   };
 
   const handleSearch = ({ search }: { search: string }) => {
-    if (search || search === "") {
+    let inputValue = search;
+    if (inputValue === undefined) {
+      inputValue = "";
+    }
+
+    if (inputValue || inputValue === "" || typeof status === "number") {
       setSearchParams({
         ...params,
-        [ProductServicesEnum.productSearch]: search,
+        [ProductServicesEnum.productSearch]: inputValue,
         status: status.toString(),
       });
     }

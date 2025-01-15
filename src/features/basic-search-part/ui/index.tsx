@@ -38,11 +38,17 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
   } = props;
   const [form] = Form.useForm();
   const { t } = useTranslation();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
+  const params = returnAllParams();
   const handleReset = () => {
     form.resetFields();
-    handleSearch({ search: "", status: STATUS.ACTIVE });
+    setSearchParams({
+      ...params,
+      search: "",
+      status: STATUS.ACTIVE.toString(),
+    });
+    setStatus(STATUS.ACTIVE);
   };
 
   const handleStatusChange = (e: number) => {

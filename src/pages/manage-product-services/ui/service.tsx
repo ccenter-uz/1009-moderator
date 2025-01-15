@@ -25,6 +25,7 @@ import {
   getZodRequiredKeys,
   notificationResponse,
   returnAllParams,
+  STATUS,
 } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { ItableBasicData } from "@shared/types";
@@ -55,6 +56,11 @@ export const Service: FC = () => {
 
   const [isAddBtnDisable, setIsAddBtnDisable] = useState<boolean>(true);
 
+  const params = returnAllParams();
+  const [subStatus, setSubStatus] = useState<number>(
+    params.status ? +params.status : STATUS.ACTIVE,
+  );
+
   const handleEditOpen = (values: editServiceType) => {
     setEditingData({ ...values, id: values.id });
     form.setFieldsValue({
@@ -66,12 +72,16 @@ export const Service: FC = () => {
   };
 
   const handleSearch = ({ search }: { search: string }) => {
-    const previousParams = returnAllParams();
+    let inputValue = search;
+    if (inputValue === undefined || inputValue === null) {
+      inputValue = "";
+    }
 
-    if (search || search === "") {
+    if (inputValue || inputValue === "" || typeof status === "number") {
       setSearchParams({
-        ...previousParams,
-        [ProductServicesEnum.serviceSearch]: search,
+        ...params,
+        [ProductServicesEnum.serviceSearch]: inputValue,
+        status: status.toString(),
       });
     }
   };
@@ -178,6 +188,8 @@ export const Service: FC = () => {
             search: searchParams.get(ProductServicesEnum.serviceSearch),
           }}
           isSearchBtnDisable={isAddBtnDisable}
+          subStatus={subStatus}
+          setSubStatus={setSubStatus}
         />
       }
       modalPart={
