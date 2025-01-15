@@ -236,5 +236,6 @@
   "confirmPassword": "Подтвердить пароль",
   "change": "Изменить",
   "old-password": "Старый пароль",
-  "new-password": "Новый пароль"
+  "new-password": "Новый пароль",
+  "password-is-not-match": "Пароли не совпадают"
 }

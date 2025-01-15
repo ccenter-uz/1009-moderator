@@ -1,7 +1,7 @@
 import { Modal, Flex, Button, Divider, Input, Form } from "antd";
 import { FormInstance } from "antd/es/form";
 import i18next from "i18next";
-import { FC, useState } from "react";
+import { ChangeEvent, FC, useState } from "react";
 
 import { useUpdateMeMutation } from "@entities/users";
 
@@ -22,6 +22,7 @@ export const SettingsModal: FC<IProps> = (props) => {
   const [form] = Form.useForm();
   const [isEditable, setIsEditable] = useState<boolean>(true);
   const [updateMe, { isLoading }] = useUpdateMeMutation();
+  const [hasNewPassword, setHasNewPassword] = useState(false);
 
   const closeModal = () => {
     setIsEditable(true);
@@ -34,6 +35,15 @@ export const SettingsModal: FC<IProps> = (props) => {
     const response = await updateMe(values);
 
     notificationResponse(response, i18next.t, closeModal);
+  };
+
+  const handleNewPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    if (value === "") {
+      return setHasNewPassword(false);
+    }
+
+    return setHasNewPassword(true);
   };
 
   return (
@@ -105,12 +115,30 @@ export const SettingsModal: FC<IProps> = (props) => {
           <Input.Password
             disabled={isEditable}
             placeholder={i18next.t("password")}
+            onChange={handleNewPasswordChange}
           />
         </Form.Item>
         <Form.Item
           name="confirmNewPassword"
           label={i18next.t("confirmPassword")}
           dependencies={["newPassword"]}
+          hasFeedback
+          rules={[
+            {
+              required: hasNewPassword,
+              message: i18next.t("confirmPassword"),
+            },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (value && value !== getFieldValue("newPassword")) {
+                  return Promise.reject(
+                    new Error(i18next.t("password-is-not-match")),
+                  );
+                }
+                return Promise.resolve();
+              },
+            }),
+          ]}
         >
           <Input.Password
             disabled={isEditable}
