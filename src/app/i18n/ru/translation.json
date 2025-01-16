@@ -230,5 +230,18 @@
   "create": "Новый",
   "update": "Редактирования",
   "deleted": "Удалено",
-  "reject-reason": "Причина отказа"
+  "reject-reason": "Причина отказа",
+  "customize-ui": "Настройка интерфейса",
+  "font-size": "Размер шрифта",
+  "small": "Маленький",
+  "medium": "Средний",
+  "large": "Большой",
+  "font-weight": "Толщина шрифта",
+  "light": "Легкий",
+  "normal": "Нормальный",
+  "bold": "Жирный",
+  "component-size": "Размер компонента",
+  "border-width": "Ширина границы",
+  "theme": "Тема",
+  "current-color": "Текущий цвет"
 }
