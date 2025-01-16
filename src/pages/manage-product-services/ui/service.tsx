@@ -80,7 +80,7 @@ export const Service: FC = () => {
       const params = returnAllParams();
       setSearchParams({
         ...params,
-        serviceStatus: status,
+        serviceStatus: status ? status.toString() : STATUS.ACTIVE.toString(),
         [ProductServicesEnum.serviceSearch]: inputValue,
       });
     }

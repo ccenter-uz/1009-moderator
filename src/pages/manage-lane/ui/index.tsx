@@ -112,7 +112,7 @@ export const ManageLanePage: FC = () => {
       setSearchParams({
         ...params,
         search: inputValue.trim(),
-        status: status.toString(),
+        status: status ? status.toString() : STATUS.ACTIVE.toString(),
       });
     }
   };

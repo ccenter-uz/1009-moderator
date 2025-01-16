@@ -75,7 +75,7 @@ export const ManageNearbyCategoryPage: FC = () => {
       setSearchParams({
         ...params,
         search: inputValue.trim(),
-        status: status.toString() || STATUS.ACTIVE.toString(),
+        status: status ? status.toString() : STATUS.ACTIVE.toString(),
       });
     }
   };

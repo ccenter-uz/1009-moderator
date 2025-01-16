@@ -110,8 +110,8 @@ export const ManageNearbyPage: FC = () => {
       setSearchParams({
         ...params,
         nearbyCategoryId: nearbyCategoryId?.toString() || "",
-        search: inputValue.trim().trim(),
-        status: status.toString(),
+        search: inputValue.trim(),
+        status: status ? status.toString() : STATUS.ACTIVE.toString(),
       });
     }
   };

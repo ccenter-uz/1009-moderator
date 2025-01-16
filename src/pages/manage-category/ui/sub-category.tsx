@@ -79,7 +79,7 @@ export const SubCategory: FC = () => {
     const params = returnAllParams();
     setSearchParams({
       ...params,
-      subCategoryStatus: status,
+      subCategoryStatus: status ? status.toString() : STATUS.ACTIVE.toString(),
       [CategorySubCategoryEnums.subCategorySearch]: search || "",
     });
   };

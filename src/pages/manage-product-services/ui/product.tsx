@@ -89,7 +89,9 @@ export const Product: FC = () => {
       setSearchParams({
         ...params,
         [ProductServicesEnum.productSearch]: inputValue,
-        productStatus: productStatus.toString(),
+        productStatus: productStatus
+          ? productStatus.toString()
+          : STATUS.ACTIVE.toString(),
       });
     }
   };

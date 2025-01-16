@@ -99,13 +99,17 @@ export const Category: FC = () => {
 
       setSearchParams({
         ...previousParamsCopy,
-        categoryStatus: categoryStatus.toString() || STATUS.ACTIVE,
+        categoryStatus: categoryStatus
+          ? categoryStatus.toString()
+          : STATUS.ACTIVE,
         [CategorySubCategoryEnums.categorySearch]: search || "",
       });
     } else {
       setSearchParams({
         ...previousParams,
-        categoryStatus: categoryStatus.toString(),
+        categoryStatus: categoryStatus
+          ? categoryStatus.toString()
+          : STATUS.ACTIVE.toString(),
         [CategorySubCategoryEnums.categorySearch]: search || "",
         [CategorySubCategoryEnums.regionId]: regionId,
         [CategorySubCategoryEnums.cityId]: cityId,
