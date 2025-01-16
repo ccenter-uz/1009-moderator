@@ -1,6 +1,6 @@
 import { Avatar, Divider, Menu, Popover } from "antd";
 import i18next from "i18next";
-import { FC, useMemo } from "react";
+import { FC } from "react";
 import { IoLogOut, IoSettings } from "react-icons/io5";
 
 import { LogoutLink } from "@features/logout";
@@ -18,9 +18,6 @@ export const AvatarComponent: FC = () => {
   const userName = getLocalStorage("user-name")
     ? getLocalStorage("user-name")?.split(" ")
     : ["Aziz", "Azizov"];
-  const randomColor = useMemo(() => {
-    return Math.floor(Math.random() * 16777215).toString(16);
-  }, []);
 
   const items = [
     {
@@ -76,8 +73,8 @@ export const AvatarComponent: FC = () => {
         <Avatar
           style={{
             cursor: "pointer",
-            backgroundColor: `#${randomColor}44`,
-            color: `#${randomColor}`,
+            backgroundColor: `#5444E144`,
+            color: `#5444E1`,
           }}
           size={40}
         >

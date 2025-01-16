@@ -116,3 +116,6 @@ export const allActives = {
   all: GET_ALL_ACTIVE_STATUS.all,
   status: GET_ALL_ACTIVE_STATUS.active,
 };
+
+export const passwordPattern =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&\-_\\(\\)])/;
