@@ -260,23 +260,23 @@ export const handleEditLocalDatas = (record: AnyObject) => {
   const fourthEditStep = {
     ...getStepsValueByKey(STEPS_DATA.FOURTH_FORMDATA, record),
     allType:
-      record[paymentName][0].Cash &&
-      record[paymentName][0].Terminal &&
-      record[paymentName][0].Transfer,
-    cash: record[paymentName][0].Cash,
-    terminal: record[paymentName][0].Terminal,
-    transfer: record[paymentName][0].Transfer,
-    worktimeFrom: record.workTime.worktimeFrom,
-    worktimeTo: record.workTime.worktimeTo,
-    lunchFrom: record.workTime.lunchFrom,
-    lunchTo: record.workTime.lunchTo,
-    dayoffs: record.workTime.dayoffs,
-    allDay: record.workTime.allDay,
-    noDayoffs: record.workTime.noDayoffs,
-    withoutLunch: record.workTime.withoutLunch,
-    bus: record.transport.bus,
-    microBus: record.transport.microBus,
-    metroStation: record.transport.metroStation,
+      record[paymentName][0]?.Cash &&
+      record[paymentName][0]?.Terminal &&
+      record[paymentName][0]?.Transfer,
+    cash: record[paymentName][0]?.Cash,
+    terminal: record[paymentName][0]?.Terminal,
+    transfer: record[paymentName][0]?.Transfer,
+    worktimeFrom: record.workTime?.worktimeFrom,
+    worktimeTo: record.workTime?.worktimeTo,
+    lunchFrom: record.workTime?.lunchFrom,
+    lunchTo: record.workTime?.lunchTo,
+    dayoffs: record.workTime?.dayoffs,
+    allDay: record.workTime?.allDay,
+    noDayoffs: record.workTime?.noDayoffs,
+    withoutLunch: record.workTime?.withoutLunch,
+    bus: record.transport?.bus,
+    microBus: record.transport?.microBus,
+    metroStation: record.transport?.metroStation,
     images: record[pictureName],
   };
 
