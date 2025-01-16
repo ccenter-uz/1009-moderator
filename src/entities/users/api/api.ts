@@ -1,5 +1,5 @@
 import { baseApi } from "@shared/api";
-import { API_MAP, API_METHODS } from "@shared/lib/helpers";
+import { API_MAP, API_METHODS, setLocalStorage } from "@shared/lib/helpers";
 
 import { setRoles, setUsers } from "../model/Slicer";
 import { getRolesType, getUsersType } from "../model/types";
@@ -71,7 +71,7 @@ export const usersApi = baseApi.injectEndpoints({
     // UPDATE-USER
     updateUser: build.mutation({
       query: (body) => ({
-        url: `${API_MAP.UPDATE_USER}/${body.userId}`,
+        url: `${API_MAP.UPDATE_USER}/${body.id}`,
         method: API_METHODS.PUT,
         body,
       }),
@@ -93,6 +93,27 @@ export const usersApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Users"],
     }),
+
+    // GET-ME
+    getMe: build.query({
+      query: () => ({ url: API_MAP.ME }),
+      onQueryStarted(args, { queryFulfilled }) {
+        queryFulfilled.then(({ data }) => {
+          setLocalStorage("user-name", data?.result.fullName);
+        });
+      },
+      providesTags: ["Me"],
+    }),
+
+    // UPDATE-ME
+    updateMe: build.mutation({
+      query: (body) => ({
+        url: API_MAP.UPDATE_ME,
+        method: API_METHODS.PUT,
+        body,
+      }),
+      invalidatesTags: ["Me"],
+    }),
   }),
 });
 
@@ -103,4 +124,6 @@ export const {
   useUpdateUserMutation,
   useDeleteUserMutation,
   useRestoreUserMutation,
+  useGetMeQuery,
+  useUpdateMeMutation,
 } = usersApi;

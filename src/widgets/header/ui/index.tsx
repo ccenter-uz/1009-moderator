@@ -6,8 +6,8 @@ import { LuDollarSign } from "react-icons/lu";
 import { TiWeatherPartlySunny } from "react-icons/ti";
 
 import "./style.css";
+import { AvatarComponent } from "@features/avatar";
 import { ChangeLng } from "@features/change-lng";
-import { LogoutUI } from "@features/logout";
 
 import { LogoSvg } from "@shared/ui";
 
@@ -85,8 +85,8 @@ export const HeaderUI: FC = () => {
       <Flex align="center" gap={16}>
         {/* CHANGE-LNG */}
         <ChangeLng />
-        {/* LOGOUT */}
-        <LogoutUI />
+        {/* AVATAR */}
+        <AvatarComponent />
       </Flex>
     </header>
   );

@@ -1,1 +1,1 @@
-export { LogoutUI } from "./ui";
+export { LogoutLink } from "./ui";
