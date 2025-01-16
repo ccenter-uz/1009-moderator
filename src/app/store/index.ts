@@ -15,6 +15,7 @@ import { useEditOrgThirdStepSlice } from "@widgets/org-edit-third-step";
 import { useManageUsersSlice } from "@entities/users";
 
 import { baseApi } from "@shared/api";
+import { CustomizeUISlicer } from "@shared/ui";
 
 export const createStore = (
   options?: ConfigureStoreOptions["preloadedState"] | undefined,
@@ -36,6 +37,8 @@ export const createStore = (
       useAdditionalSlice: useAdditionalSlice.reducer,
       // MANAGE
       useManageUsersSlice: useManageUsersSlice.reducer,
+      // UI-SETTINGS
+      CustomizeUISlicer: CustomizeUISlicer.reducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({ serializableCheck: false }).concat(
