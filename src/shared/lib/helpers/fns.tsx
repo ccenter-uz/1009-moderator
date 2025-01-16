@@ -285,3 +285,35 @@ export const handleEditLocalDatas = (record: AnyObject) => {
   setLocalStorage(STEPS_EDIT_DATA.THIRD, thirdEditStep);
   setLocalStorage(STEPS_EDIT_DATA.FOURTH, fourthEditStep);
 };
+
+// DRAGGABLE-ELEMENT-FUNCTION
+export function enableVerticalDrag(element: HTMLElement) {
+  let startY = 0;
+  let startTop = 0;
+
+  const handleMouseDown = (e: MouseEvent) => {
+    startY = e.clientY;
+    startTop = element.offsetTop;
+
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+  };
+
+  const handleMouseMove = (e: MouseEvent) => {
+    const deltaY = e.clientY - startY;
+    const newTop = startTop + deltaY;
+
+    // Prevent overflow
+    const maxTop = window.innerHeight - element.offsetHeight;
+    const boundedTop = Math.max(0, Math.min(newTop, maxTop));
+
+    element.style.top = `${boundedTop}px`;
+  };
+
+  const handleMouseUp = () => {
+    document.removeEventListener("mousemove", handleMouseMove);
+    document.removeEventListener("mouseup", handleMouseUp);
+  };
+
+  element.addEventListener("mousedown", handleMouseDown);
+}
