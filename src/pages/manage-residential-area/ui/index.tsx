@@ -65,8 +65,11 @@ export const ManageResidentialAreaPage: FC = () => {
   const formRequiredField = getZodRequiredKeys(
     ResidentialAreaCreateFormDtoSchema,
   );
+
+  const params = returnAllParams();
   const { data, isLoading } = useGetResidentialAreasQuery({
-    ...returnAllParams(),
+    status: status || STATUS.ACTIVE,
+    ...params,
   });
   const [deleteResidentialArea] = useDeleteResidentialAreaMutation();
   const [updateResidentialArea] = useUpdateResidentialAreaMutation();
@@ -74,10 +77,6 @@ export const ManageResidentialAreaPage: FC = () => {
   const [restoreResidentialArea] = useRestoreResidentialAreaMutation();
   const [editingData, setEditingData] = useState<valueProps | null>(null);
 
-  const params = returnAllParams();
-  const [status, setStatus] = useState<number>(
-    params.status ? +params.status : STATUS.ACTIVE,
-  );
   const handleEditOpen = (values: valueProps) => {
     const editingBody = {
       id: values.id,
@@ -99,7 +98,13 @@ export const ManageResidentialAreaPage: FC = () => {
     form.setFieldsValue(editingBody);
     onOpen();
   };
-  const handleSearch = ({ search }: { search: string }) => {
+  const handleSearch = ({
+    search,
+    status,
+  }: {
+    search: string;
+    status: string;
+  }) => {
     let inputValue = search;
     if (inputValue === undefined) {
       inputValue = "";
@@ -201,13 +206,7 @@ export const ManageResidentialAreaPage: FC = () => {
         columns={columns}
         data={data?.data || []}
         add={handleAdd}
-        searchPart={
-          <BasicSearchPartUI
-            handleSearch={handleSearch}
-            status={status}
-            setStatus={setStatus}
-          />
-        }
+        searchPart={<BasicSearchPartUI handleSearch={handleSearch} />}
         modalPart={
           <Form
             form={form}

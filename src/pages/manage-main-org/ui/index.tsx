@@ -39,7 +39,10 @@ export const ManageMainOrgPage: FC = () => {
   const [form] = Form.useForm<ItableBasicData>();
   const formRule = createSchemaFieldRule(MainOrgCreateFormDtoSchema);
   const formRequiredField = getZodRequiredKeys(MainOrgCreateFormDtoSchema);
-  const { data, isLoading } = useGetMainOrgQuery({ ...returnAllParams() });
+  const { data, isLoading } = useGetMainOrgQuery({
+    status: status || STATUS.ACTIVE,
+    ...returnAllParams(),
+  });
   const [deleteMainOrg] = useDeleteMainOrgMutation();
   const [createMainOrg] = useCreateMainOrgMutation();
   const [updateMainOrg] = useUpdateMainOrgMutation();
@@ -47,9 +50,6 @@ export const ManageMainOrgPage: FC = () => {
   const [editingData, setEditingData] = useState<AnyObject | null>(null);
 
   const params = returnAllParams();
-  const [status, setStatus] = useState<number>(
-    params.status ? +params.status : STATUS.ACTIVE,
-  );
 
   const handleEditOpen = (values: ItableBasicData) => {
     setEditingData({ ...values, id: values.id });
@@ -57,7 +57,13 @@ export const ManageMainOrgPage: FC = () => {
     onOpen();
   };
 
-  const handleSearch = ({ search }: { search: string }) => {
+  const handleSearch = ({
+    search,
+    status,
+  }: {
+    search: string;
+    status: string;
+  }) => {
     let inputValue = search;
     if (inputValue === undefined) {
       inputValue = "";
@@ -67,7 +73,7 @@ export const ManageMainOrgPage: FC = () => {
       setSearchParams({
         ...params,
         search: inputValue.trim(),
-        status: status.toString(),
+        status: status.toString() || STATUS.ACTIVE.toString(),
       });
     }
   };
@@ -139,13 +145,7 @@ export const ManageMainOrgPage: FC = () => {
         columns={columns}
         data={data?.data || []}
         add={handleAdd}
-        searchPart={
-          <BasicSearchPartUI
-            handleSearch={handleSearch}
-            status={status}
-            setStatus={setStatus}
-          />
-        }
+        searchPart={<BasicSearchPartUI handleSearch={handleSearch} />}
         modalPart={
           <Form
             form={form}

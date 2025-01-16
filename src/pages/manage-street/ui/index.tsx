@@ -64,17 +64,17 @@ export const ManageStreetPage: FC = () => {
   const [form] = Form.useForm<valueProps>();
   const formRule = createSchemaFieldRule(StreetCreateFormDtoSchema);
   const formRequiredField = getZodRequiredKeys(StreetCreateFormDtoSchema);
-  const { data, isLoading } = useGetStreetsQuery({ ...returnAllParams() });
+
+  const params = returnAllParams();
+  const { data, isLoading } = useGetStreetsQuery({
+    status: status || STATUS.ACTIVE,
+    ...params,
+  });
   const [deleteStreet] = useDeleteStreetMutation();
   const [updateStreet] = useUpdateStreetMutation();
   const [createStreet] = useCreateStreetMutation();
   const [restoreStreet] = useRestoreStreetMutation();
   const [editingData, setEditingData] = useState<valueProps | null>(null);
-
-  const params = returnAllParams();
-  const [status, setStatus] = useState<number>(
-    params.status ? +params.status : STATUS.ACTIVE,
-  );
 
   const handleEditOpen = (values: valueProps) => {
     const editingBody = {
@@ -99,7 +99,13 @@ export const ManageStreetPage: FC = () => {
     onOpen();
   };
 
-  const handleSearch = ({ search }: { search: string }) => {
+  const handleSearch = ({
+    search,
+    status,
+  }: {
+    search: string;
+    status: string;
+  }) => {
     let inputValue = search;
     if (inputValue === undefined) {
       inputValue = "";
@@ -109,7 +115,7 @@ export const ManageStreetPage: FC = () => {
       setSearchParams({
         ...params,
         search: inputValue.trim(),
-        status: status.toString(),
+        status: status.toString() || STATUS.ACTIVE.toString(),
       });
     }
   };
@@ -199,13 +205,7 @@ export const ManageStreetPage: FC = () => {
         columns={columns}
         data={data?.data || []}
         add={handleAdd}
-        searchPart={
-          <BasicSearchPartUI
-            handleSearch={handleSearch}
-            status={status}
-            setStatus={setStatus}
-          />
-        }
+        searchPart={<BasicSearchPartUI handleSearch={handleSearch} />}
         modalPart={
           <Form
             form={form}

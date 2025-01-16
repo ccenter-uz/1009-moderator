@@ -41,8 +41,11 @@ export const ManageNearbyCategoryPage: FC = () => {
   const formRequiredField = getZodRequiredKeys(
     NearbyCategoryCreateFormDtoSchema,
   );
+
+  const params = returnAllParams();
   const { data, isLoading } = useGetNearbyCategoryQuery({
-    ...returnAllParams(),
+    status: status || STATUS.ACTIVE,
+    ...params,
   });
   const [deleteNearbyCategory] = useDeleteNearbyCategoryMutation();
   const [createNearbyCategory] = useCreateNearbyCategoryMutation();
@@ -50,17 +53,19 @@ export const ManageNearbyCategoryPage: FC = () => {
   const [restoreNearbyCategory] = useRestoreNearbyCategoryMutation();
   const [editingData, setEditingData] = useState<AnyObject | null>(null);
 
-  const params = returnAllParams();
-  const [status, setStatus] = useState<number>(
-    params.status ? +params.status : STATUS.ACTIVE,
-  );
   const handleEditOpen = (values: ItableBasicData) => {
     setEditingData({ ...values, id: values.id });
     form.setFieldsValue(values);
     onOpen();
   };
 
-  const handleSearch = ({ search }: { search: string }) => {
+  const handleSearch = ({
+    search,
+    status,
+  }: {
+    search: string;
+    status: string;
+  }) => {
     let inputValue = search;
     if (inputValue === undefined) {
       inputValue = "";
@@ -70,7 +75,7 @@ export const ManageNearbyCategoryPage: FC = () => {
       setSearchParams({
         ...params,
         search: inputValue.trim(),
-        status: status.toString(),
+        status: status.toString() || STATUS.ACTIVE.toString(),
       });
     }
   };
@@ -143,13 +148,7 @@ export const ManageNearbyCategoryPage: FC = () => {
         columns={columns}
         data={data?.data || []}
         add={handleAdd}
-        searchPart={
-          <BasicSearchPartUI
-            handleSearch={handleSearch}
-            status={status}
-            setStatus={setStatus}
-          />
-        }
+        searchPart={<BasicSearchPartUI handleSearch={handleSearch} />}
         modalPart={
           <Form
             form={form}

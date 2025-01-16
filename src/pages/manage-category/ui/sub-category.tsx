@@ -76,10 +76,9 @@ export const SubCategory: FC = () => {
     search: string;
     status: string;
   }) => {
-    const previousParams = returnAllParams();
-
+    const params = returnAllParams();
     setSearchParams({
-      ...previousParams,
+      ...params,
       subCategoryStatus: status,
       [CategorySubCategoryEnums.subCategorySearch]: search || "",
     });

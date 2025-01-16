@@ -1,4 +1,3 @@
-import { t } from "i18next";
 import { z } from "zod";
 
 import { FormSingleFieldSchema } from "@shared/types/zod-objects";

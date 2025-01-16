@@ -64,17 +64,17 @@ export const ManagePassagePage: FC = () => {
   const [form] = Form.useForm<valueProps>();
   const formRule = createSchemaFieldRule(PassgeCreateFormDtoSchema);
   const formRequiredField = getZodRequiredKeys(PassgeCreateFormDtoSchema);
-  const { data, isLoading } = useGetPassagesQuery({ ...returnAllParams() });
+
+  const params = returnAllParams();
+  const { data, isLoading } = useGetPassagesQuery({
+    status: status || STATUS.ACTIVE,
+    ...params,
+  });
   const [deletePassage] = useDeletePassageMutation();
   const [updatePassage] = useUpdatePassageMutation();
   const [createPassage] = useCreatePassageMutation();
   const [restorePassage] = useRestorePassageMutation();
   const [editingData, setEditingData] = useState<valueProps | null>(null);
-
-  const params = returnAllParams();
-  const [status, setStatus] = useState<number>(
-    params.status ? +params.status : STATUS.ACTIVE,
-  );
 
   const handleEditOpen = (values: valueProps) => {
     const editingBody = {
@@ -97,7 +97,13 @@ export const ManagePassagePage: FC = () => {
     form.setFieldsValue(editingBody);
     onOpen();
   };
-  const handleSearch = ({ search }: { search: string }) => {
+  const handleSearch = ({
+    search,
+    status,
+  }: {
+    search: string;
+    status: string;
+  }) => {
     let inputValue = search;
     if (inputValue === undefined) {
       inputValue = "";
@@ -197,13 +203,7 @@ export const ManagePassagePage: FC = () => {
         columns={columns}
         data={data?.data || []}
         add={handleAdd}
-        searchPart={
-          <BasicSearchPartUI
-            handleSearch={handleSearch}
-            status={status}
-            setStatus={setStatus}
-          />
-        }
+        searchPart={<BasicSearchPartUI handleSearch={handleSearch} />}
         modalPart={
           <Form
             form={form}

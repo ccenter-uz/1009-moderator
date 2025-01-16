@@ -12,9 +12,11 @@ type Props = {
   handleSearch: ({
     search,
     status,
+    nearbyCategoryId,
   }: {
     search: string;
     status: string;
+    nearbyCategoryId: string | number;
   }) => void;
   loading?: boolean;
   additionalSearch?: JSX.Element;
@@ -67,7 +69,7 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
         {additionalSearch}
         <Form.Item name={"status"} label={t("status")} style={{ flex: 0.2 }}>
           <Select
-            defaultValue={1}
+            defaultValue={STATUS.ACTIVE}
             options={[
               {
                 id: 0,

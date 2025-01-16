@@ -25,6 +25,7 @@ import {
   getZodRequiredKeys,
   notificationResponse,
   returnAllParams,
+  STATUS,
 } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { ItableBasicData } from "@shared/types";
@@ -45,7 +46,7 @@ export const Service: FC = () => {
     [ProductServicesEnum.servicePage]: page,
     [ProductServicesEnum.serviceLimit]: limit,
     [ProductServicesEnum.serviceSearch]: search,
-    serviceStatus: status,
+    serviceStatus,
   } = returnAllParams();
   const [trigger, { data, isLoading }] = useLazyGetSubCategoryQuery();
   const [createSubCategory] = useCreateSubCategoryMutation();
@@ -56,7 +57,6 @@ export const Service: FC = () => {
 
   const [isAddBtnDisable, setIsAddBtnDisable] = useState<boolean>(true);
 
-  const params = returnAllParams();
   const handleEditOpen = (values: editServiceType) => {
     setEditingData({ ...values, id: values.id });
     form.setFieldsValue({
@@ -69,21 +69,19 @@ export const Service: FC = () => {
 
   const handleSearch = ({
     search,
-    status: serviceStatus,
+    status,
   }: {
     search: string;
     status: string;
   }) => {
-    let inputValue = search;
-    if (inputValue === undefined || inputValue === null) {
-      inputValue = "";
-    }
+    const inputValue = search || "";
 
-    if (inputValue || inputValue === "" || typeof status === "number") {
+    if (inputValue || inputValue === "") {
+      const params = returnAllParams();
       setSearchParams({
         ...params,
+        serviceStatus: status,
         [ProductServicesEnum.serviceSearch]: inputValue,
-        serviceStatus,
       });
     }
   };
@@ -160,16 +158,25 @@ export const Service: FC = () => {
   useEffect(() => {
     const hasParamsServiceId = searchParams.has(ProductServicesEnum.productId);
     setIsAddBtnDisable(!hasParamsServiceId);
+    console.log(Number(searchParams.get(ProductServicesEnum.productId)));
     if (searchParams.has(ProductServicesEnum.productId)) {
       trigger({
         page: Number(page) || 1,
         limit: Number(limit) || 10,
         search,
         categoryId: Number(searchParams.get(ProductServicesEnum.productId)),
+        status: serviceStatus || STATUS.ACTIVE,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams.get(ProductServicesEnum.productId), search, page, limit]);
+  }, [
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    searchParams.get(ProductServicesEnum.productId),
+    search,
+    page,
+    limit,
+    serviceStatus,
+  ]);
 
   return (
     <ManageWrapperBox

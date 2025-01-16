@@ -65,17 +65,17 @@ export const ManageAvenuePage: FC = () => {
   const formRule = createSchemaFieldRule(AvenueCreateFormDtoSchema);
   const formRequiredField = getZodRequiredKeys(AvenueCreateFormDtoSchema);
 
-  const { data, isLoading } = useGetAvenuesQuery({ ...returnAllParams() });
+  const params = returnAllParams();
+  const { data, isLoading } = useGetAvenuesQuery({
+    status: status || STATUS.ACTIVE,
+    ...params,
+  });
   const [deleteAvenue] = useDeleteAvenueMutation();
   const [updateAvenue] = useUpdateAvenueMutation();
   const [createAvenue] = useCreateAvenueMutation();
   const [restoreAvenue] = useRestoreAvenueMutation();
   const [editingData, setEditingData] = useState<valueProps | null>(null);
 
-  const params = returnAllParams();
-  const [status, setStatus] = useState<number>(
-    params.status ? +params.status : STATUS.ACTIVE,
-  );
   const handleEditOpen = (values: valueProps) => {
     const editingBody = {
       id: values.id,
@@ -97,7 +97,13 @@ export const ManageAvenuePage: FC = () => {
     form.setFieldsValue(editingBody);
     onOpen();
   };
-  const handleSearch = ({ search }: { search: string }) => {
+  const handleSearch = ({
+    search,
+    status,
+  }: {
+    search: string;
+    status: string;
+  }) => {
     let inputValue = search;
     if (inputValue === undefined) {
       inputValue = "";
@@ -197,13 +203,7 @@ export const ManageAvenuePage: FC = () => {
         data={data?.data || []}
         loading={isLoading}
         add={handleAdd}
-        searchPart={
-          <BasicSearchPartUI
-            handleSearch={handleSearch}
-            status={status}
-            setStatus={setStatus}
-          />
-        }
+        searchPart={<BasicSearchPartUI handleSearch={handleSearch} />}
         modalPart={
           <Form
             form={form}

@@ -47,18 +47,17 @@ export const ManagePhoneTypesPage: FC = () => {
   const [form] = Form.useForm<ItableBasicData>();
   const formRule = createSchemaFieldRule(PhoneTypeCreateFormDtoSchema);
   const formRequiredField = getZodRequiredKeys(PhoneTypeCreateFormDtoSchema);
+
+  const params = returnAllParams();
   const { data, isLoading } = useGetPhoneTypeQuery({
-    ...returnAllParams(),
+    status: status || STATUS.ACTIVE,
+    ...params,
   });
   const [deletePhoneType] = useDeletePhoneTypeMutation();
   const [createPhoneType] = useCreatePhoneTypeMutation();
   const [updatePhoneType] = useUpdatePhoneTypeMutation();
   const [restorePhoneType] = useRestorePhoneTypeMutation();
   const [editingData, setEditingData] = useState<AnyObject | null>(null);
-  const params = returnAllParams();
-  const [status, setStatus] = useState<number>(
-    params.status ? +params.status : STATUS.ACTIVE,
-  );
 
   const handleEditOpen = (values: ImanagePhoneTypeValues) => {
     const editingBody = {
@@ -72,7 +71,13 @@ export const ManagePhoneTypesPage: FC = () => {
     onOpen();
   };
 
-  const handleSearch = ({ search }: { search: string }) => {
+  const handleSearch = ({
+    search,
+    status,
+  }: {
+    search: string;
+    status: string;
+  }) => {
     let inputValue = search;
     if (inputValue === undefined) {
       inputValue = "";
@@ -82,7 +87,7 @@ export const ManagePhoneTypesPage: FC = () => {
       setSearchParams({
         ...params,
         search: inputValue.trim(),
-        status: status.toString(),
+        status: status.toString() || STATUS.ACTIVE.toString(),
       });
     }
   };
@@ -158,13 +163,7 @@ export const ManagePhoneTypesPage: FC = () => {
         columns={columns}
         data={data?.data || []}
         add={handleAdd}
-        searchPart={
-          <BasicSearchPartUI
-            handleSearch={handleSearch}
-            status={status}
-            setStatus={setStatus}
-          />
-        }
+        searchPart={<BasicSearchPartUI handleSearch={handleSearch} />}
         modalPart={
           <Form
             form={form}

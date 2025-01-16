@@ -64,17 +64,17 @@ export const ManageImpassePage: FC = () => {
   const [form] = Form.useForm<valueProps>();
   const formRule = createSchemaFieldRule(ImpasseCreateFormDtoSchema);
   const formRequiredField = getZodRequiredKeys(ImpasseCreateFormDtoSchema);
-  const { data, isLoading } = useGetImpassesQuery({ ...returnAllParams() });
+
+  const params = returnAllParams();
+  const { data, isLoading } = useGetImpassesQuery({
+    status: status || STATUS.ACTIVE,
+    ...params,
+  });
   const [deleteImpasse] = useDeleteImpasseMutation();
   const [updateImpasse] = useUpdateImpasseMutation();
   const [createImpasse] = useCreateImpasseMutation();
   const [restoreImpasse] = useRestoreImpasseMutation();
   const [editingData, setEditingData] = useState<valueProps | null>(null);
-
-  const params = returnAllParams();
-  const [status, setStatus] = useState<number>(
-    params.status ? +params.status : STATUS.ACTIVE,
-  );
 
   const handleEditOpen = (values: valueProps) => {
     const editingBody = {
@@ -97,7 +97,13 @@ export const ManageImpassePage: FC = () => {
     form.setFieldsValue(editingBody);
     onOpen();
   };
-  const handleSearch = ({ search }: { search: string }) => {
+  const handleSearch = ({
+    search,
+    status,
+  }: {
+    search: string;
+    status: string;
+  }) => {
     let inputValue = search;
     if (inputValue === undefined) {
       inputValue = "";
@@ -197,13 +203,7 @@ export const ManageImpassePage: FC = () => {
         columns={columns}
         data={data?.data || []}
         add={handleAdd}
-        searchPart={
-          <BasicSearchPartUI
-            handleSearch={handleSearch}
-            status={status}
-            setStatus={setStatus}
-          />
-        }
+        searchPart={<BasicSearchPartUI handleSearch={handleSearch} />}
         modalPart={
           <Form
             form={form}

@@ -87,7 +87,6 @@ export const Category: FC = () => {
     status: string;
   }) => {
     //  If region id is 0, it resets the search params, otherwise it updates the search params with region id, city id and search query.
-
     const previousParams = returnAllParams();
     const regionId = searchForm.getFieldValue("region_id");
     const cityId = searchForm.getFieldValue("city_id");
@@ -100,13 +99,13 @@ export const Category: FC = () => {
 
       setSearchParams({
         ...previousParamsCopy,
-        categoryStatus: categoryStatus,
+        categoryStatus: categoryStatus.toString() || STATUS.ACTIVE,
         [CategorySubCategoryEnums.categorySearch]: search || "",
       });
     } else {
       setSearchParams({
         ...previousParams,
-        categoryStatus: categoryStatus,
+        categoryStatus: categoryStatus.toString(),
         [CategorySubCategoryEnums.categorySearch]: search || "",
         [CategorySubCategoryEnums.regionId]: regionId,
         [CategorySubCategoryEnums.cityId]: cityId,

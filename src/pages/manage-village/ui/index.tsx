@@ -63,17 +63,17 @@ export const ManageVillagePage: FC = () => {
   const [form] = Form.useForm<valueProps>();
   const formRule = createSchemaFieldRule(VillageCreateFormDtoSchema);
   const formRequiredField = getZodRequiredKeys(VillageCreateFormDtoSchema);
-  const { data, isLoading } = useGetVillagesQuery({ ...returnAllParams() });
+
+  const params = returnAllParams();
+  const { data, isLoading } = useGetVillagesQuery({
+    status: status || STATUS.ACTIVE,
+    ...params,
+  });
   const [deleteVillage] = useDeleteVillageMutation();
   const [updateVillage] = useUpdateVillageMutation();
   const [createVillage] = useCreateVillageMutation();
   const [restoreVillage] = useRestoreVillageMutation();
   const [editingData, setEditingData] = useState<valueProps | null>(null);
-
-  const params = returnAllParams();
-  const [status, setStatus] = useState<number>(
-    params.status ? +params.status : STATUS.ACTIVE,
-  );
 
   const handleEditOpen = (values: valueProps) => {
     const editingBody = {
@@ -96,7 +96,13 @@ export const ManageVillagePage: FC = () => {
     form.setFieldsValue(editingBody);
     onOpen();
   };
-  const handleSearch = ({ search }: { search: string }) => {
+  const handleSearch = ({
+    search,
+    status,
+  }: {
+    search: string;
+    status: string;
+  }) => {
     let inputValue = search;
     if (inputValue === undefined) {
       inputValue = "";
@@ -196,13 +202,7 @@ export const ManageVillagePage: FC = () => {
         columns={columns}
         data={data?.data || []}
         add={handleAdd}
-        searchPart={
-          <BasicSearchPartUI
-            handleSearch={handleSearch}
-            status={status}
-            setStatus={setStatus}
-          />
-        }
+        searchPart={<BasicSearchPartUI handleSearch={handleSearch} />}
         modalPart={
           <Form
             form={form}

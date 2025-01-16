@@ -39,10 +39,11 @@ export const ManageSegmentsPage = () => {
   const [form] = Form.useForm();
   const formRule = createSchemaFieldRule(SegmentCreateFormDtoSchema);
   const formRequiredField = getZodRequiredKeys(SegmentCreateFormDtoSchema);
-  const { status, ...params } = returnAllParams();
+
+  const params = returnAllParams();
   const { data, isLoading } = useGetSegmentsQuery({
-    ...params,
     status: status || STATUS.ACTIVE,
+    ...params,
   });
   const [deleteSegment] = useDeleteSegmentMutation();
   const [createSegment] = useCreateSegmentMutation();
@@ -75,8 +76,8 @@ export const ManageSegmentsPage = () => {
     if (inputValue || inputValue === "") {
       setSearchParams({
         ...params,
-        search: inputValue.trim().trim(),
-        status: status.toString(),
+        search: inputValue.trim(),
+        status: status.toString() || STATUS.ACTIVE.toString(),
       });
     }
   };

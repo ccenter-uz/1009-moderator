@@ -8,8 +8,8 @@ import { MdRestore } from "react-icons/md";
 import { useSearchParams } from "react-router-dom";
 
 import { Address2Inputs } from "@features/address-2-inputs";
+import { BasicSearchPartUI } from "@features/basic-search-part";
 import { DeleteTableItemUI } from "@features/delete-table-item";
-import { NearbyPageSearchUI } from "@features/nearby-page-search";
 
 import {
   useCreateNearbyMutation,
@@ -58,8 +58,11 @@ export const ManageNearbyPage: FC = () => {
   const [form] = Form.useForm();
   const formRule = createSchemaFieldRule(NearbyCreateFormDtoSchema);
   const formRequiredField = getZodRequiredKeys(NearbyCreateFormDtoSchema);
+
+  const params = returnAllParams();
   const { data, isLoading } = useGetNearbyQuery({
-    ...returnAllParams(),
+    status: status || STATUS.ACTIVE,
+    ...params,
   });
   const { data: dataCategory, isLoading: isLoadingCategory } =
     useGetNearbyCategoryQuery({
@@ -71,17 +74,10 @@ export const ManageNearbyPage: FC = () => {
   const [updateNearby] = useUpdateNearbyMutation();
   const [restoreNearby] = useRestoreNearbyMutation();
   const [editingData, setEditingData] = useState<valueProps | null>(null);
-  const [nearbyCategoryId, setNearbyCategoryId] = useState<
-    string | number | null
-  >(null);
+  const [nearbyCategoryId, setNearbyCategoryId] = useState<number | string>("");
   const [modalNearbyCategoryId, setModalNearbyCategoryId] = useState<
     string | number | boolean
   >(true);
-
-  const params = returnAllParams();
-  const [status, setStatus] = useState<number>(
-    params.status ? +params.status : STATUS.ACTIVE,
-  );
 
   const handleEditOpen = (values: valueProps) => {
     const editingBody = {
@@ -98,7 +94,13 @@ export const ManageNearbyPage: FC = () => {
     onOpen();
   };
 
-  const handleSearch = ({ search }: { search: string }) => {
+  const handleSearch = ({
+    search,
+    status,
+  }: {
+    search: string;
+    status: string;
+  }) => {
     let inputValue = search;
     if (inputValue === undefined) {
       inputValue = "";
@@ -107,18 +109,18 @@ export const ManageNearbyPage: FC = () => {
     if (inputValue || inputValue === "") {
       setSearchParams({
         ...params,
-        nearbyCategoryId: String(nearbyCategoryId ?? undefined),
+        nearbyCategoryId: nearbyCategoryId?.toString() || "",
         search: inputValue.trim().trim(),
         status: status.toString(),
       });
     }
   };
 
-  const handleCategorySelect = (value: string | number) => {
+  const handleCategorySelect = (value: number) => {
     setNearbyCategoryId(value);
   };
   const handleClearCategory = () => {
-    setNearbyCategoryId(null);
+    setNearbyCategoryId("");
   };
   const handleSubmit = async (values: valueProps) => {
     const body = {
@@ -200,16 +202,10 @@ export const ManageNearbyPage: FC = () => {
         data={data?.data || []}
         add={handleAdd}
         searchPart={
-          <NearbyPageSearchUI
+          <BasicSearchPartUI
             handleSearch={handleSearch}
-            status={status}
-            setStatus={setStatus}
             additionalSearch={
-              <Form.Item
-                name={"nearby-category"}
-                label={t("nearby-category")}
-                style={{ marginBottom: 0, flex: 1 }}
-              >
+              <Form.Item label={t("nearby-category")} style={{ flex: 0.5 }}>
                 <Select
                   labelRender={renderLabelSelect}
                   allowClear
@@ -224,6 +220,28 @@ export const ManageNearbyPage: FC = () => {
               </Form.Item>
             }
           />
+          // <NearbyPageSearchUI
+          //   handleSearch={handleSearch}
+          //   additionalSearch={
+          //     <Form.Item
+          //       name={"nearby-category"}
+          //       label={"lorem"}
+          //       style={{ marginBottom: 0, flex: 1 }}
+          //     >
+          //       <Select
+          //         labelRender={renderLabelSelect}
+          //         allowClear
+          //         onClear={handleClearCategory}
+          //         onSelect={handleCategorySelect}
+          //         loading={isLoadingCategory}
+          //         options={dataCategory?.data.map((item: AnyObject) => ({
+          //           label: item.name,
+          //           value: item.id,
+          //         }))}
+          //       />
+          //     </Form.Item>
+          //   }
+          // />
         }
         modalPart={
           <Form
