@@ -230,6 +230,5 @@
   "create": "Новый",
   "update": "Редактирования",
   "deleted": "Удалено",
-  "reject-reason": "Причина отказа",
-  "search-by-status": "Поиск по статусу"
+  "reject-reason": "Причина отказа"
 }

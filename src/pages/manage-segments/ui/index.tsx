@@ -39,8 +39,10 @@ export const ManageSegmentsPage = () => {
   const [form] = Form.useForm();
   const formRule = createSchemaFieldRule(SegmentCreateFormDtoSchema);
   const formRequiredField = getZodRequiredKeys(SegmentCreateFormDtoSchema);
+  const { status, ...params } = returnAllParams();
   const { data, isLoading } = useGetSegmentsQuery({
-    ...returnAllParams(),
+    ...params,
+    status: status || STATUS.ACTIVE,
   });
   const [deleteSegment] = useDeleteSegmentMutation();
   const [createSegment] = useCreateSegmentMutation();
@@ -48,10 +50,6 @@ export const ManageSegmentsPage = () => {
   const [restoreSegment] = useRestoreSegmentMutation();
   const [editingData, setEditingData] = useState<AnyObject | null>(null);
 
-  const params = returnAllParams();
-  const [status, setStatus] = useState<number>(
-    params.status ? +params.status : STATUS.ACTIVE,
-  );
   const handleEditOpen = (values: { name: string; id: string | number }) => {
     setEditingData({ ...values, id: values.id });
     const body = {
@@ -62,7 +60,13 @@ export const ManageSegmentsPage = () => {
     onOpen();
   };
 
-  const handleSearch = ({ search }: { search: string }) => {
+  const handleSearch = ({
+    search,
+    status,
+  }: {
+    search: string;
+    status: string;
+  }) => {
     let inputValue = search;
     if (inputValue === undefined) {
       inputValue = "";
@@ -150,13 +154,7 @@ export const ManageSegmentsPage = () => {
         columns={columns}
         data={data?.data || []}
         add={handleAdd}
-        searchPart={
-          <BasicSearchPartUI
-            handleSearch={handleSearch}
-            status={status}
-            setStatus={setStatus}
-          />
-        }
+        searchPart={<BasicSearchPartUI handleSearch={handleSearch} />}
         modalPart={
           <Form
             form={form}

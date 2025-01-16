@@ -25,7 +25,6 @@ import {
   getZodRequiredKeys,
   notificationResponse,
   returnAllParams,
-  STATUS,
 } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { ItableBasicData } from "@shared/types";
@@ -46,6 +45,7 @@ export const Service: FC = () => {
     [ProductServicesEnum.servicePage]: page,
     [ProductServicesEnum.serviceLimit]: limit,
     [ProductServicesEnum.serviceSearch]: search,
+    serviceStatus: status,
   } = returnAllParams();
   const [trigger, { data, isLoading }] = useLazyGetSubCategoryQuery();
   const [createSubCategory] = useCreateSubCategoryMutation();
@@ -57,10 +57,6 @@ export const Service: FC = () => {
   const [isAddBtnDisable, setIsAddBtnDisable] = useState<boolean>(true);
 
   const params = returnAllParams();
-  const [subStatus, setSubStatus] = useState<number>(
-    params.status ? +params.status : STATUS.ACTIVE,
-  );
-
   const handleEditOpen = (values: editServiceType) => {
     setEditingData({ ...values, id: values.id });
     form.setFieldsValue({
@@ -71,7 +67,13 @@ export const Service: FC = () => {
     onOpen();
   };
 
-  const handleSearch = ({ search }: { search: string }) => {
+  const handleSearch = ({
+    search,
+    status: serviceStatus,
+  }: {
+    search: string;
+    status: string;
+  }) => {
     let inputValue = search;
     if (inputValue === undefined || inputValue === null) {
       inputValue = "";
@@ -81,7 +83,7 @@ export const Service: FC = () => {
       setSearchParams({
         ...params,
         [ProductServicesEnum.serviceSearch]: inputValue,
-        status: status.toString(),
+        serviceStatus,
       });
     }
   };
@@ -188,8 +190,6 @@ export const Service: FC = () => {
             search: searchParams.get(ProductServicesEnum.serviceSearch),
           }}
           isSearchBtnDisable={isAddBtnDisable}
-          subStatus={subStatus}
-          setSubStatus={setSubStatus}
         />
       }
       modalPart={

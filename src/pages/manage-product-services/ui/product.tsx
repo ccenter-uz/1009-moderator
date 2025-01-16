@@ -40,6 +40,7 @@ export const Product: FC = () => {
     [ProductServicesEnum.productPage]: page,
     [ProductServicesEnum.productLimit]: limit,
     [ProductServicesEnum.productSearch]: search,
+    productStatus,
   } = returnAllParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -52,6 +53,7 @@ export const Product: FC = () => {
     page,
     limit,
     search,
+    status: productStatus || STATUS.ACTIVE,
   });
   const [deleteProduct] = useDeleteProductMutation();
   const [createProduct] = useCreateProductMutation();
@@ -60,9 +62,6 @@ export const Product: FC = () => {
   const [editingData, setEditingData] = useState<editProductType | null>(null);
 
   const params = returnAllParams();
-  const [status, setStatus] = useState<number>(
-    params.status ? +params.status : STATUS.ACTIVE,
-  );
 
   const handleEditOpen = (values: editProductType) => {
     setEditingData({ ...values, id: values.id });
@@ -74,17 +73,23 @@ export const Product: FC = () => {
     onOpen();
   };
 
-  const handleSearch = ({ search }: { search: string }) => {
+  const handleSearch = ({
+    search,
+    status: productStatus,
+  }: {
+    search: string;
+    status: string;
+  }) => {
     let inputValue = search;
-    if (inputValue === undefined) {
+    if (inputValue === undefined || inputValue === null) {
       inputValue = "";
     }
 
-    if (inputValue || inputValue === "" || typeof status === "number") {
+    if (inputValue || inputValue === "" || typeof productStatus === "number") {
       setSearchParams({
         ...params,
         [ProductServicesEnum.productSearch]: inputValue,
-        status: status.toString(),
+        productStatus: productStatus.toString(),
       });
     }
   };
@@ -99,7 +104,6 @@ export const Product: FC = () => {
       id: editingData?.id,
     };
     const request = editingData ? updateProduct : createProduct;
-
     const response = await request(body);
 
     notificationResponse(response, t, onClose);
@@ -178,8 +182,6 @@ export const Product: FC = () => {
           additionalParams={{
             search: searchParams.get(ProductServicesEnum.productSearch),
           }}
-          status={status}
-          setStatus={setStatus}
         />
       }
       modalPart={

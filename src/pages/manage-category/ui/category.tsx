@@ -44,6 +44,7 @@ export const Category: FC = () => {
     [CategorySubCategoryEnums.categorySearch]: search,
     [CategorySubCategoryEnums.regionId]: regionId,
     [CategorySubCategoryEnums.cityId]: cityId,
+    categoryStatus,
   } = returnAllParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -57,6 +58,7 @@ export const Category: FC = () => {
     search,
     regionId,
     cityId,
+    status: categoryStatus || STATUS.ACTIVE,
   });
   const [deleteCategory] = useDeleteCategoryMutation();
   const [createCategory] = useCreateCategoryMutation();
@@ -77,7 +79,13 @@ export const Category: FC = () => {
     onOpen();
   };
 
-  const handleSearch = ({ search }: { search: string }) => {
+  const handleSearch = ({
+    search,
+    status: categoryStatus,
+  }: {
+    search: string;
+    status: string;
+  }) => {
     //  If region id is 0, it resets the search params, otherwise it updates the search params with region id, city id and search query.
 
     const previousParams = returnAllParams();
@@ -92,17 +100,20 @@ export const Category: FC = () => {
 
       setSearchParams({
         ...previousParamsCopy,
+        categoryStatus: categoryStatus,
         [CategorySubCategoryEnums.categorySearch]: search || "",
       });
     } else {
       setSearchParams({
         ...previousParams,
+        categoryStatus: categoryStatus,
         [CategorySubCategoryEnums.categorySearch]: search || "",
         [CategorySubCategoryEnums.regionId]: regionId,
         [CategorySubCategoryEnums.cityId]: cityId,
       });
     }
   };
+
   const handleSubmit = async (
     values: ItableBasicData & { region: number; city: number },
   ) => {

@@ -1,6 +1,6 @@
 import { Button, Flex, Form, Input, Select } from "antd";
 import { AnyObject } from "antd/es/_util/type";
-import { Dispatch, FC, SetStateAction, useEffect } from "react";
+import { FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { FaSearch } from "react-icons/fa";
 import { MdClear } from "react-icons/md";
@@ -14,10 +14,8 @@ type Props = {
     status,
   }: {
     search: string;
-    status: number;
+    status: string;
   }) => void;
-  status: number;
-  setStatus: Dispatch<SetStateAction<number>>;
   loading?: boolean;
   additionalSearch?: JSX.Element;
   id?: string;
@@ -28,8 +26,6 @@ type Props = {
 export const BasicSearchPartUI: FC<Props> = (props) => {
   const {
     handleSearch,
-    setStatus,
-    status,
     loading,
     additionalSearch,
     id = "basic-search",
@@ -48,11 +44,6 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
       search: "",
       status: STATUS.ACTIVE.toString(),
     });
-    setStatus(STATUS.ACTIVE);
-  };
-
-  const handleStatusChange = (e: number) => {
-    setStatus(e);
   };
 
   useEffect(() => {
@@ -72,31 +63,32 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
 
   return (
     <Form form={form} id={id} onFinish={handleSearch}>
-      <Flex gap={8} align="center" wrap="wrap">
+      <Flex gap={8}>
         {additionalSearch}
-        <Select
-          value={status}
-          onChange={handleStatusChange}
-          options={[
-            {
-              id: 0,
-              label: t("all"),
-              value: STATUS.ALL,
-            },
-            {
-              id: 1,
-              label: t("active"),
-              value: STATUS.ACTIVE,
-            },
-            {
-              id: 2,
-              label: t("inactive"),
-              value: STATUS.INACTIVE,
-            },
-          ]}
-          placeholder={t("search-by-status")}
-          allowClear
-        />
+        <Form.Item name={"status"} label={t("status")} style={{ flex: 0.2 }}>
+          <Select
+            defaultValue={1}
+            options={[
+              {
+                id: 0,
+                label: t("all"),
+                value: STATUS.ALL,
+              },
+              {
+                id: 1,
+                label: t("active"),
+                value: STATUS.ACTIVE,
+              },
+              {
+                id: 2,
+                label: t("inactive"),
+                value: STATUS.INACTIVE,
+              },
+            ]}
+            placeholder={t("status")}
+            allowClear
+          />
+        </Form.Item>
         <Form.Item name="search" style={{ marginBottom: 0, flex: 1 }}>
           <Input
             type="text"

@@ -44,9 +44,11 @@ export const SubCategory: FC = () => {
     [CategorySubCategoryEnums.subCategoryPage]: page,
     [CategorySubCategoryEnums.subCategoryLimit]: limit,
     [CategorySubCategoryEnums.subCategorySearch]: search,
+    subCategoryStatus,
   } = returnAllParams();
 
   const [trigger, { data, isLoading }] = useLazyGetSubCategoriesQuery();
+
   const [createSubCategory] = useCreateSubCategoriesMutation();
   const [updateSubCategory] = useUpdateSubCategoriesMutation();
   const [deleteSubCategory] = useDeleteSubCategoriesMutation();
@@ -67,11 +69,18 @@ export const SubCategory: FC = () => {
     onOpen();
   };
 
-  const handleSearch = ({ search }: { search: string }) => {
+  const handleSearch = ({
+    search,
+    status,
+  }: {
+    search: string;
+    status: string;
+  }) => {
     const previousParams = returnAllParams();
 
     setSearchParams({
       ...previousParams,
+      subCategoryStatus: status,
       [CategorySubCategoryEnums.subCategorySearch]: search || "",
     });
   };
@@ -154,6 +163,7 @@ export const SubCategory: FC = () => {
         page: Number(page) || 1,
         limit: Number(limit) || 10,
         search,
+        status: subCategoryStatus || STATUS.ACTIVE,
         categoryId: Number(
           searchParams.get(CategorySubCategoryEnums.categoryId),
         ),
@@ -166,6 +176,7 @@ export const SubCategory: FC = () => {
     search,
     page,
     limit,
+    subCategoryStatus,
   ]);
 
   return (
