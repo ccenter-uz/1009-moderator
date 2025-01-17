@@ -69,10 +69,10 @@ export const Service: FC = () => {
 
   const handleSearch = ({
     search,
-    status,
+    status = STATUS.ACTIVE,
   }: {
     search: string;
-    status: string;
+    status: number;
   }) => {
     const inputValue = search || "";
 
@@ -80,7 +80,9 @@ export const Service: FC = () => {
       const params = returnAllParams();
       setSearchParams({
         ...params,
-        serviceStatus: status ? status.toString() : STATUS.ACTIVE.toString(),
+        serviceStatus: status.toString()
+          ? status.toString()
+          : STATUS.ACTIVE.toString(),
         [ProductServicesEnum.serviceSearch]: inputValue,
       });
     }

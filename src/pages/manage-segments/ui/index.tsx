@@ -63,22 +63,20 @@ export const ManageSegmentsPage = () => {
 
   const handleSearch = ({
     search,
-    status,
+    status = STATUS.ACTIVE,
   }: {
     search: string;
-    status: string;
+    status: number;
   }) => {
-    console.log(search, "search");
-    console.log(status, "status");
-    console.log(data);
-
     const inputValue = search || "";
 
     if (inputValue || inputValue === "") {
       setSearchParams({
         ...params,
         search: inputValue.trim(),
-        status: status ? status.toString() : STATUS.ACTIVE.toString(),
+        status: status.toString()
+          ? status.toString()
+          : STATUS.ACTIVE.toString(),
       });
     }
   };

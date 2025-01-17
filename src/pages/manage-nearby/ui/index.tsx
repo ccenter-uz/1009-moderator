@@ -96,10 +96,10 @@ export const ManageNearbyPage: FC = () => {
 
   const handleSearch = ({
     search,
-    status,
+    status = STATUS.ACTIVE,
   }: {
     search: string;
-    status: string;
+    status: number;
   }) => {
     let inputValue = search;
     if (inputValue === undefined) {
@@ -111,7 +111,9 @@ export const ManageNearbyPage: FC = () => {
         ...params,
         nearbyCategoryId: nearbyCategoryId?.toString() || "",
         search: inputValue.trim(),
-        status: status ? status.toString() : STATUS.ACTIVE.toString(),
+        status: status.toString()
+          ? status.toString()
+          : STATUS.ACTIVE.toString(),
       });
     }
   };

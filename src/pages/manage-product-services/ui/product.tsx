@@ -75,10 +75,10 @@ export const Product: FC = () => {
 
   const handleSearch = ({
     search,
-    status: productStatus,
+    status: productStatus = STATUS.ACTIVE,
   }: {
     search: string;
-    status: string;
+    status: number;
   }) => {
     let inputValue = search;
     if (inputValue === undefined || inputValue === null) {
@@ -89,7 +89,7 @@ export const Product: FC = () => {
       setSearchParams({
         ...params,
         [ProductServicesEnum.productSearch]: inputValue,
-        productStatus: productStatus
+        productStatus: productStatus.toString()
           ? productStatus.toString()
           : STATUS.ACTIVE.toString(),
       });

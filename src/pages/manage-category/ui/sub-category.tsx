@@ -71,15 +71,17 @@ export const SubCategory: FC = () => {
 
   const handleSearch = ({
     search,
-    status,
+    status = STATUS.ACTIVE,
   }: {
     search: string;
-    status: string;
+    status: number;
   }) => {
     const params = returnAllParams();
     setSearchParams({
       ...params,
-      subCategoryStatus: status ? status.toString() : STATUS.ACTIVE.toString(),
+      subCategoryStatus: status.toString()
+        ? status.toString()
+        : STATUS.ACTIVE.toString(),
       [CategorySubCategoryEnums.subCategorySearch]: search || "",
     });
   };

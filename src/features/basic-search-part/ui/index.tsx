@@ -15,7 +15,7 @@ type Props = {
     nearbyCategoryId,
   }: {
     search: string;
-    status: string;
+    status: number;
     nearbyCategoryId: string | number;
   }) => void;
   loading?: boolean;

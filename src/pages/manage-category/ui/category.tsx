@@ -81,10 +81,10 @@ export const Category: FC = () => {
 
   const handleSearch = ({
     search,
-    status: categoryStatus,
+    status: categoryStatus = STATUS.ACTIVE,
   }: {
     search: string;
-    status: string;
+    status: number;
   }) => {
     //  If region id is 0, it resets the search params, otherwise it updates the search params with region id, city id and search query.
     const previousParams = returnAllParams();
@@ -99,7 +99,7 @@ export const Category: FC = () => {
 
       setSearchParams({
         ...previousParamsCopy,
-        categoryStatus: categoryStatus
+        categoryStatus: categoryStatus.toString()
           ? categoryStatus.toString()
           : STATUS.ACTIVE,
         [CategorySubCategoryEnums.categorySearch]: search || "",
@@ -107,7 +107,7 @@ export const Category: FC = () => {
     } else {
       setSearchParams({
         ...previousParams,
-        categoryStatus: categoryStatus
+        categoryStatus: categoryStatus.toString()
           ? categoryStatus.toString()
           : STATUS.ACTIVE.toString(),
         [CategorySubCategoryEnums.categorySearch]: search || "",

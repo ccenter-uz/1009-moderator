@@ -98,10 +98,10 @@ export const ManageLanePage: FC = () => {
   };
   const handleSearch = ({
     search,
-    status,
+    status = STATUS.ACTIVE,
   }: {
     search: string;
-    status: string;
+    status: number;
   }) => {
     let inputValue = search;
     if (inputValue === undefined) {
@@ -112,7 +112,9 @@ export const ManageLanePage: FC = () => {
       setSearchParams({
         ...params,
         search: inputValue.trim(),
-        status: status ? status.toString() : STATUS.ACTIVE.toString(),
+        status: status.toString()
+          ? status.toString()
+          : STATUS.ACTIVE.toString(),
       });
     }
   };
