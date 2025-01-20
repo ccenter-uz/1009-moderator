@@ -1,0 +1,110 @@
+/* Popup Styles */
+.ant-popup {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: 24px;
+  font-family: Arial;
+  color: #595959;
+}
+
+/* Title Styles */
+.ant-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #262626;
+  margin-bottom: 16px;
+}
+
+/* Content Styles */
+.ant-content {
+  font-size: 14px;
+  color: #595959;
+  margin-bottom: 24px;
+}
+
+/* Footer Styles */
+.ant-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ant-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Button Styles */
+.ant-confirm-button {
+  color: #fff;
+  background: #1677ff;
+  box-shadow: 0 2px 0 rgba(5, 145, 255, 0.1);
+  font-size: 14px;
+  line-height: 1.5714285714285714;
+  height: 32px;
+  padding: 4px 15px;
+  border-radius: 6px;
+  border: #1677ff;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.ant-confirm-button:hover {
+  background: #4096ff;
+  color: #fff;
+}
+
+.ant-cancel-button {
+  border-color: #d9d9d9;
+  background: #ffffff;
+  color: #595959;
+  font-size: 14px;
+  line-height: 1.5714285714285714;
+  height: 32px;
+  padding: 4px 15px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.02);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.ant-cancel-button:hover {
+  color: #4096ff;
+  border-color: #4096ff;
+}
+
+/* Icon Styles */
+.ant-icon {
+  font-size: 24px;
+  color: #1890ff; /* Match Ant Design's primary color */
+  margin-bottom: 16px;
+}
+
+.custom-input {
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #595959;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  background: #ffffff;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #d9d9d9;
+  font-family: Arial;
+}
+
+/* Change outline on focus */
+.custom-input:focus {
+  border-color: #1890ff; /* Ant Design primary color */
+  box-shadow: 0 0 4px rgba(24, 144, 255, 0.6); /* Custom box shadow for focus */
+  outline: none; /* Ensure no browser-specific outline */
+}
+
+/* Add hover effect */
+.custom-input:hover {
+  border-color: #40a9ff; /* Slightly lighter blue for hover */
+}

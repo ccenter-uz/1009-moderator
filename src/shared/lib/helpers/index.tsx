@@ -6,3 +6,4 @@ export * from "./fns";
 export * from "./api-map";
 export * from "./reset-form-fields";
 export * from "./get-zod-required-keys";
+export * from "./configs";

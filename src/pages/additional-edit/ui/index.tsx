@@ -3,7 +3,6 @@ import i18next from "i18next";
 import { CSSProperties, FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useBlocker, useLocation, useParams } from "react-router-dom";
-import Swal from "sweetalert2";
 
 import { AdditionalEditFirstStepUI } from "@widgets/additional-edit-first-step";
 import { AdditionalEditSecondStepUI } from "@widgets/additional-edit-second-step";
@@ -12,6 +11,7 @@ import { AdditionalEditThirdStepUI } from "@widgets/additional-edit-third-step";
 import {
   ADDITIONAL_EDIT_STEPS,
   additionalSubmitData,
+  AntDesignSwal,
   clearAllAdditionalEditStorage,
   getLocalStorage,
   setLocalStorage,
@@ -97,7 +97,7 @@ export const AdditionalEdit: FC = () => {
 
   useEffect(() => {
     if (blocker.state === "blocked") {
-      Swal.fire({
+      AntDesignSwal.fire({
         title: t("are-you-sure"),
         text: t("all-data-will-be-restored"),
         showCancelButton: true,

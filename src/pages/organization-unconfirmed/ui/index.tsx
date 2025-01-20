@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 import { FaCheck, FaPen } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import Swal from "sweetalert2";
 
 import { BasicSearchPartUI } from "@features/basic-search-part";
 
@@ -15,6 +14,7 @@ import {
 } from "@entities/organization";
 
 import {
+  AntDesignSwal,
   clearEditStepStorage,
   getEditingStepStorageValues,
   handleEditLocalDatas,
@@ -69,7 +69,7 @@ export const OrgUnconfirmedPage: FC = () => {
     const { editingId, firstStepData } = getEditingStepStorageValues();
 
     if (editingId && Number(record.id) !== Number(editingId)) {
-      Swal.fire({
+      AntDesignSwal.fire({
         icon: "warning",
         title: t("oops"),
         text: `${t("you-were-editing")} ${firstStepData?.name}, ${t(
@@ -103,7 +103,7 @@ export const OrgUnconfirmedPage: FC = () => {
   };
 
   const handleReject = async (id: number) => {
-    const result = await Swal.fire({
+    const result = await AntDesignSwal.fire({
       input: "textarea",
       inputLabel: t("reject-reason"),
       inputPlaceholder: t("tell-about-reason"),
