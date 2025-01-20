@@ -45,6 +45,9 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
   const [form] = Form.useForm();
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
+  const isStatusRequired = isFilterByStatusRequired?.toString()
+    ? isFilterByStatusRequired
+    : true;
 
   const params = returnAllParams();
   const status = +hasObjKeyLikeStatus(params);
@@ -84,7 +87,7 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
     <Form form={form} id={id} onFinish={handleSearch}>
       <Flex gap={8}>
         {additionalSearch}
-        {!isFilterByStatusRequired ? null : (
+        {!isStatusRequired ? null : (
           <Form.Item name={"status"} label={t("status")} style={{ flex: 0.2 }}>
             <Select
               defaultValue={defaultStatus}
