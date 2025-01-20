@@ -196,7 +196,7 @@ export const Service: FC = () => {
         <BasicSearchPartUI
           id={"service-search"}
           handleSearch={handleSearch}
-          statusFromProps={+serviceStatus}
+          status={+serviceStatus}
           additionalParams={{
             search: searchParams.get(ProductServicesEnum.serviceSearch),
           }}

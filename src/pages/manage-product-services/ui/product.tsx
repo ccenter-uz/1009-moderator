@@ -180,7 +180,7 @@ export const Product: FC = () => {
       searchPart={
         <BasicSearchPartUI
           id={"product-search"}
-          statusFromProps={+productStatus}
+          status={+productStatus}
           handleSearch={handleSearch}
           additionalParams={{
             search: searchParams.get(ProductServicesEnum.productSearch),

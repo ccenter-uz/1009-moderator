@@ -1,4 +1,4 @@
-export function hasObjKeyLikeStatus(obj: Record<string, any>): any {
+export function getValueOfKeyNamedStatus(obj: Record<string, any>): any {
   for (const key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
       if (key.toLowerCase() === "status") {

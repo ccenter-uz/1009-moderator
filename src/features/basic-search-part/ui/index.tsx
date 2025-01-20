@@ -7,7 +7,8 @@ import { MdClear } from "react-icons/md";
 import { useSearchParams } from "react-router-dom";
 
 import {
-  hasObjKeyLikeStatus,
+  findTargetKey,
+  getValueOfKeyNamedStatus,
   returnAllParams,
   STATUS,
 } from "@shared/lib/helpers";
@@ -22,7 +23,7 @@ type Props = {
     status: number;
     nearbyCategoryId: string | number;
   }) => void;
-  statusFromProps?: number;
+  status?: number;
   isFilterByStatusRequired?: boolean;
   loading?: boolean;
   additionalSearch?: JSX.Element;
@@ -34,7 +35,7 @@ type Props = {
 export const BasicSearchPartUI: FC<Props> = (props) => {
   const {
     handleSearch,
-    statusFromProps,
+    status: statusFromProps,
     isFilterByStatusRequired,
     loading,
     additionalSearch,
@@ -45,19 +46,26 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
   const [form] = Form.useForm();
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const params = returnAllParams();
+  const status = +getValueOfKeyNamedStatus(params);
+
   const isStatusRequired = isFilterByStatusRequired?.toString()
     ? isFilterByStatusRequired
     : true;
 
-  const params = returnAllParams();
-  const status = +hasObjKeyLikeStatus(params);
-
   const handleReset = () => {
+    const id = findTargetKey(params, "id");
+    const search = findTargetKey(params, "search");
+    const status = findTargetKey(params, "status");
+
+    params[id] ? (params[id] = "") : null;
+    params[search] ? (params[search] = "") : null;
+    params[status] ? (params[status] = STATUS.ACTIVE.toString()) : null;
+
     form.resetFields();
     setSearchParams({
       ...params,
-      search: "",
-      status: STATUS.ACTIVE.toString(),
     });
   };
 
