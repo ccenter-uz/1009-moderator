@@ -6,7 +6,11 @@ import { FaSearch } from "react-icons/fa";
 import { MdClear } from "react-icons/md";
 import { useSearchParams } from "react-router-dom";
 
-import { returnAllParams, STATUS } from "@shared/lib/helpers";
+import {
+  hasObjKeyLikeStatus,
+  returnAllParams,
+  STATUS,
+} from "@shared/lib/helpers";
 
 type Props = {
   handleSearch: ({
@@ -18,6 +22,7 @@ type Props = {
     status: number;
     nearbyCategoryId: string | number;
   }) => void;
+  statusFromProps?: number;
   loading?: boolean;
   additionalSearch?: JSX.Element;
   id?: string;
@@ -28,6 +33,7 @@ type Props = {
 export const BasicSearchPartUI: FC<Props> = (props) => {
   const {
     handleSearch,
+    statusFromProps,
     loading,
     additionalSearch,
     id = "basic-search",
@@ -39,6 +45,8 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const params = returnAllParams();
+  const status = +hasObjKeyLikeStatus(params);
+
   const handleReset = () => {
     form.resetFields();
     setSearchParams({
@@ -63,13 +71,20 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
+  const defaultStatus =
+    status >= 0
+      ? status
+      : statusFromProps !== undefined && statusFromProps >= 0
+      ? statusFromProps
+      : STATUS.ACTIVE;
+
   return (
     <Form form={form} id={id} onFinish={handleSearch}>
       <Flex gap={8}>
         {additionalSearch}
         <Form.Item name={"status"} label={t("status")} style={{ flex: 0.2 }}>
           <Select
-            defaultValue={STATUS.ACTIVE}
+            defaultValue={defaultStatus}
             options={[
               {
                 id: 0,

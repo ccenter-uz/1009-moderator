@@ -194,6 +194,7 @@ export const SubCategory: FC = () => {
       searchPart={
         <BasicSearchPartUI
           id="sub-category-search"
+          statusFromProps={+subCategoryStatus}
           handleSearch={handleSearch}
           additionalParams={{
             search: searchParams.get(

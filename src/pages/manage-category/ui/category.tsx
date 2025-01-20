@@ -214,8 +214,9 @@ export const Category: FC = () => {
       add={onAdd}
       searchPart={
         <BasicSearchPartUI
-          handleSearch={handleSearch}
           id="category-search"
+          handleSearch={handleSearch}
+          statusFromProps={+categoryStatus}
           additionalSearch={
             <SearchWithRegionCityUI
               form={searchForm}

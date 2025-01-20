@@ -78,6 +78,7 @@ export const Service: FC = () => {
 
     if (inputValue || inputValue === "") {
       const params = returnAllParams();
+
       setSearchParams({
         ...params,
         serviceStatus: status.toString()
@@ -195,6 +196,7 @@ export const Service: FC = () => {
         <BasicSearchPartUI
           id={"service-search"}
           handleSearch={handleSearch}
+          statusFromProps={+serviceStatus}
           additionalParams={{
             search: searchParams.get(ProductServicesEnum.serviceSearch),
           }}
