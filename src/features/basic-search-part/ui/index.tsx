@@ -23,6 +23,7 @@ type Props = {
     nearbyCategoryId: string | number;
   }) => void;
   statusFromProps?: number;
+  isFilterByStatusRequired?: boolean;
   loading?: boolean;
   additionalSearch?: JSX.Element;
   id?: string;
@@ -34,6 +35,7 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
   const {
     handleSearch,
     statusFromProps,
+    isFilterByStatusRequired,
     loading,
     additionalSearch,
     id = "basic-search",
@@ -82,30 +84,33 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
     <Form form={form} id={id} onFinish={handleSearch}>
       <Flex gap={8}>
         {additionalSearch}
-        <Form.Item name={"status"} label={t("status")} style={{ flex: 0.2 }}>
-          <Select
-            defaultValue={defaultStatus}
-            options={[
-              {
-                id: 0,
-                label: t("all"),
-                value: STATUS.ALL,
-              },
-              {
-                id: 1,
-                label: t("active"),
-                value: STATUS.ACTIVE,
-              },
-              {
-                id: 2,
-                label: t("inactive"),
-                value: STATUS.INACTIVE,
-              },
-            ]}
-            placeholder={t("status")}
-            allowClear
-          />
-        </Form.Item>
+        {!isFilterByStatusRequired ? null : (
+          <Form.Item name={"status"} label={t("status")} style={{ flex: 0.2 }}>
+            <Select
+              defaultValue={defaultStatus}
+              options={[
+                {
+                  id: 0,
+                  label: t("all"),
+                  value: STATUS.ALL,
+                },
+                {
+                  id: 1,
+                  label: t("active"),
+                  value: STATUS.ACTIVE,
+                },
+                {
+                  id: 2,
+                  label: t("inactive"),
+                  value: STATUS.INACTIVE,
+                },
+              ]}
+              placeholder={t("status")}
+              allowClear
+            />
+          </Form.Item>
+        )}
+
         <Form.Item name="search" style={{ marginBottom: 0, flex: 1 }}>
           <Input
             type="text"
