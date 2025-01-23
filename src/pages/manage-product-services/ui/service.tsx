@@ -25,6 +25,7 @@ import {
   getZodRequiredKeys,
   notificationResponse,
   returnAllParams,
+  STATUS,
 } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { ItableBasicData } from "@shared/types";
@@ -45,6 +46,8 @@ export const Service: FC = () => {
     [ProductServicesEnum.servicePage]: page,
     [ProductServicesEnum.serviceLimit]: limit,
     [ProductServicesEnum.serviceSearch]: search,
+    [ProductServicesEnum.productId]: productId,
+    [ProductServicesEnum.serviceStatus]: serviceStatus,
   } = returnAllParams();
   const [trigger, { data, isLoading }] = useLazyGetSubCategoryQuery();
   const [createSubCategory] = useCreateSubCategoryMutation();
@@ -54,6 +57,11 @@ export const Service: FC = () => {
   const [editingData, setEditingData] = useState<editServiceType | null>(null);
 
   const [isAddBtnDisable, setIsAddBtnDisable] = useState<boolean>(true);
+  const [isFilterReset, setIsFilterReset] = useState<
+    string | number | undefined
+  >();
+
+  const params = returnAllParams();
 
   const handleEditOpen = (values: editServiceType) => {
     setEditingData({ ...values, id: values.id });
@@ -65,13 +73,22 @@ export const Service: FC = () => {
     onOpen();
   };
 
-  const handleSearch = ({ search }: { search: string }) => {
-    const previousParams = returnAllParams();
+  const handleSearch = ({
+    search,
+    status = STATUS.ACTIVE,
+  }: {
+    search: string;
+    status: number;
+  }) => {
+    const inputValue = search || "";
 
-    if (search || search === "") {
+    if (inputValue || inputValue === "" || typeof status === "number") {
       setSearchParams({
-        ...previousParams,
-        [ProductServicesEnum.serviceSearch]: search,
+        ...params,
+        [ProductServicesEnum.serviceStatus]: status.toString()
+          ? status.toString()
+          : STATUS.ACTIVE.toString(),
+        [ProductServicesEnum.serviceSearch]: inputValue.trim(),
       });
     }
   };
@@ -106,6 +123,19 @@ export const Service: FC = () => {
     setEditingData(null);
     form.resetFields();
   };
+
+  useEffect(() => {
+    if (isFilterReset) {
+      console.log("click from service");
+
+      setSearchParams({
+        ...params,
+        [ProductServicesEnum.serviceSearch]: "",
+        [ProductServicesEnum.serviceStatus]: STATUS.ACTIVE.toString(),
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFilterReset]);
 
   const columns = [
     ...columnsForCategoriesTu,
@@ -146,18 +176,27 @@ export const Service: FC = () => {
   ];
 
   useEffect(() => {
-    const hasParamsServiceId = searchParams.has(ProductServicesEnum.productId);
-    setIsAddBtnDisable(!hasParamsServiceId);
+    setIsAddBtnDisable(!productId);
+
     if (searchParams.has(ProductServicesEnum.productId)) {
       trigger({
         page: Number(page) || 1,
         limit: Number(limit) || 10,
         search,
         categoryId: Number(searchParams.get(ProductServicesEnum.productId)),
+        status: serviceStatus || STATUS.ACTIVE,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams.get(ProductServicesEnum.productId), search, page, limit]);
+  }, [
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    searchParams.get(ProductServicesEnum.productId),
+    search,
+    page,
+    limit,
+    serviceStatus,
+    productId,
+  ]);
 
   return (
     <ManageWrapperBox
@@ -174,6 +213,8 @@ export const Service: FC = () => {
         <BasicSearchPartUI
           id={"service-search"}
           handleSearch={handleSearch}
+          handleReset={setIsFilterReset}
+          status={Number(serviceStatus)}
           additionalParams={{
             search: searchParams.get(ProductServicesEnum.serviceSearch),
           }}

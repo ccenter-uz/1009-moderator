@@ -180,7 +180,10 @@ export const OrgUnconfirmedPage: FC = () => {
     <>
       <h2>{t("unconfirmed")}</h2>
       <Flex vertical gap={16}>
-        <BasicSearchPartUI handleSearch={handleSearch} />
+        <BasicSearchPartUI
+          handleSearch={handleSearch}
+          isFilterByStatusRequired={false}
+        />
         <Table
           loading={isLoading}
           columns={columns}

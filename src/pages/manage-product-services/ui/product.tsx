@@ -2,7 +2,7 @@ import { Flex, Form, Tooltip } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { createSchemaFieldRule } from "antd-zod";
 import { t } from "i18next";
-import { FC, memo, useState } from "react";
+import { FC, memo, useEffect, useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
 import { MdRestore } from "react-icons/md";
 import { useSearchParams } from "react-router-dom";
@@ -40,6 +40,7 @@ export const Product: FC = () => {
     [ProductServicesEnum.productPage]: page,
     [ProductServicesEnum.productLimit]: limit,
     [ProductServicesEnum.productSearch]: search,
+    [ProductServicesEnum.productStatus]: productStatus,
   } = returnAllParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -52,12 +53,18 @@ export const Product: FC = () => {
     page,
     limit,
     search,
+    status: productStatus || STATUS.ACTIVE,
   });
   const [deleteProduct] = useDeleteProductMutation();
   const [createProduct] = useCreateProductMutation();
   const [updateProduct] = useUpdateProductMutation();
   const [restoreProduct] = useRestoreProductMutation();
   const [editingData, setEditingData] = useState<editProductType | null>(null);
+  const [isFilterReset, setIsFilterReset] = useState<
+    string | number | undefined
+  >();
+
+  const params = returnAllParams();
 
   const handleEditOpen = (values: editProductType) => {
     setEditingData({ ...values, id: values.id });
@@ -69,13 +76,25 @@ export const Product: FC = () => {
     onOpen();
   };
 
-  const handleSearch = ({ search }: { search: string }) => {
-    const previousParams = returnAllParams();
+  const handleSearch = ({
+    search,
+    status = STATUS.ACTIVE,
+  }: {
+    search: string;
+    status: number;
+  }) => {
+    let inputValue = search;
+    if (inputValue === undefined || inputValue === null) {
+      inputValue = "";
+    }
 
-    if (search || search === "") {
+    if (inputValue || inputValue === "" || typeof status === "number") {
       setSearchParams({
-        ...previousParams,
-        [ProductServicesEnum.productSearch]: search,
+        ...params,
+        [ProductServicesEnum.productSearch]: inputValue.trim(),
+        [ProductServicesEnum.productStatus]: status.toString()
+          ? status.toString()
+          : STATUS.ACTIVE.toString(),
       });
     }
   };
@@ -90,7 +109,6 @@ export const Product: FC = () => {
       id: editingData?.id,
     };
     const request = editingData ? updateProduct : createProduct;
-
     const response = await request(body);
 
     notificationResponse(response, t, onClose);
@@ -111,6 +129,20 @@ export const Product: FC = () => {
       [ProductServicesEnum.productId]: record.id as string,
     });
   };
+
+  useEffect(() => {
+    if (isFilterReset) {
+      setSearchParams({
+        ...params,
+        [ProductServicesEnum.productStatus]: STATUS.ACTIVE.toString(),
+        [ProductServicesEnum.productSearch]: "",
+        [ProductServicesEnum.productId]: "",
+        [ProductServicesEnum.serviceSearch]: "",
+        [ProductServicesEnum.serviceStatus]: STATUS.ACTIVE.toString(),
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFilterReset]);
 
   const columns = [
     ...columnsForCategoriesTu,
@@ -165,7 +197,9 @@ export const Product: FC = () => {
       searchPart={
         <BasicSearchPartUI
           id={"product-search"}
+          status={Number(productStatus)}
           handleSearch={handleSearch}
+          handleReset={setIsFilterReset}
           additionalParams={{
             search: searchParams.get(ProductServicesEnum.productSearch),
           }}
