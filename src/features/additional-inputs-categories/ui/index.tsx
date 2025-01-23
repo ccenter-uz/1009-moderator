@@ -12,9 +12,8 @@ import { FC, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPen, FaPlus, FaTrash } from "react-icons/fa";
 import { useSearchParams } from "react-router-dom";
-import Swal from "sweetalert2";
 
-import { returnAllParams } from "@shared/lib/helpers";
+import { AntDesignSwal, returnAllParams } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { Can } from "@shared/ui";
 
@@ -56,7 +55,7 @@ export const AdditionalInputsCategoriesUI: FC = () => {
   );
   const [editCatId, setEditCatId] = useState<number | string | null>(null);
   const onDeleteCategory = () => {
-    Swal.fire({
+    AntDesignSwal.fire({
       title: t("are-you-sure"),
       text: t("content-will-be-deleted"),
       icon: "warning",
