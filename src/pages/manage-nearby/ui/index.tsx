@@ -1,7 +1,7 @@
 import { Flex, Form, Select, Tooltip } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { createSchemaFieldRule } from "antd-zod";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
 import { MdRestore } from "react-icons/md";
@@ -73,11 +73,15 @@ export const ManageNearbyPage: FC = () => {
   const [createNearby] = useCreateNearbyMutation();
   const [updateNearby] = useUpdateNearbyMutation();
   const [restoreNearby] = useRestoreNearbyMutation();
+
   const [editingData, setEditingData] = useState<valueProps | null>(null);
   const [nearbyCategoryId, setNearbyCategoryId] = useState<number | string>("");
   const [modalNearbyCategoryId, setModalNearbyCategoryId] = useState<
     string | number | boolean
   >(true);
+  const [isFilterReset, setIsFilterReset] = useState<
+    string | number | undefined
+  >();
 
   const handleEditOpen = (values: valueProps) => {
     const editingBody = {
@@ -152,6 +156,17 @@ export const ManageNearbyPage: FC = () => {
     onOpen();
   };
 
+  useEffect(() => {
+    if (isFilterReset) {
+      setSearchParams({
+        ...params,
+        status: STATUS.ACTIVE.toString(),
+        search: "",
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFilterReset]);
+
   const columns = [
     ...columnsWithRegions,
     {
@@ -206,6 +221,8 @@ export const ManageNearbyPage: FC = () => {
         searchPart={
           <BasicSearchPartUI
             handleSearch={handleSearch}
+            handleReset={setIsFilterReset}
+            status={Number(params.status)}
             additionalSearch={
               <Form.Item label={t("nearby-category")} style={{ flex: 0.5 }}>
                 <Select

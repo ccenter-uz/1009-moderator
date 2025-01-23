@@ -1,6 +1,6 @@
 import { Flex, Form, Tooltip } from "antd";
 import { createSchemaFieldRule } from "antd-zod";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
 import { MdRestore } from "react-icons/md";
@@ -74,7 +74,11 @@ export const ManageImpassePage: FC = () => {
   const [updateImpasse] = useUpdateImpasseMutation();
   const [createImpasse] = useCreateImpasseMutation();
   const [restoreImpasse] = useRestoreImpasseMutation();
+
   const [editingData, setEditingData] = useState<valueProps | null>(null);
+  const [isFilterReset, setIsFilterReset] = useState<
+    string | number | undefined
+  >();
 
   const handleEditOpen = (values: valueProps) => {
     const editingBody = {
@@ -158,6 +162,17 @@ export const ManageImpassePage: FC = () => {
     onOpen();
   };
 
+  useEffect(() => {
+    if (isFilterReset) {
+      setSearchParams({
+        ...params,
+        status: STATUS.ACTIVE.toString(),
+        search: "",
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFilterReset]);
+
   const columns = [
     ...columnsForAddress,
     {
@@ -205,7 +220,13 @@ export const ManageImpassePage: FC = () => {
         columns={columns}
         data={data?.data || []}
         add={handleAdd}
-        searchPart={<BasicSearchPartUI handleSearch={handleSearch} />}
+        searchPart={
+          <BasicSearchPartUI
+            handleSearch={handleSearch}
+            handleReset={setIsFilterReset}
+            status={Number(params.status)}
+          />
+        }
         modalPart={
           <Form
             form={form}

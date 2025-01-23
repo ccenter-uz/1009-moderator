@@ -1,7 +1,7 @@
 import { Flex, Form, Tooltip } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { createSchemaFieldRule } from "antd-zod";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
 import { MdRestore } from "react-icons/md";
@@ -48,6 +48,9 @@ export const ManageMainOrgPage: FC = () => {
   const [updateMainOrg] = useUpdateMainOrgMutation();
   const [restoreMainOrg] = useRestoreMainOrgMutation();
   const [editingData, setEditingData] = useState<AnyObject | null>(null);
+  const [isFilterReset, setIsFilterReset] = useState<
+    string | number | undefined
+  >();
 
   const params = returnAllParams();
 
@@ -100,6 +103,17 @@ export const ManageMainOrgPage: FC = () => {
     form.resetFields();
   };
 
+  useEffect(() => {
+    if (isFilterReset) {
+      setSearchParams({
+        ...params,
+        status: STATUS.ACTIVE.toString(),
+        search: "",
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFilterReset]);
+
   const columns = [
     ...columnsWithSingleName,
     {
@@ -147,7 +161,13 @@ export const ManageMainOrgPage: FC = () => {
         columns={columns}
         data={data?.data || []}
         add={handleAdd}
-        searchPart={<BasicSearchPartUI handleSearch={handleSearch} />}
+        searchPart={
+          <BasicSearchPartUI
+            handleSearch={handleSearch}
+            handleReset={setIsFilterReset}
+            status={Number(params.status)}
+          />
+        }
         modalPart={
           <Form
             form={form}

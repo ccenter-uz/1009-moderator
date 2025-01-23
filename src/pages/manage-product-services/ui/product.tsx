@@ -2,7 +2,7 @@ import { Flex, Form, Tooltip } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { createSchemaFieldRule } from "antd-zod";
 import { t } from "i18next";
-import { FC, memo, useState } from "react";
+import { FC, memo, useEffect, useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
 import { MdRestore } from "react-icons/md";
 import { useSearchParams } from "react-router-dom";
@@ -40,7 +40,7 @@ export const Product: FC = () => {
     [ProductServicesEnum.productPage]: page,
     [ProductServicesEnum.productLimit]: limit,
     [ProductServicesEnum.productSearch]: search,
-    productStatus,
+    [ProductServicesEnum.productStatus]: productStatus,
   } = returnAllParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -60,6 +60,9 @@ export const Product: FC = () => {
   const [updateProduct] = useUpdateProductMutation();
   const [restoreProduct] = useRestoreProductMutation();
   const [editingData, setEditingData] = useState<editProductType | null>(null);
+  const [isFilterReset, setIsFilterReset] = useState<
+    string | number | undefined
+  >();
 
   const params = returnAllParams();
 
@@ -75,7 +78,7 @@ export const Product: FC = () => {
 
   const handleSearch = ({
     search,
-    status: productStatus = STATUS.ACTIVE,
+    status = STATUS.ACTIVE,
   }: {
     search: string;
     status: number;
@@ -85,12 +88,12 @@ export const Product: FC = () => {
       inputValue = "";
     }
 
-    if (inputValue || inputValue === "" || typeof productStatus === "number") {
+    if (inputValue || inputValue === "" || typeof status === "number") {
       setSearchParams({
         ...params,
-        [ProductServicesEnum.productSearch]: inputValue,
-        productStatus: productStatus.toString()
-          ? productStatus.toString()
+        [ProductServicesEnum.productSearch]: inputValue.trim(),
+        [ProductServicesEnum.productStatus]: status.toString()
+          ? status.toString()
           : STATUS.ACTIVE.toString(),
       });
     }
@@ -126,6 +129,20 @@ export const Product: FC = () => {
       [ProductServicesEnum.productId]: record.id as string,
     });
   };
+
+  useEffect(() => {
+    if (isFilterReset) {
+      setSearchParams({
+        ...params,
+        [ProductServicesEnum.productStatus]: STATUS.ACTIVE.toString(),
+        [ProductServicesEnum.productSearch]: "",
+        [ProductServicesEnum.productId]: "",
+        [ProductServicesEnum.serviceSearch]: "",
+        [ProductServicesEnum.serviceStatus]: STATUS.ACTIVE.toString(),
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFilterReset]);
 
   const columns = [
     ...columnsForCategoriesTu,
@@ -180,8 +197,9 @@ export const Product: FC = () => {
       searchPart={
         <BasicSearchPartUI
           id={"product-search"}
-          status={+productStatus}
+          status={Number(productStatus)}
           handleSearch={handleSearch}
+          handleReset={setIsFilterReset}
           additionalParams={{
             search: searchParams.get(ProductServicesEnum.productSearch),
           }}

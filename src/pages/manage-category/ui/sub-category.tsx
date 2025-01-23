@@ -44,7 +44,7 @@ export const SubCategory: FC = () => {
     [CategorySubCategoryEnums.subCategoryPage]: page,
     [CategorySubCategoryEnums.subCategoryLimit]: limit,
     [CategorySubCategoryEnums.subCategorySearch]: search,
-    subCategoryStatus,
+    [CategorySubCategoryEnums.subCategoryStatus]: subCategoryStatus,
   } = returnAllParams();
 
   const [trigger, { data, isLoading }] = useLazyGetSubCategoriesQuery();
@@ -58,7 +58,11 @@ export const SubCategory: FC = () => {
   );
 
   const [isAddBtnDisable, setIsAddBtnDisable] = useState<boolean>(true);
+  const [isFilterReset, setIsFilterReset] = useState<
+    string | number | undefined
+  >();
 
+  const params = returnAllParams();
   const handleEditOpen = (values: editSubcategoryType) => {
     setEditingData({ ...values, id: values.id });
     form.setFieldsValue({
@@ -79,7 +83,7 @@ export const SubCategory: FC = () => {
     const params = returnAllParams();
     setSearchParams({
       ...params,
-      subCategoryStatus: status.toString()
+      [CategorySubCategoryEnums.subCategoryStatus]: status.toString()
         ? status.toString()
         : STATUS.ACTIVE.toString(),
       [CategorySubCategoryEnums.subCategorySearch]: search || "",
@@ -114,6 +118,19 @@ export const SubCategory: FC = () => {
     setEditingData(null);
     form.resetFields();
   };
+
+  useEffect(() => {
+    if (isFilterReset) {
+      console.log("click from service");
+
+      setSearchParams({
+        ...params,
+        [CategorySubCategoryEnums.subCategorySearch]: "",
+        [CategorySubCategoryEnums.subCategoryStatus]: STATUS.ACTIVE.toString(),
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFilterReset]);
 
   const columns = [
     ...columnsForCategories,
@@ -196,6 +213,7 @@ export const SubCategory: FC = () => {
           id="sub-category-search"
           status={+subCategoryStatus}
           handleSearch={handleSearch}
+          handleReset={setIsFilterReset}
           additionalParams={{
             search: searchParams.get(
               CategorySubCategoryEnums.subCategorySearch,

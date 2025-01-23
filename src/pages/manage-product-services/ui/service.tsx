@@ -46,7 +46,8 @@ export const Service: FC = () => {
     [ProductServicesEnum.servicePage]: page,
     [ProductServicesEnum.serviceLimit]: limit,
     [ProductServicesEnum.serviceSearch]: search,
-    serviceStatus,
+    [ProductServicesEnum.productId]: productId,
+    [ProductServicesEnum.serviceStatus]: serviceStatus,
   } = returnAllParams();
   const [trigger, { data, isLoading }] = useLazyGetSubCategoryQuery();
   const [createSubCategory] = useCreateSubCategoryMutation();
@@ -56,6 +57,11 @@ export const Service: FC = () => {
   const [editingData, setEditingData] = useState<editServiceType | null>(null);
 
   const [isAddBtnDisable, setIsAddBtnDisable] = useState<boolean>(true);
+  const [isFilterReset, setIsFilterReset] = useState<
+    string | number | undefined
+  >();
+
+  const params = returnAllParams();
 
   const handleEditOpen = (values: editServiceType) => {
     setEditingData({ ...values, id: values.id });
@@ -76,15 +82,13 @@ export const Service: FC = () => {
   }) => {
     const inputValue = search || "";
 
-    if (inputValue || inputValue === "") {
-      const params = returnAllParams();
-
+    if (inputValue || inputValue === "" || typeof status === "number") {
       setSearchParams({
         ...params,
-        serviceStatus: status.toString()
+        [ProductServicesEnum.serviceStatus]: status.toString()
           ? status.toString()
           : STATUS.ACTIVE.toString(),
-        [ProductServicesEnum.serviceSearch]: inputValue,
+        [ProductServicesEnum.serviceSearch]: inputValue.trim(),
       });
     }
   };
@@ -119,6 +123,19 @@ export const Service: FC = () => {
     setEditingData(null);
     form.resetFields();
   };
+
+  useEffect(() => {
+    if (isFilterReset) {
+      console.log("click from service");
+
+      setSearchParams({
+        ...params,
+        [ProductServicesEnum.serviceSearch]: "",
+        [ProductServicesEnum.serviceStatus]: STATUS.ACTIVE.toString(),
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFilterReset]);
 
   const columns = [
     ...columnsForCategoriesTu,
@@ -159,9 +176,8 @@ export const Service: FC = () => {
   ];
 
   useEffect(() => {
-    const hasParamsServiceId = searchParams.has(ProductServicesEnum.productId);
-    setIsAddBtnDisable(!hasParamsServiceId);
-    console.log(Number(searchParams.get(ProductServicesEnum.productId)));
+    setIsAddBtnDisable(!productId);
+
     if (searchParams.has(ProductServicesEnum.productId)) {
       trigger({
         page: Number(page) || 1,
@@ -179,6 +195,7 @@ export const Service: FC = () => {
     page,
     limit,
     serviceStatus,
+    productId,
   ]);
 
   return (
@@ -196,7 +213,8 @@ export const Service: FC = () => {
         <BasicSearchPartUI
           id={"service-search"}
           handleSearch={handleSearch}
-          status={+serviceStatus}
+          handleReset={setIsFilterReset}
+          status={Number(serviceStatus)}
           additionalParams={{
             search: searchParams.get(ProductServicesEnum.serviceSearch),
           }}

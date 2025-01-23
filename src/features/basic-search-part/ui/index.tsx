@@ -1,17 +1,12 @@
 import { Button, Flex, Form, Input, Select } from "antd";
 import { AnyObject } from "antd/es/_util/type";
-import { FC, useEffect } from "react";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaSearch } from "react-icons/fa";
 import { MdClear } from "react-icons/md";
 import { useSearchParams } from "react-router-dom";
 
-import {
-  findTargetKey,
-  getValueOfKeyNamedStatus,
-  returnAllParams,
-  STATUS,
-} from "@shared/lib/helpers";
+import { returnAllParams, STATUS } from "@shared/lib/helpers";
 
 type Props = {
   handleSearch: ({
@@ -23,7 +18,8 @@ type Props = {
     status: number;
     nearbyCategoryId: string | number;
   }) => void;
-  status?: number;
+  handleReset: Dispatch<SetStateAction<string | number | undefined>>;
+  status: number;
   isFilterByStatusRequired?: boolean;
   loading?: boolean;
   additionalSearch?: JSX.Element;
@@ -35,6 +31,7 @@ type Props = {
 export const BasicSearchPartUI: FC<Props> = (props) => {
   const {
     handleSearch,
+    handleReset: handleResetFromProps,
     status: statusFromProps,
     isFilterByStatusRequired,
     loading,
@@ -45,28 +42,20 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
   } = props;
   const [form] = Form.useForm();
   const { t } = useTranslation();
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const params = returnAllParams();
-  const status = +getValueOfKeyNamedStatus(params);
+  const [searchParams] = useSearchParams();
 
   const isStatusRequired = isFilterByStatusRequired?.toString()
     ? isFilterByStatusRequired
     : true;
 
+  const [initialStatusValue, setInitialStatusValue] = useState(
+    statusFromProps >= 0 ? statusFromProps : STATUS.ACTIVE,
+  );
+
   const handleReset = () => {
-    const id = findTargetKey(params, "id");
-    const search = findTargetKey(params, "search");
-    const status = findTargetKey(params, "status");
-
-    params[id] ? (params[id] = "") : null;
-    params[search] ? (params[search] = "") : null;
-    params[status] ? (params[status] = STATUS.ACTIVE.toString()) : null;
-
+    handleResetFromProps?.(new Date().getTime());
     form.resetFields();
-    setSearchParams({
-      ...params,
-    });
+    setInitialStatusValue(STATUS.ACTIVE);
   };
 
   useEffect(() => {
@@ -84,12 +73,12 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
-  const defaultStatus =
-    status >= 0
-      ? status
-      : statusFromProps !== undefined && statusFromProps >= 0
-      ? statusFromProps
-      : STATUS.ACTIVE;
+  useEffect(() => {
+    if (statusFromProps !== undefined) {
+      setInitialStatusValue(statusFromProps);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [statusFromProps]);
 
   return (
     <Form form={form} id={id} onFinish={handleSearch}>
@@ -98,7 +87,7 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
         {!isStatusRequired ? null : (
           <Form.Item name={"status"} label={t("status")} style={{ flex: 0.2 }}>
             <Select
-              defaultValue={defaultStatus}
+              defaultValue={initialStatusValue}
               options={[
                 {
                   id: 0,
@@ -121,7 +110,6 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
             />
           </Form.Item>
         )}
-
         <Form.Item name="search" style={{ marginBottom: 0, flex: 1 }}>
           <Input
             type="text"

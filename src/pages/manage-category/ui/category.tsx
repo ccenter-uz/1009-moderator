@@ -44,7 +44,7 @@ export const Category: FC = () => {
     [CategorySubCategoryEnums.categorySearch]: search,
     [CategorySubCategoryEnums.regionId]: regionId,
     [CategorySubCategoryEnums.cityId]: cityId,
-    categoryStatus,
+    [CategorySubCategoryEnums.categoryStatus]: categoryStatus,
   } = returnAllParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -55,9 +55,9 @@ export const Category: FC = () => {
   const { data, isLoading } = useGetCategoriesQuery({
     page,
     limit,
-    search,
     regionId,
     cityId,
+    search,
     status: categoryStatus || STATUS.ACTIVE,
   });
   const [deleteCategory] = useDeleteCategoryMutation();
@@ -66,6 +66,11 @@ export const Category: FC = () => {
   const [restoreCategory] = useRestoreCategoryMutation();
   const [editingData, setEditingData] = useState<editCategoryType | null>(null);
   const [isSearchBtnDisable, setIsSearchBtnDisable] = useState<boolean>(true);
+  const [isFilterReset, setIsFilterReset] = useState<
+    string | number | undefined
+  >();
+
+  const params = returnAllParams();
 
   const handleEditOpen = (values: editCategoryType) => {
     setEditingData({ ...values, id: values.id });
@@ -81,7 +86,7 @@ export const Category: FC = () => {
 
   const handleSearch = ({
     search,
-    status: categoryStatus = STATUS.ACTIVE,
+    status = STATUS.ACTIVE,
   }: {
     search: string;
     status: number;
@@ -99,16 +104,16 @@ export const Category: FC = () => {
 
       setSearchParams({
         ...previousParamsCopy,
-        categoryStatus: categoryStatus.toString()
-          ? categoryStatus.toString()
-          : STATUS.ACTIVE,
+        [CategorySubCategoryEnums.categoryStatus]: status.toString()
+          ? status.toString()
+          : STATUS.ACTIVE.toString(),
         [CategorySubCategoryEnums.categorySearch]: search || "",
       });
     } else {
       setSearchParams({
         ...previousParams,
-        categoryStatus: categoryStatus.toString()
-          ? categoryStatus.toString()
+        [CategorySubCategoryEnums.categoryStatus]: status.toString()
+          ? status.toString()
           : STATUS.ACTIVE.toString(),
         [CategorySubCategoryEnums.categorySearch]: search || "",
         [CategorySubCategoryEnums.regionId]: regionId,
@@ -152,6 +157,20 @@ export const Category: FC = () => {
       [CategorySubCategoryEnums.categoryId]: record.id as string,
     });
   };
+
+  useEffect(() => {
+    if (isFilterReset) {
+      setSearchParams({
+        ...params,
+        [CategorySubCategoryEnums.categoryStatus]: STATUS.ACTIVE.toString(),
+        [CategorySubCategoryEnums.categorySearch]: "",
+        [CategorySubCategoryEnums.categoryId]: "",
+        [CategorySubCategoryEnums.subCategorySearch]: "",
+        [CategorySubCategoryEnums.subCategoryStatus]: STATUS.ACTIVE.toString(),
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFilterReset]);
 
   const columns = [
     ...columnsForCategories,
@@ -216,6 +235,7 @@ export const Category: FC = () => {
         <BasicSearchPartUI
           id="category-search"
           handleSearch={handleSearch}
+          handleReset={setIsFilterReset}
           status={+categoryStatus}
           additionalSearch={
             <SearchWithRegionCityUI
