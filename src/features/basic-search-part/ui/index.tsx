@@ -74,8 +74,9 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
   }, [searchParams]);
 
   useEffect(() => {
-    if (statusFromProps !== undefined) {
+    if (statusFromProps !== undefined && !isNaN(statusFromProps)) {
       setInitialStatusValue(statusFromProps);
+      form.setFieldsValue({ status: statusFromProps });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [statusFromProps]);
