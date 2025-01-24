@@ -168,19 +168,33 @@ export const OrgUnconfirmedPage: FC = () => {
     },
   ];
 
-  const handleSearch = ({ search }: { search: string }) => {
-    const prevParams = returnAllParams();
-    setSearchParams({
-      ...prevParams,
-      search,
-    });
+  const handleSearch = ({
+    search,
+    createdBy,
+  }: {
+    search: string;
+    createdBy: string;
+  }) => {
+    const params = returnAllParams();
+    const inputValue = search || "";
+
+    if (inputValue || inputValue === "") {
+      setSearchParams({
+        ...params,
+        createdBy,
+        search: inputValue.trim(),
+      });
+    }
   };
 
   return (
     <>
       <h2>{t("unconfirmed")}</h2>
       <Flex vertical gap={16}>
-        <BasicSearchPartUI handleSearch={handleSearch} />
+        <BasicSearchPartUI
+          handleSearch={handleSearch}
+          hasCreateByFilter={true}
+        />
         <Table
           loading={isLoading}
           columns={columns}

@@ -1,4 +1,4 @@
-import { Button, Flex, Form, Input } from "antd";
+import { Button, Flex, Form, Input, Select } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -6,13 +6,20 @@ import { FaSearch } from "react-icons/fa";
 import { MdClear } from "react-icons/md";
 import { useSearchParams } from "react-router-dom";
 
-import { returnAllParams } from "@shared/lib/helpers";
+import { CREATEDBYENUM, returnAllParams } from "@shared/lib/helpers";
 
 type Props = {
-  handleSearch: ({ search }: { search: string }) => void;
+  handleSearch: ({
+    search,
+    createdBy,
+  }: {
+    search: string;
+    createdBy: string;
+  }) => void;
   loading?: boolean;
   additionalSearch?: JSX.Element;
   id?: string;
+  hasCreateByFilter?: boolean;
   additionalParams?: unknown | AnyObject;
   isSearchBtnDisable?: boolean;
 };
@@ -23,6 +30,7 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
     loading,
     additionalSearch,
     id = "basic-search",
+    hasCreateByFilter = false,
     additionalParams,
     isSearchBtnDisable,
   } = props;
@@ -32,7 +40,7 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
 
   const handleReset = () => {
     form.resetFields();
-    handleSearch({ search: "" });
+    handleSearch({ search: "", createdBy: CREATEDBYENUM.Billing });
   };
 
   useEffect(() => {
@@ -54,6 +62,27 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
     <Form form={form} id={id} onFinish={handleSearch}>
       <Flex gap={8} align="center" wrap="wrap">
         {additionalSearch}
+        {!hasCreateByFilter ? null : (
+          <Form.Item name="createdBy" style={{ marginBottom: 0, flex: 1 }}>
+            <Select
+              defaultValue={CREATEDBYENUM.Billing}
+              options={[
+                {
+                  label: t("billing"),
+                  value: CREATEDBYENUM.Billing,
+                },
+                {
+                  label: t("client"),
+                  value: CREATEDBYENUM.Client,
+                },
+                {
+                  label: t("moderator"),
+                  value: CREATEDBYENUM.Moderator,
+                },
+              ]}
+            />
+          </Form.Item>
+        )}
         <Form.Item name="search" style={{ marginBottom: 0, flex: 1 }}>
           <Input
             type="text"
