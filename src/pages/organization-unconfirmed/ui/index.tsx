@@ -1,6 +1,6 @@
 import { Button, Flex, Table, Tooltip } from "antd";
 import { AnyObject } from "antd/es/_util/type";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaCheck, FaPen } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
@@ -20,6 +20,7 @@ import {
   handleEditLocalDatas,
   returnAllParams,
   setLocalStorage,
+  STATUS,
   STEPS_EDIT_DATA,
   STEPS_ENUM,
   unconfirmedTableColumns,
@@ -33,6 +34,8 @@ enum TYPE_AND_STATUS {
   STATUS_REJECTED = 2,
 }
 
+// lorem
+
 export const OrgUnconfirmedPage: FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -44,6 +47,10 @@ export const OrgUnconfirmedPage: FC = () => {
     ...returnAllParams(),
   });
   const [checkOrganization] = useCheckOrganizationMutation();
+  const params = returnAllParams();
+  const [isFilterReset, setIsFilterReset] = useState<
+    string | number | undefined
+  >();
 
   const handleCheckOrganization = (
     id: number,
@@ -118,6 +125,17 @@ export const OrgUnconfirmedPage: FC = () => {
     }
   };
 
+  useEffect(() => {
+    if (isFilterReset) {
+      setSearchParams({
+        ...params,
+        status: STATUS.ACTIVE.toString(),
+        search: "",
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFilterReset]);
+
   const columns = [
     ...unconfirmedTableColumns,
     {
@@ -181,6 +199,8 @@ export const OrgUnconfirmedPage: FC = () => {
       <h2>{t("unconfirmed")}</h2>
       <Flex vertical gap={16}>
         <BasicSearchPartUI
+          handleReset={setIsFilterReset}
+          status={1}
           handleSearch={handleSearch}
           isFilterByStatusRequired={false}
         />
