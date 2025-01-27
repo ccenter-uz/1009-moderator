@@ -16,11 +16,11 @@ import {
 import {
   AntDesignSwal,
   clearEditStepStorage,
+  CreatedByEnum,
   getEditingStepStorageValues,
   handleEditLocalDatas,
   returnAllParams,
   setLocalStorage,
-  STATUS,
   STEPS_EDIT_DATA,
   STEPS_ENUM,
   unconfirmedTableColumns,
@@ -33,8 +33,6 @@ enum TYPE_AND_STATUS {
   STATUS_CONFIRMED = 1,
   STATUS_REJECTED = 2,
 }
-
-// lorem
 
 export const OrgUnconfirmedPage: FC = () => {
   const { t } = useTranslation();
@@ -129,7 +127,7 @@ export const OrgUnconfirmedPage: FC = () => {
     if (isFilterReset) {
       setSearchParams({
         ...params,
-        status: STATUS.ACTIVE.toString(),
+        createdBy: CreatedByEnum.Billing,
         search: "",
       });
     }
@@ -186,12 +184,22 @@ export const OrgUnconfirmedPage: FC = () => {
     },
   ];
 
-  const handleSearch = ({ search }: { search: string }) => {
-    const prevParams = returnAllParams();
-    setSearchParams({
-      ...prevParams,
-      search,
-    });
+  const handleSearch = ({
+    search,
+    createdBy = CreatedByEnum.Billing,
+  }: {
+    search: string;
+    createdBy: string;
+  }) => {
+    const inputValue = search || "";
+
+    if (inputValue || inputValue === "") {
+      setSearchParams({
+        ...params,
+        search: inputValue.trim(),
+        createdBy,
+      });
+    }
   };
 
   return (
@@ -199,10 +207,9 @@ export const OrgUnconfirmedPage: FC = () => {
       <h2>{t("unconfirmed")}</h2>
       <Flex vertical gap={16}>
         <BasicSearchPartUI
-          handleReset={setIsFilterReset}
-          status={1}
           handleSearch={handleSearch}
-          isFilterByStatusRequired={false}
+          handleReset={setIsFilterReset}
+          hasFilterByStatus={false}
         />
         <Table
           loading={isLoading}
