@@ -1,6 +1,5 @@
 import { Row, Col, Table, Flex, Tooltip } from "antd";
 import { AnyObject } from "antd/es/_util/type";
-import { ColumnsType } from "antd/es/table";
 import { t } from "i18next";
 import { FC, useState } from "react";
 import { FaEnvelope, FaPencilAlt } from "react-icons/fa";
@@ -23,6 +22,7 @@ import {
   setColorByStatus,
   setLocalStorage,
   status,
+  statusType,
   STEPS_EDIT_DATA,
   STEPS_ENUM,
 } from "@shared/lib/helpers";
@@ -108,7 +108,7 @@ export const SearchTopTable: FC<Props> = (props) => {
     }
   };
 
-  const columns: ColumnsType<AnyObject> = [
+  const columns = [
     {
       title: t("code"),
       dataIndex: "inn",
@@ -150,7 +150,7 @@ export const SearchTopTable: FC<Props> = (props) => {
       title: t("status"),
       dataIndex: "status",
       key: "status",
-      render: (text: number) => setColorByStatus(status[text]),
+      render: (text: statusType) => setColorByStatus(status[text]),
     },
     {
       width: 80,

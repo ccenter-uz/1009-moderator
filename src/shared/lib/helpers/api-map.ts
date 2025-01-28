@@ -105,4 +105,5 @@ export const API_MAP = {
   RESTORE_ORGANIZATION: "organization",
   CHECK_ORGANIZATION: "organization/check",
   UNCONFIRMED_ORGANIZATION_ALL: "organization/unconfirm",
+  MY_ORGANIZATION_ALL: "organization/my-org",
 };

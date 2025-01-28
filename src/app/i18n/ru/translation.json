@@ -230,5 +230,12 @@
   "create": "Новый",
   "update": "Редактирования",
   "deleted": "Удалено",
-  "reject-reason": "Причина отказа"
+  "reject-reason": "Причина отказа",
+  "waitings": "Ожидающие",
+  "organization-waitings": "Организации ожидающие",
+  "accepted": "Актив",
+  "rejected": "Отклонено",
+  "check": "В процессе",
+  "rejectReason": "Причина отказа",
+  "deleteReason": "Причина удаления"
 }

@@ -3,6 +3,9 @@ import { AnyObject } from "antd/es/_util/type";
 import DOMPurify from "dompurify";
 import i18next from "i18next";
 import { ReactNode } from "react";
+import { FaCheck } from "react-icons/fa";
+import { GoClock } from "react-icons/go";
+import { IoClose, IoWarning } from "react-icons/io5";
 
 import { STEPS_EDIT_DATA } from "./enums";
 import { STEPS_DATA } from "./static-datas";
@@ -106,14 +109,66 @@ export const notificationResponse = (
 
 export const setColorByStatus = (status: string) => {
   switch (status) {
-    case i18next.t("not-active"):
+    case i18next.t("rejected"):
       return (
-        <span style={{ color: "#ff4d4f" }}>{i18next.t("not-active")}</span>
+        <span
+          style={{
+            color: "#ff4d4f",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5em",
+          }}
+          title={i18next.t("rejected")}
+        >
+          <IoWarning />
+          {i18next.t("rejected")}
+        </span>
       );
-    case i18next.t("active"):
-      return <span style={{ color: "#52c41a" }}>{i18next.t("active")}</span>;
+    case i18next.t("accepted"):
+      return (
+        <span
+          style={{
+            color: "#52c41a",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5em",
+          }}
+          title={i18next.t("accepted")}
+        >
+          <FaCheck />
+          {i18next.t("accepted")}
+        </span>
+      );
     case i18next.t("deleted"):
-      return <span style={{ color: "#ff4d4f" }}>{i18next.t("deleted")}</span>;
+      return (
+        <span
+          style={{
+            color: "#ff4d4f",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5em",
+          }}
+          title={i18next.t("deleted")}
+        >
+          <IoClose />
+          {i18next.t("deleted")}
+        </span>
+      );
+    case i18next.t("check"):
+      return (
+        <span
+          style={{
+            color: "grey",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5em",
+          }}
+          title={i18next.t("check")}
+        >
+          <GoClock />
+          {i18next.t("check")}
+        </span>
+      );
     default:
       return null;
   }
