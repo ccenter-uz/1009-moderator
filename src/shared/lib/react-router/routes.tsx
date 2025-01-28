@@ -3,7 +3,7 @@ import { Link, redirect, useRouteError } from "react-router-dom";
 
 import MainLayout from "@app/ui/layout";
 import { FaRegNewspaper, FaUsers } from "react-icons/fa";
-import { IoAnalytics, IoStatsChart } from "react-icons/io5";
+import { IoAnalytics } from "react-icons/io5";
 import {
   MdAdd,
   MdListAlt,
@@ -12,7 +12,7 @@ import {
   MdOutlinePending,
   MdOutlineShoppingCart,
   MdPayments,
-  MdPending,
+  MdRestore,
   MdSettings,
 } from "react-icons/md";
 import { GoOrganization } from "react-icons/go";
@@ -48,10 +48,7 @@ import { MonitoringUserAsync } from "@pages/monitoring-user";
 import { MonitoringOrgsAsync } from "@pages/monitoring-orgs";
 import { MonitoringTransactionsAsync } from "@pages/monitoring-transaction";
 import { ManageRolesAsync } from "@pages/manage-roles";
-import {
-  moderatorPermissionsByRole,
-  operatorPermissionsByRole,
-} from "./permissions-by-role";
+import { operatorPermissionsByRole } from "./permissions-by-role";
 import { getLocalStorage } from "../helpers";
 import { ManageSegmentsAsync } from "@pages/manage-segments";
 import { OrgWaitingsAsync } from "@pages/organization-waitings";
@@ -155,7 +152,7 @@ const childRoutes = [
         key: "/orgs/waitings",
         name: "/orgs/waitings",
         label: <Link to="/orgs/waitings">{i18next.t("waitings")}</Link>,
-        icon: <MdPending />,
+        icon: <MdRestore />,
         path: "waitings",
         element: <OrgWaitingsAsync />,
       },

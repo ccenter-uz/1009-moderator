@@ -255,7 +255,6 @@
   "password-must-include-one-special-character": "Пароль должен содержать 1 специальный символ",
   "password-must-include-one-digit": "Пароль должен содержать 1 цифру",
   "password-must-include-one-uppercase": "Пароль должен содержать 1 заглавную букву",
-
   "waitings": "Ожидающие",
   "organization-waitings": "Организации ожидающие",
   "accepted": "Актив",

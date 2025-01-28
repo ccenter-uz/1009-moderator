@@ -1,9 +1,10 @@
-import { Flex, Tooltip } from "antd";
+import { Flex, Select, Tooltip } from "antd";
+import i18next from "i18next";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
 import { MdRestore } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { BasicSearchPartUI } from "@features/basic-search-part";
 import { DeleteTableItemUI } from "@features/delete-table-item";
@@ -15,6 +16,7 @@ import {
 } from "@entities/organization";
 
 import {
+  AntDesignSwal,
   clearEditStepStorage,
   columnsForMyOrganizations,
   getEditingStepStorageValues,
@@ -26,6 +28,17 @@ import {
 } from "@shared/lib/helpers";
 import { ManageWrapperBox } from "@shared/ui";
 
+const statusOptions = [
+  {
+    value: 3,
+    label: i18next.t("all"),
+  },
+  { value: -1, label: i18next.t("deleted") },
+  { value: 0, label: i18next.t("check") },
+  { value: 1, label: i18next.t("accepted") },
+  { value: 2, label: i18next.t("rejected") },
+];
+
 export const OrganizationWaitingsPage = () => {
   const { t } = useTranslation();
   const { data, isLoading } = useGetMyOrganizationsQuery({
@@ -34,12 +47,17 @@ export const OrganizationWaitingsPage = () => {
   const [deleteOrganization] = useDeleteOrganizationMutation();
   const [restoreOrganization] = useRestoreOrganizationMutation();
   const navigate = useNavigate();
+  const [_, setSearchParams] = useSearchParams();
+  const [status, setStatus] = useState<string>(() => {
+    const params = returnAllParams();
+    return params.status || "3";
+  });
 
   const checkExistId = (record: { id: number }) => {
     const { editingId, firstStepData } = getEditingStepStorageValues();
 
     if (editingId && Number(record.id) !== Number(editingId)) {
-      Swal.fire({
+      AntDesignSwal.fire({
         icon: "warning",
         title: t("oops"),
         text: `${t("you-were-editing")} ${firstStepData?.name}, ${t(
@@ -72,7 +90,7 @@ export const OrganizationWaitingsPage = () => {
     }
   };
   const handleDelete = async (id: number) => {
-    const result = await Swal.fire({
+    const result = await AntDesignSwal.fire({
       input: "textarea",
       inputLabel: t("delete-reason"),
       inputPlaceholder: t("tell-about-reason"),
@@ -131,15 +149,62 @@ export const OrganizationWaitingsPage = () => {
   ];
 
   const onSearch = ({ search }: { search: string }) => {
-    console.log(search, "search");
+    const params = returnAllParams();
+    if (status === "3") {
+      delete params.status;
+      setSearchParams({
+        ...params,
+        search: search || "",
+      });
+    } else {
+      setSearchParams({
+        ...params,
+        search: search || "",
+        status,
+      });
+    }
   };
+  const handleReset = () => {
+    setSearchParams({
+      page: "1",
+      limit: "10",
+    });
+    setStatus("3");
+  };
+  const handleSelectFilterByStatus = (value: number) =>
+    setStatus(String(value));
 
   return (
     <div>
       <ManageWrapperBox
         loading={isLoading}
         title={t("organization-waitings")}
-        searchPart={<BasicSearchPartUI handleSearch={onSearch} />}
+        searchPart={
+          <BasicSearchPartUI
+            additionalSearch={
+              <Flex align="center" gap={8}>
+                <label>{t("status")}</label>
+                <Select
+                  value={Number(status)}
+                  style={{ width: 150 }}
+                  showSearch
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    (option?.label ?? "").includes(input)
+                  }
+                  filterSort={(optionA, optionB) =>
+                    (optionA?.label ?? "").localeCompare(optionB?.label ?? "")
+                  }
+                  onSelect={handleSelectFilterByStatus}
+                  options={statusOptions}
+                />
+              </Flex>
+            }
+            handleSearch={onSearch}
+            handleReset={handleReset}
+            isFilterByStatusRequired={false}
+          />
+        }
         columns={columns}
         data={data?.data || []}
         totalItems={data?.total || 0}
