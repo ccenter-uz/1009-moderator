@@ -5,23 +5,16 @@ import { IoLogOut, IoSettings } from "react-icons/io5";
 
 import { LogoutLink } from "@features/logout";
 
-// import { useGetMeQuery } from "@entities/users";
+import { useGetMeQuery } from "@entities/users";
 
 import { getLocalStorage } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 
 import { SettingsModal } from "./settings-modal";
-const data = {
-  result: {
-    fullName: "Aziz Azizov",
-    phoneNumber: "+998991234567",
-    id: 1,
-    role: { name: "moderator" },
-  },
-};
+
 export const AvatarComponent: FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  // const { data } = useGetMeQuery({});
+  const { data } = useGetMeQuery({});
   const userName = getLocalStorage("user-name")
     ? getLocalStorage("user-name")?.split(" ")
     : ["Aziz", "Azizov"];
