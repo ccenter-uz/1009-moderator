@@ -147,7 +147,7 @@ export const columnsForForBasicTable = [
     title: i18next.t("status"),
     dataIndex: "status",
     key: "status",
-    render: (text: statusType) => setColorByStatus(status[text]),
+    render: (text: number) => setColorByStatus(status[text]),
   },
 ];
 export const columnsWithSingleName = [
@@ -528,13 +528,18 @@ export const searchModalColumns: searchColType = [
   },
 ];
 
-export const status: { [key in 0 | 1 | -1 | 2]: string } = {
+export const statusForOrgs: { [key in 0 | 1 | -1 | 2]: string } = {
   0: i18next.t("check"),
   1: i18next.t("accepted"),
   "-1": i18next.t("deleted"),
   2: i18next.t("rejected"),
 };
 
+export const status: { [key: number]: string } = {
+  0: i18next.t("deleted"),
+  1: i18next.t("accepted"),
+  "-1": i18next.t("deleted"),
+};
 export const usersTableColumns = [
   {
     title: i18next.t("full-name"),
