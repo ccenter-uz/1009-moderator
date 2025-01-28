@@ -1,15 +1,15 @@
 import { Flex, Form, Select, Tooltip } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { createSchemaFieldRule } from "antd-zod";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
 import { MdRestore } from "react-icons/md";
 import { useSearchParams } from "react-router-dom";
 
 import { Address2Inputs } from "@features/address-2-inputs";
+import { BasicSearchPartUI } from "@features/basic-search-part";
 import { DeleteTableItemUI } from "@features/delete-table-item";
-import { NearbyPageSearchUI } from "@features/nearby-page-search";
 
 import {
   useCreateNearbyMutation,
@@ -58,8 +58,11 @@ export const ManageNearbyPage: FC = () => {
   const [form] = Form.useForm();
   const formRule = createSchemaFieldRule(NearbyCreateFormDtoSchema);
   const formRequiredField = getZodRequiredKeys(NearbyCreateFormDtoSchema);
+
+  const params = returnAllParams();
   const { data, isLoading } = useGetNearbyQuery({
-    ...returnAllParams(),
+    status: status || STATUS.ACTIVE,
+    ...params,
   });
   const { data: dataCategory, isLoading: isLoadingCategory } =
     useGetNearbyCategoryQuery({
@@ -70,13 +73,15 @@ export const ManageNearbyPage: FC = () => {
   const [createNearby] = useCreateNearbyMutation();
   const [updateNearby] = useUpdateNearbyMutation();
   const [restoreNearby] = useRestoreNearbyMutation();
+
   const [editingData, setEditingData] = useState<valueProps | null>(null);
-  const [nearbyCategoryId, setNearbyCategoryId] = useState<
-    string | number | null
-  >(null);
+  const [nearbyCategoryId, setNearbyCategoryId] = useState<number | string>("");
   const [modalNearbyCategoryId, setModalNearbyCategoryId] = useState<
     string | number | boolean
   >(true);
+  const [isFilterReset, setIsFilterReset] = useState<
+    string | number | undefined
+  >();
 
   const handleEditOpen = (values: valueProps) => {
     const editingBody = {
@@ -93,18 +98,35 @@ export const ManageNearbyPage: FC = () => {
     onOpen();
   };
 
-  const handleSearch = ({ search }: { search: string }) => {
-    setSearchParams({
-      nearbyCategoryId: String(nearbyCategoryId ?? undefined),
-      search: search ?? "",
-    });
+  const handleSearch = ({
+    search,
+    status = STATUS.ACTIVE,
+  }: {
+    search: string;
+    status: number;
+  }) => {
+    let inputValue = search;
+    if (inputValue === undefined) {
+      inputValue = "";
+    }
+
+    if (inputValue || inputValue === "") {
+      setSearchParams({
+        ...params,
+        nearbyCategoryId: nearbyCategoryId?.toString() || "",
+        search: inputValue.trim(),
+        status: status.toString()
+          ? status.toString()
+          : STATUS.ACTIVE.toString(),
+      });
+    }
   };
 
-  const handleCategorySelect = (value: string | number) => {
+  const handleCategorySelect = (value: number) => {
     setNearbyCategoryId(value);
   };
   const handleClearCategory = () => {
-    setNearbyCategoryId(null);
+    setNearbyCategoryId("");
   };
   const handleSubmit = async (values: valueProps) => {
     const body = {
@@ -133,6 +155,17 @@ export const ManageNearbyPage: FC = () => {
     form.resetFields();
     onOpen();
   };
+
+  useEffect(() => {
+    if (isFilterReset) {
+      setSearchParams({
+        ...params,
+        status: STATUS.ACTIVE.toString(),
+        search: "",
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFilterReset]);
 
   const columns = [
     ...columnsWithRegions,
@@ -186,15 +219,12 @@ export const ManageNearbyPage: FC = () => {
         data={data?.data || []}
         add={handleAdd}
         searchPart={
-          <NearbyPageSearchUI
+          <BasicSearchPartUI
             handleSearch={handleSearch}
+            handleReset={setIsFilterReset}
+            status={Number(params.status)}
             additionalSearch={
-              <Form.Item
-                name={"nearby-category"}
-                label={t("nearby-category")}
-                style={{ marginBottom: 0, flex: 1 }}
-              >
-                {/* AnyObject cause cannot find proper type */}
+              <Form.Item label={t("nearby-category")} style={{ flex: 0.5 }}>
                 <Select
                   labelRender={renderLabelSelect}
                   allowClear
@@ -209,6 +239,28 @@ export const ManageNearbyPage: FC = () => {
               </Form.Item>
             }
           />
+          // <NearbyPageSearchUI
+          //   handleSearch={handleSearch}
+          //   additionalSearch={
+          //     <Form.Item
+          //       name={"nearby-category"}
+          //       label={"lorem"}
+          //       style={{ marginBottom: 0, flex: 1 }}
+          //     >
+          //       <Select
+          //         labelRender={renderLabelSelect}
+          //         allowClear
+          //         onClear={handleClearCategory}
+          //         onSelect={handleCategorySelect}
+          //         loading={isLoadingCategory}
+          //         options={dataCategory?.data.map((item: AnyObject) => ({
+          //           label: item.name,
+          //           value: item.id,
+          //         }))}
+          //       />
+          //     </Form.Item>
+          //   }
+          // />
         }
         modalPart={
           <Form

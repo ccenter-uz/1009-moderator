@@ -1,7 +1,7 @@
 import { Flex, Form, Tooltip } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { createSchemaFieldRule } from "antd-zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
 import { MdRestore } from "react-icons/md";
@@ -39,14 +39,22 @@ export const ManageSegmentsPage = () => {
   const [form] = Form.useForm();
   const formRule = createSchemaFieldRule(SegmentCreateFormDtoSchema);
   const formRequiredField = getZodRequiredKeys(SegmentCreateFormDtoSchema);
+
+  const params = returnAllParams();
   const { data, isLoading } = useGetSegmentsQuery({
-    ...returnAllParams(),
+    status: status || STATUS.ACTIVE,
+    ...params,
   });
   const [deleteSegment] = useDeleteSegmentMutation();
   const [createSegment] = useCreateSegmentMutation();
   const [updateSegment] = useUpdateSegmentMutation();
   const [restoreSegment] = useRestoreSegmentMutation();
+
   const [editingData, setEditingData] = useState<AnyObject | null>(null);
+  const [isFilterReset, setIsFilterReset] = useState<
+    string | number | undefined
+  >();
+
   const handleEditOpen = (values: { name: string; id: string | number }) => {
     setEditingData({ ...values, id: values.id });
     const body = {
@@ -57,9 +65,24 @@ export const ManageSegmentsPage = () => {
     onOpen();
   };
 
-  const handleSearch = ({ search }: { search: string }) => {
-    const previousParams = returnAllParams();
-    setSearchParams({ ...previousParams, search });
+  const handleSearch = ({
+    search,
+    status = STATUS.ACTIVE,
+  }: {
+    search: string;
+    status: number;
+  }) => {
+    const inputValue = search || "";
+
+    if (inputValue || inputValue === "") {
+      setSearchParams({
+        ...params,
+        search: inputValue.trim(),
+        status: status.toString()
+          ? status.toString()
+          : STATUS.ACTIVE.toString(),
+      });
+    }
   };
 
   const handleSubmit = async (values: ItableBasicData) => {
@@ -81,6 +104,17 @@ export const ManageSegmentsPage = () => {
     setEditingData(null);
     form.resetFields();
   };
+
+  useEffect(() => {
+    if (isFilterReset) {
+      setSearchParams({
+        ...params,
+        status: STATUS.ACTIVE.toString(),
+        search: "",
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFilterReset]);
 
   const columns = [
     ...columnsWithSingleName,
@@ -135,7 +169,13 @@ export const ManageSegmentsPage = () => {
         columns={columns}
         data={data?.data || []}
         add={handleAdd}
-        searchPart={<BasicSearchPartUI handleSearch={handleSearch} />}
+        searchPart={
+          <BasicSearchPartUI
+            status={Number(params.status)}
+            handleSearch={handleSearch}
+            handleReset={setIsFilterReset}
+          />
+        }
         modalPart={
           <Form
             form={form}

@@ -7,6 +7,7 @@ import { ErrorHandler, logError } from "@shared/ui/error-handler";
 
 import { store } from "../store";
 
+import { AntConfigProvider } from "./antProvider";
 import { router } from "./routerProvider";
 
 const enhance = compose((component) =>
@@ -19,7 +20,9 @@ const enhance = compose((component) =>
 export const ProviderWrapper = enhance(() => (
   <>
     <Provider store={store}>
-      <RouterProvider router={router} />
+      <AntConfigProvider>
+        <RouterProvider router={router} />
+      </AntConfigProvider>
     </Provider>
   </>
 ));

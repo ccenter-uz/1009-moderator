@@ -1,6 +1,6 @@
 import { Flex, Form, Tooltip } from "antd";
 import { createSchemaFieldRule } from "antd-zod";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
 import { MdRestore } from "react-icons/md";
@@ -64,12 +64,21 @@ export const ManageImpassePage: FC = () => {
   const [form] = Form.useForm<valueProps>();
   const formRule = createSchemaFieldRule(ImpasseCreateFormDtoSchema);
   const formRequiredField = getZodRequiredKeys(ImpasseCreateFormDtoSchema);
-  const { data, isLoading } = useGetImpassesQuery({ ...returnAllParams() });
+
+  const params = returnAllParams();
+  const { data, isLoading } = useGetImpassesQuery({
+    status: status || STATUS.ACTIVE,
+    ...params,
+  });
   const [deleteImpasse] = useDeleteImpasseMutation();
   const [updateImpasse] = useUpdateImpasseMutation();
   const [createImpasse] = useCreateImpasseMutation();
   const [restoreImpasse] = useRestoreImpasseMutation();
+
   const [editingData, setEditingData] = useState<valueProps | null>(null);
+  const [isFilterReset, setIsFilterReset] = useState<
+    string | number | undefined
+  >();
 
   const handleEditOpen = (values: valueProps) => {
     const editingBody = {
@@ -92,10 +101,26 @@ export const ManageImpassePage: FC = () => {
     form.setFieldsValue(editingBody);
     onOpen();
   };
-  const handleSearch = ({ search }: { search: string }) => {
-    const previousParams = returnAllParams();
-    if (search || search === "") {
-      setSearchParams({ ...previousParams, search });
+  const handleSearch = ({
+    search,
+    status = STATUS.ACTIVE,
+  }: {
+    search: string;
+    status: number;
+  }) => {
+    let inputValue = search;
+    if (inputValue === undefined) {
+      inputValue = "";
+    }
+
+    if (inputValue || inputValue === "" || typeof status === "number") {
+      setSearchParams({
+        ...params,
+        search: inputValue.trim(),
+        status: status.toString()
+          ? status.toString()
+          : STATUS.ACTIVE.toString(),
+      });
     }
   };
 
@@ -136,6 +161,17 @@ export const ManageImpassePage: FC = () => {
     form.resetFields();
     onOpen();
   };
+
+  useEffect(() => {
+    if (isFilterReset) {
+      setSearchParams({
+        ...params,
+        status: STATUS.ACTIVE.toString(),
+        search: "",
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFilterReset]);
 
   const columns = [
     ...columnsForAddress,
@@ -184,7 +220,13 @@ export const ManageImpassePage: FC = () => {
         columns={columns}
         data={data?.data || []}
         add={handleAdd}
-        searchPart={<BasicSearchPartUI handleSearch={handleSearch} />}
+        searchPart={
+          <BasicSearchPartUI
+            handleSearch={handleSearch}
+            handleReset={setIsFilterReset}
+            status={Number(params.status)}
+          />
+        }
         modalPart={
           <Form
             form={form}

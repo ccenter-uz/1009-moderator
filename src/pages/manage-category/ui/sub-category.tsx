@@ -44,9 +44,11 @@ export const SubCategory: FC = () => {
     [CategorySubCategoryEnums.subCategoryPage]: page,
     [CategorySubCategoryEnums.subCategoryLimit]: limit,
     [CategorySubCategoryEnums.subCategorySearch]: search,
+    [CategorySubCategoryEnums.subCategoryStatus]: subCategoryStatus,
   } = returnAllParams();
 
   const [trigger, { data, isLoading }] = useLazyGetSubCategoriesQuery();
+
   const [createSubCategory] = useCreateSubCategoriesMutation();
   const [updateSubCategory] = useUpdateSubCategoriesMutation();
   const [deleteSubCategory] = useDeleteSubCategoriesMutation();
@@ -56,7 +58,11 @@ export const SubCategory: FC = () => {
   );
 
   const [isAddBtnDisable, setIsAddBtnDisable] = useState<boolean>(true);
+  const [isFilterReset, setIsFilterReset] = useState<
+    string | number | undefined
+  >();
 
+  const params = returnAllParams();
   const handleEditOpen = (values: editSubcategoryType) => {
     setEditingData({ ...values, id: values.id });
     form.setFieldsValue({
@@ -67,11 +73,19 @@ export const SubCategory: FC = () => {
     onOpen();
   };
 
-  const handleSearch = ({ search }: { search: string }) => {
-    const previousParams = returnAllParams();
-
+  const handleSearch = ({
+    search,
+    status = STATUS.ACTIVE,
+  }: {
+    search: string;
+    status: number;
+  }) => {
+    const params = returnAllParams();
     setSearchParams({
-      ...previousParams,
+      ...params,
+      [CategorySubCategoryEnums.subCategoryStatus]: status.toString()
+        ? status.toString()
+        : STATUS.ACTIVE.toString(),
       [CategorySubCategoryEnums.subCategorySearch]: search || "",
     });
   };
@@ -104,6 +118,19 @@ export const SubCategory: FC = () => {
     setEditingData(null);
     form.resetFields();
   };
+
+  useEffect(() => {
+    if (isFilterReset) {
+      console.log("click from service");
+
+      setSearchParams({
+        ...params,
+        [CategorySubCategoryEnums.subCategorySearch]: "",
+        [CategorySubCategoryEnums.subCategoryStatus]: STATUS.ACTIVE.toString(),
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFilterReset]);
 
   const columns = [
     ...columnsForCategories,
@@ -154,6 +181,7 @@ export const SubCategory: FC = () => {
         page: Number(page) || 1,
         limit: Number(limit) || 10,
         search,
+        status: subCategoryStatus || STATUS.ACTIVE,
         categoryId: Number(
           searchParams.get(CategorySubCategoryEnums.categoryId),
         ),
@@ -166,6 +194,7 @@ export const SubCategory: FC = () => {
     search,
     page,
     limit,
+    subCategoryStatus,
   ]);
 
   return (
@@ -182,7 +211,9 @@ export const SubCategory: FC = () => {
       searchPart={
         <BasicSearchPartUI
           id="sub-category-search"
+          status={+subCategoryStatus}
           handleSearch={handleSearch}
+          handleReset={setIsFilterReset}
           additionalParams={{
             search: searchParams.get(
               CategorySubCategoryEnums.subCategorySearch,

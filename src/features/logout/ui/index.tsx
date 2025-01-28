@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Typography } from "antd";
 import { FC, startTransition } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -15,7 +15,7 @@ function deleteAllCookies() {
   }
 }
 
-export const LogoutUI: FC = () => {
+export const LogoutLink: FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -35,8 +35,14 @@ export const LogoutUI: FC = () => {
   };
 
   return (
-    <Button aria-label="Logout_btn" title={t("logout")} onClick={onLogout}>
+    <Typography.Link
+      onClick={onLogout}
+      type="danger"
+      color="crimson"
+      aria-label="Logout_btn"
+      title={t("logout")}
+    >
       {t("exit")}
-    </Button>
+    </Typography.Link>
   );
 };

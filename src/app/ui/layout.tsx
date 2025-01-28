@@ -7,7 +7,7 @@ import { Outlet } from "react-router-dom";
 import { HeaderUI } from "@widgets/header";
 import { SiderUI } from "@widgets/sider";
 
-import { LoadingSpinner } from "@shared/ui";
+import { CustomizeUI, LoadingSpinner } from "@shared/ui";
 const MainLayout = () => {
   return (
     <Layout style={{ height: "100dvh" }}>
@@ -41,6 +41,7 @@ const MainLayout = () => {
               <Suspense fallback={<LoadingSpinner />}>
                 <Outlet />
               </Suspense>
+              <CustomizeUI />
             </div>
           </Content>
         </Layout>

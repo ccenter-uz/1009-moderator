@@ -37,6 +37,8 @@ export const OrgAddFirstStepUI: FC<IProps> = (props) => {
   const { form } = props;
   const Storage = localStorage.getItem("firstStepData");
   const localS = getLocalStorage("firstStepData");
+  const role = getLocalStorage("user-role");
+
   const { t } = useTranslation();
   const { data } = useSelector(
     ({ useAddOrgFirstStepSlice }: RootState) => useAddOrgFirstStepSlice,
@@ -278,18 +280,21 @@ export const OrgAddFirstStepUI: FC<IProps> = (props) => {
               showSearch
             />
           </Form.Item>
-          <Form.Item
-            name={"secret"}
-            label={<ParagraphBold>{t("Секрет")}</ParagraphBold>}
-            rules={[
-              {
-                required: true,
-                message: t("required-field"),
-              },
-            ]}
-          >
-            <Input type="text" placeholder={t("Секрет")} allowClear />
-          </Form.Item>
+          {role === "moderator" ? (
+            <Form.Item
+              name={"secret"}
+              label={<ParagraphBold>{t("Секрет")}</ParagraphBold>}
+              rules={[
+                {
+                  required: true,
+                  message: t("required-field"),
+                },
+              ]}
+            >
+              <Input type="text" placeholder={t("Секрет")} allowClear />
+            </Form.Item>
+          ) : null}
+
           <Form.Item
             name={"segmentId"}
             label={<ParagraphBold>{t("segment")}</ParagraphBold>}
