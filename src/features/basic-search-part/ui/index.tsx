@@ -45,6 +45,7 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
   const [form] = Form.useForm();
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
+  const { createdBy } = returnAllParams();
 
   const [initialStatusValue, setInitialStatusValue] = useState(
     statusFromProps !== undefined && statusFromProps >= 0
@@ -52,13 +53,13 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
       : STATUS.ACTIVE,
   );
   const [initialCreatedByValue, setInitialCreatedByValue] = useState<string>(
-    CreatedByEnum.Billing,
+    createdBy || CreatedByEnum.All,
   );
 
   const handleReset = () => {
     handleResetFromProps?.(new Date().getTime());
     setInitialStatusValue(STATUS.ACTIVE);
-    setInitialCreatedByValue(CreatedByEnum.Billing);
+    setInitialCreatedByValue(CreatedByEnum.All);
     form.resetFields();
   };
 
@@ -125,18 +126,23 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
               options={[
                 {
                   id: 0,
+                  label: t("all"),
+                  value: CreatedByEnum.All,
+                },
+                {
+                  id: 1,
                   label: t("billing"),
                   value: CreatedByEnum.Billing,
                 },
                 {
-                  id: 1,
+                  id: 2,
                   label: t("client"),
                   value: CreatedByEnum.Client,
                 },
                 {
-                  id: 2,
-                  label: t("moderator"),
-                  value: CreatedByEnum.Moderator,
+                  id: 3,
+                  label: t("operator"),
+                  value: CreatedByEnum.Operator,
                 },
               ]}
               placeholder={t("createdBy")}

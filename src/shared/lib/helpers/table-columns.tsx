@@ -603,6 +603,13 @@ export const unconfirmedTableColumns = [
     key: "address",
   },
   {
+    title: i18next.t("createdBy"),
+    dataIndex: "createdBy",
+    key: "createdBy",
+    render: (text: string) => i18next.t(text[0] + text.slice(1)),
+  },
+
+  {
     title: i18next.t("employee"),
     dataIndex: "staffNumber",
     key: "staffNumber",

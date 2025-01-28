@@ -127,7 +127,7 @@ export const OrgUnconfirmedPage: FC = () => {
     if (isFilterReset) {
       setSearchParams({
         ...params,
-        createdBy: CreatedByEnum.Billing,
+        createdBy: CreatedByEnum.All,
         search: "",
       });
     }
@@ -186,7 +186,7 @@ export const OrgUnconfirmedPage: FC = () => {
 
   const handleSearch = ({
     search,
-    createdBy = CreatedByEnum.Billing,
+    createdBy = CreatedByEnum.All,
   }: {
     search: string;
     createdBy: string;
@@ -201,6 +201,7 @@ export const OrgUnconfirmedPage: FC = () => {
       });
     }
   };
+  console.log(data?.data);
 
   return (
     <>
