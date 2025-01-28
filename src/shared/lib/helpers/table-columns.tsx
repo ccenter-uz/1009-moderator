@@ -37,7 +37,7 @@ export const columnsForMyOrganizations = [
     title: i18next.t("status"),
     dataIndex: "status",
     key: "status",
-    render: (text: statusType) => setColorByStatus(status[text]),
+    render: (text: statusType) => setColorByStatus(statusForOrgs[text]),
   },
   {
     width: 80,
