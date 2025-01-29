@@ -107,6 +107,7 @@ export const baseApi = createApi({
     "Organizations",
     "UnconfirmedOrganizations",
     "Me",
+    "MyOrganizations",
   ],
   endpoints: () => ({}),
 });

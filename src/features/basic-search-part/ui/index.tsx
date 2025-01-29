@@ -18,8 +18,8 @@ type Props = {
     status: number;
     nearbyCategoryId: string | number;
   }) => void;
-  handleReset: Dispatch<SetStateAction<string | number | undefined>>;
-  status: number;
+  handleReset?: Dispatch<SetStateAction<string | number | undefined>>;
+  status?: number;
   isFilterByStatusRequired?: boolean;
   loading?: boolean;
   additionalSearch?: JSX.Element;
@@ -49,7 +49,7 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
     : true;
 
   const [initialStatusValue, setInitialStatusValue] = useState(
-    statusFromProps >= 0 ? statusFromProps : STATUS.ACTIVE,
+    statusFromProps && statusFromProps >= 0 ? statusFromProps : STATUS.ACTIVE,
   );
 
   const handleReset = () => {
