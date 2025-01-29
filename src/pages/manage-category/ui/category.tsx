@@ -52,14 +52,24 @@ export const Category: FC = () => {
   const [searchForm] = Form.useForm();
   const formRule = createSchemaFieldRule(CategoryCreateFormDtoSchema);
   const formRequiredField = getZodRequiredKeys(CategoryCreateFormDtoSchema);
-  const { data, isLoading } = useGetCategoriesQuery({
-    page,
-    limit,
-    regionId,
-    cityId,
-    search,
-    status: categoryStatus || STATUS.ACTIVE,
-  });
+  const { data, isLoading } = useGetCategoriesQuery(
+    cityId
+      ? {
+          page,
+          limit,
+          regionId,
+          cityId,
+          search,
+          status: categoryStatus || STATUS.ACTIVE,
+        }
+      : {
+          page,
+          limit,
+          regionId,
+          search,
+          status: categoryStatus || STATUS.ACTIVE,
+        },
+  );
   const [deleteCategory] = useDeleteCategoryMutation();
   const [createCategory] = useCreateCategoryMutation();
   const [updateCategory] = useUpdateCategoryMutation();
@@ -110,15 +120,27 @@ export const Category: FC = () => {
         [CategorySubCategoryEnums.categorySearch]: search || "",
       });
     } else {
-      setSearchParams({
-        ...previousParams,
-        [CategorySubCategoryEnums.categoryStatus]: status.toString()
-          ? status.toString()
-          : STATUS.ACTIVE.toString(),
-        [CategorySubCategoryEnums.categorySearch]: search || "",
-        [CategorySubCategoryEnums.regionId]: regionId,
-        [CategorySubCategoryEnums.cityId]: cityId,
-      });
+      if (cityId === undefined) {
+        delete previousParams[CategorySubCategoryEnums.cityId];
+        setSearchParams({
+          ...previousParams,
+          [CategorySubCategoryEnums.categoryStatus]: status.toString()
+            ? status.toString()
+            : STATUS.ACTIVE.toString(),
+          [CategorySubCategoryEnums.categorySearch]: search || "",
+          [CategorySubCategoryEnums.regionId]: regionId,
+        });
+      } else {
+        setSearchParams({
+          ...previousParams,
+          [CategorySubCategoryEnums.categoryStatus]: status.toString()
+            ? status.toString()
+            : STATUS.ACTIVE.toString(),
+          [CategorySubCategoryEnums.categorySearch]: search || "",
+          [CategorySubCategoryEnums.regionId]: regionId,
+          [CategorySubCategoryEnums.cityId]: cityId,
+        });
+      }
     }
   };
 
@@ -158,8 +180,11 @@ export const Category: FC = () => {
     });
   };
 
+  // Reset
   useEffect(() => {
     if (isFilterReset) {
+      delete params[CategorySubCategoryEnums.regionId];
+      delete params[CategorySubCategoryEnums.cityId];
       setSearchParams({
         ...params,
         [CategorySubCategoryEnums.categoryStatus]: STATUS.ACTIVE.toString(),
@@ -169,6 +194,8 @@ export const Category: FC = () => {
         [CategorySubCategoryEnums.subCategoryStatus]: STATUS.ACTIVE.toString(),
       });
     }
+    searchForm.setFieldValue(["region_id"], 0);
+    searchForm.resetFields(["city_id"]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFilterReset]);
 
@@ -211,7 +238,12 @@ export const Category: FC = () => {
   ];
 
   useEffect(() => {
-    if (regionId || cityId) {
+    if (regionId) {
+      searchForm.setFieldsValue({
+        region_id: Number(regionId),
+      });
+    }
+    if (cityId) {
       searchForm.setFieldsValue({
         region_id: Number(regionId),
         city_id: Number(cityId),
@@ -241,6 +273,7 @@ export const Category: FC = () => {
             <SearchWithRegionCityUI
               form={searchForm}
               setIsSearchBtnDisable={setIsSearchBtnDisable}
+              handleReset={isFilterReset || undefined}
             />
           }
           additionalParams={{
