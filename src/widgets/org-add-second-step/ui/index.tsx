@@ -28,32 +28,34 @@ import { setData } from "../model/Slicer";
 
 export const OrgAddSecondStepUI: FC = () => {
   const { t } = useTranslation();
+  const getDataWithRegionCityParams = {
+    ...allActives,
+    regionId: getLocalStorage("firstStepData")?.regionId,
+    cityId: getLocalStorage("firstStepData")?.cityId,
+  };
   const { data } = useSelector(
     ({ useAddOrgSecondStepSlice }: RootState) => useAddOrgSecondStepSlice,
   );
   const { data: villageData, isLoading: isLoadingVillage } =
-    useGetVillagesQuery({
-      ...allActives,
-      regionId: getLocalStorage("firstStepData")?.regionId,
-      cityId: getLocalStorage("firstStepData")?.cityId,
-    });
-  const { data: avenueData, isLoading: isLoadingAvenue } =
-    useGetAvenuesQuery(allActives);
+    useGetVillagesQuery(getDataWithRegionCityParams);
+  const { data: avenueData, isLoading: isLoadingAvenue } = useGetAvenuesQuery(
+    getDataWithRegionCityParams,
+  );
   const { data: residentialAreaData, isLoading: isLoadingResidentialArea } =
-    useGetResidentialAreasQuery(allActives);
-  const { data: areaData, isLoading: isLoadingArea } =
-    useGetAreasQuery(allActives);
-  const { data: streetData, isLoading: isLoadingStreet } = useGetStreetsQuery({
-    ...allActives,
-    regionId: getLocalStorage("firstStepData")?.regionId,
-    cityId: getLocalStorage("firstStepData")?.cityId,
-  });
-  const { data: laneData, isLoading: isLoadingLane } =
-    useGetLanesQuery(allActives);
+    useGetResidentialAreasQuery(getDataWithRegionCityParams);
+  const { data: areaData, isLoading: isLoadingArea } = useGetAreasQuery(
+    getDataWithRegionCityParams,
+  );
+  const { data: streetData, isLoading: isLoadingStreet } = useGetStreetsQuery(
+    getDataWithRegionCityParams,
+  );
+  const { data: laneData, isLoading: isLoadingLane } = useGetLanesQuery(
+    getDataWithRegionCityParams,
+  );
   const { data: impasseData, isLoading: isLoadingImpasse } =
-    useGetImpassesQuery(allActives);
+    useGetImpassesQuery(getDataWithRegionCityParams);
   const { data: passageData, isLoading: isLoadingPassage } =
-    useGetPassagesQuery(allActives);
+    useGetPassagesQuery(getDataWithRegionCityParams);
 
   return (
     <>
