@@ -58,6 +58,7 @@ export const SingleInputWithModalUI: FC<Props> = (props) => {
             onClick={onOpen}
             value={selectedData?.id}
             labelRender={() => selectedData && selectedData?.name}
+            disabled={form?.getFieldValue("regionId") ? false : true}
           />
         </Form.Item>
       </Col>

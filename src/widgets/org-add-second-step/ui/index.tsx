@@ -16,7 +16,11 @@ import { useGetResidentialAreasQuery } from "@entities/residential-area";
 import { useGetStreetsQuery } from "@entities/street";
 import { useGetVillagesQuery } from "@entities/village";
 
-import { allActives, renderLabelSelect } from "@shared/lib/helpers";
+import {
+  allActives,
+  getLocalStorage,
+  renderLabelSelect,
+} from "@shared/lib/helpers";
 import { RootState } from "@shared/types";
 import { ParagraphBold } from "@shared/ui/paragraph-bold";
 
@@ -28,15 +32,22 @@ export const OrgAddSecondStepUI: FC = () => {
     ({ useAddOrgSecondStepSlice }: RootState) => useAddOrgSecondStepSlice,
   );
   const { data: villageData, isLoading: isLoadingVillage } =
-    useGetVillagesQuery(allActives);
+    useGetVillagesQuery({
+      ...allActives,
+      regionId: getLocalStorage("firstStepData")?.regionId,
+      cityId: getLocalStorage("firstStepData")?.cityId,
+    });
   const { data: avenueData, isLoading: isLoadingAvenue } =
     useGetAvenuesQuery(allActives);
   const { data: residentialAreaData, isLoading: isLoadingResidentialArea } =
     useGetResidentialAreasQuery(allActives);
   const { data: areaData, isLoading: isLoadingArea } =
     useGetAreasQuery(allActives);
-  const { data: streetData, isLoading: isLoadingStreet } =
-    useGetStreetsQuery(allActives);
+  const { data: streetData, isLoading: isLoadingStreet } = useGetStreetsQuery({
+    ...allActives,
+    regionId: getLocalStorage("firstStepData")?.regionId,
+    cityId: getLocalStorage("firstStepData")?.cityId,
+  });
   const { data: laneData, isLoading: isLoadingLane } =
     useGetLanesQuery(allActives);
   const { data: impasseData, isLoading: isLoadingImpasse } =
