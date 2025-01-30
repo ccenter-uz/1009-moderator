@@ -98,6 +98,9 @@ export const columnsForAddress = [
     title: i18next.t("index"),
     dataIndex: "index",
     key: "index",
+    render: (text: string) => (
+      <div style={{ whiteSpace: "pre-wrap" }}>{text}</div>
+    ),
   },
   {
     title: i18next.t("status"),
@@ -302,6 +305,9 @@ export const columnsWithAddressAndNamings = [
     title: i18next.t("index"),
     dataIndex: "index",
     key: "index",
+    render: (text: string) => (
+      <div style={{ whiteSpace: "pre-wrap" }}>{text}</div>
+    ),
   },
   {
     title: i18next.t("status"),
