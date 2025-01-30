@@ -28,12 +28,13 @@ import { useCreateOrganizationMutation } from "@entities/organization";
 import {
   getDayOffsCheckbox,
   notificationResponse,
+  omitUndefinedValues,
   removeLocalStorage,
   SEND_BODY,
   STEPS_DATA,
   STEPS_ENUM,
 } from "@shared/lib/helpers";
-import { RootState } from "@shared/types";
+import { IOrganizationBody, RootState } from "@shared/types";
 
 const contentStyle: CSSProperties = {
   margin: "16px",
@@ -119,8 +120,8 @@ export const OrgAddPage: FC = () => {
   const onSubmit = async () => {
     const formData = new FormData();
 
-    const body = {
-      ...form.getFieldsValue(SEND_BODY),
+    const body: IOrganizationBody = {
+      ...omitUndefinedValues(form.getFieldsValue(SEND_BODY)),
       paymentTypes: {
         cash: form.getFieldValue("cash"),
         terminal: form.getFieldValue("terminal"),
