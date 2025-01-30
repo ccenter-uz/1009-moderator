@@ -81,7 +81,7 @@ export const Address3Inputs: FC<Props> = (props) => {
 
   return (
     <Row gutter={8}>
-      <Col xs={24} sm={12} md={12} lg={12} xl={6}>
+      <Col xs={24} sm={12} md={12} lg={12} xl={8}>
         <Form.Item
           name={FORM_FIELDS.index}
           rules={[rule]}
@@ -92,7 +92,7 @@ export const Address3Inputs: FC<Props> = (props) => {
           <TextArea placeholder={t(FORM_FIELDS.index)} />
         </Form.Item>
       </Col>
-      <Col xs={24} sm={12} md={12} lg={12} xl={6}>
+      <Col xs={24} sm={12} md={12} lg={12} xl={5}>
         <Form.Item
           name={FORM_FIELDS.region}
           rules={[rule]}
@@ -140,7 +140,7 @@ export const Address3Inputs: FC<Props> = (props) => {
           />
         </Form.Item>
       </Col>
-      <Col xs={24} sm={12} md={12} lg={12} xl={6}>
+      <Col xs={24} sm={12} md={12} lg={12} xl={5}>
         <Form.Item
           name={FORM_FIELDS.district}
           rules={[rule]}
