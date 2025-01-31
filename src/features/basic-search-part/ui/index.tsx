@@ -86,9 +86,13 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
       <Flex gap={8}>
         {additionalSearch}
         {!isStatusRequired ? null : (
-          <Form.Item name={"status"} label={t("status")} style={{ flex: 0.2 }}>
+          <Form.Item
+            name={"status"}
+            label={t("status")}
+            style={{ flex: 0.2 }}
+            initialValue={initialStatusValue}
+          >
             <Select
-              defaultValue={initialStatusValue}
               options={[
                 {
                   id: 0,
