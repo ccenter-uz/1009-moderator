@@ -115,7 +115,11 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
             />
           </Form.Item>
         )}
-        <Form.Item name="search" style={{ marginBottom: 0, flex: 1 }}>
+        <Form.Item
+          name="search"
+          style={{ marginBottom: 0, flex: 1 }}
+          label={t("search")}
+        >
           <Input
             type="text"
             placeholder={t("search")}
