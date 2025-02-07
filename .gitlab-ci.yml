@@ -4,7 +4,7 @@ stages:
 
 variables:
   DOCKER_DRIVER: overlay2
-  DOCKER_HOST: "unix:///var/run/docker.sock"  # Используем локальный сокет Docker
+  DOCKER_HOST: "unix:///var/run/docker.sock"  # локальный сокет Docker
 
 build-job:
   stage: build
