@@ -1,16 +1,28 @@
-stages:          # List of stages for jobs, and their order of execution
+stages:
   - build
   - deploy
 
-build-job:       # This job runs in the build stage, which runs first.
-  stage: build
-  script:
-    - echo "Compiling the code..."
-    - echo "Compile complete."
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_HOST: "unix:///var/run/docker.sock"  # Используем локальный сокет Docker
 
-deploy-job:      # This job runs in the deploy stage.
-  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  environment: production
+build-job:
+  stage: build
+  image: node:22.11.0
+  before_script:
+    - cd $CI_PROJECT_DIR
+    - git pull origin dev
   script:
-    - echo "Deploying application..."
-    - echo "Application successfully deployed."
+    - docker build -t 1009_front_dev:latest .
+  only:
+    - dev
+
+deploy-job:
+  stage: deploy
+  script:
+    - docker stop 1009_front_dev || true
+    - docker rm 1009_front_dev || true
+    - docker run -d --name 1009_front_dev -p 3002:3002 1009_front_dev:latest
+    - docker image prune -f
+  only:
+    - dev
