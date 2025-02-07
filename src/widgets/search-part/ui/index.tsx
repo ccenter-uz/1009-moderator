@@ -27,19 +27,16 @@ export const SearchPartUI: FC<Props> = (props) => {
     searchTableRef?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const onValueChange = ({
-    regionId,
-    cityId,
-  }: {
-    regionId: number;
-    cityId: number;
-  }) => {
-    if (regionId !== undefined) {
-      setRegionId(regionId);
-    }
-    if (cityId !== undefined) {
-      setCityId(cityId);
-    }
+  const onValueChange = (
+    _: unknown,
+    allValues: {
+      regionId: number;
+      cityId: number;
+    },
+  ) => {
+    const { regionId, cityId } = allValues;
+    setRegionId(regionId);
+    setCityId(cityId);
   };
 
   const onCancel = () => {

@@ -70,7 +70,7 @@ export const AddressSearchPartUI: FC<Props> = (props) => {
   const [searchValueStreet, setSearchValueStreet] = useState("");
 
   useEffect(() => {
-    if (isOpenVillage && regionId && cityId) {
+    if ((isOpenVillage && cityId) || (isOpenVillage && regionId)) {
       triggerVillage({
         regionId,
         cityId,
@@ -79,9 +79,8 @@ export const AddressSearchPartUI: FC<Props> = (props) => {
         search: searchValueVillage,
       });
     }
-    if (regionId && isOpenVillage) {
+    if (!regionId && !cityId && isOpenVillage) {
       triggerVillage({
-        regionId,
         page: villagePagination.page,
         limit: villagePagination.limit,
         search: searchValueVillage,
@@ -92,7 +91,7 @@ export const AddressSearchPartUI: FC<Props> = (props) => {
   }, [villagePagination, searchValueVillage, isOpenVillage]);
 
   useEffect(() => {
-    if (isOpenNearby && regionId && cityId) {
+    if ((isOpenNearby && cityId) || (isOpenNearby && regionId)) {
       triggerNearby({
         regionId,
         cityId,
@@ -101,9 +100,8 @@ export const AddressSearchPartUI: FC<Props> = (props) => {
         search: searchValueNearby,
       });
     }
-    if (regionId && isOpenNearby) {
+    if (!regionId && !cityId && isOpenNearby) {
       triggerNearby({
-        regionId,
         page: nearbyPagination.page,
         limit: nearbyPagination.limit,
         search: searchValueNearby,
@@ -113,7 +111,7 @@ export const AddressSearchPartUI: FC<Props> = (props) => {
   }, [nearbyPagination, searchValueNearby, isOpenNearby]);
 
   useEffect(() => {
-    if (isOpenStreet && regionId && cityId) {
+    if ((isOpenStreet && cityId) || (isOpenStreet && regionId)) {
       triggerStreet({
         regionId,
         cityId,
@@ -122,9 +120,8 @@ export const AddressSearchPartUI: FC<Props> = (props) => {
         search: searchValueStreet,
       });
     }
-    if (regionId && isOpenStreet) {
+    if (!regionId && !cityId && isOpenStreet) {
       triggerStreet({
-        regionId,
         page: streetPagination.page,
         limit: streetPagination.limit,
         search: searchValueStreet,

@@ -33,7 +33,11 @@ const columns = [
 
 export const CategorySubcategorySelect: FC<Props> = (props) => {
   const { form, regionId, cityId } = props;
-  const { isOpen, onOpen: openCategoryModal, onClose } = useDisclosure();
+  const {
+    isOpen: categoryIsOpen,
+    onOpen: openCategoryModal,
+    onClose,
+  } = useDisclosure();
   const {
     isOpen: subCategoryIsOpen,
     onOpen: openSubCategoryModal,
@@ -78,16 +82,10 @@ export const CategorySubcategorySelect: FC<Props> = (props) => {
   };
 
   useEffect(() => {
-    if (regionId) {
-      triggerCategory({
-        regionId,
-        status: GET_ALL_ACTIVE_STATUS.active,
-        page: categoryPagination.page,
-        limit: categoryPagination.limit,
-        search: categorySearchValue,
-      });
-    }
-    if (cityId) {
+    if (
+      (categoryIsOpen && regionId) ||
+      (categoryIsOpen && cityId && regionId)
+    ) {
       triggerCategory({
         regionId,
         cityId,
@@ -97,11 +95,25 @@ export const CategorySubcategorySelect: FC<Props> = (props) => {
         search: categorySearchValue,
       });
     }
+    if (!cityId && !regionId && categoryIsOpen) {
+      triggerCategory({
+        status: GET_ALL_ACTIVE_STATUS.active,
+        page: categoryPagination.page,
+        limit: categoryPagination.limit,
+        search: categorySearchValue,
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [categorySearchValue, categoryPagination, regionId, cityId]);
+  }, [
+    categoryIsOpen,
+    categorySearchValue,
+    categoryPagination,
+    regionId,
+    cityId,
+  ]);
 
   useEffect(() => {
-    if (selectedDataCategory) {
+    if (subCategoryIsOpen && selectedDataCategory) {
       triggerSubCategory({
         status: GET_ALL_ACTIVE_STATUS.active,
         page: subCategoryPagination.page,
@@ -111,7 +123,12 @@ export const CategorySubcategorySelect: FC<Props> = (props) => {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [subCategorySearchValue, subCategoryPagination, selectedDataCategory]);
+  }, [
+    subCategoryIsOpen,
+    subCategorySearchValue,
+    subCategoryPagination,
+    selectedDataCategory,
+  ]);
 
   useEffect(() => {
     form.setFieldsValue({
@@ -166,7 +183,7 @@ export const CategorySubcategorySelect: FC<Props> = (props) => {
         setSearchValue={setCategorySearchValue}
         data={categoryData?.data || []}
         columns={columns}
-        isOpen={isOpen}
+        isOpen={categoryIsOpen}
         onClose={onClose}
         title={t("category")}
         handleClickRow={handleClickCategoryRow}
