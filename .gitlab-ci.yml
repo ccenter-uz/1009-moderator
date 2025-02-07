@@ -22,7 +22,7 @@ deploy-job:
   script:
     - docker stop 1009_front_dev || true
     - docker rm 1009_front_dev || true
-    - docker run -d --name 1009_front_dev -p 3002:3002 1009_front_dev:latest
+    - docker run -d --name 1009_front_dev -p 3000:3000 1009_front_dev:latest
     - docker image prune -f
   only:
     - dev
