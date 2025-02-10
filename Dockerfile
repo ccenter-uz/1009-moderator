@@ -4,7 +4,8 @@ FROM node:22.11.0-alpine
 # Устанавливаем рабочую директорию в контейнере
 WORKDIR /app
 
-COPY .env ./
+COPY .env /app/
+
 # Копируем файл package.json и package-lock.json (если есть)
 COPY package*.json ./
 
