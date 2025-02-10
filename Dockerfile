@@ -4,7 +4,7 @@ FROM node:22.11.0-alpine
 # Устанавливаем рабочую директорию в контейнере
 WORKDIR /app
 
-ARG VITE_APP_BASE_URL="https://1009.ccenter.uz/"
+ARG VITE_APP_BASE_URL="https://admin-1009.ccenter.uz/v1"
 ARG VITE_APP_VERSION="1.0.0"
 ARG VITE_APP_GITHUB_LINK="https://gitlab.ccenter.uz/"
 ARG VITE_APP_RELEASES_LINK="https://gitlab.ccenter.uz/"
