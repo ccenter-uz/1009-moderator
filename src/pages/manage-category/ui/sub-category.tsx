@@ -108,7 +108,7 @@ export const SubCategory: FC = () => {
       categoryId: Number(searchParams.get(CategorySubCategoryEnums.categoryId)),
     });
 
-    notificationResponse(response, t, onClose);
+    notificationResponse(response, onClose);
     form.resetFields();
     onClose();
   };

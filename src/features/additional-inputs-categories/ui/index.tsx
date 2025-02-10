@@ -8,38 +8,29 @@ import {
   Select,
   Typography,
 } from "antd";
+import i18next from "i18next";
 import { FC, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPen, FaPlus, FaTrash } from "react-icons/fa";
+import { MdRestore } from "react-icons/md";
 import { useSearchParams } from "react-router-dom";
 
-import { AntDesignSwal, returnAllParams } from "@shared/lib/helpers";
+import {
+  useCreateAdditionalCategoryMutation,
+  useDeleteAdditionalCategoryMutation,
+  useGetAdditionalCategoriesQuery,
+  useRestoreAdditionalCategoryMutation,
+  useUpdateAdditionalCategoryMutation,
+} from "@entities/additional";
+
+import {
+  AntDesignSwal,
+  notificationResponse,
+  returnAllParams,
+  STATUS,
+} from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { Can } from "@shared/ui";
-
-/**
- * AdditionalInputsCategoriesUI
- *
- * This component is used to select additional categories and subcategories
- * for the search.
- *
- * It has the following functions:
- *
- * - `categoryChange`: This function is called when the category select is changed.
- *   It updates the category state and navigates to the new URL with the selected category.
- * - `subCategoryChange`: This function is called when the subcategory select is changed.
- *   It updates the subcategory state and navigates to the new URL with the selected subcategory.
- * - `onCloseClear`: This function is called when the modal is closed.
- *   It resets the form fields and closes the modal.
- * - `onSubmit`: This function is called when the form is submitted.
- *   It logs the form values to the console and closes the modal.
- *
- * It has the following state:
- *
- * - `category`: This state is used to store the selected category.
- * - `subCategory`: This state is used to store the selected subcategory.
- * @returns {JSX.Element} - The JSX element of the component.
- */
 
 const enum ENUMS {
   CATEGORY = "category",
@@ -54,7 +45,15 @@ export const AdditionalInputsCategoriesUI: FC = () => {
     searchParams.get(ENUMS.CATEGORY) || "",
   );
   const [editCatId, setEditCatId] = useState<number | string | null>(null);
-  const onDeleteCategory = () => {
+  const { data: categories, isLoading } = useGetAdditionalCategoriesQuery({
+    ...returnAllParams(),
+  });
+  const [createAdditionalCategory] = useCreateAdditionalCategoryMutation();
+  const [updateAdditionalCategory] = useUpdateAdditionalCategoryMutation();
+  const [deleteAdditionalCategory] = useDeleteAdditionalCategoryMutation();
+  const [restoreAdditionalCategory] = useRestoreAdditionalCategoryMutation();
+
+  const onDeleteCategory = (id: string) => {
     AntDesignSwal.fire({
       title: t("are-you-sure"),
       text: t("content-will-be-deleted"),
@@ -66,7 +65,7 @@ export const AdditionalInputsCategoriesUI: FC = () => {
       cancelButtonText: t("no-cancel"),
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log("deleted");
+        console.log("deleted", id);
       }
     });
   };
@@ -85,16 +84,24 @@ export const AdditionalInputsCategoriesUI: FC = () => {
     onOpen();
   };
 
-  const categoryOption = [
-    {
-      value: "entertainment",
-      label: (
-        <Flex justify="space-between" align="center">
-          <Typography.Text>{t("additional-entertainment")}</Typography.Text>
+  const options = categories?.data.map((item) => ({
+    value: item.id,
+    label: (
+      <Flex justify="space-between" align="center">
+        <Typography.Text>
+          {item.name?.[i18next.language as keyof typeof item.name]}
+        </Typography.Text>
+        {item.status === STATUS.ACTIVE ? (
           <Flex align="center" gap={5}>
             <Can i="update" a="additional">
               <FaPen
-                onClick={() => onEditCategory(t("additional-entertainment"), 1)}
+                onClick={() =>
+                  item.name &&
+                  onEditCategory(
+                    item.name[i18next.language as keyof typeof item.name],
+                    1,
+                  )
+                }
                 cursor={"pointer"}
                 color="grey"
                 title={t("edit")}
@@ -102,121 +109,27 @@ export const AdditionalInputsCategoriesUI: FC = () => {
             </Can>
             <Can i="delete" a="additional">
               <FaTrash
-                onClick={onDeleteCategory}
+                onClick={() => onDeleteCategory(item.id)}
                 cursor={"pointer"}
                 color="grey"
                 title={t("delete")}
               />
             </Can>
           </Flex>
-        </Flex>
-      ),
-    },
-    {
-      value: "communal",
-      label: (
-        <Flex justify="space-between" align="center">
-          <Typography.Text>{t("additional-communal")}</Typography.Text>
-          <Flex align="center" gap={5}>
-            <Can i="update" a="additional">
-              <FaPen
-                onClick={() => onEditCategory(t("additional-communal"), 2)}
+        ) : (
+          <Flex>
+            <Can i="restore" a="additional">
+              <MdRestore
                 cursor={"pointer"}
-                color="grey"
-                title={t("edit")}
-              />
-            </Can>
-            <Can i="delete" a="additional">
-              <FaTrash
-                onClick={onDeleteCategory}
-                cursor={"pointer"}
-                color="grey"
+                color="orange"
                 title={t("delete")}
               />
             </Can>
           </Flex>
-        </Flex>
-      ),
-    },
-    {
-      value: "numbers-codes",
-      label: (
-        <Flex justify="space-between" align="center">
-          <Typography.Text>{t("additional-numbers-codes")}</Typography.Text>
-          <Flex align="center" gap={5}>
-            <Can i="update" a="additional">
-              <FaPen
-                onClick={() => onEditCategory(t("additional-numbers-codes"), 3)}
-                cursor={"pointer"}
-                color="grey"
-                title={t("edit")}
-              />
-            </Can>
-            <Can i="delete" a="additional">
-              <FaTrash
-                onClick={onDeleteCategory}
-                cursor={"pointer"}
-                color="grey"
-                title={t("delete")}
-              />
-            </Can>
-          </Flex>
-        </Flex>
-      ),
-    },
-    {
-      value: "need-to-know",
-      label: (
-        <Flex justify="space-between" align="center">
-          <Typography.Text>{t("additional-need-to-know")}</Typography.Text>
-          <Flex align="center" gap={5}>
-            <Can i="update" a="additional">
-              <FaPen
-                onClick={() => onEditCategory(t("additional-need-to-know"), 4)}
-                cursor={"pointer"}
-                color="grey"
-                title={t("edit")}
-              />
-            </Can>
-            <Can i="delete" a="additional">
-              <FaTrash
-                onClick={onDeleteCategory}
-                cursor={"pointer"}
-                color="grey"
-                title={t("delete")}
-              />
-            </Can>
-          </Flex>
-        </Flex>
-      ),
-    },
-    {
-      value: "info-tashkent",
-      label: (
-        <Flex justify="space-between" align="center">
-          <Typography.Text>{t("additional-info-tashkent")}</Typography.Text>
-          <Flex align="center" gap={5}>
-            <Can i="update" a="additional">
-              <FaPen
-                onClick={() => onEditCategory(t("additional-info-tashkent"), 5)}
-                cursor={"pointer"}
-                color="grey"
-                title={t("edit")}
-              />
-            </Can>
-            <Can i="delete" a="additional">
-              <FaTrash
-                onClick={onDeleteCategory}
-                cursor={"pointer"}
-                color="grey"
-                title={t("delete")}
-              />
-            </Can>
-          </Flex>
-        </Flex>
-      ),
-    },
-  ];
+        )}
+      </Flex>
+    ),
+  }));
 
   const prevParams = useMemo(() => {
     return returnAllParams();
@@ -235,12 +148,22 @@ export const AdditionalInputsCategoriesUI: FC = () => {
     form.resetFields();
   };
 
-  const onSubmit = (values: { ru: string; uz: string; cy: string }) => {
-    if (editCatId) {
-      console.log("editing", { ...values, category_id: editCatId });
-    } else {
-      console.log("creating", values);
-    }
+  const onSubmit = async (values: { ru: string; uz: string; cy: string }) => {
+    const body = {
+      id: editCatId,
+      name: {
+        ru: values.ru,
+        uz: values.uz,
+        cy: values.cy,
+      },
+    };
+    const request = editCatId
+      ? updateAdditionalCategory
+      : createAdditionalCategory;
+    const response = await request(body);
+
+    notificationResponse(response, onCloseClear);
+    form.resetFields();
     onCloseClear();
   };
 
@@ -271,11 +194,12 @@ export const AdditionalInputsCategoriesUI: FC = () => {
             {t("choose-additional-category")}
           </label>
           <Select
+            loading={isLoading}
             value={category}
             id={ENUMS.CATEGORY}
             onSelect={onCategoryChange}
             placeholder={t("choose-additional-category")}
-            options={categoryOption}
+            options={options}
             allowClear
             onClear={onClear}
             showSearch

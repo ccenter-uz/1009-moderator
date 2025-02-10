@@ -111,4 +111,9 @@ export const API_MAP = {
   USERS_MONITORING: "monitoring/user",
   TRANSACTIONS_MONITORING: "monitoring/transaction",
   ORGANIZATIONS_MONITORING: "monitoring/organization",
+  ADDITIONAL_CATEGORY_ALL: "additional-category",
+  CREATE_ADDITIONAL_CATEGORY: "additional-category",
+  UPDATE_ADDITIONAL_CATEGORY: "additional-category",
+  DELETE_ADDITIONAL_CATEGORY: "additional-category",
+  RESTORE_ADDITIONAL_CATEGORY: "additional-category",
 };

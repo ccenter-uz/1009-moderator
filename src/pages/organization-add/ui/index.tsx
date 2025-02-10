@@ -157,7 +157,7 @@ export const OrgAddPage: FC = () => {
 
     const response = await createOrganization(formData);
 
-    notificationResponse(response, t);
+    notificationResponse(response);
 
     response?.data.status === 201 && (onClearAllData(), navigate("/orgs/all"));
   };

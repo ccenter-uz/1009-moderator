@@ -218,7 +218,7 @@ export const OrgEditPage: FC = () => {
 
     const response = await updateOrganization(formData);
 
-    notificationResponse(response, t);
+    notificationResponse(response);
 
     response?.data.status === 200 && (onClearAllData(), navigate("/orgs/all"));
   };
