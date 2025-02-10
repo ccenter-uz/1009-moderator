@@ -4,7 +4,15 @@ FROM node:22.11.0-alpine
 # Устанавливаем рабочую директорию в контейнере
 WORKDIR /app
 
-COPY .env /app/
+ARG VITE_APP_BASE_URL="https://admin-1009.ccenter.uz/v1"
+ARG VITE_APP_VERSION="1.0.0"
+ARG VITE_APP_GITHUB_LINK="https://gitlab.ccenter.uz/"
+ARG VITE_APP_RELEASES_LINK="https://gitlab.ccenter.uz/"
+
+ENV VITE_APP_BASE_URL=${VITE_APP_BASE_URL}
+ENV VITE_APP_VERSION=${VITE_APP_VERSION}
+ENV VITE_APP_GITHUB_LINK=${VITE_APP_GITHUB_LINK}
+ENV VITE_APP_RELEASES_LINK=${VITE_APP_RELEASES_LINK}
 
 # Копируем файл package.json и package-lock.json (если есть)
 COPY package*.json ./
