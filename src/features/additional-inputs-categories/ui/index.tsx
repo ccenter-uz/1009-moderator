@@ -100,7 +100,14 @@ export const AdditionalInputsCategoriesUI: FC = () => {
         <Flex align="center" gap={5}>
           <Can i="update" a="additional">
             <FaPen
-              onClick={() => onEditCategory(item)}
+              onClick={() =>
+                onEditCategory(
+                  item as {
+                    id: string;
+                    name: { ru: string; uz: string; cy: string };
+                  },
+                )
+              }
               cursor={"pointer"}
               color="grey"
               title={t("edit")}

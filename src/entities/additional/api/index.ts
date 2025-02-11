@@ -19,7 +19,7 @@ export const additionalApi = baseApi.injectEndpoints({
           data: response?.result?.data.map(
             (item: {
               id: string;
-              name?: { ru: string; uz: string; en: string };
+              name?: { ru: string; uz: string; cy: string };
               status: number;
             }) => ({
               ...item,
