@@ -12,22 +12,21 @@ import i18next from "i18next";
 import { FC, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPen, FaPlus, FaTrash } from "react-icons/fa";
-import { MdRestore } from "react-icons/md";
 import { useSearchParams } from "react-router-dom";
 
 import {
   useCreateAdditionalCategoryMutation,
   useDeleteAdditionalCategoryMutation,
   useGetAdditionalCategoriesQuery,
-  useRestoreAdditionalCategoryMutation,
   useUpdateAdditionalCategoryMutation,
 } from "@entities/additional";
 
 import {
   AntDesignSwal,
+  GET_ALL_ACTIVE_STATUS,
   notificationResponse,
+  renderLabelSelect,
   returnAllParams,
-  STATUS,
 } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { Can } from "@shared/ui";
@@ -41,17 +40,18 @@ export const AdditionalInputsCategoriesUI: FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [searchParams, setSearchParams] = useSearchParams();
   const [form] = Form.useForm();
-  const [category, setCategory] = useState<string>(
-    searchParams.get(ENUMS.CATEGORY) || "",
+  const [category, setCategory] = useState<number | null>(
+    Number(searchParams.get(ENUMS.CATEGORY)) || null,
   );
   const [editCatId, setEditCatId] = useState<number | string | null>(null);
   const { data: categories, isLoading } = useGetAdditionalCategoriesQuery({
     ...returnAllParams(),
+    status: GET_ALL_ACTIVE_STATUS.active,
+    all: GET_ALL_ACTIVE_STATUS.all,
   });
   const [createAdditionalCategory] = useCreateAdditionalCategoryMutation();
   const [updateAdditionalCategory] = useUpdateAdditionalCategoryMutation();
   const [deleteAdditionalCategory] = useDeleteAdditionalCategoryMutation();
-  const [restoreAdditionalCategory] = useRestoreAdditionalCategoryMutation();
 
   const onDeleteCategory = (id: string) => {
     AntDesignSwal.fire({
@@ -59,24 +59,30 @@ export const AdditionalInputsCategoriesUI: FC = () => {
       text: t("content-will-be-deleted"),
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
       confirmButtonText: t("yes-delete"),
       cancelButtonText: t("no-cancel"),
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        console.log("deleted", id);
+        await deleteAdditionalCategory(id);
+        form.resetFields();
+        const prevParams = returnAllParams();
+        delete prevParams[ENUMS.CATEGORY];
+        setSearchParams(prevParams);
+        setCategory(null);
       }
     });
   };
 
-  const onEditCategory = (name: string, id: string | number) => {
-    console.log(name, "edit-title");
-    console.log(id, "edit-id");
+  const onEditCategory = (item: {
+    id: string;
+    name: { ru: string; uz: string; cy: string };
+  }) => {
     form.setFieldsValue({
-      ru: name,
+      ru: item.name?.ru,
+      uz: item.name?.uz,
+      cy: item.name?.cy,
     });
-    setEditCatId(id);
+    setEditCatId(item.id);
     onOpen();
   };
   const onAddCategory = () => {
@@ -91,42 +97,25 @@ export const AdditionalInputsCategoriesUI: FC = () => {
         <Typography.Text>
           {item.name?.[i18next.language as keyof typeof item.name]}
         </Typography.Text>
-        {item.status === STATUS.ACTIVE ? (
-          <Flex align="center" gap={5}>
-            <Can i="update" a="additional">
-              <FaPen
-                onClick={() =>
-                  item.name &&
-                  onEditCategory(
-                    item.name[i18next.language as keyof typeof item.name],
-                    1,
-                  )
-                }
-                cursor={"pointer"}
-                color="grey"
-                title={t("edit")}
-              />
-            </Can>
-            <Can i="delete" a="additional">
-              <FaTrash
-                onClick={() => onDeleteCategory(item.id)}
-                cursor={"pointer"}
-                color="grey"
-                title={t("delete")}
-              />
-            </Can>
-          </Flex>
-        ) : (
-          <Flex>
-            <Can i="restore" a="additional">
-              <MdRestore
-                cursor={"pointer"}
-                color="orange"
-                title={t("delete")}
-              />
-            </Can>
-          </Flex>
-        )}
+
+        <Flex align="center" gap={5}>
+          <Can i="update" a="additional">
+            <FaPen
+              onClick={() => onEditCategory(item)}
+              cursor={"pointer"}
+              color="grey"
+              title={t("edit")}
+            />
+          </Can>
+          <Can i="delete" a="additional">
+            <FaTrash
+              onClick={() => onDeleteCategory(item.id)}
+              cursor={"pointer"}
+              color="grey"
+              title={t("delete")}
+            />
+          </Can>
+        </Flex>
       </Flex>
     ),
   }));
@@ -135,11 +124,11 @@ export const AdditionalInputsCategoriesUI: FC = () => {
     return returnAllParams();
   }, []);
 
-  const onCategoryChange = (value: string) => {
+  const onCategoryChange = (value: number) => {
     setCategory(value);
     setSearchParams({
       ...prevParams,
-      category: value,
+      category: String(value),
     });
   };
 
@@ -169,7 +158,7 @@ export const AdditionalInputsCategoriesUI: FC = () => {
 
   const onClear = () => {
     setSearchParams("");
-    setCategory("");
+    setCategory(null);
   };
 
   const addPart = (menu: JSX.Element) => {
@@ -194,8 +183,9 @@ export const AdditionalInputsCategoriesUI: FC = () => {
             {t("choose-additional-category")}
           </label>
           <Select
+            labelRender={renderLabelSelect}
             loading={isLoading}
-            value={category}
+            value={Number(category)}
             id={ENUMS.CATEGORY}
             onSelect={onCategoryChange}
             placeholder={t("choose-additional-category")}
