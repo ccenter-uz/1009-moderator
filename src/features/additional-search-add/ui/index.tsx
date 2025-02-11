@@ -1,4 +1,4 @@
-import { Button, Flex, Form, Input, Typography } from "antd";
+import { Button, Flex, Form, Input } from "antd";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPlus, FaSearch } from "react-icons/fa";
@@ -15,13 +15,9 @@ export const AdditionalSearchAddUI: FC = () => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
 
-  const onClear = () => form.resetFields();
-
   const onSubmit = ({ search }: string) => {
-    console.log(search, "additional-search");
     const params = returnAllParams();
     setSearchParams({ ...params, search } as string);
-    onClear();
   };
 
   const onClearLocalStorage = () => clearAllAdditionalStorage();
@@ -61,7 +57,7 @@ export const AdditionalSearchAddUI: FC = () => {
           <Link
             to="/additional/add"
             state={{
-              category: searchParams.get("category"),
+              category: searchParams.get("additionalCategoryId"),
             }}
           >
             <Button

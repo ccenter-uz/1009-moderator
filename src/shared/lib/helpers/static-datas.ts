@@ -97,10 +97,10 @@ export const additionalSubmitData = (
       uz: getLocalStorage(firstStep)["warning-uz"],
       cy: getLocalStorage(firstStep)["warning-cyrill"],
     },
-    title: {
-      ru: getLocalStorage(firstStep)["title-ru"],
-      uz: getLocalStorage(firstStep)["title-uz"],
-      cy: getLocalStorage(firstStep)["title-cyrill"],
+    name: {
+      ru: getLocalStorage(firstStep)["name-ru"],
+      uz: getLocalStorage(firstStep)["name-uz"],
+      cy: getLocalStorage(firstStep)["name-cyrill"],
     },
     table: getLocalStorage(secondStep),
     content: getLocalStorage(thirdStep),

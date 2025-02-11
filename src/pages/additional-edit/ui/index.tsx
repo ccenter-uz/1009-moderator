@@ -2,11 +2,18 @@ import { Button, Divider, Flex, Form, Steps } from "antd";
 import i18next from "i18next";
 import { CSSProperties, FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useBlocker, useLocation, useParams } from "react-router-dom";
+import {
+  useBlocker,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 
 import { AdditionalEditFirstStepUI } from "@widgets/additional-edit-first-step";
 import { AdditionalEditSecondStepUI } from "@widgets/additional-edit-second-step";
 import { AdditionalEditThirdStepUI } from "@widgets/additional-edit-third-step";
+
+import { useUpdateAdditionalMutation } from "@entities/additional";
 
 import {
   ADDITIONAL_EDIT_STEPS,
@@ -14,6 +21,7 @@ import {
   AntDesignSwal,
   clearAllAdditionalEditStorage,
   getLocalStorage,
+  notificationResponse,
   setLocalStorage,
 } from "@shared/lib/helpers";
 
@@ -46,6 +54,8 @@ export const AdditionalEdit: FC = () => {
   const [current, setCurrent] = useState(
     +getLocalStorage(ADDITIONAL_EDIT_STEPS.ADDITIONAL_EDIT_CURRENT_STEP) || 0,
   );
+  const [updateAdditional] = useUpdateAdditionalMutation();
+  const navigate = useNavigate();
 
   const next = () => {
     if (current === 0) {
@@ -58,17 +68,21 @@ export const AdditionalEdit: FC = () => {
   };
   const prev = () => setCurrent(current - 1);
 
-  const onSubmit = () => {
-    const data = {
+  const onSubmit = async () => {
+    const body = {
       ...additionalSubmitData(
         ADDITIONAL_EDIT_STEPS.ADDITIONAL_EDIT_FIRST_STEP,
         ADDITIONAL_EDIT_STEPS.ADDITIONAL_EDIT_SECOND_STEP,
         ADDITIONAL_EDIT_STEPS.ADDITIONAL_EDIT_THIRD_STEP,
       ),
       id,
-      category_id: location.state?.category || null,
+      additionalCategoryId: location.state?.category || null,
     };
-    console.log(data, "data");
+    const response = await updateAdditional(body);
+
+    notificationResponse(response);
+    clearAllAdditionalEditStorage();
+    navigate("/additional");
   };
 
   useEffect(() => {

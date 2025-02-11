@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   additinalCategories: [],
+  additional: [],
 };
 
 export const useAdditionalSlice = createSlice({
@@ -11,8 +12,12 @@ export const useAdditionalSlice = createSlice({
     setAdditionalCategories: (state, action) => {
       state.additinalCategories = action.payload;
     },
+    setAdditional: (state, action) => {
+      state.additional = action.payload;
+    },
   },
 });
 
-export const { setAdditionalCategories } = useAdditionalSlice.actions;
+export const { setAdditionalCategories, setAdditional } =
+  useAdditionalSlice.actions;
 export default useAdditionalSlice.reducer;

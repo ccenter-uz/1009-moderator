@@ -116,4 +116,9 @@ export const API_MAP = {
   UPDATE_ADDITIONAL_CATEGORY: "additional-category",
   DELETE_ADDITIONAL_CATEGORY: "additional-category",
   RESTORE_ADDITIONAL_CATEGORY: "additional-category",
+  ADDITIONAL_ALL: "additional",
+  CREATE_ADDITIONAL: "additional",
+  UPDATE_ADDITIONAL: "additional",
+  DELETE_ADDITIONAL: "additional",
+  RESTORE_ADDITIONAL: "additional",
 };

@@ -24,7 +24,7 @@ export const AdditionalEditor: FC<Props> = (props) => {
   const [valueRu, setValueRu] = useState<string>("");
   const [valueUz, setValueUz] = useState<string>("");
   const [valueCyrill, setValueCyrill] = useState<string>("");
-  const [title, setTitle] = useState<{
+  const [name, setName] = useState<{
     ru: string;
     uz: string;
     cy: string;
@@ -33,7 +33,7 @@ export const AdditionalEditor: FC<Props> = (props) => {
     {
       id: string;
       content: { ru: string; uz: string; cy: string };
-      title: { ru: string; uz: string; cy: string };
+      name: { ru: string; uz: string; cy: string };
     }[]
   >(getLocalStorage(localName) ? getLocalStorage(localName) : []);
 
@@ -42,7 +42,7 @@ export const AdditionalEditor: FC<Props> = (props) => {
       ...editor,
       {
         id: Date.now().toString(),
-        title,
+        name,
         content: {
           ru: valueRu,
           uz: valueUz,
@@ -54,22 +54,22 @@ export const AdditionalEditor: FC<Props> = (props) => {
     setValueRu("");
     setValueUz("");
     setValueCyrill("");
-    setTitle({ ru: "", uz: "", cy: "" });
+    setName({ ru: "", uz: "", cy: "" });
   };
 
   const onEdit = ({
     content,
     id,
-    title,
+    name,
   }: {
     content: { ru: string; uz: string; cy: string };
     id: string;
-    title: { ru: string; uz: string; cy: string };
+    name: { ru: string; uz: string; cy: string };
   }) => {
     setValueRu(content.ru);
     setValueUz(content.uz);
     setValueCyrill(content.cy);
-    setTitle(title);
+    setName(name);
     const newEditor = editor.filter((el) => el.id !== id);
     setEditor(newEditor);
   };
@@ -80,8 +80,8 @@ export const AdditionalEditor: FC<Props> = (props) => {
   };
 
   const onChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setTitle({ ...title, [name]: value });
+    const { name: targetName, value: targetValue } = e.target;
+    setName({ ...name, [targetName]: targetValue });
   };
 
   useEffect(() => {
@@ -97,7 +97,7 @@ export const AdditionalEditor: FC<Props> = (props) => {
         placeholder={t("title-ru")}
         name="ru"
         onChange={onChangeTitle}
-        value={title.ru}
+        value={name.ru}
       />
       <SunEditor
         setContents={valueRu}
@@ -110,7 +110,7 @@ export const AdditionalEditor: FC<Props> = (props) => {
         placeholder={t("title-uz")}
         name="uz"
         onChange={onChangeTitle}
-        value={title.uz}
+        value={name.uz}
       />
       <SunEditor
         setContents={valueUz}
@@ -123,7 +123,7 @@ export const AdditionalEditor: FC<Props> = (props) => {
         placeholder={t("title-cyrill")}
         name="cy"
         onChange={onChangeTitle}
-        value={title.cy}
+        value={name.cy}
       />
       <SunEditor
         setContents={valueCyrill}
@@ -148,7 +148,7 @@ export const AdditionalEditor: FC<Props> = (props) => {
             key: el.id,
             label: (
               <Flex align="center" justify="space-between">
-                <Typography.Text>{el.title.ru}</Typography.Text>
+                <Typography.Text>{el.name.ru}</Typography.Text>
                 <Flex gap={8} align="center" justify="end">
                   <FaPen
                     onClick={() => onEdit(el)}
@@ -167,21 +167,21 @@ export const AdditionalEditor: FC<Props> = (props) => {
             ),
             children: (
               <Flex key={el.id} vertical>
-                <Typography.Text>{el.title.ru}</Typography.Text>
+                <Typography.Text>{el.name.ru}</Typography.Text>
                 <div
                   className={className}
                   dangerouslySetInnerHTML={{
                     __html: renderHtml(el.content.ru),
                   }}
                 />
-                <Typography.Text>{el.title.uz}</Typography.Text>
+                <Typography.Text>{el.name.uz}</Typography.Text>
                 <div
                   className={className}
                   dangerouslySetInnerHTML={{
                     __html: renderHtml(el.content.uz),
                   }}
                 />
-                <Typography.Text>{el.title.cy}</Typography.Text>
+                <Typography.Text>{el.name.cy}</Typography.Text>
                 <div
                   className={className}
                   dangerouslySetInnerHTML={{

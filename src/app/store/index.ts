@@ -1,8 +1,6 @@
 import { configureStore, ConfigureStoreOptions } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
-import { useAdditionalSlice } from "@pages/additional";
-
 import { useAddOrgFirstStepSlice } from "@widgets/org-add-first-step";
 import { useAddOrgFourthStepSlice } from "@widgets/org-add-fourth-step";
 import { useAddOrgSecondStepSlice } from "@widgets/org-add-second-step";
@@ -33,8 +31,6 @@ export const createStore = (
       useEditOrgSecondStepSlice: useEditOrgSecondStepSlice.reducer,
       useEditOrgThirdStepSlice: useEditOrgThirdStepSlice.reducer,
       useEditOrgFourthStepSlice: useEditOrgFourthStepSlice.reducer,
-      // ADDITIONAL
-      useAdditionalSlice: useAdditionalSlice.reducer,
       // MANAGE
       useManageUsersSlice: useManageUsersSlice.reducer,
       // UI-SETTINGS

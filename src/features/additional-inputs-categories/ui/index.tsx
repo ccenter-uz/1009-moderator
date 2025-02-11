@@ -15,6 +15,7 @@ import { FaPen, FaPlus, FaTrash } from "react-icons/fa";
 import { useSearchParams } from "react-router-dom";
 
 import {
+  IAdditionalCategoryType,
   useCreateAdditionalCategoryMutation,
   useDeleteAdditionalCategoryMutation,
   useGetAdditionalCategoriesQuery,
@@ -32,7 +33,7 @@ import { useDisclosure } from "@shared/lib/hooks";
 import { Can } from "@shared/ui";
 
 const enum ENUMS {
-  CATEGORY = "category",
+  CATEGORY = "additionalCategoryId",
 }
 
 export const AdditionalInputsCategoriesUI: FC = () => {
@@ -52,7 +53,7 @@ export const AdditionalInputsCategoriesUI: FC = () => {
   const [updateAdditionalCategory] = useUpdateAdditionalCategoryMutation();
   const [deleteAdditionalCategory] = useDeleteAdditionalCategoryMutation();
 
-  const onDeleteCategory = (id: string) => {
+  const onDeleteCategory = (id: number) => {
     AntDesignSwal.fire({
       title: t("are-you-sure"),
       text: t("content-will-be-deleted"),
@@ -72,10 +73,7 @@ export const AdditionalInputsCategoriesUI: FC = () => {
     });
   };
 
-  const onEditCategory = (item: {
-    id: string;
-    name: { ru: string; uz: string; cy: string };
-  }) => {
+  const onEditCategory = (item: IAdditionalCategoryType) => {
     form.setFieldsValue({
       ru: item.name?.ru,
       uz: item.name?.uz,
@@ -100,14 +98,7 @@ export const AdditionalInputsCategoriesUI: FC = () => {
         <Flex align="center" gap={5}>
           <Can i="update" a="additional">
             <FaPen
-              onClick={() =>
-                onEditCategory(
-                  item as {
-                    id: string;
-                    name: { ru: string; uz: string; cy: string };
-                  },
-                )
-              }
+              onClick={() => onEditCategory(item)}
               cursor={"pointer"}
               color="grey"
               title={t("edit")}
@@ -134,7 +125,7 @@ export const AdditionalInputsCategoriesUI: FC = () => {
     setCategory(value);
     setSearchParams({
       ...prevParams,
-      category: String(value),
+      additionalCategoryId: String(value),
     });
   };
 
