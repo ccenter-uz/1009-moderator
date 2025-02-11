@@ -45,7 +45,6 @@ export const AdditionalInputsCategoriesUI: FC = () => {
   );
   const [editCatId, setEditCatId] = useState<number | string | null>(null);
   const { data: categories, isLoading } = useGetAdditionalCategoriesQuery({
-    ...returnAllParams(),
     status: GET_ALL_ACTIVE_STATUS.active,
     all: GET_ALL_ACTIVE_STATUS.all,
   });
