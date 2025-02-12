@@ -20,6 +20,9 @@ type Props = {
     createdBy: string;
     nearbyCategoryId: string | number;
   }) => void;
+  handleReset?: Dispatch<SetStateAction<string | number | undefined>>;
+  status?: number;
+  isFilterByStatusRequired?: boolean;
   handleReset: Dispatch<SetStateAction<string | number | undefined>>;
   status?: number;
   hasFilterByStatus?: boolean;
@@ -48,6 +51,7 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
   const { createdBy } = returnAllParams();
 
   const [initialStatusValue, setInitialStatusValue] = useState(
+    statusFromProps && statusFromProps >= 0 ? statusFromProps : STATUS.ACTIVE,
     statusFromProps !== undefined && statusFromProps >= 0
       ? statusFromProps
       : STATUS.ACTIVE,
@@ -91,9 +95,13 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
       <Flex gap={8}>
         {additionalSearch}
         {hasFilterByStatus ? (
-          <Form.Item name={"status"} label={t("status")} style={{ flex: 0.2 }}>
+          <Form.Item
+            name={"status"}
+            label={t("status")}
+            style={{ flex: 0.2 }}
+            initialValue={initialStatusValue}
+          >
             <Select
-              defaultValue={initialStatusValue}
               options={[
                 {
                   id: 0,
@@ -150,7 +158,11 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
             />
           </Form.Item>
         )}
-        <Form.Item name="search" style={{ marginBottom: 0, flex: 1 }}>
+        <Form.Item
+          name="search"
+          style={{ marginBottom: 0, flex: 1 }}
+          label={t("search")}
+        >
           <Input
             type="text"
             placeholder={t("search")}

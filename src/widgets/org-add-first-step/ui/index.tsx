@@ -46,6 +46,7 @@ export const OrgAddFirstStepUI: FC<IProps> = (props) => {
   const { data: categoryData, isLoading: isLoadingCategories } =
     useGetCategoriesQuery({
       ...allActives,
+      regionId: form.getFieldValue("regionId"),
       cityId: form.getFieldValue("cityId"),
     });
   const { data: mainOrgData, isLoading: isLoadingMainOrg } =

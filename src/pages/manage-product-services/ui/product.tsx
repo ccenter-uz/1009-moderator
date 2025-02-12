@@ -111,7 +111,7 @@ export const Product: FC = () => {
     const request = editingData ? updateProduct : createProduct;
     const response = await request(body);
 
-    notificationResponse(response, t, onClose);
+    notificationResponse(response, onClose);
     form.resetFields();
     onClose();
   };

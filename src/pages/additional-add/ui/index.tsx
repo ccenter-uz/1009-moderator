@@ -2,11 +2,13 @@ import { Button, Divider, Flex, Form, Steps } from "antd";
 import i18next from "i18next";
 import { CSSProperties, FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useBlocker, useLocation } from "react-router-dom";
+import { useBlocker, useLocation, useNavigate } from "react-router-dom";
 
 import { AdditionalAddFirstStepUI } from "@widgets/additional-add-first-step";
 import { AdditionalAddSecondStepUI } from "@widgets/additional-add-second-step";
 import { AdditionalAddThirdStepUI } from "@widgets/additional-add-third-step";
+
+import { useCreateAdditionalMutation } from "@entities/additional";
 
 import {
   ADDITIONAL_ADD_STEPS,
@@ -14,6 +16,7 @@ import {
   AntDesignSwal,
   clearAllAdditionalAddStorage,
   getLocalStorage,
+  notificationResponse,
   setLocalStorage,
 } from "@shared/lib/helpers";
 
@@ -45,6 +48,8 @@ export const AdditionalAdd: FC = () => {
   const [current, setCurrent] = useState(
     +getLocalStorage(ADDITIONAL_ADD_STEPS.ADDITIONAL_ADD_CURRENT_STEP) || 0,
   );
+  const [createAdditional] = useCreateAdditionalMutation();
+  const navigate = useNavigate();
 
   const next = () => {
     if (current === 0) {
@@ -57,16 +62,20 @@ export const AdditionalAdd: FC = () => {
   };
   const prev = () => setCurrent(current - 1);
 
-  const onSubmit = () => {
-    const data = {
+  const onSubmit = async () => {
+    const body = {
       ...additionalSubmitData(
         ADDITIONAL_ADD_STEPS.ADDITIONAL_ADD_FIRST_STEP,
         ADDITIONAL_ADD_STEPS.ADDITIONAL_ADD_SECOND_STEP,
         ADDITIONAL_ADD_STEPS.ADDITIONAL_ADD_THIRD_STEP,
       ),
-      category_id: location.state?.category || null,
+      additionalCategoryId: Number(location.state?.category) || null,
     };
-    console.log(data, "data");
+    const response = await createAdditional(body);
+
+    notificationResponse(response);
+    clearAllAdditionalAddStorage();
+    navigate("/additional");
   };
 
   useEffect(() => {

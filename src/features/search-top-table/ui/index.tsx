@@ -22,7 +22,8 @@ import {
   phoneColumns,
   setColorByStatus,
   setLocalStorage,
-  status,
+  statusForOrgs,
+  statusType,
   STEPS_EDIT_DATA,
   STEPS_ENUM,
 } from "@shared/lib/helpers";
@@ -108,7 +109,7 @@ export const SearchTopTable: FC<Props> = (props) => {
     }
   };
 
-  const columns: ColumnsType<AnyObject> = [
+  const columns: ColumnsType = [
     {
       title: t("code"),
       dataIndex: "inn",
@@ -150,7 +151,7 @@ export const SearchTopTable: FC<Props> = (props) => {
       title: t("status"),
       dataIndex: "status",
       key: "status",
-      render: (text: number) => setColorByStatus(status[text]),
+      render: (text: statusType) => setColorByStatus(statusForOrgs[text]),
     },
     {
       width: 80,

@@ -258,5 +258,12 @@
   "createdBy": "Создано",
   "billing": "Биллинг",
   "client": "Клиент",
-  "operator": "Оператор"
+  "operator": "Оператор",
+  "waitings": "Ожидающие",
+  "organization-waitings": "Организации ожидающие",
+  "accepted": "Актив",
+  "rejected": "Отклонено",
+  "check": "В процессе",
+  "rejectReason": "Причина отказа",
+  "deleteReason": "Причина удаления"
 }
