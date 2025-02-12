@@ -55,7 +55,7 @@ export const UserAddEditModalUI: FC<Props> = (props) => {
   const onSubmit = async (values: FormValues) => {
     const res = await createUser(values);
 
-    notificationResponse(res, t, onClose);
+    notificationResponse(res, onClose);
   };
 
   const onEdit = async (values: FormValues) => {
@@ -64,7 +64,7 @@ export const UserAddEditModalUI: FC<Props> = (props) => {
       userId: record?.id,
     };
     const res = await updateUser(body);
-    notificationResponse(res, t, onClose);
+    notificationResponse(res, onClose);
   };
 
   useEffect(() => {

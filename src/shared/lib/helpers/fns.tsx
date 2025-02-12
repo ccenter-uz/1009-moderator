@@ -88,20 +88,16 @@ export const clearCookie = () => {
   deleteCookie("refreshToken");
 };
 
-export const notificationResponse = (
-  res: AnyObject,
-  t: (arg0: string) => string,
-  onClose?: () => void,
-) => {
+export const notificationResponse = (res: AnyObject, onClose?: () => void) => {
   if (res.data.status >= 200 && res.data.status < 300) {
     notification.success({
-      message: t("success"),
+      message: i18next.t("success"),
       placement: "bottomRight",
     });
     onClose && onClose();
   } else {
     notification.error({
-      message: t("error"),
+      message: i18next.t("error"),
       placement: "bottomRight",
     });
   }
