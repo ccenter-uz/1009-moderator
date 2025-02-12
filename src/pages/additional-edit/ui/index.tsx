@@ -76,7 +76,7 @@ export const AdditionalEdit: FC = () => {
         ADDITIONAL_EDIT_STEPS.ADDITIONAL_EDIT_THIRD_STEP,
       ),
       id,
-      additionalCategoryId: location.state?.category || null,
+      additionalCategoryId: Number(location.state?.category) || null,
     };
     const response = await updateAdditional(body);
 
