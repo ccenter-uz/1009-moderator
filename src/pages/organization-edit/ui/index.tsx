@@ -1,3 +1,5 @@
+import { it } from "node:test";
+
 import { Button, Divider, Flex, Form, notification, Steps } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import i18next from "i18next";
@@ -160,6 +162,17 @@ export const OrgEditPage: FC = () => {
     setCurrent(current - 1);
     localStorage.setItem(STEPS_EDIT_DATA.CURRENT, JSON.stringify(current - 1));
   };
+
+  const extractPictures = (pictures: AnyObject[], images: AnyObject[]) => {
+    if (pictures.length !== 0) {
+      return pictures;
+    }
+
+    return images
+      .filter((item: AnyObject) => !!item.link)
+      .map((item: AnyObject) => item as AnyObject);
+  };
+
   const onSubmit = async () => {
     const formData = new FormData();
 
@@ -200,22 +213,18 @@ export const OrgEditPage: FC = () => {
         })),
       },
       picture: {
-        pictures:
-          pictures.length !== 0
-            ? pictures
-            : images.map((item: AnyObject) => ({
-                link: item.link,
-              })),
+        pictures: extractPictures(pictures, images),
       },
     };
     for (const key in body) {
       formData.append(key, JSON.stringify(body[key]));
     }
-    for (let i = 0; i < images.length; i++) {
-      if (!images[i].link) {
-        formData.append("photos", images[i]);
+
+    images.forEach((image: any) => {
+      if (!image.link) {
+        formData.append("photos", image);
       }
-    }
+    });
 
     const response = await updateOrganization(formData);
 

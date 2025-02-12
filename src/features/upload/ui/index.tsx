@@ -44,17 +44,19 @@ export const UploadUI: FC<Props> = (props) => {
 
   return (
     <div className="upload">
-      {fileList?.map((file: AnyObject) => (
-        <ImageWithDelete
-          key={file?.name}
-          src={
-            file.link
-              ? file.link
-              : URL?.createObjectURL(new Blob([file as Blob]))
-          }
-          alt={file.name}
-          onDelete={() => onRemove(file)}
-        />
+      {fileList?.map((file: AnyObject, index) => (
+        <div key={file?.name + index}>
+          <ImageWithDelete
+            key={file?.name}
+            src={
+              file.link
+                ? file.link
+                : URL?.createObjectURL(new Blob([file as Blob]))
+            }
+            alt={file.name}
+            onDelete={() => onRemove(file)}
+          />
+        </div>
       ))}
       <label htmlFor="file" id="upload-content">
         <FaPlus fontSize={18} />
