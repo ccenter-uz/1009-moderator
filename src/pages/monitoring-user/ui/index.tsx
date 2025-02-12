@@ -185,7 +185,7 @@ export const MonitoringUserUI: FC = () => {
             }
             handleSearch={onSearch}
             handleReset={handleReset}
-            isFilterByStatusRequired={false}
+            hasFilterByStatus={false}
           />
         }
         columns={columns}

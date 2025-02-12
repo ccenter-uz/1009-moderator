@@ -110,6 +110,8 @@ export const baseApi = createApi({
     "MyOrganizations",
     "UsersMonitoring",
     "OrganizationMonitoring",
+    "AdditionalCategories",
+    "Additional",
   ],
   endpoints: () => ({}),
 });

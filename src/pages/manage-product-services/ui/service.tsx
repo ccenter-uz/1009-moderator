@@ -113,7 +113,7 @@ export const Service: FC = () => {
       ),
     });
 
-    notificationResponse(response, t, onClose);
+    notificationResponse(response, onClose);
     form.resetFields();
     onClose();
   };

@@ -41,8 +41,8 @@ export default defineConfig(({ mode }) => {
         "@shared": path.resolve("src/shared"),
       },
     },
-   server: {
-      port: 3000
-   }
+    server: {
+      port: 3000,
+    },
   };
 });

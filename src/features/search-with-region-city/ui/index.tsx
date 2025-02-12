@@ -89,7 +89,7 @@ export const SearchWithRegionCityUI: FC<Props> = (props) => {
   }, [handleReset]);
 
   return (
-    <Form form={form} style={{ flex: 0.5 }}>
+    <Form form={form} style={{ flex: 0.8 }}>
       <Flex align="center" gap={16}>
         <Form.Item
           name={"region_id"}
