@@ -1,11 +1,16 @@
 import { baseApi } from "@shared/api";
 import { API_MAP, API_METHODS } from "@shared/lib/helpers";
 
-import { setOrganization, setUnconfirmedOrganization } from "../model/Slicer";
+import {
+  setMyOrganization,
+  setOrganization,
+  setUnconfirmedOrganization,
+} from "../model/Slicer";
 import { getOrganizationType } from "../model/types";
 
 export const organizationApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
+    // GET-ORGANIZATIONS
     getOrganizations: build.query({
       query: (params) => ({
         url: API_MAP.ORGANIZATION_ALL,
@@ -67,6 +72,37 @@ export const organizationApi = baseApi.injectEndpoints({
         );
       },
     }),
+    // GET-MY-ORGANIZATIONS
+    getMyOrganizations: build.query({
+      query: (params) => ({
+        url: API_MAP.MY_ORGANIZATION_ALL,
+        method: API_METHODS.GET,
+        params,
+      }),
+      providesTags: ["MyOrganizations"],
+      transformResponse: (response: getOrganizationType) => {
+        return {
+          data: response?.result?.data.map((item) => ({
+            ...item,
+            key: item.id,
+          })),
+          total: response?.result?.totalDocs,
+        };
+      },
+      async onQueryStarted(args, { dispatch, queryFulfilled }) {
+        const { data } = await queryFulfilled;
+
+        dispatch(
+          setMyOrganization(
+            data?.data?.map((item: { id: string }) => ({
+              ...item,
+              key: item.id,
+            })),
+          ),
+        );
+      },
+    }),
+
     // CREATE
     createOrganization: build.mutation({
       query: (body) => ({
@@ -118,6 +154,7 @@ export const organizationApi = baseApi.injectEndpoints({
 export const {
   useGetUnconfirmedOrganizationsQuery,
   useGetOrganizationsQuery,
+  useGetMyOrganizationsQuery,
   useCreateOrganizationMutation,
   useUpdateOrganizationMutation,
   useDeleteOrganizationMutation,

@@ -38,7 +38,7 @@ export const SettingsModal: FC<IProps> = (props) => {
   }) => {
     const response = await updateMe(values);
 
-    notificationResponse(response, i18next.t, closeModal);
+    notificationResponse(response, closeModal);
   };
 
   const handlePasswordChange = (

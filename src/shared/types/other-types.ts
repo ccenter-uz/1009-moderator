@@ -1,3 +1,5 @@
+import { AnyObject } from "antd/es/_util/type";
+
 export type ItableDataAddress = {
   key: string | number;
   id: number | string;
@@ -36,3 +38,7 @@ export type ItableWithRegions = ItableBasicData & {
   status?: number;
   staffNumber?: string | number;
 };
+
+export interface IOrganizationBody {
+  [key: string]: AnyObject | string | number;
+}

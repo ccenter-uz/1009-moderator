@@ -1,7 +1,4 @@
-import {
-  FetchBaseQueryError,
-  FetchBaseQueryMeta,
-} from "@reduxjs/toolkit/query";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { notification } from "antd";
 import i18next from "i18next";
 

@@ -1,11 +1,10 @@
-import { Button, Flex, Table, Tooltip } from "antd";
+import { Button, Flex, Select, Table, Tooltip } from "antd";
 import { AnyObject } from "antd/es/_util/type";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaCheck, FaPen } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import Swal from "sweetalert2";
 
 import { BasicSearchPartUI } from "@features/basic-search-part";
 
@@ -15,7 +14,9 @@ import {
 } from "@entities/organization";
 
 import {
+  AntDesignSwal,
   clearEditStepStorage,
+  CreatedByEnum,
   getEditingStepStorageValues,
   handleEditLocalDatas,
   returnAllParams,
@@ -44,6 +45,10 @@ export const OrgUnconfirmedPage: FC = () => {
     ...returnAllParams(),
   });
   const [checkOrganization] = useCheckOrganizationMutation();
+  const params = returnAllParams();
+  const [createdBy, setCreatedBy] = useState<CreatedByEnum>(
+    (params.createdBy as CreatedByEnum) || CreatedByEnum.All,
+  );
 
   const handleCheckOrganization = (
     id: number,
@@ -69,7 +74,7 @@ export const OrgUnconfirmedPage: FC = () => {
     const { editingId, firstStepData } = getEditingStepStorageValues();
 
     if (editingId && Number(record.id) !== Number(editingId)) {
-      Swal.fire({
+      AntDesignSwal.fire({
         icon: "warning",
         title: t("oops"),
         text: `${t("you-were-editing")} ${firstStepData?.name}, ${t(
@@ -103,7 +108,7 @@ export const OrgUnconfirmedPage: FC = () => {
   };
 
   const handleReject = async (id: number) => {
-    const result = await Swal.fire({
+    const result = await AntDesignSwal.fire({
       input: "textarea",
       inputLabel: t("reject-reason"),
       inputPlaceholder: t("tell-about-reason"),
@@ -169,18 +174,64 @@ export const OrgUnconfirmedPage: FC = () => {
   ];
 
   const handleSearch = ({ search }: { search: string }) => {
-    const prevParams = returnAllParams();
     setSearchParams({
-      ...prevParams,
-      search,
+      ...params,
+      search: search || "",
+      createdBy: String(createdBy),
     });
+  };
+
+  const handleReset = () => {
+    const prevParams = returnAllParams();
+    delete prevParams.search;
+    delete prevParams.createdBy;
+    setCreatedBy(CreatedByEnum.All);
+    setSearchParams(prevParams);
   };
 
   return (
     <>
       <h2>{t("unconfirmed")}</h2>
       <Flex vertical gap={16}>
-        <BasicSearchPartUI handleSearch={handleSearch} />
+        <BasicSearchPartUI
+          handleSearch={handleSearch}
+          handleReset={handleReset}
+          hasFilterByStatus={false}
+          additionalSearch={
+            <Flex align="center" gap={8} flex={0.3}>
+              <label htmlFor="createdBy">{t("createdBy")}</label>
+              <Select
+                value={createdBy}
+                style={{ width: "100%" }}
+                onSelect={(value) => setCreatedBy(value)}
+                options={[
+                  {
+                    id: 0,
+                    label: t("all"),
+                    value: CreatedByEnum.All,
+                  },
+                  {
+                    id: 1,
+                    label: t("billing"),
+                    value: CreatedByEnum.Billing,
+                  },
+                  {
+                    id: 2,
+                    label: t("client"),
+                    value: CreatedByEnum.Client,
+                  },
+                  {
+                    id: 3,
+                    label: t("operator"),
+                    value: CreatedByEnum.Operator,
+                  },
+                ]}
+                placeholder={t("createdBy")}
+                allowClear
+              />
+            </Flex>
+          }
+        />
         <Table
           loading={isLoading}
           columns={columns}

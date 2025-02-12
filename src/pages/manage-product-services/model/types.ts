@@ -2,10 +2,12 @@ export enum ProductServicesEnum {
   productPage = "products-page",
   productLimit = "products-limit",
   productSearch = "products-search",
+  productStatus = "products-status",
   productId = "product-id",
   servicePage = "service-page",
   serviceLimit = "service-limit",
   serviceSearch = "service-search",
+  serviceStatus = "service-status",
 }
 
 export type editProductType = {

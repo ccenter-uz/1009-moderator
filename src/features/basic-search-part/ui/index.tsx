@@ -1,15 +1,27 @@
-import { Button, Flex, Form, Input } from "antd";
+import { Button, Flex, Form, Input, Select } from "antd";
 import { AnyObject } from "antd/es/_util/type";
-import { FC, useEffect } from "react";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaSearch } from "react-icons/fa";
 import { MdClear } from "react-icons/md";
 import { useSearchParams } from "react-router-dom";
 
-import { returnAllParams } from "@shared/lib/helpers";
+import { returnAllParams, STATUS } from "@shared/lib/helpers";
 
 type Props = {
-  handleSearch: ({ search }: { search: string }) => void;
+  handleSearch: ({
+    search,
+    status,
+    nearbyCategoryId,
+  }: {
+    search: string;
+    status: number;
+    nearbyCategoryId: string | number;
+  }) => void;
+  status?: number;
+  isFilterByStatusRequired?: boolean;
+  handleReset: Dispatch<SetStateAction<string | number | undefined>>;
+  hasFilterByStatus?: boolean;
   loading?: boolean;
   additionalSearch?: JSX.Element;
   id?: string;
@@ -20,6 +32,9 @@ type Props = {
 export const BasicSearchPartUI: FC<Props> = (props) => {
   const {
     handleSearch,
+    handleReset: handleResetFromProps,
+    status: statusFromProps,
+    hasFilterByStatus = true,
     loading,
     additionalSearch,
     id = "basic-search",
@@ -30,9 +45,16 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
 
+  const [initialStatusValue, setInitialStatusValue] = useState(
+    statusFromProps !== undefined && statusFromProps >= 0
+      ? statusFromProps
+      : STATUS.ACTIVE,
+  );
+
   const handleReset = () => {
+    handleResetFromProps?.(new Date().getTime());
     form.resetFields();
-    handleSearch({ search: "" });
+    setInitialStatusValue(STATUS.ACTIVE);
   };
 
   useEffect(() => {
@@ -50,11 +72,53 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
+  useEffect(() => {
+    if (statusFromProps !== undefined && !isNaN(statusFromProps)) {
+      setInitialStatusValue(statusFromProps);
+      form.setFieldsValue({ status: statusFromProps });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [statusFromProps]);
+
   return (
     <Form form={form} id={id} onFinish={handleSearch}>
-      <Flex gap={8} align="center" wrap="wrap">
+      <Flex gap={8}>
         {additionalSearch}
-        <Form.Item name="search" style={{ marginBottom: 0, flex: 1 }}>
+        {hasFilterByStatus && (
+          <Form.Item
+            name={"status"}
+            label={t("status")}
+            style={{ flex: 0.3, width: "max-content" }}
+            initialValue={initialStatusValue}
+          >
+            <Select
+              options={[
+                {
+                  id: 0,
+                  label: t("all"),
+                  value: STATUS.ALL,
+                },
+                {
+                  id: 1,
+                  label: t("active"),
+                  value: STATUS.ACTIVE,
+                },
+                {
+                  id: 2,
+                  label: t("inactive"),
+                  value: STATUS.INACTIVE,
+                },
+              ]}
+              placeholder={t("status")}
+              allowClear
+            />
+          </Form.Item>
+        )}
+        <Form.Item
+          name="search"
+          style={{ marginBottom: 0, flex: 1 }}
+          label={t("search")}
+        >
           <Input
             type="text"
             placeholder={t("search")}

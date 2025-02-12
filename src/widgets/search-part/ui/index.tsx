@@ -1,6 +1,6 @@
 import { Button, Col, Divider, Flex, Form, Row } from "antd";
 import { AnyObject } from "antd/es/_util/type";
-import { FC, SetStateAction, Dispatch } from "react";
+import { FC, SetStateAction, Dispatch, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { PersonalSearchPartUI } from "@widgets/personal-search-part";
@@ -18,6 +18,8 @@ export const SearchPartUI: FC<Props> = (props) => {
   const { setSearchValues, searchTableRef } = props;
   const { t } = useTranslation();
   const [form] = Form.useForm();
+  const [regionId, setRegionId] = useState<number | null>(null);
+  const [cityId, setCityId] = useState<number | null>(null);
 
   const onSubmit = (values: AnyObject) => {
     setSearchValues(values);
@@ -25,21 +27,48 @@ export const SearchPartUI: FC<Props> = (props) => {
     searchTableRef?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const onValueChange = (
+    _: unknown,
+    allValues: {
+      regionId: number;
+      cityId: number;
+    },
+  ) => {
+    const { regionId, cityId } = allValues;
+    setRegionId(regionId);
+    setCityId(cityId);
+  };
+
   const onCancel = () => {
     setSearchValues(null);
+    setRegionId(null);
+    setCityId(null);
     form.resetFields();
   };
 
   return (
-    <Form form={form} id="search-part" onFinish={onSubmit}>
-      <CategorySubcategorySelect form={form} />
+    <Form
+      form={form}
+      id="search-part"
+      onFinish={onSubmit}
+      onValuesChange={onValueChange}
+    >
+      <CategorySubcategorySelect
+        form={form}
+        regionId={regionId}
+        cityId={cityId}
+      />
       <Divider />
       <Row gutter={24}>
         <Col span={8}>
           <PersonalSearchPartUI form={form} />
         </Col>
         <Col span={8}>
-          <AddressSearchPartUI form={form} />
+          <AddressSearchPartUI
+            form={form}
+            regionId={regionId}
+            cityId={cityId}
+          />
         </Col>
         <Col span={8}>
           <ContactSearchPartUI />

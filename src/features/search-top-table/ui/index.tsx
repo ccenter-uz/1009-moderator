@@ -6,7 +6,6 @@ import { FC, useState } from "react";
 import { FaEnvelope, FaPencilAlt } from "react-icons/fa";
 import { MdRestore } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
 
 import { DeleteTableItemUI } from "@features/delete-table-item";
 
@@ -16,13 +15,15 @@ import {
 } from "@entities/organization";
 
 import {
+  AntDesignSwal,
   clearEditStepStorage,
   getEditingStepStorageValues,
   handleEditLocalDatas,
   phoneColumns,
   setColorByStatus,
   setLocalStorage,
-  status,
+  statusForOrgs,
+  statusType,
   STEPS_EDIT_DATA,
   STEPS_ENUM,
 } from "@shared/lib/helpers";
@@ -54,7 +55,7 @@ export const SearchTopTable: FC<Props> = (props) => {
     const { editingId, firstStepData } = getEditingStepStorageValues();
 
     if (editingId && Number(record.id) !== Number(editingId)) {
-      Swal.fire({
+      AntDesignSwal.fire({
         icon: "warning",
         title: t("oops"),
         text: `${t("you-were-editing")} ${firstStepData?.name}, ${t(
@@ -88,7 +89,7 @@ export const SearchTopTable: FC<Props> = (props) => {
   };
 
   const handleDelete = async (id: number) => {
-    const result = await Swal.fire({
+    const result = await AntDesignSwal.fire({
       input: "textarea",
       inputLabel: t("delete-reason"),
       inputPlaceholder: t("tell-about-reason"),
@@ -108,7 +109,7 @@ export const SearchTopTable: FC<Props> = (props) => {
     }
   };
 
-  const columns: ColumnsType<AnyObject> = [
+  const columns: ColumnsType = [
     {
       title: t("code"),
       dataIndex: "inn",
@@ -150,7 +151,7 @@ export const SearchTopTable: FC<Props> = (props) => {
       title: t("status"),
       dataIndex: "status",
       key: "status",
-      render: (text: number) => setColorByStatus(status[text]),
+      render: (text: statusType) => setColorByStatus(statusForOrgs[text]),
     },
     {
       width: 80,

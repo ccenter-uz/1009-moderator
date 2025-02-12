@@ -3,9 +3,12 @@ export enum CategorySubCategoryEnums {
   categoryLimit = "category-limit",
   categorySearch = "category-search",
   categoryId = "category-id",
+  categoryStatus = "category-status",
+
   subCategoryPage = "subCategory-page",
   subCategoryLimit = "subCategory-limit",
   subCategorySearch = "subCategory-search",
+  subCategoryStatus = "sub-category-status",
   regionId = "region_id",
   cityId = "city_id",
 }
