@@ -6,25 +6,21 @@ import { FaSearch } from "react-icons/fa";
 import { MdClear } from "react-icons/md";
 import { useSearchParams } from "react-router-dom";
 
-import { CreatedByEnum, returnAllParams, STATUS } from "@shared/lib/helpers";
+import { returnAllParams, STATUS } from "@shared/lib/helpers";
 
 type Props = {
   handleSearch: ({
     search,
     status,
-    createdBy,
     nearbyCategoryId,
   }: {
     search: string;
     status: number;
-    createdBy: string;
     nearbyCategoryId: string | number;
   }) => void;
-  handleReset?: Dispatch<SetStateAction<string | number | undefined>>;
   status?: number;
   isFilterByStatusRequired?: boolean;
   handleReset: Dispatch<SetStateAction<string | number | undefined>>;
-  status?: number;
   hasFilterByStatus?: boolean;
   loading?: boolean;
   additionalSearch?: JSX.Element;
@@ -48,23 +44,17 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
   const [form] = Form.useForm();
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
-  const { createdBy } = returnAllParams();
 
   const [initialStatusValue, setInitialStatusValue] = useState(
-    statusFromProps && statusFromProps >= 0 ? statusFromProps : STATUS.ACTIVE,
     statusFromProps !== undefined && statusFromProps >= 0
       ? statusFromProps
       : STATUS.ACTIVE,
   );
-  const [initialCreatedByValue, setInitialCreatedByValue] = useState<string>(
-    createdBy || CreatedByEnum.All,
-  );
 
   const handleReset = () => {
     handleResetFromProps?.(new Date().getTime());
-    setInitialStatusValue(STATUS.ACTIVE);
-    setInitialCreatedByValue(CreatedByEnum.All);
     form.resetFields();
+    setInitialStatusValue(STATUS.ACTIVE);
   };
 
   useEffect(() => {
@@ -94,11 +84,11 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
     <Form form={form} id={id} onFinish={handleSearch}>
       <Flex gap={8}>
         {additionalSearch}
-        {hasFilterByStatus ? (
+        {hasFilterByStatus && (
           <Form.Item
             name={"status"}
             label={t("status")}
-            style={{ flex: 0.2 }}
+            style={{ flex: 0.3, width: "max-content" }}
             initialValue={initialStatusValue}
           >
             <Select
@@ -120,40 +110,6 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
                 },
               ]}
               placeholder={t("status")}
-              allowClear
-            />
-          </Form.Item>
-        ) : (
-          <Form.Item
-            name={"createdBy"}
-            label={t("createdBy")}
-            style={{ flex: 0.2 }}
-          >
-            <Select
-              defaultValue={initialCreatedByValue}
-              options={[
-                {
-                  id: 0,
-                  label: t("all"),
-                  value: CreatedByEnum.All,
-                },
-                {
-                  id: 1,
-                  label: t("billing"),
-                  value: CreatedByEnum.Billing,
-                },
-                {
-                  id: 2,
-                  label: t("client"),
-                  value: CreatedByEnum.Client,
-                },
-                {
-                  id: 3,
-                  label: t("operator"),
-                  value: CreatedByEnum.Operator,
-                },
-              ]}
-              placeholder={t("createdBy")}
               allowClear
             />
           </Form.Item>

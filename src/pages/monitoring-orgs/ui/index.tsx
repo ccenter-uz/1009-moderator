@@ -186,7 +186,7 @@ export const MonitoringOrgsUI: FC = () => {
             }
             handleSearch={onSearch}
             handleReset={handleReset}
-            isFilterByStatusRequired={false}
+            hasFilterByStatus={false}
           />
         }
         columns={columns}

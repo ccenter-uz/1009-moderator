@@ -1,6 +1,6 @@
-import { Button, Flex, Table, Tooltip } from "antd";
+import { Button, Flex, Select, Table, Tooltip } from "antd";
 import { AnyObject } from "antd/es/_util/type";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaCheck, FaPen } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
@@ -46,9 +46,9 @@ export const OrgUnconfirmedPage: FC = () => {
   });
   const [checkOrganization] = useCheckOrganizationMutation();
   const params = returnAllParams();
-  const [isFilterReset, setIsFilterReset] = useState<
-    string | number | undefined
-  >();
+  const [createdBy, setCreatedBy] = useState<CreatedByEnum>(
+    (params.createdBy as CreatedByEnum) || CreatedByEnum.All,
+  );
 
   const handleCheckOrganization = (
     id: number,
@@ -123,17 +123,6 @@ export const OrgUnconfirmedPage: FC = () => {
     }
   };
 
-  useEffect(() => {
-    if (isFilterReset) {
-      setSearchParams({
-        ...params,
-        createdBy: CreatedByEnum.All,
-        search: "",
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFilterReset]);
-
   const columns = [
     ...unconfirmedTableColumns,
     {
@@ -184,24 +173,21 @@ export const OrgUnconfirmedPage: FC = () => {
     },
   ];
 
-  const handleSearch = ({
-    search,
-    createdBy = CreatedByEnum.All,
-  }: {
-    search: string;
-    createdBy: string;
-  }) => {
-    const inputValue = search || "";
-
-    if (inputValue || inputValue === "") {
-      setSearchParams({
-        ...params,
-        search: inputValue.trim(),
-        createdBy,
-      });
-    }
+  const handleSearch = ({ search }: { search: string }) => {
+    setSearchParams({
+      ...params,
+      search: search || "",
+      createdBy: String(createdBy),
+    });
   };
-  console.log(data?.data);
+
+  const handleReset = () => {
+    const prevParams = returnAllParams();
+    delete prevParams.search;
+    delete prevParams.createdBy;
+    setCreatedBy(CreatedByEnum.All);
+    setSearchParams(prevParams);
+  };
 
   return (
     <>
@@ -209,8 +195,42 @@ export const OrgUnconfirmedPage: FC = () => {
       <Flex vertical gap={16}>
         <BasicSearchPartUI
           handleSearch={handleSearch}
-          handleReset={setIsFilterReset}
+          handleReset={handleReset}
           hasFilterByStatus={false}
+          additionalSearch={
+            <Flex align="center" gap={8} flex={0.3}>
+              <label htmlFor="createdBy">{t("createdBy")}</label>
+              <Select
+                value={createdBy}
+                style={{ width: "100%" }}
+                onSelect={(value) => setCreatedBy(value)}
+                options={[
+                  {
+                    id: 0,
+                    label: t("all"),
+                    value: CreatedByEnum.All,
+                  },
+                  {
+                    id: 1,
+                    label: t("billing"),
+                    value: CreatedByEnum.Billing,
+                  },
+                  {
+                    id: 2,
+                    label: t("client"),
+                    value: CreatedByEnum.Client,
+                  },
+                  {
+                    id: 3,
+                    label: t("operator"),
+                    value: CreatedByEnum.Operator,
+                  },
+                ]}
+                placeholder={t("createdBy")}
+                allowClear
+              />
+            </Flex>
+          }
         />
         <Table
           loading={isLoading}
