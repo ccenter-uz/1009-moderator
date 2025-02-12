@@ -38,6 +38,8 @@ interface ImanagePhoneTypeValues {
   name: { ru: string; uz: string; cy: string };
   id: number;
   status?: number;
+  orderNumber?: number;
+  order_number?: number;
 }
 
 export const ManagePhoneTypesPage: FC = () => {
@@ -67,6 +69,7 @@ export const ManagePhoneTypesPage: FC = () => {
       name_uz: values.name.uz,
       name_uzcyrill: values.name.cy,
       id: editingData?.id,
+      orderNumber: values.order_number,
     };
     setEditingData({ ...values, id: values.id });
     form.setFieldsValue(editingBody);
@@ -103,6 +106,7 @@ export const ManagePhoneTypesPage: FC = () => {
         uz: values.name_uz,
         cy: values.name_uzcyrill,
       },
+      orderNumber: Number(values.orderNumber),
       id: editingData?.id,
     };
 

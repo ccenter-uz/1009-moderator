@@ -117,8 +117,8 @@ export const columnsForAddress = [
   },
   {
     title: i18next.t("employee"),
-    dataIndex: "staffNumber",
-    key: "staffNumber",
+    dataIndex: "staff_number",
+    key: "staff_number",
   },
 ];
 
@@ -218,8 +218,8 @@ export const columnsForPhoneTypeTable = [
   },
   {
     title: i18next.t("employee"),
-    dataIndex: "staffNumber",
-    key: "staffNumber",
+    dataIndex: "staff_number",
+    key: "staff_number",
   },
 ];
 
@@ -264,8 +264,8 @@ export const columnsWithRegions = [
   },
   {
     title: i18next.t("employee"),
-    dataIndex: "staffNumber",
-    key: "staffNumber",
+    dataIndex: "staff_number",
+    key: "staff_number",
   },
 ];
 
@@ -325,8 +325,8 @@ export const columnsWithAddressAndNamings = [
   },
   {
     title: i18next.t("employee"),
-    dataIndex: "staffNumber",
-    key: "staffNumber",
+    dataIndex: "staff_number",
+    key: "staff_number",
   },
 ];
 
@@ -377,8 +377,8 @@ export const columnsForCategories = [
   },
   {
     title: i18next.t("employee"),
-    dataIndex: "staffNumber",
-    key: "staffNumber",
+    dataIndex: "staff_number",
+    key: "staff_number",
   },
 ];
 export const columnsForCategoriesTu = [
@@ -414,8 +414,8 @@ export const columnsForCategoriesTu = [
   },
   {
     title: i18next.t("employee"),
-    dataIndex: "staffNumber",
-    key: "staffNumber",
+    dataIndex: "staff_number",
+    key: "staff_number",
   },
 ];
 
@@ -670,8 +670,8 @@ export const unconfirmedTableColumns = [
 
   {
     title: i18next.t("employee"),
-    dataIndex: "staffNumber",
-    key: "staffNumber",
+    dataIndex: "staff_number",
+    key: "staff_number",
   },
   {
     title: i18next.t("type"),

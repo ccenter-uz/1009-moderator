@@ -255,5 +255,16 @@
   "password-must-include-one-special-character": "Пароль должен содержать 1 специальный символ",
   "password-must-include-one-digit": "Пароль должен содержать 1 цифру",
   "password-must-include-one-uppercase": "Пароль должен содержать 1 заглавную букву",
+  "createdBy": "Создано",
+  "billing": "Биллинг",
+  "client": "Клиент",
+  "operator": "Оператор",
+  "waitings": "Ожидающие",
+  "organization-waitings": "Организации ожидающие",
+  "accepted": "Актив",
+  "rejected": "Отклонено",
+  "check": "В процессе",
+  "rejectReason": "Причина отказа",
+  "deleteReason": "Причина удаления",
   "order-number": "Очередной номер"
 }

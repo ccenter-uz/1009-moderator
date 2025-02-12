@@ -129,11 +129,7 @@ export const ModalAddEdit: FC<Props> = (props) => {
           </div>
         </div>
       )}
-      <Form.Item
-        name="order-number"
-        label={t("order-number")}
-        layout="vertical"
-      >
+      <Form.Item name="orderNumber" label={t("order-number")} layout="vertical">
         <Input type="number" placeholder={t("order-number")} />
       </Form.Item>
     </Modal>

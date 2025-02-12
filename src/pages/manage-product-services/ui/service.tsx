@@ -69,6 +69,7 @@ export const Service: FC = () => {
       name_uz: values.name.uz,
       name_ru: values.name.ru,
       name_uzcyrill: values.name.cy,
+      orderNumber: values.order_number,
     });
     onOpen();
   };
@@ -100,6 +101,7 @@ export const Service: FC = () => {
         uz: serviceData.name_uz,
         cy: serviceData.name_uzcyrill,
       },
+      orderNumber: Number(serviceData.orderNumber),
     };
 
     const request =

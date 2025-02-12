@@ -69,6 +69,7 @@ export const SubCategory: FC = () => {
       name_uz: values.name.uz,
       name_ru: values.name.ru,
       name_uzcyrill: values.name.cy,
+      orderNumber: values.order_number,
     });
     onOpen();
   };
@@ -92,6 +93,7 @@ export const SubCategory: FC = () => {
 
   const handleSubmit = async (serviceData: ItableBasicData) => {
     const serviceBody = {
+      orderNumber: Number(serviceData.orderNumber),
       name: {
         ru: serviceData.name_ru,
         uz: serviceData.name_uz,

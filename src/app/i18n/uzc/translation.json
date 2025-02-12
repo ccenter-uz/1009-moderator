@@ -216,5 +216,7 @@
   "not-allowed": "Не разрешено",
   "confirm": "Подтвердить",
   "reject": "Отклонить",
+  "createdBy": "Создано",
+  "operator": "Оператор",
   "order-number": "Очередной номер"
 }

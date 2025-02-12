@@ -20,6 +20,8 @@ export type editProductType = {
   staffNumber: string;
   status: string | number;
   key?: string | number;
+  orderNumber?: number;
+  order_number?: number;
 };
 
 export type editServiceType = editProductType;
