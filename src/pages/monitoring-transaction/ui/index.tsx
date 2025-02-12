@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, SetStateAction } from "react";
 import { useTranslation } from "react-i18next";
 
 import { BasicSearchPartUI } from "@features/basic-search-part";

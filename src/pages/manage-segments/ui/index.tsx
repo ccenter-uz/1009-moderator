@@ -129,6 +129,7 @@ export const ManageSegmentsPage = () => {
         record: ItableBasicData & {
           status: number;
           name: { uz: string; ru: string; cy: string };
+          orderNumber: number;
         },
       ) => {
         if (record.status === STATUS.ACTIVE) {

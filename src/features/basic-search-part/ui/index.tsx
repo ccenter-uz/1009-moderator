@@ -20,7 +20,7 @@ type Props = {
   }) => void;
   status?: number;
   isFilterByStatusRequired?: boolean;
-  handleReset: Dispatch<SetStateAction<string | number | undefined>>;
+  handleReset?: Dispatch<SetStateAction<string | number | undefined>>;
   hasFilterByStatus?: boolean;
   loading?: boolean;
   additionalSearch?: JSX.Element;
