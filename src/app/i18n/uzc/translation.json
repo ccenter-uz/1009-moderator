@@ -217,5 +217,6 @@
   "confirm": "Подтвердить",
   "reject": "Отклонить",
   "createdBy": "Создано",
-  "operator": "Оператор"
+  "operator": "Оператор",
+  "order-number": "Очередной номер"
 }

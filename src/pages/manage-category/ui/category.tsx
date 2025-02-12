@@ -90,6 +90,7 @@ export const Category: FC = () => {
       name_uzcyrill: values.name.cy,
       region: values.region?.id,
       city: values.city?.id,
+      orderNumber: values.order_number,
     });
     onOpen();
   };
@@ -145,11 +146,16 @@ export const Category: FC = () => {
   };
 
   const handleSubmit = async (
-    values: ItableBasicData & { region: number; city: number },
+    values: ItableBasicData & {
+      region: number;
+      city: number;
+      orderNumber: number;
+    },
   ) => {
     const body = {
       regionId: values.region,
       cityId: values.city,
+      orderNumber: Number(values.orderNumber),
       name: {
         ru: values.name_ru,
         uz: values.name_uz,

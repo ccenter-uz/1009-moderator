@@ -50,9 +50,13 @@ interface valueProps {
   status?: number;
   regionId?: string;
   cityId?: string;
+  region_id?: string;
+  city_id?: string;
   name: { uz: string; ru: string; cy: string };
   oldName: { uz: string; ru: string; cy: string };
   newName: { uz: string; ru: string; cy: string };
+  orderNumber?: number;
+  order_number?: number;
 }
 
 export const ManageDistrictPage: FC = () => {
@@ -81,8 +85,8 @@ export const ManageDistrictPage: FC = () => {
     const editingBody = {
       id: values.id,
       index: values.index,
-      region: values.regionId,
-      city: values.cityId,
+      region: values.region_id,
+      city: values.city_id,
       name_uz: values.name.uz,
       name_ru: values.name.ru,
       name_uzcyrill: values.name.cy,
@@ -92,6 +96,7 @@ export const ManageDistrictPage: FC = () => {
       new_name_uz: values.newName.uz,
       new_name_ru: values.newName.ru,
       new_name_cyrill: values.newName.cy,
+      orderNumber: values.order_number,
     };
     setEditingData({ ...values, id: values.id });
     form.setFieldsValue(editingBody);
@@ -127,6 +132,7 @@ export const ManageDistrictPage: FC = () => {
       regionId: values.region,
       cityId: values.city,
       index: values.index,
+      orderNumber: Number(values.orderNumber),
       name: {
         uz: values.name_uz,
         ru: values.name_ru,

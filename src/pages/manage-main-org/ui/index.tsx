@@ -86,6 +86,7 @@ export const ManageMainOrgPage: FC = () => {
   const handleSubmit = async (values: ItableBasicData) => {
     const body = {
       ...values,
+      orderNumber: Number(values.orderNumber),
       id: editingData?.id,
     };
     const request = editingData ? updateMainOrg : createMainOrg;
