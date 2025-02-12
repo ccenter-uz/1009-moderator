@@ -13,6 +13,8 @@ import { AddressThreeSearchPartUI } from "./address";
 
 type Props = {
   form: FormInstance;
+  regionId: number | null;
+  cityId: number | null;
 };
 
 const columns = [
@@ -25,7 +27,7 @@ const columns = [
 ];
 
 export const AddressSearchPartUI: FC<Props> = (props) => {
-  const { form } = props;
+  const { form, regionId, cityId } = props;
   const {
     isOpen: isOpenVillage,
     onOpen: onOpenVillage,
@@ -68,18 +70,37 @@ export const AddressSearchPartUI: FC<Props> = (props) => {
   const [searchValueStreet, setSearchValueStreet] = useState("");
 
   useEffect(() => {
-    if (isOpenVillage) {
+    if ((isOpenVillage && cityId) || (isOpenVillage && regionId)) {
+      triggerVillage({
+        regionId,
+        cityId,
+        page: villagePagination.page,
+        limit: villagePagination.limit,
+        search: searchValueVillage,
+      });
+    }
+    if (!regionId && !cityId && isOpenVillage) {
       triggerVillage({
         page: villagePagination.page,
         limit: villagePagination.limit,
         search: searchValueVillage,
       });
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [villagePagination, searchValueVillage, isOpenVillage]);
 
   useEffect(() => {
-    if (isOpenNearby) {
+    if ((isOpenNearby && cityId) || (isOpenNearby && regionId)) {
+      triggerNearby({
+        regionId,
+        cityId,
+        page: nearbyPagination.page,
+        limit: nearbyPagination.limit,
+        search: searchValueNearby,
+      });
+    }
+    if (!regionId && !cityId && isOpenNearby) {
       triggerNearby({
         page: nearbyPagination.page,
         limit: nearbyPagination.limit,
@@ -90,7 +111,16 @@ export const AddressSearchPartUI: FC<Props> = (props) => {
   }, [nearbyPagination, searchValueNearby, isOpenNearby]);
 
   useEffect(() => {
-    if (isOpenStreet) {
+    if ((isOpenStreet && cityId) || (isOpenStreet && regionId)) {
+      triggerStreet({
+        regionId,
+        cityId,
+        page: streetPagination.page,
+        limit: streetPagination.limit,
+        search: searchValueStreet,
+      });
+    }
+    if (!regionId && !cityId && isOpenStreet) {
       triggerStreet({
         page: streetPagination.page,
         limit: streetPagination.limit,

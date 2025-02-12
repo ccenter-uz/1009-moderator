@@ -20,15 +20,18 @@ import {
   useLazyGetNearbyQuery,
 } from "@entities/nearby";
 
-import { allActives } from "@shared/lib/helpers";
+import { allActives, getLocalStorage } from "@shared/lib/helpers";
 
 type Props = {
   data: AnyObject[];
   setData: any;
+  type?: "edit";
 };
 
 export const TableOrientirUI: FC<Props> = (props) => {
-  const { data, setData } = props;
+  const { data, setData, type } = props;
+  const localGetDataName =
+    type === "edit" ? "firstStepDataEdit" : "firstStepData";
   const dispatch = useDispatch();
   const { data: nearbyCategoryOptions, isLoading: isLoadingNearbyCategory } =
     useGetNearbyCategoryQuery(allActives);
@@ -79,7 +82,7 @@ export const TableOrientirUI: FC<Props> = (props) => {
   ];
 
   const onDelete = async (id: string | number) => {
-    const newData = data.filter((item: AnyObject) => item.colId !== id);
+    const newData = data.filter((item) => item.colId !== id);
     dispatch(setData(newData));
   };
 
@@ -109,6 +112,8 @@ export const TableOrientirUI: FC<Props> = (props) => {
     ]);
 
     triggerNearby({
+      regionId: getLocalStorage(localGetDataName)?.regionId,
+      cityId: getLocalStorage(localGetDataName)?.cityId,
       nearbyCategoryId: value,
       ...allActives,
     });

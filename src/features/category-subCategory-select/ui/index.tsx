@@ -13,6 +13,8 @@ import { SearchModal } from "@shared/ui/search-modal";
 
 type Props = {
   form: FormInstance;
+  regionId: number | null;
+  cityId: number | null;
 };
 
 type SelectedDataTypes = {
@@ -30,8 +32,12 @@ const columns = [
 ];
 
 export const CategorySubcategorySelect: FC<Props> = (props) => {
-  const { form } = props;
-  const { isOpen, onOpen: openCategoryModal, onClose } = useDisclosure();
+  const { form, regionId, cityId } = props;
+  const {
+    isOpen: categoryIsOpen,
+    onOpen: openCategoryModal,
+    onClose,
+  } = useDisclosure();
   const {
     isOpen: subCategoryIsOpen,
     onOpen: openSubCategoryModal,
@@ -76,17 +82,38 @@ export const CategorySubcategorySelect: FC<Props> = (props) => {
   };
 
   useEffect(() => {
-    triggerCategory({
-      status: GET_ALL_ACTIVE_STATUS.active,
-      page: categoryPagination.page,
-      limit: categoryPagination.limit,
-      search: categorySearchValue,
-    });
+    if (
+      (categoryIsOpen && regionId) ||
+      (categoryIsOpen && cityId && regionId)
+    ) {
+      triggerCategory({
+        regionId,
+        cityId,
+        status: GET_ALL_ACTIVE_STATUS.active,
+        page: categoryPagination.page,
+        limit: categoryPagination.limit,
+        search: categorySearchValue,
+      });
+    }
+    if (!cityId && !regionId && categoryIsOpen) {
+      triggerCategory({
+        status: GET_ALL_ACTIVE_STATUS.active,
+        page: categoryPagination.page,
+        limit: categoryPagination.limit,
+        search: categorySearchValue,
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [categorySearchValue, categoryPagination]);
+  }, [
+    categoryIsOpen,
+    categorySearchValue,
+    categoryPagination,
+    regionId,
+    cityId,
+  ]);
 
   useEffect(() => {
-    if (selectedDataCategory) {
+    if (subCategoryIsOpen && selectedDataCategory) {
       triggerSubCategory({
         status: GET_ALL_ACTIVE_STATUS.active,
         page: subCategoryPagination.page,
@@ -96,7 +123,12 @@ export const CategorySubcategorySelect: FC<Props> = (props) => {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [subCategorySearchValue, subCategoryPagination, selectedDataCategory]);
+  }, [
+    subCategoryIsOpen,
+    subCategorySearchValue,
+    subCategoryPagination,
+    selectedDataCategory,
+  ]);
 
   useEffect(() => {
     form.setFieldsValue({
@@ -116,6 +148,7 @@ export const CategorySubcategorySelect: FC<Props> = (props) => {
           style={{ marginBottom: 10 }}
         >
           <Select
+            disabled={!regionId}
             allowClear
             onClear={handleClickCategorySelect}
             dropdownStyle={{ display: "none" }}
@@ -134,7 +167,7 @@ export const CategorySubcategorySelect: FC<Props> = (props) => {
           <Select
             allowClear
             onClear={() => setSelectedDataSubCategory(null)}
-            disabled={!selectedDataCategory}
+            disabled={!selectedDataCategory || !regionId}
             dropdownStyle={{ display: "none" }}
             onClick={() => selectedDataCategory && openSubCategoryModal()}
             value={selectedDataSubCategory?.id}
@@ -150,7 +183,7 @@ export const CategorySubcategorySelect: FC<Props> = (props) => {
         setSearchValue={setCategorySearchValue}
         data={categoryData?.data || []}
         columns={columns}
-        isOpen={isOpen}
+        isOpen={categoryIsOpen}
         onClose={onClose}
         title={t("category")}
         handleClickRow={handleClickCategoryRow}

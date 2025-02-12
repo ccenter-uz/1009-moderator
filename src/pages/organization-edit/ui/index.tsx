@@ -30,6 +30,7 @@ import {
   getDayOffsCheckbox,
   getEditingStepStorageValues,
   notificationResponse,
+  omitUndefinedValues,
   removeLocalStorage,
   SEND_BODY,
   setDatyOffsCheckbox,
@@ -37,7 +38,7 @@ import {
   STEPS_EDIT_DATA,
   STEPS_ENUM,
 } from "@shared/lib/helpers";
-import { RootState } from "@shared/types";
+import { IOrganizationBody, RootState } from "@shared/types";
 
 // STYLE
 const contentStyle: CSSProperties = {
@@ -46,7 +47,7 @@ const contentStyle: CSSProperties = {
 
 export const OrgEditPage: FC = () => {
   const { t } = useTranslation();
-  const { id } = useParams();
+  const { id } = useParams<string>();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [updateOrganization, { isLoading }] = useUpdateOrganizationMutation();
@@ -162,9 +163,9 @@ export const OrgEditPage: FC = () => {
   const onSubmit = async () => {
     const formData = new FormData();
 
-    const body = {
-      ...form.getFieldsValue(SEND_BODY),
-      id,
+    const body: IOrganizationBody = {
+      ...omitUndefinedValues(form.getFieldsValue(SEND_BODY)),
+      id: id as string,
       paymentTypes: {
         cash: form.getFieldValue("cash"),
         terminal: form.getFieldValue("terminal"),

@@ -73,7 +73,17 @@ export const AddressThreeSearchPartUI: FC<Props> = (props) => {
           <Select
             allowClear
             onClear={() => {
-              setCityDisabled(true), setDistrictDisabled(true);
+              form.resetFields([
+                "cityId",
+                "districtId",
+                "categoryId",
+                "subCategoryId",
+                "villageId",
+                "nearbyId",
+                "streetId",
+              ]),
+                setCityDisabled(true),
+                setDistrictDisabled(true);
             }}
             options={
               dataRegions?.data.map((region: AnyObject) => ({
@@ -82,7 +92,17 @@ export const AddressThreeSearchPartUI: FC<Props> = (props) => {
               })) || []
             }
             placeholder={t("region")}
-            onChange={() => form.resetFields(["cityId", "districtId"])}
+            onChange={() =>
+              form.resetFields([
+                "cityId",
+                "districtId",
+                "categoryId",
+                "subCategoryId",
+                "villageId",
+                "nearbyId",
+                "streetId",
+              ])
+            }
             onSelect={onSelectRegion}
             loading={isLoadingRegions}
           />
@@ -93,7 +113,17 @@ export const AddressThreeSearchPartUI: FC<Props> = (props) => {
           <Select
             disabled={cityDisabled}
             allowClear
-            onClear={() => setDistrictDisabled(true)}
+            onClear={() => {
+              form.resetFields([
+                "districtId",
+                "categoryId",
+                "subCategoryId",
+                "villageId",
+                "nearbyId",
+                "streetId",
+              ]),
+                setDistrictDisabled(true);
+            }}
             options={
               dataCities?.data.map((city: AnyObject) => ({
                 label: city.name[i18next.language],
@@ -101,7 +131,16 @@ export const AddressThreeSearchPartUI: FC<Props> = (props) => {
               })) || []
             }
             placeholder={t("city")}
-            onChange={() => form.resetFields(["districtId"])}
+            onChange={() =>
+              form.resetFields([
+                "districtId",
+                "categoryId",
+                "subCategoryId",
+                "villageId",
+                "nearbyId",
+                "streetId",
+              ])
+            }
             onSelect={onSelectCity}
             loading={isLoadingCities}
           />

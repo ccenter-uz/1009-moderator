@@ -16,7 +16,11 @@ import { useGetResidentialAreasQuery } from "@entities/residential-area";
 import { useGetStreetsQuery } from "@entities/street";
 import { useGetVillagesQuery } from "@entities/village";
 
-import { allActives, renderLabelSelect } from "@shared/lib/helpers";
+import {
+  allActives,
+  getLocalStorage,
+  renderLabelSelect,
+} from "@shared/lib/helpers";
 import { RootState } from "@shared/types";
 import { ParagraphBold } from "@shared/ui/paragraph-bold";
 
@@ -24,25 +28,34 @@ import { setData } from "../model/Slicer";
 
 export const OrgEditSecondStepUI: FC = () => {
   const { t } = useTranslation();
+  const getDataWithRegionCityParams = {
+    ...allActives,
+    regionId: getLocalStorage("firstStepDataEdit")?.regionId,
+    cityId: getLocalStorage("firstStepDataEdit")?.cityId,
+  };
   const { data } = useSelector(
     ({ useEditOrgSecondStepSlice }: RootState) => useEditOrgSecondStepSlice,
   );
   const { data: villageData, isLoading: isLoadingVillage } =
-    useGetVillagesQuery(allActives);
-  const { data: avenueData, isLoading: isLoadingAvenue } =
-    useGetAvenuesQuery(allActives);
+    useGetVillagesQuery(getDataWithRegionCityParams);
+  const { data: avenueData, isLoading: isLoadingAvenue } = useGetAvenuesQuery(
+    getDataWithRegionCityParams,
+  );
   const { data: residentialAreaData, isLoading: isLoadingResidentialArea } =
-    useGetResidentialAreasQuery(allActives);
-  const { data: areaData, isLoading: isLoadingArea } =
-    useGetAreasQuery(allActives);
-  const { data: streetData, isLoading: isLoadingStreet } =
-    useGetStreetsQuery(allActives);
-  const { data: laneData, isLoading: isLoadingLane } =
-    useGetLanesQuery(allActives);
+    useGetResidentialAreasQuery(getDataWithRegionCityParams);
+  const { data: areaData, isLoading: isLoadingArea } = useGetAreasQuery(
+    getDataWithRegionCityParams,
+  );
+  const { data: streetData, isLoading: isLoadingStreet } = useGetStreetsQuery(
+    getDataWithRegionCityParams,
+  );
+  const { data: laneData, isLoading: isLoadingLane } = useGetLanesQuery(
+    getDataWithRegionCityParams,
+  );
   const { data: impasseData, isLoading: isLoadingImpasse } =
-    useGetImpassesQuery(allActives);
+    useGetImpassesQuery(getDataWithRegionCityParams);
   const { data: passageData, isLoading: isLoadingPassage } =
-    useGetPassagesQuery(allActives);
+    useGetPassagesQuery(getDataWithRegionCityParams);
 
   return (
     <>
@@ -218,7 +231,7 @@ export const OrgEditSecondStepUI: FC = () => {
           </Form.Item>
         </Col>
       </Row>
-      <TableOrientirUI data={data} setData={setData} />
+      <TableOrientirUI data={data} setData={setData} type="edit" />
     </>
   );
 };

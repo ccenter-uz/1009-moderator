@@ -1,4 +1,4 @@
-import { notification } from "antd";
+import { FormInstance, notification } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import DOMPurify from "dompurify";
 import i18next from "i18next";
@@ -372,3 +372,9 @@ export function enableVerticalDrag(element: HTMLElement) {
 
   element.addEventListener("mousedown", handleMouseDown);
 }
+
+export const omitUndefinedValues = (obj: FormInstance) => {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([_, value]) => value !== undefined),
+  );
+};
