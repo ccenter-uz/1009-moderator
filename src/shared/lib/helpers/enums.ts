@@ -65,3 +65,10 @@ export const enum ROLES {
   MODERATOR = "moderator",
   USER = "user",
 }
+
+export const enum CreatedByEnum {
+  All = "all",
+  Billing = "billing",
+  Client = "client",
+  Operator = "operator",
+}

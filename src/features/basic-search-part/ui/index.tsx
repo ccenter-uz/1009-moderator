@@ -18,9 +18,10 @@ type Props = {
     status: number;
     nearbyCategoryId: string | number;
   }) => void;
-  handleReset?: Dispatch<SetStateAction<string | number | undefined>>;
   status?: number;
   isFilterByStatusRequired?: boolean;
+  handleReset: Dispatch<SetStateAction<string | number | undefined>>;
+  hasFilterByStatus?: boolean;
   loading?: boolean;
   additionalSearch?: JSX.Element;
   id?: string;
@@ -33,7 +34,7 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
     handleSearch,
     handleReset: handleResetFromProps,
     status: statusFromProps,
-    isFilterByStatusRequired,
+    hasFilterByStatus = true,
     loading,
     additionalSearch,
     id = "basic-search",
@@ -44,12 +45,10 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
 
-  const isStatusRequired = isFilterByStatusRequired?.toString()
-    ? isFilterByStatusRequired
-    : true;
-
   const [initialStatusValue, setInitialStatusValue] = useState(
-    statusFromProps && statusFromProps >= 0 ? statusFromProps : STATUS.ACTIVE,
+    statusFromProps !== undefined && statusFromProps >= 0
+      ? statusFromProps
+      : STATUS.ACTIVE,
   );
 
   const handleReset = () => {
@@ -85,11 +84,11 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
     <Form form={form} id={id} onFinish={handleSearch}>
       <Flex gap={8}>
         {additionalSearch}
-        {!isStatusRequired ? null : (
+        {hasFilterByStatus && (
           <Form.Item
             name={"status"}
             label={t("status")}
-            style={{ flex: 0.2 }}
+            style={{ flex: 0.3, width: "max-content" }}
             initialValue={initialStatusValue}
           >
             <Select
