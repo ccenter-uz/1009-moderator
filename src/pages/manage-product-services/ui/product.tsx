@@ -72,6 +72,7 @@ export const Product: FC = () => {
       name_uz: values.name.uz,
       name_ru: values.name.ru,
       name_uzcyrill: values.name.cy,
+      orderNumber: values.order_number,
     });
     onOpen();
   };
@@ -106,6 +107,7 @@ export const Product: FC = () => {
         uz: values.name_uz,
         cy: values.name_uzcyrill,
       },
+      orderNumber: Number(values.orderNumber),
       id: editingData?.id,
     };
     const request = editingData ? updateProduct : createProduct;

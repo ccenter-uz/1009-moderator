@@ -299,6 +299,8 @@ export const OrgAddPage: FC = () => {
       <Flex align="center" justify="end" gap={8} style={{ marginTop: 24 }}>
         <Button
           disabled={isLoading}
+          type="primary"
+          danger
           style={{ margin: "0 8px" }}
           onClick={onClearAllData}
         >

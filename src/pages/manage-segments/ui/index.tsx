@@ -55,11 +55,16 @@ export const ManageSegmentsPage = () => {
     string | number | undefined
   >();
 
-  const handleEditOpen = (values: { name: string; id: string | number }) => {
+  const handleEditOpen = (values: {
+    name: string;
+    id: string | number;
+    orderNumber: number;
+  }) => {
     setEditingData({ ...values, id: values.id });
     const body = {
       name: values.name,
       id: values.id,
+      orderNumber: values.orderNumber,
     };
     form.setFieldsValue({ ...body });
     onOpen();
@@ -89,6 +94,7 @@ export const ManageSegmentsPage = () => {
     const body = {
       name: values.name,
       id: editingData?.id,
+      orderNumber: Number(values.orderNumber),
     };
     const request = editingData ? updateSegment : createSegment;
 

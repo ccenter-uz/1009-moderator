@@ -47,8 +47,12 @@ interface valueProps {
   status?: number;
   regionId?: string;
   cityId?: string;
+  region_id?: string;
+  city_id?: string;
   name: { uz: string; ru: string; cy: string };
-  nearbyCategoryId?: string;
+  nearby_category_id?: string;
+  orderNumber?: number;
+  order_number?: number;
 }
 
 export const ManageNearbyPage: FC = () => {
@@ -86,12 +90,13 @@ export const ManageNearbyPage: FC = () => {
   const handleEditOpen = (values: valueProps) => {
     const editingBody = {
       id: values.id,
-      region: values.regionId,
-      city: values.cityId,
+      region: values.region_id,
+      city: values.city_id,
       name_uz: values.name.uz,
       name_ru: values.name.ru,
       name_uzcyrill: values.name.cy,
-      "nearby-category": values.nearbyCategoryId,
+      "nearby-category": values.nearby_category_id,
+      orderNumber: values.order_number,
     };
     setEditingData({ ...values, id: values.id });
     form.setFieldsValue(editingBody);
@@ -131,9 +136,10 @@ export const ManageNearbyPage: FC = () => {
   const handleSubmit = async (values: valueProps) => {
     const body = {
       id: editingData?.id,
-      nearbyCategoryId: modalNearbyCategoryId,
+      nearbyCategoryId: Number(modalNearbyCategoryId),
       regionId: values.region,
       cityId: values.city,
+      orderNumber: Number(values.orderNumber),
       name: {
         uz: values.name_uz,
         ru: values.name_ru,
