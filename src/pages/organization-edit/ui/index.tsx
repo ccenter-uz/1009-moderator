@@ -1,5 +1,3 @@
-import { it } from "node:test";
-
 import { Button, Divider, Flex, Form, notification, Steps } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import i18next from "i18next";

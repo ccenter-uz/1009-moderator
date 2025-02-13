@@ -1,14 +1,14 @@
 import { Col, Form, FormInstance, Input, Row, Select } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import i18next from "i18next";
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 import { TableCategoryServices } from "@features/table-category-services";
 
 import {
-  useGetCategoriesQuery,
+  useLazyGetCategoriesQuery,
   useLazyGetSubCategoriesQuery,
 } from "@entities/category-subcategory";
 import { useLazyGetDistrictsQuery } from "@entities/district";
@@ -38,17 +38,15 @@ export const OrgAddFirstStepUI: FC<IProps> = (props) => {
   const Storage = localStorage.getItem("firstStepData");
   const localS = getLocalStorage("firstStepData");
   const role = getLocalStorage("user-role");
-
   const { t } = useTranslation();
+  const [disabledInputs, setDisabledInputs] = useState(false);
   const { data } = useSelector(
     ({ useAddOrgFirstStepSlice }: RootState) => useAddOrgFirstStepSlice,
   );
-  const { data: categoryData, isLoading: isLoadingCategories } =
-    useGetCategoriesQuery({
-      ...allActives,
-      regionId: form.getFieldValue("regionId"),
-      cityId: form.getFieldValue("cityId"),
-    });
+  const [
+    triggerCategory,
+    { data: categoryData, isLoading: isLoadingCategory },
+  ] = useLazyGetCategoriesQuery();
   const { data: mainOrgData, isLoading: isLoadingMainOrg } =
     useGetMainOrgQuery(allActives);
   const { data: segmentsData, isLoading: isLoadingSegments } =
@@ -68,16 +66,29 @@ export const OrgAddFirstStepUI: FC<IProps> = (props) => {
   ] = useLazyGetDistrictsQuery();
 
   const onChangeRegion = (value: string) => {
+    if (!value) return null;
     triggerCities({
       regionId: value,
       ...allActives,
     });
+    triggerCategory({
+      ...allActives,
+      regionId: Number(value),
+    });
     form.resetFields(["cityId", "districtId", "categoryId", "subCategoryId"]);
+    setDisabledInputs(false);
   };
   const onChangeCity = (value: string) => {
+    if (!value) return null;
     triggerDistrict({
+      regionId: Number(form.getFieldValue("regionId")),
       cityId: value,
       ...allActives,
+    });
+    triggerCategory({
+      ...allActives,
+      regionId: Number(form.getFieldValue("regionId")),
+      cityId: Number(value),
     });
     form.resetFields(["districtId", "categoryId", "subCategoryId"]);
   };
@@ -91,14 +102,20 @@ export const OrgAddFirstStepUI: FC<IProps> = (props) => {
 
   useEffect(() => {
     if (Storage) {
-      const { cityId, districtId } = localS;
-      if (cityId) {
+      const { cityId, districtId, regionId } = localS;
+      if (regionId) {
+        setDisabledInputs(false);
+      }
+      if (cityId && regionId) {
         triggerCities({
+          regionId: Number(regionId),
           ...allActives,
         });
       }
-      if (districtId) {
+      if (districtId && regionId && cityId) {
         triggerDistrict({
+          regionId: Number(regionId),
+          cityId: Number(cityId),
           ...allActives,
         });
       }
@@ -108,10 +125,16 @@ export const OrgAddFirstStepUI: FC<IProps> = (props) => {
 
   useEffect(() => {
     if (Storage) {
-      const { subCategoryId } = localS;
-
+      const { subCategoryId, categoryId, regionId, cityId } = localS;
+      if (categoryId && regionId && cityId) {
+        triggerCategory({
+          regionId,
+          cityId,
+          ...allActives,
+        });
+      }
       if (subCategoryId) {
-        trigerSubcategory({ ...allActives });
+        trigerSubcategory({ ...allActives, categoryId });
       }
     }
 
@@ -159,14 +182,15 @@ export const OrgAddFirstStepUI: FC<IProps> = (props) => {
                 label: item.name[i18next.language],
               }))}
               allowClear
-              onClear={() =>
+              onClear={() => {
                 form.resetFields([
                   "cityId",
                   "districtId",
                   "categoryId",
                   "subCategoryId",
-                ])
-              }
+                ]),
+                  setDisabledInputs(true);
+              }}
               showSearch
               placeholder={t("region")}
             />
@@ -182,6 +206,7 @@ export const OrgAddFirstStepUI: FC<IProps> = (props) => {
             ]}
           >
             <Select
+              disabled={disabledInputs}
               labelRender={renderLabelSelect}
               onSelect={onChangeCity}
               loading={isLoadingCities}
@@ -202,6 +227,7 @@ export const OrgAddFirstStepUI: FC<IProps> = (props) => {
             label={<ParagraphBold>{t("district")}</ParagraphBold>}
           >
             <Select
+              disabled={disabledInputs}
               labelRender={renderLabelSelect}
               loading={isLoadingDistrict}
               options={districtData?.data.map((item: AnyObject) => ({
@@ -224,6 +250,7 @@ export const OrgAddFirstStepUI: FC<IProps> = (props) => {
             ]}
           >
             <Select
+              disabled={disabledInputs}
               labelRender={renderLabelSelect}
               options={categoryData?.data.map((item: AnyObject) => ({
                 value: item.id,
@@ -232,7 +259,7 @@ export const OrgAddFirstStepUI: FC<IProps> = (props) => {
               placeholder={t("category")}
               allowClear
               showSearch
-              loading={isLoadingCategories}
+              loading={isLoadingCategory}
               onSelect={onChangeCategory}
             />
           </Form.Item>
@@ -249,6 +276,7 @@ export const OrgAddFirstStepUI: FC<IProps> = (props) => {
             ]}
           >
             <Select
+              disabled={disabledInputs}
               labelRender={renderLabelSelect}
               options={subcategoryData?.data.map((item: AnyObject) => ({
                 value: item.id,
