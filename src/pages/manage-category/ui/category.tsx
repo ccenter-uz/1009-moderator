@@ -1,7 +1,7 @@
 import { Flex, Form, Tooltip } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { createSchemaFieldRule } from "antd-zod";
-import { t } from "i18next";
+import i18next, { t } from "i18next";
 import { FC, useEffect, useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
 import { MdRestore } from "react-icons/md";
@@ -11,6 +11,7 @@ import { Address2Inputs } from "@features/address-2-inputs";
 import { BasicSearchPartUI } from "@features/basic-search-part";
 import { DeleteTableItemUI } from "@features/delete-table-item";
 import { SearchWithRegionCityUI } from "@features/search-with-region-city";
+import { TableOrderFilterUI } from "@features/table-order-filter";
 
 import {
   useGetCategoriesQuery,
@@ -52,6 +53,7 @@ export const Category: FC = () => {
   const [searchForm] = Form.useForm();
   const formRule = createSchemaFieldRule(CategoryCreateFormDtoSchema);
   const formRequiredField = getZodRequiredKeys(CategoryCreateFormDtoSchema);
+  const [order, setOrder] = useState<"name" | "orderNumber">("orderNumber");
   const { data, isLoading } = useGetCategoriesQuery(
     cityId
       ? {
@@ -60,6 +62,8 @@ export const Category: FC = () => {
           regionId,
           cityId,
           search,
+          langCode: i18next.language,
+          order,
           status: categoryStatus || STATUS.ACTIVE,
         }
       : {
@@ -67,6 +71,8 @@ export const Category: FC = () => {
           limit,
           regionId,
           search,
+          langCode: i18next.language,
+          order,
           status: categoryStatus || STATUS.ACTIVE,
         },
   );
@@ -206,6 +212,15 @@ export const Category: FC = () => {
   }, [isFilterReset]);
 
   const columns = [
+    {
+      title: t("name"),
+      dataIndex: "name",
+      key: "name",
+      render: (text: { [key: string]: string }) => text[i18next.language],
+      filterDropdown: () => (
+        <TableOrderFilterUI order={order} setOrder={setOrder} />
+      ),
+    },
     ...columnsForCategories,
     {
       flex: 0.5,

@@ -1,5 +1,6 @@
 import { Flex, Form, Tooltip } from "antd";
 import { createSchemaFieldRule } from "antd-zod";
+import i18next from "i18next";
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
@@ -9,6 +10,7 @@ import { useSearchParams } from "react-router-dom";
 import { Address3Inputs } from "@features/address-3-inputs";
 import { BasicSearchPartUI } from "@features/basic-search-part";
 import { DeleteTableItemUI } from "@features/delete-table-item";
+import { TableOrderFilterUI } from "@features/table-order-filter";
 
 import {
   useCreateImpasseMutation,
@@ -69,10 +71,12 @@ export const ManageImpassePage: FC = () => {
   const [form] = Form.useForm<valueProps>();
   const formRule = createSchemaFieldRule(ImpasseCreateFormDtoSchema);
   const formRequiredField = getZodRequiredKeys(ImpasseCreateFormDtoSchema);
-
+  const [order, setOrder] = useState<"name" | "orderNumber">("orderNumber");
   const params = returnAllParams();
   const { data, isLoading } = useGetImpassesQuery({
-    status: status || STATUS.ACTIVE,
+    status: STATUS.ACTIVE,
+    langCode: i18next.language,
+    order,
     ...params,
   });
   const [deleteImpasse] = useDeleteImpasseMutation();
@@ -181,6 +185,15 @@ export const ManageImpassePage: FC = () => {
   }, [isFilterReset]);
 
   const columns = [
+    {
+      title: t("name"),
+      dataIndex: "name",
+      key: "name",
+      render: (text: { [key: string]: string }) => text[i18next.language],
+      filterDropdown: () => (
+        <TableOrderFilterUI order={order} setOrder={setOrder} />
+      ),
+    },
     ...columnsForAddress,
     {
       flex: 0.5,

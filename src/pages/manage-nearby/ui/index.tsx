@@ -1,6 +1,7 @@
 import { Flex, Form, Select, Tooltip } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { createSchemaFieldRule } from "antd-zod";
+import i18next from "i18next";
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
@@ -10,6 +11,7 @@ import { useSearchParams } from "react-router-dom";
 import { Address2Inputs } from "@features/address-2-inputs";
 import { BasicSearchPartUI } from "@features/basic-search-part";
 import { DeleteTableItemUI } from "@features/delete-table-item";
+import { TableOrderFilterUI } from "@features/table-order-filter";
 
 import {
   useCreateNearbyMutation,
@@ -62,10 +64,12 @@ export const ManageNearbyPage: FC = () => {
   const [form] = Form.useForm();
   const formRule = createSchemaFieldRule(NearbyCreateFormDtoSchema);
   const formRequiredField = getZodRequiredKeys(NearbyCreateFormDtoSchema);
-
+  const [order, setOrder] = useState<"name" | "orderNumber">("orderNumber");
   const params = returnAllParams();
   const { data, isLoading } = useGetNearbyQuery({
-    status: status || STATUS.ACTIVE,
+    status: STATUS.ACTIVE,
+    langCode: i18next.language,
+    order,
     ...params,
   });
   const { data: dataCategory, isLoading: isLoadingCategory } =
@@ -174,6 +178,15 @@ export const ManageNearbyPage: FC = () => {
   }, [isFilterReset]);
 
   const columns = [
+    {
+      title: t("name"),
+      dataIndex: "name",
+      key: "name",
+      render: (text: { [key: string]: string }) => text[i18next.language],
+      filterDropdown: () => (
+        <TableOrderFilterUI order={order} setOrder={setOrder} />
+      ),
+    },
     ...columnsWithRegions,
     {
       flex: 0.5,
