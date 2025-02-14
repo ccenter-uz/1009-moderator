@@ -1,5 +1,6 @@
 import { Flex, Form, Tooltip } from "antd";
 import { createSchemaFieldRule } from "antd-zod";
+import i18next from "i18next";
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
@@ -9,6 +10,7 @@ import { useSearchParams } from "react-router-dom";
 import { Address2Inputs } from "@features/address-2-inputs";
 import { BasicSearchPartUI } from "@features/basic-search-part";
 import { DeleteTableItemUI } from "@features/delete-table-item";
+import { TableOrderFilterUI } from "@features/table-order-filter";
 
 import {
   useCreateDistrictMutation,
@@ -66,10 +68,12 @@ export const ManageDistrictPage: FC = () => {
   const [form] = Form.useForm<valueProps>();
   const formRule = createSchemaFieldRule(DistrictCreateFormDtoSchema);
   const formRequiredField = getZodRequiredKeys(DistrictCreateFormDtoSchema);
-
+  const [order, setOrder] = useState<"name" | "orderNumber">("orderNumber");
   const params = returnAllParams();
   const { data, isLoading } = useGetDistrictsQuery({
-    status: status || STATUS.ACTIVE,
+    status: STATUS.ACTIVE,
+    langCode: i18next.language,
+    order,
     ...params,
   });
   const [deleteDistrict] = useDeleteDistrictMutation();
@@ -177,6 +181,15 @@ export const ManageDistrictPage: FC = () => {
   }, [isFilterReset]);
 
   const columns = [
+    {
+      title: t("name"),
+      dataIndex: "name",
+      key: "name",
+      render: (text: { [key: string]: string }) => text[i18next.language],
+      filterDropdown: () => (
+        <TableOrderFilterUI order={order} setOrder={setOrder} />
+      ),
+    },
     ...columnsWithAddressAndNamings,
     {
       flex: 0.5,

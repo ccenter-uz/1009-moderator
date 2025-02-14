@@ -1,7 +1,7 @@
 import { Flex, Form, Tooltip } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { createSchemaFieldRule } from "antd-zod";
-import { t } from "i18next";
+import i18next, { t } from "i18next";
 import { FC, memo, useEffect, useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
 import { MdRestore } from "react-icons/md";
@@ -9,6 +9,7 @@ import { useSearchParams } from "react-router-dom";
 
 import { BasicSearchPartUI } from "@features/basic-search-part";
 import { DeleteTableItemUI } from "@features/delete-table-item";
+import { TableOrderFilterUI } from "@features/table-order-filter";
 
 import {
   useCreateProductMutation,
@@ -49,10 +50,13 @@ export const Product: FC = () => {
   const formRequiredField = getZodRequiredKeys(
     ProductServicesCreateFormDtoSchema,
   );
+  const [order, setOrder] = useState<"name" | "orderNumber">("orderNumber");
   const { data, isLoading } = useGetProductsQuery({
     page,
     limit,
     search,
+    langCode: i18next.language,
+    order,
     status: productStatus || STATUS.ACTIVE,
   });
   const [deleteProduct] = useDeleteProductMutation();
@@ -147,6 +151,15 @@ export const Product: FC = () => {
   }, [isFilterReset]);
 
   const columns = [
+    {
+      title: t("name"),
+      dataIndex: "name",
+      key: "name",
+      render: (text: { [key: string]: string }) => text[i18next.language],
+      filterDropdown: () => (
+        <TableOrderFilterUI order={order} setOrder={setOrder} />
+      ),
+    },
     ...columnsForCategoriesTu,
     {
       flex: 0.5,

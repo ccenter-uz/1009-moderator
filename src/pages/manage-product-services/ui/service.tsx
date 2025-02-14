@@ -1,6 +1,6 @@
 import { Flex, Form, Tooltip } from "antd";
 import { createSchemaFieldRule } from "antd-zod";
-import { t } from "i18next";
+import i18next, { t } from "i18next";
 import { FC, useEffect, useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
 import { MdRestore } from "react-icons/md";
@@ -8,6 +8,7 @@ import { useSearchParams } from "react-router-dom";
 
 import { BasicSearchPartUI } from "@features/basic-search-part";
 import { DeleteTableItemUI } from "@features/delete-table-item";
+import { TableOrderFilterUI } from "@features/table-order-filter";
 
 import {
   useCreateSubCategoryMutation,
@@ -49,6 +50,7 @@ export const Service: FC = () => {
     [ProductServicesEnum.productId]: productId,
     [ProductServicesEnum.serviceStatus]: serviceStatus,
   } = returnAllParams();
+  const [order, setOrder] = useState<"name" | "orderNumber">("orderNumber");
   const [trigger, { data, isLoading }] = useLazyGetSubCategoryQuery();
   const [createSubCategory] = useCreateSubCategoryMutation();
   const [updateSubCategory] = useUpdateSubCategoryMutation();
@@ -140,6 +142,15 @@ export const Service: FC = () => {
   }, [isFilterReset]);
 
   const columns = [
+    {
+      title: t("name"),
+      dataIndex: "name",
+      key: "name",
+      render: (text: { [key: string]: string }) => text[i18next.language],
+      filterDropdown: () => (
+        <TableOrderFilterUI order={order} setOrder={setOrder} />
+      ),
+    },
     ...columnsForCategoriesTu,
     {
       flex: 0.5,
@@ -185,6 +196,8 @@ export const Service: FC = () => {
         page: Number(page) || 1,
         limit: Number(limit) || 10,
         search,
+        langCode: i18next.language,
+        order,
         categoryId: Number(searchParams.get(ProductServicesEnum.productId)),
         status: serviceStatus || STATUS.ACTIVE,
       });
@@ -198,6 +211,7 @@ export const Service: FC = () => {
     limit,
     serviceStatus,
     productId,
+    order,
   ]);
 
   return (
