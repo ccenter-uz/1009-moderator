@@ -218,9 +218,9 @@ export const OrgEditPage: FC = () => {
       formData.append(key, JSON.stringify(body[key]));
     }
 
-    images.forEach((image: any) => {
-      if (!image.link) {
-        formData.append("photos", image);
+    images.forEach((image: { link: string; file?: Blob }) => {
+      if (!image.link && image.file) {
+        formData.append("photos", image.file);
       }
     });
 
