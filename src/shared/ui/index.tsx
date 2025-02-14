@@ -9,4 +9,5 @@ export { Can } from "./can-casl";
 export { DashboardHeaderCards } from "./dashboard-header-cards";
 export { CustomizeUI } from "./customize-ui";
 export { CustomizeUISlicer } from "./customize-ui/model/Slicer";
+export { SearchableSelect } from "./searchable-select";
 export * from "./logo/logo-svg";

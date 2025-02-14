@@ -22,6 +22,7 @@ import {
   resetFieldsValue,
   returnAllParams,
 } from "@shared/lib/helpers";
+import { SearchableSelect } from "@shared/ui";
 
 interface Props {
   form: FormInstance;
@@ -96,7 +97,7 @@ export const SearchWithRegionCityUI: FC<Props> = (props) => {
           label={t("region")}
           style={{ marginBottom: 0, flex: 1 }}
         >
-          <Select
+          <SearchableSelect
             options={[
               {
                 id: 0,
@@ -111,7 +112,6 @@ export const SearchWithRegionCityUI: FC<Props> = (props) => {
             placeholder={t("region")}
             onSelect={onSelectRegion}
             loading={isLoadingRegions}
-            allowClear
           />
         </Form.Item>
         <Form.Item
@@ -119,7 +119,7 @@ export const SearchWithRegionCityUI: FC<Props> = (props) => {
           label={t("city")}
           style={{ marginBottom: 0, flex: 1 }}
         >
-          <Select
+          <SearchableSelect
             options={
               dataCities?.data.map((city: AnyObject) => ({
                 label: city.name[i18next.language],
@@ -129,7 +129,6 @@ export const SearchWithRegionCityUI: FC<Props> = (props) => {
             placeholder={t("city")}
             onSelect={onSelectCity}
             loading={isLoadingCities}
-            allowClear
             disabled={!regionValue}
           />
         </Form.Item>

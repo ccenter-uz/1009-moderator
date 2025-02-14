@@ -1,5 +1,4 @@
-import { Row, Col, Input, Form, Select } from "antd";
-import { AnyObject } from "antd/es/_util/type";
+import { Row, Col, Input, Form } from "antd";
 import i18next from "i18next";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
@@ -16,12 +15,9 @@ import { useGetResidentialAreasQuery } from "@entities/residential-area";
 import { useGetStreetsQuery } from "@entities/street";
 import { useGetVillagesQuery } from "@entities/village";
 
-import {
-  allActives,
-  getLocalStorage,
-  renderLabelSelect,
-} from "@shared/lib/helpers";
+import { allActives, getLocalStorage } from "@shared/lib/helpers";
 import { RootState } from "@shared/types";
+import { SearchableSelect } from "@shared/ui";
 import { ParagraphBold } from "@shared/ui/paragraph-bold";
 
 import { setData } from "../model/Slicer";
@@ -65,15 +61,16 @@ export const OrgAddSecondStepUI: FC = () => {
             name={"villageId"}
             label={<ParagraphBold>{t("village")}</ParagraphBold>}
           >
-            <Select
-              labelRender={renderLabelSelect}
+            <SearchableSelect
               loading={isLoadingVillage}
-              options={villageData?.data.map((item: AnyObject) => ({
-                value: item.id,
-                label: item.name[i18next.language],
-              }))}
-              allowClear
-              showSearch
+              options={villageData?.data.map(
+                (item: Record<string, string | number>) => ({
+                  value: item.id,
+                  label: String(
+                    item.name[i18next.language as keyof typeof item.name],
+                  ),
+                }),
+              )}
               placeholder={t("village")}
             />
           </Form.Item>
@@ -81,15 +78,16 @@ export const OrgAddSecondStepUI: FC = () => {
             name={"avenueId"}
             label={<ParagraphBold>{t("avenue")}</ParagraphBold>}
           >
-            <Select
-              labelRender={renderLabelSelect}
+            <SearchableSelect
               loading={isLoadingAvenue}
-              options={avenueData?.data.map((item: AnyObject) => ({
-                value: item.id,
-                label: item.name[i18next.language],
-              }))}
-              allowClear
-              showSearch
+              options={avenueData?.data.map(
+                (item: Record<string, string | number>) => ({
+                  value: item.id,
+                  label: String(
+                    item.name[i18next.language as keyof typeof item.name],
+                  ),
+                }),
+              )}
               placeholder={t("avenue")}
             />
           </Form.Item>
@@ -97,15 +95,16 @@ export const OrgAddSecondStepUI: FC = () => {
             name={"residentialId"}
             label={<ParagraphBold>{t("residential-area")}</ParagraphBold>}
           >
-            <Select
-              labelRender={renderLabelSelect}
+            <SearchableSelect
               loading={isLoadingResidentialArea}
-              options={residentialAreaData?.data.map((item: AnyObject) => ({
-                value: item.id,
-                label: item.name[i18next.language],
-              }))}
-              allowClear
-              showSearch
+              options={residentialAreaData?.data.map(
+                (item: Record<string, string | number>) => ({
+                  value: item.id,
+                  label: String(
+                    item.name[i18next.language as keyof typeof item.name],
+                  ),
+                }),
+              )}
               placeholder={t("residential-area")}
             />
           </Form.Item>
@@ -113,15 +112,16 @@ export const OrgAddSecondStepUI: FC = () => {
             name={"areaId"}
             label={<ParagraphBold>{t("area")}</ParagraphBold>}
           >
-            <Select
-              labelRender={renderLabelSelect}
+            <SearchableSelect
               loading={isLoadingArea}
-              options={areaData?.data.map((item: AnyObject) => ({
-                value: item.id,
-                label: item.name[i18next.language],
-              }))}
-              allowClear
-              showSearch
+              options={areaData?.data.map(
+                (item: Record<string, string | number>) => ({
+                  value: item.id,
+                  label: String(
+                    item.name[i18next.language as keyof typeof item.name],
+                  ),
+                }),
+              )}
               placeholder={t("area")}
             />
           </Form.Item>
@@ -137,15 +137,16 @@ export const OrgAddSecondStepUI: FC = () => {
             name={"streetId"}
             label={<ParagraphBold>{t("street")}</ParagraphBold>}
           >
-            <Select
-              labelRender={renderLabelSelect}
+            <SearchableSelect
               loading={isLoadingStreet}
-              options={streetData?.data.map((item: AnyObject) => ({
-                value: item.id,
-                label: item.name[i18next.language],
-              }))}
-              allowClear
-              showSearch
+              options={streetData?.data.map(
+                (item: Record<string, string | number>) => ({
+                  value: item.id,
+                  label: String(
+                    item.name[i18next.language as keyof typeof item.name],
+                  ),
+                }),
+              )}
               placeholder={t("street")}
             />
           </Form.Item>
@@ -153,15 +154,16 @@ export const OrgAddSecondStepUI: FC = () => {
             name={"laneId"}
             label={<ParagraphBold>{t("lane")}</ParagraphBold>}
           >
-            <Select
-              labelRender={renderLabelSelect}
+            <SearchableSelect
               loading={isLoadingLane}
-              options={laneData?.data.map((item: AnyObject) => ({
-                value: item.id,
-                label: item.name[i18next.language],
-              }))}
-              allowClear
-              showSearch
+              options={laneData?.data.map(
+                (item: Record<string, string | number>) => ({
+                  value: item.id,
+                  label: String(
+                    item.name[i18next.language as keyof typeof item.name],
+                  ),
+                }),
+              )}
               placeholder={t("lane")}
             />
           </Form.Item>
@@ -169,15 +171,16 @@ export const OrgAddSecondStepUI: FC = () => {
             name={"passageId"}
             label={<ParagraphBold>{t("passage")}</ParagraphBold>}
           >
-            <Select
-              labelRender={renderLabelSelect}
+            <SearchableSelect
               loading={isLoadingPassage}
-              options={passageData?.data.map((item: AnyObject) => ({
-                value: item.id,
-                label: item.name[i18next.language],
-              }))}
-              allowClear
-              showSearch
+              options={passageData?.data.map(
+                (item: Record<string, string | number>) => ({
+                  value: item.id,
+                  label: String(
+                    item.name[i18next.language as keyof typeof item.name],
+                  ),
+                }),
+              )}
               placeholder={t("passage")}
             />
           </Form.Item>
@@ -187,15 +190,16 @@ export const OrgAddSecondStepUI: FC = () => {
             name={"impasseId"}
             label={<ParagraphBold>{t("impasse")}</ParagraphBold>}
           >
-            <Select
-              labelRender={renderLabelSelect}
+            <SearchableSelect
               loading={isLoadingImpasse}
-              options={impasseData?.data.map((item: AnyObject) => ({
-                value: item.id,
-                label: item.name[i18next.language],
-              }))}
-              allowClear
-              showSearch
+              options={impasseData?.data.map(
+                (item: Record<string, string | number>) => ({
+                  value: item.id,
+                  label: String(
+                    item.name[i18next.language as keyof typeof item.name],
+                  ),
+                }),
+              )}
               placeholder={t("impasse")}
             />
           </Form.Item>

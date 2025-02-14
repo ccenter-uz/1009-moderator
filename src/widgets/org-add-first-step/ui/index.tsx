@@ -1,5 +1,4 @@
-import { Col, Form, FormInstance, Input, Row, Select } from "antd";
-import { AnyObject } from "antd/es/_util/type";
+import { Col, Form, FormInstance, Input, Row } from "antd";
 import i18next from "i18next";
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -19,12 +18,9 @@ import {
 } from "@entities/region-city";
 import { useGetSegmentsQuery } from "@entities/segments";
 
-import {
-  allActives,
-  getLocalStorage,
-  renderLabelSelect,
-} from "@shared/lib/helpers";
+import { allActives, getLocalStorage } from "@shared/lib/helpers";
 import { RootState } from "@shared/types";
+import { SearchableSelect } from "@shared/ui";
 import { ParagraphBold } from "@shared/ui/paragraph-bold";
 
 import { setData } from "../model/Slicer";
@@ -173,15 +169,18 @@ export const OrgAddFirstStepUI: FC<IProps> = (props) => {
               },
             ]}
           >
-            <Select
-              labelRender={renderLabelSelect}
+            <SearchableSelect
               onSelect={onChangeRegion}
               loading={isLoadingRegion}
-              options={regionData?.data.map((item: AnyObject) => ({
-                value: item.id,
-                label: item.name[i18next.language],
-              }))}
-              allowClear
+              placeholder={t("region")}
+              options={regionData?.data.map(
+                (item: Record<string, string | number>) => ({
+                  value: item.id,
+                  label: String(
+                    item.name[i18next.language as keyof typeof item.name],
+                  ),
+                }),
+              )}
               onClear={() => {
                 form.resetFields([
                   "cityId",
@@ -191,8 +190,6 @@ export const OrgAddFirstStepUI: FC<IProps> = (props) => {
                 ]),
                   setDisabledInputs(true);
               }}
-              showSearch
-              placeholder={t("region")}
             />
           </Form.Item>
           <Form.Item
@@ -205,20 +202,21 @@ export const OrgAddFirstStepUI: FC<IProps> = (props) => {
               },
             ]}
           >
-            <Select
+            <SearchableSelect
               disabled={disabledInputs}
-              labelRender={renderLabelSelect}
               onSelect={onChangeCity}
               loading={isLoadingCities}
-              options={citiesData?.data.map((item: AnyObject) => ({
-                value: item.id,
-                label: item.name[i18next.language],
-              }))}
-              allowClear
+              options={citiesData?.data.map(
+                (item: Record<string, string | number>) => ({
+                  value: item.id,
+                  label: String(
+                    item.name[i18next.language as keyof typeof item.name],
+                  ),
+                }),
+              )}
               onClear={() =>
                 form.resetFields(["districtId", "categoryId", "subCategoryId"])
               }
-              showSearch
               placeholder={t("city")}
             />
           </Form.Item>
@@ -226,16 +224,17 @@ export const OrgAddFirstStepUI: FC<IProps> = (props) => {
             name={"districtId"}
             label={<ParagraphBold>{t("district")}</ParagraphBold>}
           >
-            <Select
+            <SearchableSelect
               disabled={disabledInputs}
-              labelRender={renderLabelSelect}
               loading={isLoadingDistrict}
-              options={districtData?.data.map((item: AnyObject) => ({
-                value: item.id,
-                label: item.name[i18next.language],
-              }))}
-              allowClear
-              showSearch
+              options={districtData?.data.map(
+                (item: Record<string, string | number>) => ({
+                  value: item.id,
+                  label: String(
+                    item.name[i18next.language as keyof typeof item.name],
+                  ),
+                }),
+              )}
               placeholder={t("district")}
             />
           </Form.Item>
@@ -249,16 +248,17 @@ export const OrgAddFirstStepUI: FC<IProps> = (props) => {
               },
             ]}
           >
-            <Select
+            <SearchableSelect
               disabled={disabledInputs}
-              labelRender={renderLabelSelect}
-              options={categoryData?.data.map((item: AnyObject) => ({
-                value: item.id,
-                label: item.name[i18next.language],
-              }))}
+              options={categoryData?.data.map(
+                (item: Record<string, string | number>) => ({
+                  value: item.id,
+                  label: String(
+                    item.name[i18next.language as keyof typeof item.name],
+                  ),
+                }),
+              )}
               placeholder={t("category")}
-              allowClear
-              showSearch
               loading={isLoadingCategory}
               onSelect={onChangeCategory}
             />
@@ -275,16 +275,17 @@ export const OrgAddFirstStepUI: FC<IProps> = (props) => {
               },
             ]}
           >
-            <Select
+            <SearchableSelect
               disabled={disabledInputs}
-              labelRender={renderLabelSelect}
-              options={subcategoryData?.data.map((item: AnyObject) => ({
-                value: item.id,
-                label: item.name[i18next.language],
-              }))}
+              options={subcategoryData?.data.map(
+                (item: Record<string, string | number>) => ({
+                  value: item.id,
+                  label: String(
+                    item.name[i18next.language as keyof typeof item.name],
+                  ),
+                }),
+              )}
               placeholder={t("sub-category")}
-              allowClear
-              showSearch
               loading={isLoadingSubcategory}
             />
           </Form.Item>
@@ -298,15 +299,15 @@ export const OrgAddFirstStepUI: FC<IProps> = (props) => {
               },
             ]}
           >
-            <Select
+            <SearchableSelect
               placeholder={t("main-org")}
-              options={mainOrgData?.data.map((item: AnyObject) => ({
-                value: item.id,
-                label: item.name,
-              }))}
+              options={mainOrgData?.data.map(
+                (item: Record<string, string | number>) => ({
+                  value: item.id,
+                  label: item.name,
+                }),
+              )}
               loading={isLoadingMainOrg}
-              allowClear
-              showSearch
             />
           </Form.Item>
           {role === "moderator" ? (
@@ -328,15 +329,15 @@ export const OrgAddFirstStepUI: FC<IProps> = (props) => {
             name={"segmentId"}
             label={<ParagraphBold>{t("segment")}</ParagraphBold>}
           >
-            <Select
+            <SearchableSelect
               placeholder={t("segment")}
-              options={segmentsData?.data.map((item: AnyObject) => ({
-                value: item.id,
-                label: item.name,
-              }))}
+              options={segmentsData?.data.map(
+                (item: Record<string, string | number>) => ({
+                  value: item.id,
+                  label: item.name,
+                }),
+              )}
               loading={isLoadingSegments}
-              allowClear
-              showSearch
             />
           </Form.Item>
           <Form.Item

@@ -4,18 +4,17 @@ import {
   Typography,
   Row,
   Col,
-  Select,
   Input,
   Button,
   Table,
   Checkbox,
   Form,
 } from "antd";
-import { AnyObject } from "antd/es/_util/type";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import TextArea from "antd/es/input/TextArea";
+import { DefaultOptionType } from "antd/es/select";
 import i18next, { t } from "i18next";
-import { FC, useState } from "react";
+import { FC, ReactNode, useState } from "react";
 import { FaTrashAlt } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -23,6 +22,7 @@ import { useGetPhoneTypeQuery } from "@entities/phone";
 
 import { GET_ALL_ACTIVE_STATUS, getLocalStorage } from "@shared/lib/helpers";
 import { RootState } from "@shared/types";
+import { SearchableSelect } from "@shared/ui";
 import { ParagraphBold } from "@shared/ui/paragraph-bold";
 
 import { setData } from "../model/Slicer";
@@ -38,9 +38,9 @@ export const OrgAddThirdStepUI: FC = () => {
       all: GET_ALL_ACTIVE_STATUS.all,
       status: GET_ALL_ACTIVE_STATUS.active,
     });
-  const [selectedPhoneType, setSelectedPhoneType] = useState<AnyObject[] | []>(
-    [],
-  );
+  const [selectedPhoneType, setSelectedPhoneType] = useState<
+    { phoneTypeId: string | number; "phone-type": string | ReactNode }[] | []
+  >([]);
 
   const [phone, setPhone] = useState<string>("");
 
@@ -61,7 +61,7 @@ export const OrgAddThirdStepUI: FC = () => {
           title: t("secret"),
           dataIndex: "isSecret",
           key: "isSecret",
-          render: (text: string, record: AnyObject) => (
+          render: (text: string, record: { phone: string }) => (
             <Checkbox
               checked={!!text}
               onChange={(e: CheckboxChangeEvent) => onSecretCheck(e, record)}
@@ -73,7 +73,7 @@ export const OrgAddThirdStepUI: FC = () => {
       title: t("action"),
       dataIndex: "action",
       key: "action",
-      render: (text: string, record: AnyObject) => (
+      render: (text: string, record: { phone: string }) => (
         <Popconfirm
           title={t("delete")}
           onConfirm={() => onDelete(record?.phone)}
@@ -91,7 +91,7 @@ export const OrgAddThirdStepUI: FC = () => {
     },
   ];
 
-  const onSecretCheck = (e: CheckboxChangeEvent, record: AnyObject) => {
+  const onSecretCheck = (e: CheckboxChangeEvent, record: { phone: string }) => {
     const filteredData = data
       ?.filter((item: { phone: string }) => item.phone === record.phone)
       .map((item: { isSecret: boolean }) => ({
@@ -111,7 +111,9 @@ export const OrgAddThirdStepUI: FC = () => {
   };
 
   const onDelete = async (phone: string) => {
-    const newData = data.filter((item: AnyObject) => item.phone !== phone);
+    const newData = data.filter(
+      (item: { phone: string | number }) => item.phone !== phone,
+    );
     dispatch(setData(newData));
   };
 
@@ -129,11 +131,10 @@ export const OrgAddThirdStepUI: FC = () => {
     setPhone("");
   };
 
-  const onSelectType = (
-    value: string,
-    option: { value: string | number; label: string },
-  ) => {
-    setSelectedPhoneType([{ phoneTypeId: value, "phone-type": option.label }]);
+  const onSelectType = (value: string, option: DefaultOptionType) => {
+    setSelectedPhoneType([
+      { phoneTypeId: value, "phone-type": option.label as string },
+    ]);
   };
 
   return (
@@ -181,18 +182,20 @@ export const OrgAddThirdStepUI: FC = () => {
         <Col span={11}>
           <Flex align="center" gap={8}>
             <label htmlFor="phone-type">{t("phone-type")}</label>
-            <Select
+            <SearchableSelect
               loading={phoneTypesLoading}
-              allowClear
-              showSearch
               id="phone-type"
               value={selectedPhoneType[0]?.phoneTypeId}
-              onSelect={onSelectType}
-              options={phoneTypesData?.data?.map((item: AnyObject) => ({
-                value: item.id,
-                label: item.name[i18next.language],
-              }))}
+              options={phoneTypesData?.data?.map(
+                (item: Record<string, string | number>) => ({
+                  value: item.id,
+                  label: String(
+                    item.name[i18next.language as keyof typeof item.name],
+                  ),
+                }),
+              )}
               style={{ flex: 1 }}
+              onSelect={onSelectType}
             />
           </Flex>
         </Col>

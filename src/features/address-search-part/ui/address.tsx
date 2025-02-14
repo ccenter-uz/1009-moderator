@@ -1,4 +1,4 @@
-import { Col, Select, Form, FormInstance } from "antd";
+import { Col, Form, FormInstance } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import i18next, { t } from "i18next";
 import { FC, useCallback, useEffect, useState } from "react";
@@ -10,6 +10,7 @@ import {
 } from "@entities/region-city";
 
 import { GET_ALL_ACTIVE_STATUS } from "@shared/lib/helpers";
+import { SearchableSelect } from "@shared/ui";
 
 type Props = {
   form: FormInstance;
@@ -70,8 +71,7 @@ export const AddressThreeSearchPartUI: FC<Props> = (props) => {
           label={t("region")}
           style={{ marginBottom: 10 }}
         >
-          <Select
-            allowClear
+          <SearchableSelect
             onClear={() => {
               form.resetFields([
                 "cityId",
@@ -110,9 +110,8 @@ export const AddressThreeSearchPartUI: FC<Props> = (props) => {
       </Col>
       <Col span={24}>
         <Form.Item name="cityId" label={t("city")} style={{ marginBottom: 10 }}>
-          <Select
+          <SearchableSelect
             disabled={cityDisabled}
-            allowClear
             onClear={() => {
               form.resetFields([
                 "districtId",
@@ -152,9 +151,8 @@ export const AddressThreeSearchPartUI: FC<Props> = (props) => {
           label={t("district")}
           style={{ marginBottom: 10 }}
         >
-          <Select
+          <SearchableSelect
             disabled={dataDistrict?.data.length === 0 || districtDisabled}
-            allowClear
             placeholder={t("district")}
             options={
               dataDistrict?.data.map((passage: AnyObject) => ({
