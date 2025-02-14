@@ -39,7 +39,7 @@ export const SearchTableUI: FC<Props> = (props) => {
           }) => ({
             phone: item?.phone,
             isSecret: item?.isSecret,
-            phoneType: item?.PhoneTypes.name[i18next.language],
+            phoneType: item?.PhoneTypes?.name[i18next.language],
           }),
         ),
       );
@@ -49,7 +49,7 @@ export const SearchTableUI: FC<Props> = (props) => {
             ProductServiceSubCategory: { name: { [key: string]: string } };
           }) => ({
             ProductServiceSubCategory:
-              item.ProductServiceSubCategory.name[i18next.language],
+              item.ProductServiceSubCategory?.name[i18next.language],
           }),
         ),
       );

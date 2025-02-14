@@ -403,7 +403,7 @@ export const attrColumns: searchColType = [
     title: i18next.t("main-org"),
     dataIndex: "mainorganization",
     key: "mainorganization",
-    render: (text: { name: string }) => text.name,
+    render: (text: { name: string }) => text?.name,
   },
   {
     width: 60,
