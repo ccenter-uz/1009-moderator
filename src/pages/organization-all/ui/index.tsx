@@ -1,4 +1,3 @@
-import { AnyObject } from "antd/es/_util/type";
 import { FC, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -12,7 +11,10 @@ import { returnAllParams } from "@shared/lib/helpers";
 export const OrgAllPage: FC = () => {
   const [searchTableRef, setSearchTableRef] = useState<HTMLElement>();
   const [searchParams] = useSearchParams();
-  const [searchValues, setSearchValues] = useState<AnyObject | null>(null);
+  const [searchValues, setSearchValues] = useState<{
+    regionId: number;
+    cityId: number;
+  } | null>(null);
   const { data, isLoading, refetch } = useGetOrganizationsQuery({
     ...returnAllParams(),
     ...searchValues,

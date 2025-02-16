@@ -292,12 +292,6 @@ export const OrgAddFirstStepUI: FC<IProps> = (props) => {
           <Form.Item
             name={"mainOrganizationId"}
             label={<ParagraphBold>{t("main-org")}</ParagraphBold>}
-            rules={[
-              {
-                required: true,
-                message: t("required-field"),
-              },
-            ]}
           >
             <SearchableSelect
               placeholder={t("main-org")}
@@ -314,12 +308,6 @@ export const OrgAddFirstStepUI: FC<IProps> = (props) => {
             <Form.Item
               name={"secret"}
               label={<ParagraphBold>{t("Секрет")}</ParagraphBold>}
-              rules={[
-                {
-                  required: true,
-                  message: t("required-field"),
-                },
-              ]}
             >
               <Input type="text" placeholder={t("Секрет")} allowClear />
             </Form.Item>

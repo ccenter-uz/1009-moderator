@@ -1,5 +1,4 @@
 import { Button, Divider, Flex, Form, notification, Steps } from "antd";
-import { AnyObject } from "antd/es/_util/type";
 import i18next from "i18next";
 import { CSSProperties, FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -161,14 +160,12 @@ export const OrgEditPage: FC = () => {
     localStorage.setItem(STEPS_EDIT_DATA.CURRENT, JSON.stringify(current - 1));
   };
 
-  const extractPictures = (pictures: AnyObject[], images: AnyObject[]) => {
+  const extractPictures = (pictures: unknown[], images: { link: string }[]) => {
     if (pictures.length !== 0) {
       return pictures;
     }
 
-    return images
-      .filter((item: AnyObject) => !!item.link)
-      .map((item: AnyObject) => item as AnyObject);
+    return images.filter((item) => !!item.link).map((item) => item);
   };
 
   const onSubmit = async () => {
@@ -203,12 +200,19 @@ export const OrgEditPage: FC = () => {
         nearbees: orientirData,
       },
       phone: {
-        phones: phoneData.map((item: AnyObject) => ({
-          key: item.id,
-          phone: item.phone,
-          phoneTypeId: item.phoneTypeId,
-          isSecret: item.isSecret,
-        })),
+        phones: phoneData.map(
+          (item: {
+            phone: string;
+            phoneTypeId: number;
+            id: string;
+            isSecret: boolean;
+          }) => ({
+            key: item.id,
+            phone: item.phone,
+            phoneTypeId: item.phoneTypeId,
+            isSecret: item.isSecret,
+          }),
+        ),
       },
       picture: {
         pictures: extractPictures(pictures, images),

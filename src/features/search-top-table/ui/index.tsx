@@ -1,5 +1,4 @@
 import { Row, Col, Table, Flex, Tooltip } from "antd";
-import { AnyObject } from "antd/es/_util/type";
 import { ColumnsType } from "antd/es/table";
 import { t } from "i18next";
 import { FC, useState } from "react";
@@ -30,10 +29,12 @@ import {
 import { usePaginate } from "@shared/lib/hooks";
 import { Can } from "@shared/ui";
 
+import { TAttr, TPhone } from "../model/types";
+
 type Props = {
-  data: AnyObject[];
-  setAttrData: (data: AnyObject[]) => void;
-  phonesData: AnyObject[];
+  data: { status: number; id: number | string }[] | [];
+  setAttrData: (data: TAttr[]) => void;
+  phonesData: TPhone[];
   onOpen: () => void;
   totalItems: number;
   isLoading?: boolean;
@@ -51,7 +52,7 @@ export const SearchTopTable: FC<Props> = (props) => {
   const [deleteOrganization] = useDeleteOrganizationMutation();
   const [restoreOrganization] = useRestoreOrganizationMutation();
 
-  const checkExistId = (record: AnyObject) => {
+  const checkExistId = (record: { id: number | string; status: number }) => {
     const { editingId, firstStepData } = getEditingStepStorageValues();
 
     if (editingId && Number(record.id) !== Number(editingId)) {
@@ -88,7 +89,7 @@ export const SearchTopTable: FC<Props> = (props) => {
     }
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: number | string) => {
     const result = await AntDesignSwal.fire({
       input: "textarea",
       inputLabel: t("delete-reason"),
@@ -109,13 +110,12 @@ export const SearchTopTable: FC<Props> = (props) => {
     }
   };
 
-  const columns: ColumnsType = [
+  const columns: unknown = [
     {
       title: t("code"),
       dataIndex: "inn",
       key: "inn",
       width: 80,
-      align: "center",
     },
     {
       width: 400,
@@ -129,14 +129,13 @@ export const SearchTopTable: FC<Props> = (props) => {
       dataIndex: "sms",
       key: "sms",
       width: 20,
-      align: "center",
-      render: (text: string, record: AnyObject) => (
+      render: (_: string, record: { id: number | string; status: number }) => (
         <FaEnvelope
           color="#4e9eff"
           cursor={"pointer"}
           title={t("sms")}
           onClick={() => {
-            onOpen(), setSelectedRowKeys(record.id);
+            onOpen(), setSelectedRowKeys(Number(record.id));
           }}
         />
       ),
@@ -158,8 +157,7 @@ export const SearchTopTable: FC<Props> = (props) => {
       title: t("action"),
       key: "action",
       dataIndex: "action",
-      align: "center",
-      render: (text: string, record: AnyObject) => {
+      render: (_: string, record: { status: number; id: number | string }) => {
         if (record.status === 1) {
           return (
             <Flex justify="center" align="center" gap={8}>
@@ -198,7 +196,7 @@ export const SearchTopTable: FC<Props> = (props) => {
       <Col span={16}>
         <Table
           loading={isLoading}
-          columns={columns}
+          columns={columns as ColumnsType<{ id: number | string }>}
           dataSource={data}
           pagination={{
             current: page,
@@ -212,9 +210,9 @@ export const SearchTopTable: FC<Props> = (props) => {
             onChange: (current) => setPage(current),
           }}
           bordered
-          onRow={(row: AnyObject) => ({
+          onRow={(row: { id: number | string }) => ({
             onClick: () => {
-              setSelectedRowKeys(row.id), setAttrData([row]);
+              setSelectedRowKeys(Number(row.id)), setAttrData([row as TAttr]);
             },
           })}
           rowClassName={(row) =>
