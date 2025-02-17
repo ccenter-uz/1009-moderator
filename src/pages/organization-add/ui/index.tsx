@@ -93,7 +93,11 @@ export const OrgAddPage: FC = () => {
     },
   ];
 
-  const STORE_STEPS_DATA = () => {
+  const next = async () => {
+    await form.validateFields();
+    setCurrent(current + 1);
+    localStorage.setItem("currentStep", JSON.stringify(current + 1));
+    // STORE_STEPS_DATA
     if (current === STEPS_ENUM.firstStep) {
       const firstStepData = {
         ...form.getFieldsValue(STEPS_DATA.FIRST_FORMDATA),
@@ -115,17 +119,29 @@ export const OrgAddPage: FC = () => {
     }
   };
 
-  const next = async () => {
-    await form.validateFields();
-    setCurrent(current + 1);
-    localStorage.setItem("currentStep", JSON.stringify(current + 1));
-    STORE_STEPS_DATA();
-  };
-
   // SAVE-VALUES-UNMOUNT
   useEffect(() => {
     return () => {
-      STORE_STEPS_DATA();
+      // STORE_STEPS_DATA
+      if (current === STEPS_ENUM.firstStep) {
+        const firstStepData = {
+          ...form.getFieldsValue(STEPS_DATA.FIRST_FORMDATA),
+          categoryTu: categoryTu,
+        };
+        localStorage.setItem("firstStepData", JSON.stringify(firstStepData));
+      } else if (current === STEPS_ENUM.secondStep) {
+        const secondStepData = {
+          ...form.getFieldsValue(STEPS_DATA.SECOND_FORMDATA),
+          nearbees: orientirData,
+        };
+        localStorage.setItem("secondStepData", JSON.stringify(secondStepData));
+      } else if (current === STEPS_ENUM.thirdStep) {
+        const thirdStepData = {
+          ...form.getFieldsValue(STEPS_DATA.THIRD_FORMDATA),
+          phone: phoneData,
+        };
+        localStorage.setItem("thirdStepData", JSON.stringify(thirdStepData));
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
