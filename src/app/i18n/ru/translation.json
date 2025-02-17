@@ -266,8 +266,8 @@
   "check": "В процессе",
   "rejectReason": "Причина отказа",
   "deleteReason": "Причина удаления",
-  "order-number": "Очередной номер",
+  "order_number": "Очередной номер",
   "by-name": "По имени",
-  "by-order-number": "По номеру очереди",
+  "by-order_number": "По номеру очереди",
   "sort-by": "Сортировать по"
 }

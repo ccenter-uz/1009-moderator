@@ -56,6 +56,12 @@ export const columnsForMyOrganizations = [
 
 export const columnsForAddress = [
   {
+    title: i18next.t("order_number"),
+    dataIndex: "order_number",
+    key: "order_number",
+    render: (text: { [key: string]: string }) => text ?? "---",
+  },
+  {
     title: i18next.t("old_name"),
     dataIndex: "oldName",
     key: "oldName",
@@ -150,6 +156,12 @@ export const columnsForForBasicTable = [
 ];
 export const columnsWithSingleName = [
   {
+    title: i18next.t("order_number"),
+    dataIndex: "order_number",
+    key: "order_number",
+    render: (text: { [key: string]: string }) => text ?? "---",
+  },
+  {
     title: i18next.t("createdAt"),
     dataIndex: "createdAt",
     key: "createdAt",
@@ -175,6 +187,12 @@ export const columnsWithSingleName = [
   },
 ];
 export const columnsForPhoneTypeTable = [
+  {
+    title: i18next.t("order_number"),
+    dataIndex: "order_number",
+    key: "order_number",
+    render: (text: { [key: string]: string }) => text ?? "---",
+  },
   {
     title: i18next.t("createdAt"),
     dataIndex: "createdAt",
@@ -207,6 +225,12 @@ export const columnsForPhoneTypeTable = [
 ];
 
 export const columnsWithRegions = [
+  {
+    title: i18next.t("order_number"),
+    dataIndex: "order_number",
+    key: "order_number",
+    render: (text: { [key: string]: string }) => text ?? "---",
+  },
   {
     title: i18next.t("nearby-category"),
     dataIndex: "category",
@@ -247,6 +271,12 @@ export const columnsWithRegions = [
 ];
 
 export const columnsWithAddressAndNamings = [
+  {
+    title: i18next.t("order_number"),
+    dataIndex: "order_number",
+    key: "order_number",
+    render: (text: { [key: string]: string }) => text ?? "---",
+  },
   {
     title: i18next.t("old_name"),
     dataIndex: "oldName",
@@ -303,6 +333,12 @@ export const columnsWithAddressAndNamings = [
 
 export const columnsForCategories = [
   {
+    title: i18next.t("order_number"),
+    dataIndex: "order_number",
+    key: "order_number",
+    render: (text: { [key: string]: string }) => text ?? "---",
+  },
+  {
     title: i18next.t("region"),
     dataIndex: "region",
     key: "region",
@@ -336,6 +372,12 @@ export const columnsForCategories = [
 ];
 export const columnsForSubcategories = [
   {
+    title: i18next.t("order_number"),
+    dataIndex: "order_number",
+    key: "order_number",
+    render: (text: { [key: string]: string }) => text ?? "---",
+  },
+  {
     title: i18next.t("status"),
     dataIndex: "status",
     key: "status",
@@ -354,6 +396,12 @@ export const columnsForSubcategories = [
   },
 ];
 export const columnsForCategoriesTu = [
+  {
+    title: i18next.t("order_number"),
+    dataIndex: "order_number",
+    key: "order_number",
+    render: (text: { [key: string]: string }) => text ?? "---",
+  },
   {
     title: i18next.t("status"),
     dataIndex: "status",

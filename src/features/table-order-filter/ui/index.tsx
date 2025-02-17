@@ -23,7 +23,7 @@ export const TableOrderFilterUI: FC<TProps> = (props) => {
       >
         <Flex vertical gap={5}>
           <Radio value="name">{t("by-name")}</Radio>
-          <Radio value="orderNumber">{t("by-order-number")}</Radio>
+          <Radio value="orderNumber">{t("by-order_number")}</Radio>
         </Flex>
       </Radio.Group>
       <Divider style={{ margin: "8px 0" }} />
