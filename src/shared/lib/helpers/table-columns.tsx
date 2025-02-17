@@ -665,6 +665,12 @@ export const unconfirmedTableColumns = [
     render: (text: string) => (text === "null" ? "" : text), // if address is empty
   },
   {
+    title: i18next.t("phone"),
+    dataIndex: "PhoneVersion",
+    key: "PhoneVersion",
+    render: (text: { phone: string }[]) => text?.map((item) => item?.phone),
+  },
+  {
     title: i18next.t("createdBy"),
     dataIndex: "createdBy",
     key: "createdBy",

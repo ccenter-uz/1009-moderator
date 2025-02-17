@@ -1,7 +1,7 @@
 import { Flex, Form, Tooltip } from "antd";
 import { createSchemaFieldRule } from "antd-zod";
 import i18next from "i18next";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
 import { MdRestore } from "react-icons/md";
@@ -59,9 +59,7 @@ export const ManageNeighborhoodPage = () => {
   const [editingData, setEditingData] = useState<INeighborhoodValues | null>(
     null,
   );
-  const [isFilterReset, setIsFilterReset] = useState<
-    string | number | undefined
-  >();
+
   const handleEditOpen = (values: INeighborhoodValues) => {
     const editingBody = {
       id: values.id,
@@ -87,9 +85,13 @@ export const ManageNeighborhoodPage = () => {
   const handleSearch = ({
     search,
     status = STATUS.ACTIVE,
+    oldName,
+    newName,
   }: {
     search: string;
     status: number;
+    oldName: string;
+    newName: string;
   }) => {
     let inputValue = search;
     if (inputValue === undefined) {
@@ -99,12 +101,21 @@ export const ManageNeighborhoodPage = () => {
     if (inputValue || inputValue === "" || typeof status === "number") {
       setSearchParams({
         ...params,
+        oldName: oldName ? oldName : "",
+        newName: newName ? newName : "",
         search: inputValue.trim(),
         status: status.toString()
           ? status.toString()
           : STATUS.ACTIVE.toString(),
       });
     }
+  };
+  const handleReset = () => {
+    const prevParams = returnAllParams();
+    delete prevParams.search;
+    delete prevParams.oldName;
+    delete prevParams.newName;
+    setSearchParams(prevParams);
   };
 
   const handleSubmit = async (values: INeighborhoodValues) => {
@@ -145,17 +156,6 @@ export const ManageNeighborhoodPage = () => {
     form.resetFields();
     onOpen();
   };
-
-  useEffect(() => {
-    if (isFilterReset) {
-      setSearchParams({
-        ...params,
-        status: STATUS.ACTIVE.toString(),
-        search: "",
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFilterReset]);
 
   const columns = [
     {
@@ -215,8 +215,9 @@ export const ManageNeighborhoodPage = () => {
         add={handleAdd}
         searchPart={
           <BasicSearchPartUI
+            hasOldAndNewNameFilter
             handleSearch={handleSearch}
-            handleReset={setIsFilterReset}
+            handleReset={handleReset}
             status={Number(params.status)}
           />
         }
