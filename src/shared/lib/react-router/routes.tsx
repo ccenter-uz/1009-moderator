@@ -52,6 +52,7 @@ import { operatorPermissionsByRole } from "./permissions-by-role";
 import { getLocalStorage } from "../helpers";
 import { ManageSegmentsAsync } from "@pages/manage-segments";
 import { OrgWaitingsAsync } from "@pages/organization-waitings";
+import { ManageNeighborhoodAsync } from "@pages/manage-neighborhood";
 
 function BubbleError() {
   const error = useRouteError();
@@ -294,6 +295,16 @@ const childRoutes = [
         icon: <LuCircleDot />,
         path: "residential-area",
         element: <ManageResidentialAreaAsync />,
+      },
+      {
+        key: "/manage/neighborhood",
+        name: "/manage/neighborhood",
+        label: (
+          <Link to="/manage/neighborhood">{i18next.t("neighborhood")}</Link>
+        ),
+        icon: <LuCircleDot />,
+        path: "neighborhood",
+        element: <ManageNeighborhoodAsync />,
       },
       {
         key: "/manage/impasse",

@@ -10,6 +10,7 @@ import { useGetAreasQuery } from "@entities/area";
 import { useGetAvenuesQuery } from "@entities/avenue";
 import { useGetImpassesQuery } from "@entities/impasse";
 import { useGetLanesQuery } from "@entities/lane";
+import { useGetNeighborhoodsQuery } from "@entities/neighborhood";
 import { useGetPassagesQuery } from "@entities/passage";
 import { useGetResidentialAreasQuery } from "@entities/residential-area";
 import { useGetStreetsQuery } from "@entities/street";
@@ -39,6 +40,8 @@ export const OrgAddSecondStepUI: FC = () => {
   );
   const { data: residentialAreaData, isLoading: isLoadingResidentialArea } =
     useGetResidentialAreasQuery(getDataWithRegionCityParams);
+  const { data: neighborhoodData, isLoading: isLoadingNeighborhood } =
+    useGetNeighborhoodsQuery(getDataWithRegionCityParams);
   const { data: areaData, isLoading: isLoadingArea } = useGetAreasQuery(
     getDataWithRegionCityParams,
   );
@@ -106,6 +109,23 @@ export const OrgAddSecondStepUI: FC = () => {
                 }),
               )}
               placeholder={t("residential-area")}
+            />
+          </Form.Item>
+          <Form.Item
+            name={"neighborhoodId"}
+            label={<ParagraphBold>{t("neighborhood")}</ParagraphBold>}
+          >
+            <SearchableSelect
+              loading={isLoadingNeighborhood}
+              options={neighborhoodData?.data.map(
+                (item: Record<string, string | number>) => ({
+                  value: item.id,
+                  label: String(
+                    item.name[i18next.language as keyof typeof item.name],
+                  ),
+                }),
+              )}
+              placeholder={t("neighborhood")}
             />
           </Form.Item>
           <Form.Item
