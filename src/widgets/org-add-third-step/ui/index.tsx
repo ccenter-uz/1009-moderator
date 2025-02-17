@@ -73,7 +73,7 @@ export const OrgAddThirdStepUI: FC = () => {
       title: t("action"),
       dataIndex: "action",
       key: "action",
-      render: (text: string, record: { phone: string }) => (
+      render: (_: string, record: { phone: string }) => (
         <Popconfirm
           title={t("delete")}
           onConfirm={() => onDelete(record?.phone)}
@@ -98,15 +98,12 @@ export const OrgAddThirdStepUI: FC = () => {
         ...item,
         isSecret: e.target.checked,
       }));
+    const otherData = data?.filter(
+      (item: { phone: string }) => item.phone !== record.phone,
+    );
 
-    const otherData = data
-      ?.filter((item: { phone: string }) => item.phone !== record.phone)
-      .map((item: { isSecret: boolean }) => ({
-        ...item,
-        isSecret: false,
-      }));
     if (!filteredData) return null;
-    const newData = [...otherData, ...filteredData];
+    const newData = [...filteredData, ...otherData];
     dispatch(setData(newData));
   };
 
