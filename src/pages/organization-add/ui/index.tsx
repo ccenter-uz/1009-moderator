@@ -37,12 +37,12 @@ const OrgAddSecondStepUI = lazy(() =>
     default: module.OrgAddSecondStepUI,
   })),
 );
-const OrgAddFourthStepUI = lazy(() =>
+const OrgAddThirdStepUI = lazy(() =>
   import("@widgets/org-add-third-step").then((module) => ({
     default: module.OrgAddThirdStepUI,
   })),
 );
-const OrgAddThirdStepUI = lazy(() =>
+const OrgAddFourthStepUI = lazy(() =>
   import("@widgets/org-add-fourth-step").then((module) => ({
     default: module.OrgAddFourthStepUI,
   })),
@@ -101,7 +101,7 @@ export const OrgAddPage: FC = () => {
     },
   ];
 
-  const STORE_STEPS_DATA = () => {
+  const STORE_STEPS_DATA = (current: number) => {
     if (current === STEPS_ENUM.firstStep) {
       const firstStepData = {
         ...form.getFieldsValue(STEPS_DATA.FIRST_FORMDATA),
@@ -127,16 +127,8 @@ export const OrgAddPage: FC = () => {
     await form.validateFields();
     setCurrent(current + 1);
     localStorage.setItem("currentStep", JSON.stringify(current + 1));
-    STORE_STEPS_DATA();
+    STORE_STEPS_DATA(current);
   };
-
-  // SAVE-VALUES-UNMOUNT
-  useEffect(() => {
-    return () => {
-      STORE_STEPS_DATA();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const prev = () => {
     setCurrent(current - 1);
@@ -308,7 +300,16 @@ export const OrgAddPage: FC = () => {
       form.setFieldsValue(JSON.parse(thirdStepData)),
         dispatch(setPhoneData(JSON.parse(thirdStepData)?.phone));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
+  // SAVE-VALUES-UNMOUNT
+  useEffect(() => {
+    return () => {
+      const currentStep = Number(localStorage.getItem("currentStep"));
+
+      STORE_STEPS_DATA(currentStep);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
