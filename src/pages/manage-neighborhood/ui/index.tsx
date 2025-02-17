@@ -1,7 +1,7 @@
 import { Flex, Form, Tooltip } from "antd";
 import { createSchemaFieldRule } from "antd-zod";
 import i18next from "i18next";
-import { FC, useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
 import { MdRestore } from "react-icons/md";
@@ -16,55 +16,53 @@ import { NameInputsCyrill } from "@entities/name-inputs-cyrill";
 import { NameInputsRu } from "@entities/name-inputs-ru";
 import { NameInputsUz } from "@entities/name-inputs-uz";
 import {
-  useCreateResidentialAreaMutation,
-  useDeleteResidentialAreaMutation,
-  useGetResidentialAreasQuery,
-  useRestoreResidentialAreaMutation,
-  useUpdateResidentialAreaMutation,
-} from "@entities/residential-area";
+  useGetNeighborhoodsQuery,
+  useDeleteNeighborhoodMutation,
+  useUpdateNeighborhoodMutation,
+  useCreateNeighborhoodMutation,
+  useRestoreNeighborhoodMutation,
+} from "@entities/neighborhood";
 
 import {
-  columnsForAddress,
   getZodRequiredKeys,
-  notificationResponse,
   returnAllParams,
   STATUS,
+  notificationResponse,
+  columnsForAddress,
 } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { ManageWrapperBox, ModalAddEdit } from "@shared/ui";
 
-import { ResidentialAreaCreateFormDtoSchema } from "./model/dto";
-import { IResidentialAreaValues } from "./model/types";
+import { NeighborhoodCreateFormDtoSchema } from "../model/dto";
+import { INeighborhoodValues } from "../model/types";
 
-export const ManageResidentialAreaPage: FC = () => {
+export const ManageNeighborhoodPage = () => {
   const { t } = useTranslation();
   const [_, setSearchParams] = useSearchParams();
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const [form] = Form.useForm<IResidentialAreaValues>();
-  const formRule = createSchemaFieldRule(ResidentialAreaCreateFormDtoSchema);
-  const formRequiredField = getZodRequiredKeys(
-    ResidentialAreaCreateFormDtoSchema,
-  );
+  const [form] = Form.useForm<INeighborhoodValues>();
+  const formRule = createSchemaFieldRule(NeighborhoodCreateFormDtoSchema);
+  const formRequiredField = getZodRequiredKeys(NeighborhoodCreateFormDtoSchema);
   const [order, setOrder] = useState<"name" | "orderNumber">("orderNumber");
   const params = returnAllParams();
-  const { data, isLoading } = useGetResidentialAreasQuery({
+  const { data, isLoading } = useGetNeighborhoodsQuery({
     status: STATUS.ACTIVE,
     langCode: i18next.language,
     order,
     ...params,
   });
-  const [deleteResidentialArea] = useDeleteResidentialAreaMutation();
-  const [updateResidentialArea] = useUpdateResidentialAreaMutation();
-  const [createResidentialArea] = useCreateResidentialAreaMutation();
-  const [restoreResidentialArea] = useRestoreResidentialAreaMutation();
+  const [deleteNeighborhood] = useDeleteNeighborhoodMutation();
+  const [updateNeighborhood] = useUpdateNeighborhoodMutation();
+  const [createNeighborhood] = useCreateNeighborhoodMutation();
+  const [restoreNeighborhood] = useRestoreNeighborhoodMutation();
 
-  const [editingData, setEditingData] = useState<IResidentialAreaValues | null>(
+  const [editingData, setEditingData] = useState<INeighborhoodValues | null>(
     null,
   );
   const [isFilterReset, setIsFilterReset] = useState<
     string | number | undefined
   >();
-  const handleEditOpen = (values: IResidentialAreaValues) => {
+  const handleEditOpen = (values: INeighborhoodValues) => {
     const editingBody = {
       id: values.id,
       index: values.index,
@@ -109,7 +107,7 @@ export const ManageResidentialAreaPage: FC = () => {
     }
   };
 
-  const handleSubmit = async (values: IResidentialAreaValues) => {
+  const handleSubmit = async (values: INeighborhoodValues) => {
     const body = {
       id: editingData?.id,
       regionId: values.region,
@@ -133,7 +131,7 @@ export const ManageResidentialAreaPage: FC = () => {
         cy: values.new_name_cyrill,
       },
     };
-    const request = editingData ? updateResidentialArea : createResidentialArea;
+    const request = editingData ? updateNeighborhood : createNeighborhood;
 
     const response = await request(body);
 
@@ -176,7 +174,7 @@ export const ManageResidentialAreaPage: FC = () => {
       key: "action",
       dataIndex: "action",
       align: "center",
-      render: (text: string, record: IResidentialAreaValues) => {
+      render: (_: string, record: INeighborhoodValues) => {
         if (record.status === STATUS.ACTIVE) {
           return (
             <Flex justify="center" align="center" gap={8}>
@@ -187,9 +185,7 @@ export const ManageResidentialAreaPage: FC = () => {
                 title={t("edit")}
                 onClick={() => handleEditOpen(record)}
               />
-              <DeleteTableItemUI
-                fetch={() => deleteResidentialArea(record.id)}
-              />
+              <DeleteTableItemUI fetch={() => deleteNeighborhood(record.id)} />
             </Flex>
           );
         } else if (record.status === STATUS.INACTIVE) {
@@ -199,7 +195,7 @@ export const ManageResidentialAreaPage: FC = () => {
                 color="grey"
                 cursor={"pointer"}
                 size={20}
-                onClick={() => restoreResidentialArea(record.id)}
+                onClick={() => restoreNeighborhood(record.id)}
               />
             </Tooltip>
           );
@@ -213,7 +209,7 @@ export const ManageResidentialAreaPage: FC = () => {
       <ManageWrapperBox
         totalItems={data?.total || 0}
         loading={isLoading}
-        title={t("residential-area")}
+        title={t("neighborhood")}
         columns={columns}
         data={data?.data || []}
         add={handleAdd}
@@ -228,8 +224,8 @@ export const ManageResidentialAreaPage: FC = () => {
           <Form
             form={form}
             onFinish={handleSubmit}
-            id="manage-residential-area"
-            className="manage-residential-area"
+            id="manage-neighborhood"
+            className="manage-neighborhood"
           >
             <ModalAddEdit
               loading={isLoading}
@@ -260,7 +256,7 @@ export const ManageResidentialAreaPage: FC = () => {
                   requiredFields={formRequiredField}
                 />
               }
-              formId={"manage-residential-area"}
+              formId={"manage-neighborhood"}
             />
           </Form>
         }

@@ -112,6 +112,7 @@ export const baseApi = createApi({
     "OrganizationMonitoring",
     "AdditionalCategories",
     "Additional",
+    "Neighborhoods",
   ],
   endpoints: () => ({}),
 });

@@ -66,6 +66,7 @@ export const UploadUI: FC<Props> = (props) => {
       <input
         type="file"
         id="file"
+        accept="image/png, image/jpeg, image/webp, image/jpg, image/svg"
         style={{ display: "none" }}
         onChange={onUpload}
       />

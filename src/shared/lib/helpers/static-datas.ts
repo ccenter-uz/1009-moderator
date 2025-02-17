@@ -19,6 +19,7 @@ export const STEPS_DATA = {
   SECOND_FORMDATA: [
     "villageId",
     "residentialId",
+    "neighborhoodId",
     "areaId",
     "avenueId",
     "kvartal",
@@ -64,6 +65,7 @@ export const SEND_BODY = [
   "villageId",
   "districtId",
   "residentialId",
+  "neighborhoodId",
   "areaId",
   "kvartal",
   "streetId",
