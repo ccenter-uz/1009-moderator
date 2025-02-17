@@ -54,6 +54,7 @@ export const organizationApi = baseApi.injectEndpoints({
           data: response?.result?.data.map((item) => ({
             ...item,
             id: Number(item.id),
+            organizationId: Number(item.organizationId),
             key: item.id,
           })),
           total: response?.result?.totalDocs,
@@ -133,7 +134,7 @@ export const organizationApi = baseApi.injectEndpoints({
     // CHECK
     checkOrganization: build.mutation({
       query: (body) => ({
-        url: `${API_MAP.CHECK_ORGANIZATION}/${body.id}`,
+        url: `${API_MAP.CHECK_ORGANIZATION}/${body.organizationId}`,
         method: API_METHODS.PUT,
         body,
       }),
