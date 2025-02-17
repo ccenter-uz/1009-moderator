@@ -1,5 +1,4 @@
 import { Button, Col, Divider, Flex, Form, Row } from "antd";
-import { AnyObject } from "antd/es/_util/type";
 import { FC, SetStateAction, Dispatch, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -10,7 +9,9 @@ import { CategorySubcategorySelect } from "@features/category-subCategory-select
 import { ContactSearchPartUI } from "@features/contact-search-part";
 
 type Props = {
-  setSearchValues: Dispatch<SetStateAction<AnyObject | null>>;
+  setSearchValues: Dispatch<
+    SetStateAction<{ regionId: number; cityId: number } | null>
+  >;
   searchTableRef?: HTMLElement | null;
 };
 
@@ -21,7 +22,7 @@ export const SearchPartUI: FC<Props> = (props) => {
   const [regionId, setRegionId] = useState<number | null>(null);
   const [cityId, setCityId] = useState<number | null>(null);
 
-  const onSubmit = (values: AnyObject) => {
+  const onSubmit = (values: { regionId: number; cityId: number }) => {
     setSearchValues(values);
 
     searchTableRef?.scrollIntoView({ behavior: "smooth" });

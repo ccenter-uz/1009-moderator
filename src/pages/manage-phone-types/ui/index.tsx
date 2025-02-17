@@ -1,6 +1,7 @@
 import { Flex, Form, Tooltip } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { createSchemaFieldRule } from "antd-zod";
+import i18next from "i18next";
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
@@ -9,6 +10,7 @@ import { useSearchParams } from "react-router-dom";
 
 import { BasicSearchPartUI } from "@features/basic-search-part";
 import { DeleteTableItemUI } from "@features/delete-table-item";
+import { TableOrderFilterUI } from "@features/table-order-filter";
 
 import {
   useCreatePhoneTypeMutation,
@@ -38,6 +40,8 @@ interface ImanagePhoneTypeValues {
   name: { ru: string; uz: string; cy: string };
   id: number;
   status?: number;
+  orderNumber?: number;
+  order_number?: number;
 }
 
 export const ManagePhoneTypesPage: FC = () => {
@@ -47,10 +51,12 @@ export const ManagePhoneTypesPage: FC = () => {
   const [form] = Form.useForm<ItableBasicData>();
   const formRule = createSchemaFieldRule(PhoneTypeCreateFormDtoSchema);
   const formRequiredField = getZodRequiredKeys(PhoneTypeCreateFormDtoSchema);
-
+  const [order, setOrder] = useState<"name" | "orderNumber">("orderNumber");
   const params = returnAllParams();
   const { data, isLoading } = useGetPhoneTypeQuery({
-    status: status || STATUS.ACTIVE,
+    status: STATUS.ACTIVE,
+    langCode: i18next.language,
+    order,
     ...params,
   });
   const [deletePhoneType] = useDeletePhoneTypeMutation();
@@ -67,6 +73,7 @@ export const ManagePhoneTypesPage: FC = () => {
       name_uz: values.name.uz,
       name_uzcyrill: values.name.cy,
       id: editingData?.id,
+      orderNumber: values.order_number,
     };
     setEditingData({ ...values, id: values.id });
     form.setFieldsValue(editingBody);
@@ -103,6 +110,7 @@ export const ManagePhoneTypesPage: FC = () => {
         uz: values.name_uz,
         cy: values.name_uzcyrill,
       },
+      orderNumber: Number(values.orderNumber),
       id: editingData?.id,
     };
 
@@ -132,6 +140,15 @@ export const ManagePhoneTypesPage: FC = () => {
   }, [isFilterReset]);
 
   const columns = [
+    {
+      title: t("name"),
+      dataIndex: "name",
+      key: "name",
+      render: (text: { [key: string]: string }) => text[i18next.language],
+      filterDropdown: () => (
+        <TableOrderFilterUI order={order} setOrder={setOrder} />
+      ),
+    },
     ...columnsForPhoneTypeTable,
     {
       flex: 0.5,
@@ -139,7 +156,7 @@ export const ManagePhoneTypesPage: FC = () => {
       key: "action",
       dataIndex: "action",
       align: "center",
-      render: (text: string, record: ImanagePhoneTypeValues) => {
+      render: (_: string, record: ImanagePhoneTypeValues) => {
         if (record.status === STATUS.ACTIVE) {
           return (
             <Flex justify="center" align="center" gap={8}>

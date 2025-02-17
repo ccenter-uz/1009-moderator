@@ -1,4 +1,4 @@
-import { Button, Flex, Form, Input, Select } from "antd";
+import { Button, Flex, Form, Input } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -7,6 +7,7 @@ import { MdClear } from "react-icons/md";
 import { useSearchParams } from "react-router-dom";
 
 import { returnAllParams, STATUS } from "@shared/lib/helpers";
+import { SearchableSelect } from "@shared/ui";
 
 type Props = {
   handleSearch: ({
@@ -20,7 +21,7 @@ type Props = {
   }) => void;
   status?: number;
   isFilterByStatusRequired?: boolean;
-  handleReset: Dispatch<SetStateAction<string | number | undefined>>;
+  handleReset?: Dispatch<SetStateAction<string | number | undefined>>;
   hasFilterByStatus?: boolean;
   loading?: boolean;
   additionalSearch?: JSX.Element;
@@ -91,7 +92,7 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
             style={{ flex: 0.3, width: "max-content" }}
             initialValue={initialStatusValue}
           >
-            <Select
+            <SearchableSelect
               options={[
                 {
                   id: 0,
@@ -110,7 +111,6 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
                 },
               ]}
               placeholder={t("status")}
-              allowClear
             />
           </Form.Item>
         )}

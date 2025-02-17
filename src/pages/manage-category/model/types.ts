@@ -33,6 +33,7 @@ export type editCategoryType = {
     title?: string;
     name: { ru: string; uz: string; cy: string };
   };
+  order_number?: number;
 };
 
 export type editSubcategoryType = editCategoryType;

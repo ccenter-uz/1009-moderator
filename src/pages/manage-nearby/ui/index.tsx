@@ -1,6 +1,7 @@
 import { Flex, Form, Select, Tooltip } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { createSchemaFieldRule } from "antd-zod";
+import i18next from "i18next";
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
@@ -10,6 +11,7 @@ import { useSearchParams } from "react-router-dom";
 import { Address2Inputs } from "@features/address-2-inputs";
 import { BasicSearchPartUI } from "@features/basic-search-part";
 import { DeleteTableItemUI } from "@features/delete-table-item";
+import { TableOrderFilterUI } from "@features/table-order-filter";
 
 import {
   useCreateNearbyMutation,
@@ -47,8 +49,12 @@ interface valueProps {
   status?: number;
   regionId?: string;
   cityId?: string;
+  region_id?: string;
+  city_id?: string;
   name: { uz: string; ru: string; cy: string };
-  nearbyCategoryId?: string;
+  nearby_category_id?: string;
+  orderNumber?: number;
+  order_number?: number;
 }
 
 export const ManageNearbyPage: FC = () => {
@@ -58,10 +64,12 @@ export const ManageNearbyPage: FC = () => {
   const [form] = Form.useForm();
   const formRule = createSchemaFieldRule(NearbyCreateFormDtoSchema);
   const formRequiredField = getZodRequiredKeys(NearbyCreateFormDtoSchema);
-
+  const [order, setOrder] = useState<"name" | "orderNumber">("orderNumber");
   const params = returnAllParams();
   const { data, isLoading } = useGetNearbyQuery({
-    status: status || STATUS.ACTIVE,
+    status: STATUS.ACTIVE,
+    langCode: i18next.language,
+    order,
     ...params,
   });
   const { data: dataCategory, isLoading: isLoadingCategory } =
@@ -86,12 +94,13 @@ export const ManageNearbyPage: FC = () => {
   const handleEditOpen = (values: valueProps) => {
     const editingBody = {
       id: values.id,
-      region: values.regionId,
-      city: values.cityId,
+      region: values.region_id,
+      city: values.city_id,
       name_uz: values.name.uz,
       name_ru: values.name.ru,
       name_uzcyrill: values.name.cy,
-      "nearby-category": values.nearbyCategoryId,
+      "nearby-category": values.nearby_category_id,
+      orderNumber: values.order_number,
     };
     setEditingData({ ...values, id: values.id });
     form.setFieldsValue(editingBody);
@@ -131,9 +140,10 @@ export const ManageNearbyPage: FC = () => {
   const handleSubmit = async (values: valueProps) => {
     const body = {
       id: editingData?.id,
-      nearbyCategoryId: modalNearbyCategoryId,
+      nearbyCategoryId: Number(modalNearbyCategoryId),
       regionId: values.region,
       cityId: values.city,
+      orderNumber: Number(values.orderNumber),
       name: {
         uz: values.name_uz,
         ru: values.name_ru,
@@ -168,6 +178,15 @@ export const ManageNearbyPage: FC = () => {
   }, [isFilterReset]);
 
   const columns = [
+    {
+      title: t("name"),
+      dataIndex: "name",
+      key: "name",
+      render: (text: { [key: string]: string }) => text[i18next.language],
+      filterDropdown: () => (
+        <TableOrderFilterUI order={order} setOrder={setOrder} />
+      ),
+    },
     ...columnsWithRegions,
     {
       flex: 0.5,

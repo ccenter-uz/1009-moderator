@@ -30,6 +30,7 @@ export type ItableBasicData = {
   name_cyrill?: string;
   updated_date: string;
   employee: string;
+  orderNumber?: number;
 };
 
 export type ItableWithRegions = ItableBasicData & {

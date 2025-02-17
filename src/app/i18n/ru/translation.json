@@ -265,5 +265,9 @@
   "rejected": "Отклонено",
   "check": "В процессе",
   "rejectReason": "Причина отказа",
-  "deleteReason": "Причина удаления"
+  "deleteReason": "Причина удаления",
+  "order-number": "Очередной номер",
+  "by-name": "По имени",
+  "by-order-number": "По номеру очереди",
+  "sort-by": "Сортировать по"
 }

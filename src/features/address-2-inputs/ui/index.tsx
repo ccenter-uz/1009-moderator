@@ -1,4 +1,4 @@
-import { Row, Col, Select, Form, FormInstance } from "antd";
+import { Row, Col, Form, FormInstance } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { Rule } from "antd/es/form";
 import TextArea from "antd/es/input/TextArea";
@@ -12,6 +12,7 @@ import {
 } from "@entities/region-city";
 
 import { GET_ALL_ACTIVE_STATUS, resetFieldsValue } from "@shared/lib/helpers";
+import { SearchableSelect } from "@shared/ui";
 
 type Props = {
   withIndex?: boolean;
@@ -80,7 +81,7 @@ export const Address2Inputs: FC<Props> = (props) => {
           label={t(FORM_FIELDS.region)}
           layout="vertical"
         >
-          <Select
+          <SearchableSelect
             options={
               dataRegions?.data.map((region: AnyObject) => ({
                 label: region.name[i18next.language],
@@ -102,7 +103,7 @@ export const Address2Inputs: FC<Props> = (props) => {
           label={t(FORM_FIELDS.city)}
           layout="vertical"
         >
-          <Select
+          <SearchableSelect
             options={
               dataCities?.data.map((city: AnyObject) => ({
                 label: city.name[i18next.language],

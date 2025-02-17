@@ -1,12 +1,27 @@
 import { Row, Col, Table } from "antd";
-import { AnyObject } from "antd/es/_util/type";
 import { FC } from "react";
 
 import { attrColumns, subCategoryColumns } from "@shared/lib/helpers";
 
+type TAttr = {
+  id?: number;
+  Phone: {
+    phone: string;
+    isSecret: boolean;
+    PhoneTypes: { name: { [key: string]: string } };
+  }[];
+
+  ProductServices: {
+    ProductServiceSubCategory: { name: { [key: string]: string } };
+  }[];
+};
+type TSubCategory = {
+  ProductServiceSubCategory: string;
+};
+
 type Props = {
-  attrData: AnyObject[];
-  subCategoryData: AnyObject[];
+  attrData: TAttr[];
+  subCategoryData: TSubCategory[];
 };
 
 export const SearchBottomTable: FC<Props> = (props) => {

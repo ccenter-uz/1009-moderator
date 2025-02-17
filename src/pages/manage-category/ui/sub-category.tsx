@@ -1,6 +1,6 @@
 import { Flex, Form, Tooltip } from "antd";
 import { createSchemaFieldRule } from "antd-zod";
-import { t } from "i18next";
+import i18next, { t } from "i18next";
 import { FC, useEffect, useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
 import { MdRestore } from "react-icons/md";
@@ -8,6 +8,7 @@ import { useSearchParams } from "react-router-dom";
 
 import { BasicSearchPartUI } from "@features/basic-search-part";
 import { DeleteTableItemUI } from "@features/delete-table-item";
+import { TableOrderFilterUI } from "@features/table-order-filter";
 
 import {
   useLazyGetSubCategoriesQuery,
@@ -21,7 +22,7 @@ import { SingleNameRu } from "@entities/single-name-ru";
 import { SingleNameUz } from "@entities/single-name-uz";
 
 import {
-  columnsForCategories,
+  columnsForSubcategories,
   getZodRequiredKeys,
   notificationResponse,
   returnAllParams,
@@ -46,7 +47,7 @@ export const SubCategory: FC = () => {
     [CategorySubCategoryEnums.subCategorySearch]: search,
     [CategorySubCategoryEnums.subCategoryStatus]: subCategoryStatus,
   } = returnAllParams();
-
+  const [order, setOrder] = useState<"name" | "orderNumber">("orderNumber");
   const [trigger, { data, isLoading }] = useLazyGetSubCategoriesQuery();
 
   const [createSubCategory] = useCreateSubCategoriesMutation();
@@ -69,6 +70,7 @@ export const SubCategory: FC = () => {
       name_uz: values.name.uz,
       name_ru: values.name.ru,
       name_uzcyrill: values.name.cy,
+      orderNumber: values.order_number,
     });
     onOpen();
   };
@@ -92,6 +94,7 @@ export const SubCategory: FC = () => {
 
   const handleSubmit = async (serviceData: ItableBasicData) => {
     const serviceBody = {
+      orderNumber: Number(serviceData.orderNumber),
       name: {
         ru: serviceData.name_ru,
         uz: serviceData.name_uz,
@@ -133,7 +136,16 @@ export const SubCategory: FC = () => {
   }, [isFilterReset]);
 
   const columns = [
-    ...columnsForCategories,
+    {
+      title: t("name"),
+      dataIndex: "name",
+      key: "name",
+      render: (text: { [key: string]: string }) => text[i18next.language],
+      filterDropdown: () => (
+        <TableOrderFilterUI order={order} setOrder={setOrder} />
+      ),
+    },
+    ...columnsForSubcategories,
     {
       flex: 0.5,
       title: "Действия",
@@ -181,6 +193,8 @@ export const SubCategory: FC = () => {
         page: Number(page) || 1,
         limit: Number(limit) || 10,
         search,
+        langCode: i18next.language,
+        order,
         status: subCategoryStatus || STATUS.ACTIVE,
         categoryId: Number(
           searchParams.get(CategorySubCategoryEnums.categoryId),
@@ -195,6 +209,7 @@ export const SubCategory: FC = () => {
     page,
     limit,
     subCategoryStatus,
+    order,
   ]);
 
   return (

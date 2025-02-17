@@ -1,6 +1,7 @@
 import { Flex, Form, Tooltip } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { createSchemaFieldRule } from "antd-zod";
+import i18next from "i18next";
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
@@ -9,6 +10,7 @@ import { useSearchParams } from "react-router-dom";
 
 import { BasicSearchPartUI } from "@features/basic-search-part";
 import { DeleteTableItemUI } from "@features/delete-table-item";
+import { TableOrderFilterUI } from "@features/table-order-filter";
 
 import {
   useCreateNearbyCategoryMutation,
@@ -41,17 +43,18 @@ export const ManageNearbyCategoryPage: FC = () => {
   const formRequiredField = getZodRequiredKeys(
     NearbyCategoryCreateFormDtoSchema,
   );
-
+  const [order, setOrder] = useState<"name" | "orderNumber">("orderNumber");
   const params = returnAllParams();
   const { data, isLoading } = useGetNearbyCategoryQuery({
-    status: status || STATUS.ACTIVE,
+    status: STATUS.ACTIVE,
+    langCode: i18next.language,
+    order,
     ...params,
   });
   const [deleteNearbyCategory] = useDeleteNearbyCategoryMutation();
   const [createNearbyCategory] = useCreateNearbyCategoryMutation();
   const [updateNearbyCategory] = useUpdateNearbyCategoryMutation();
   const [restoreNearbyCategory] = useRestoreNearbyCategoryMutation();
-
   const [editingData, setEditingData] = useState<AnyObject | null>(null);
   const [isFilterReset, setIsFilterReset] = useState<
     string | number | undefined
@@ -117,6 +120,14 @@ export const ManageNearbyCategoryPage: FC = () => {
   }, [isFilterReset]);
 
   const columns = [
+    {
+      title: t("name"),
+      dataIndex: "name",
+      key: "name",
+      filterDropdown: () => (
+        <TableOrderFilterUI order={order} setOrder={setOrder} />
+      ),
+    },
     ...columnsWithSingleName,
     {
       flex: 0.5,

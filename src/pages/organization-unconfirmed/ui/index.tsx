@@ -1,5 +1,4 @@
 import { Button, Flex, Select, Table, Tooltip } from "antd";
-import { AnyObject } from "antd/es/_util/type";
 import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaCheck, FaPen } from "react-icons/fa";
@@ -70,7 +69,7 @@ export const OrgUnconfirmedPage: FC = () => {
     }
   };
 
-  const checkExistId = (record: AnyObject) => {
+  const checkExistId = (record: { id: number }) => {
     const { editingId, firstStepData } = getEditingStepStorageValues();
 
     if (editingId && Number(record.id) !== Number(editingId)) {

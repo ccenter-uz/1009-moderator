@@ -1,6 +1,7 @@
 import { Flex, Form, Tooltip } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { createSchemaFieldRule } from "antd-zod";
+import i18next from "i18next";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
@@ -9,6 +10,7 @@ import { useSearchParams } from "react-router-dom";
 
 import { BasicSearchPartUI } from "@features/basic-search-part";
 import { DeleteTableItemUI } from "@features/delete-table-item";
+import { TableOrderFilterUI } from "@features/table-order-filter";
 
 import {
   useCreateSegmentMutation,
@@ -39,10 +41,12 @@ export const ManageSegmentsPage = () => {
   const [form] = Form.useForm();
   const formRule = createSchemaFieldRule(SegmentCreateFormDtoSchema);
   const formRequiredField = getZodRequiredKeys(SegmentCreateFormDtoSchema);
-
+  const [order, setOrder] = useState<"name" | "orderNumber">("orderNumber");
   const params = returnAllParams();
   const { data, isLoading } = useGetSegmentsQuery({
-    status: status || STATUS.ACTIVE,
+    status: STATUS.ACTIVE,
+    langCode: i18next.language,
+    order,
     ...params,
   });
   const [deleteSegment] = useDeleteSegmentMutation();
@@ -55,11 +59,16 @@ export const ManageSegmentsPage = () => {
     string | number | undefined
   >();
 
-  const handleEditOpen = (values: { name: string; id: string | number }) => {
+  const handleEditOpen = (values: {
+    name: string;
+    id: string | number;
+    orderNumber: number;
+  }) => {
     setEditingData({ ...values, id: values.id });
     const body = {
       name: values.name,
       id: values.id,
+      orderNumber: values.orderNumber,
     };
     form.setFieldsValue({ ...body });
     onOpen();
@@ -89,6 +98,7 @@ export const ManageSegmentsPage = () => {
     const body = {
       name: values.name,
       id: editingData?.id,
+      orderNumber: Number(values.orderNumber),
     };
     const request = editingData ? updateSegment : createSegment;
 
@@ -117,6 +127,14 @@ export const ManageSegmentsPage = () => {
   }, [isFilterReset]);
 
   const columns = [
+    {
+      title: t("name"),
+      dataIndex: "name",
+      key: "name",
+      filterDropdown: () => (
+        <TableOrderFilterUI order={order} setOrder={setOrder} />
+      ),
+    },
     ...columnsWithSingleName,
     {
       flex: 0.5,
@@ -125,10 +143,11 @@ export const ManageSegmentsPage = () => {
       dataIndex: "action",
       align: "center",
       render: (
-        text: string,
+        _: string,
         record: ItableBasicData & {
           status: number;
           name: { uz: string; ru: string; cy: string };
+          orderNumber: number;
         },
       ) => {
         if (record.status === STATUS.ACTIVE) {

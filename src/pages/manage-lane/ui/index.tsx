@@ -1,5 +1,6 @@
 import { Flex, Form, Tooltip } from "antd";
 import { createSchemaFieldRule } from "antd-zod";
+import i18next from "i18next";
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
@@ -9,6 +10,7 @@ import { useSearchParams } from "react-router-dom";
 import { Address3Inputs } from "@features/address-3-inputs";
 import { BasicSearchPartUI } from "@features/basic-search-part";
 import { DeleteTableItemUI } from "@features/delete-table-item";
+import { TableOrderFilterUI } from "@features/table-order-filter";
 
 import {
   useCreateLaneMutation,
@@ -51,9 +53,14 @@ export interface valueProps {
   regionId?: string;
   cityId?: string;
   districtId?: string;
+  region_id?: string;
+  city_id?: string;
+  district_id?: string;
   name: { uz: string; ru: string; cy: string };
   oldName: { uz: string; ru: string; cy: string };
   newName: { uz: string; ru: string; cy: string };
+  orderNumber?: number;
+  order_number?: number;
 }
 
 export const ManageLanePage: FC = () => {
@@ -63,10 +70,12 @@ export const ManageLanePage: FC = () => {
   const [form] = Form.useForm<valueProps>();
   const formRule = createSchemaFieldRule(LaneCreateFormDtoSchema);
   const formRequiredField = getZodRequiredKeys(LaneCreateFormDtoSchema);
-
+  const [order, setOrder] = useState<"name" | "orderNumber">("orderNumber");
   const params = returnAllParams();
   const { data, isLoading } = useGetLanesQuery({
-    status: status || STATUS.ACTIVE,
+    status: STATUS.ACTIVE,
+    langCode: i18next.language,
+    order,
     ...params,
   });
   const [deleteLane] = useDeleteLaneMutation();
@@ -82,9 +91,9 @@ export const ManageLanePage: FC = () => {
     const editingBody = {
       id: values.id,
       index: values.index,
-      region: values.regionId,
-      district: values.districtId,
-      city: values.cityId,
+      region: values.region_id,
+      district: values.district_id,
+      city: values.city_id,
       name_uz: values.name.uz,
       name_ru: values.name.ru,
       name_uzcyrill: values.name.cy,
@@ -94,6 +103,7 @@ export const ManageLanePage: FC = () => {
       new_name_uz: values.newName.uz,
       new_name_ru: values.newName.ru,
       new_name_cyrill: values.newName.cy,
+      orderNumber: values.order_number,
     };
     setEditingData({ ...values, id: values.id });
     form.setFieldsValue(editingBody);
@@ -129,6 +139,7 @@ export const ManageLanePage: FC = () => {
       cityId: values.city,
       districtId: values.district,
       index: values.index,
+      orderNumber: Number(values.orderNumber),
       name: {
         uz: values.name_uz,
         ru: values.name_ru,
@@ -172,6 +183,15 @@ export const ManageLanePage: FC = () => {
   }, [isFilterReset]);
 
   const columns = [
+    {
+      title: t("name"),
+      dataIndex: "name",
+      key: "name",
+      render: (text: { [key: string]: string }) => text[i18next.language],
+      filterDropdown: () => (
+        <TableOrderFilterUI order={order} setOrder={setOrder} />
+      ),
+    },
     ...columnsForAddress,
     {
       flex: 0.5,

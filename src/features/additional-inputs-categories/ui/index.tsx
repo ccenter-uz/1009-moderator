@@ -1,13 +1,4 @@
-import {
-  Button,
-  Divider,
-  Flex,
-  Form,
-  Input,
-  Modal,
-  Select,
-  Typography,
-} from "antd";
+import { Button, Divider, Flex, Form, Input, Modal, Typography } from "antd";
 import i18next from "i18next";
 import { FC, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -26,11 +17,10 @@ import {
   AntDesignSwal,
   GET_ALL_ACTIVE_STATUS,
   notificationResponse,
-  renderLabelSelect,
   returnAllParams,
 } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
-import { Can } from "@shared/ui";
+import { Can, SearchableSelect } from "@shared/ui";
 
 const enum ENUMS {
   CATEGORY = "additionalCategoryId",
@@ -179,17 +169,14 @@ export const AdditionalInputsCategoriesUI: FC = () => {
           <label htmlFor={ENUMS.CATEGORY}>
             {t("choose-additional-category")}
           </label>
-          <Select
-            labelRender={renderLabelSelect}
+          <SearchableSelect
             loading={isLoading}
             value={Number(category)}
             id={ENUMS.CATEGORY}
             onSelect={onCategoryChange}
             placeholder={t("choose-additional-category")}
             options={options}
-            allowClear
             onClear={onClear}
-            showSearch
             dropdownRender={(menu) => addPart(menu)}
           />
         </Flex>
