@@ -241,7 +241,7 @@ export const OrgUnconfirmedPage: FC = () => {
           pagination={{
             current: page,
             pageSize: pageSize,
-            total: 0,
+            total: data?.total,
             showTotal: (total) => `${total} ${t("piece")}`,
             showSizeChanger: true,
             pageSizeOptions: pageSizeOptions,
