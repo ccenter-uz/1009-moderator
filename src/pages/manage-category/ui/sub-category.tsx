@@ -48,8 +48,10 @@ export const SubCategory: FC = () => {
     [CategorySubCategoryEnums.subCategoryStatus]: subCategoryStatus,
   } = returnAllParams();
   const [order, setOrder] = useState<"name" | "orderNumber">("orderNumber");
+  const [langCode, setLangCode] = useState<"ru" | "uz" | "cy">(
+    i18next.language as "ru" | "uz" | "cy",
+  );
   const [trigger, { data, isLoading }] = useLazyGetSubCategoriesQuery();
-
   const [createSubCategory] = useCreateSubCategoriesMutation();
   const [updateSubCategory] = useUpdateSubCategoriesMutation();
   const [deleteSubCategory] = useDeleteSubCategoriesMutation();
@@ -137,12 +139,45 @@ export const SubCategory: FC = () => {
 
   const columns = [
     {
-      title: t("name"),
+      title: t("name-uz"),
       dataIndex: "name",
       key: "name",
-      render: (text: { [key: string]: string }) => text[i18next.language],
+      render: (text: { uz: string }) => text?.uz,
       filterDropdown: () => (
-        <TableOrderFilterUI order={order} setOrder={setOrder} />
+        <TableOrderFilterUI
+          langCode="uz"
+          setLangCode={setLangCode}
+          order={order}
+          setOrder={setOrder}
+        />
+      ),
+    },
+    {
+      title: t("name-ru"),
+      dataIndex: "name",
+      key: "name",
+      render: (text: { ru: string }) => text?.ru,
+      filterDropdown: () => (
+        <TableOrderFilterUI
+          langCode="ru"
+          setLangCode={setLangCode}
+          order={order}
+          setOrder={setOrder}
+        />
+      ),
+    },
+    {
+      title: t("name-cyrill"),
+      dataIndex: "name",
+      key: "name",
+      render: (text: { cy: string }) => text?.cy,
+      filterDropdown: () => (
+        <TableOrderFilterUI
+          langCode="cy"
+          setLangCode={setLangCode}
+          order={order}
+          setOrder={setOrder}
+        />
       ),
     },
     ...columnsForSubcategories,
@@ -193,7 +228,7 @@ export const SubCategory: FC = () => {
         page: Number(page) || 1,
         limit: Number(limit) || 10,
         search,
-        langCode: i18next.language,
+        langCode,
         order,
         status: subCategoryStatus || STATUS.ACTIVE,
         categoryId: Number(

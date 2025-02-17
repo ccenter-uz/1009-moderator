@@ -51,11 +51,14 @@ export const Product: FC = () => {
     ProductServicesCreateFormDtoSchema,
   );
   const [order, setOrder] = useState<"name" | "orderNumber">("orderNumber");
+  const [langCode, setLangCode] = useState<"uz" | "ru" | "cy">(
+    i18next.language as "uz" | "ru" | "cy",
+  );
   const { data, isLoading } = useGetProductsQuery({
     page,
     limit,
     search,
-    langCode: i18next.language,
+    langCode,
     order,
     status: productStatus || STATUS.ACTIVE,
   });
@@ -152,12 +155,45 @@ export const Product: FC = () => {
 
   const columns = [
     {
-      title: t("name"),
+      title: t("name-uz"),
       dataIndex: "name",
       key: "name",
-      render: (text: { [key: string]: string }) => text[i18next.language],
+      render: (text: { uz: string }) => text?.uz,
       filterDropdown: () => (
-        <TableOrderFilterUI order={order} setOrder={setOrder} />
+        <TableOrderFilterUI
+          langCode="uz"
+          setLangCode={setLangCode}
+          order={order}
+          setOrder={setOrder}
+        />
+      ),
+    },
+    {
+      title: t("name-ru"),
+      dataIndex: "name",
+      key: "name",
+      render: (text: { ru: string }) => text?.ru,
+      filterDropdown: () => (
+        <TableOrderFilterUI
+          langCode="ru"
+          setLangCode={setLangCode}
+          order={order}
+          setOrder={setOrder}
+        />
+      ),
+    },
+    {
+      title: t("name-cyrill"),
+      dataIndex: "name",
+      key: "name",
+      render: (text: { cy: string }) => text?.cy,
+      filterDropdown: () => (
+        <TableOrderFilterUI
+          langCode="cy"
+          setLangCode={setLangCode}
+          order={order}
+          setOrder={setOrder}
+        />
       ),
     },
     ...columnsForCategoriesTu,

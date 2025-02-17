@@ -14,15 +14,20 @@ type Props = {
     search,
     status,
     nearbyCategoryId,
+    oldName,
+    newName,
   }: {
     search: string;
     status: number;
     nearbyCategoryId: string | number;
+    oldName: string;
+    newName: string;
   }) => void;
   status?: number;
   isFilterByStatusRequired?: boolean;
   handleReset?: Dispatch<SetStateAction<string | number | undefined>>;
   hasFilterByStatus?: boolean;
+  hasOldAndNewNameFilter?: boolean;
   loading?: boolean;
   additionalSearch?: JSX.Element;
   id?: string;
@@ -36,6 +41,7 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
     handleReset: handleResetFromProps,
     status: statusFromProps,
     hasFilterByStatus = true,
+    hasOldAndNewNameFilter = false,
     loading,
     additionalSearch,
     id = "basic-search",
@@ -65,6 +71,11 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
         ...params,
         ...additionalParams,
       });
+    } else if (params.newName || params.oldName) {
+      form.setFieldsValue({
+        oldName: params.oldName,
+        newName: params.newName,
+      });
     } else {
       form.setFieldsValue({
         search: params.search,
@@ -89,7 +100,7 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
           <Form.Item
             name={"status"}
             label={t("status")}
-            style={{ flex: 0.3, width: "max-content" }}
+            style={{ flex: 0.5, width: "max-content" }}
             initialValue={initialStatusValue}
           >
             <SearchableSelect
@@ -113,6 +124,34 @@ export const BasicSearchPartUI: FC<Props> = (props) => {
               placeholder={t("status")}
             />
           </Form.Item>
+        )}
+        {hasOldAndNewNameFilter && (
+          <Flex gap={8}>
+            <Form.Item
+              name="oldName"
+              style={{ marginBottom: 0, flex: 1 }}
+              label={t("old_name")}
+            >
+              <Input
+                type="text"
+                placeholder={t("old_name")}
+                allowClear
+                disabled={loading}
+              />
+            </Form.Item>
+            <Form.Item
+              name="newName"
+              style={{ marginBottom: 0, flex: 1 }}
+              label={t("new_name")}
+            >
+              <Input
+                type="text"
+                placeholder={t("new_name")}
+                allowClear
+                disabled={loading}
+              />
+            </Form.Item>
+          </Flex>
         )}
         <Form.Item
           name="search"
