@@ -103,7 +103,9 @@ export const Service: FC = () => {
         uz: serviceData.name_uz,
         cy: serviceData.name_uzcyrill,
       },
-      orderNumber: Number(serviceData.orderNumber),
+      orderNumber: serviceData.orderNumber
+        ? Number(serviceData.orderNumber)
+        : null,
     };
 
     const request =

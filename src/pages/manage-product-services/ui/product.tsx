@@ -111,7 +111,7 @@ export const Product: FC = () => {
         uz: values.name_uz,
         cy: values.name_uzcyrill,
       },
-      orderNumber: Number(values.orderNumber),
+      orderNumber: values.orderNumber ? Number(values.orderNumber) : null,
       id: editingData?.id,
     };
     const request = editingData ? updateProduct : createProduct;

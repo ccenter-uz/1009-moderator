@@ -98,7 +98,7 @@ export const ManageSegmentsPage = () => {
     const body = {
       name: values.name,
       id: editingData?.id,
-      orderNumber: Number(values.orderNumber),
+      orderNumber: values.orderNumber ? Number(values.orderNumber) : null,
     };
     const request = editingData ? updateSegment : createSegment;
 

@@ -136,7 +136,7 @@ export const ManageDistrictPage: FC = () => {
       regionId: values.region,
       cityId: values.city,
       index: values.index,
-      orderNumber: Number(values.orderNumber),
+      orderNumber: values.orderNumber ? Number(values.orderNumber) : null,
       name: {
         uz: values.name_uz,
         ru: values.name_ru,

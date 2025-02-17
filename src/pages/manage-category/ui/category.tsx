@@ -161,7 +161,7 @@ export const Category: FC = () => {
     const body = {
       regionId: values.region,
       cityId: values.city,
-      orderNumber: Number(values.orderNumber),
+      orderNumber: values.orderNumber ? Number(values.orderNumber) : null,
       name: {
         ru: values.name_ru,
         uz: values.name_uz,

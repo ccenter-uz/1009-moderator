@@ -114,7 +114,7 @@ export const ManageNeighborhoodPage = () => {
       cityId: values.city,
       districtId: values.district,
       index: values.index,
-      orderNumber: Number(values.orderNumber),
+      orderNumber: values.orderNumber ? Number(values.orderNumber) : null,
       name: {
         uz: values.name_uz,
         ru: values.name_ru,

@@ -94,7 +94,9 @@ export const SubCategory: FC = () => {
 
   const handleSubmit = async (serviceData: ItableBasicData) => {
     const serviceBody = {
-      orderNumber: Number(serviceData.orderNumber),
+      orderNumber: serviceData.orderNumber
+        ? Number(serviceData.orderNumber)
+        : null,
       name: {
         ru: serviceData.name_ru,
         uz: serviceData.name_uz,
@@ -124,8 +126,6 @@ export const SubCategory: FC = () => {
 
   useEffect(() => {
     if (isFilterReset) {
-      console.log("click from service");
-
       setSearchParams({
         ...params,
         [CategorySubCategoryEnums.subCategorySearch]: "",

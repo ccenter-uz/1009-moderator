@@ -110,7 +110,7 @@ export const ManagePhoneTypesPage: FC = () => {
         uz: values.name_uz,
         cy: values.name_uzcyrill,
       },
-      orderNumber: Number(values.orderNumber),
+      orderNumber: values.orderNumber ? Number(values.orderNumber) : null,
       id: editingData?.id,
     };
 
