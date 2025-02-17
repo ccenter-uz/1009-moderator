@@ -93,11 +93,7 @@ export const OrgAddPage: FC = () => {
     },
   ];
 
-  const next = async () => {
-    await form.validateFields();
-    setCurrent(current + 1);
-    localStorage.setItem("currentStep", JSON.stringify(current + 1));
-    // STORE STEPS DATA
+  const STORE_STEPS_DATA = () => {
     if (current === STEPS_ENUM.firstStep) {
       const firstStepData = {
         ...form.getFieldsValue(STEPS_DATA.FIRST_FORMDATA),
@@ -118,6 +114,21 @@ export const OrgAddPage: FC = () => {
       localStorage.setItem("thirdStepData", JSON.stringify(thirdStepData));
     }
   };
+
+  const next = async () => {
+    await form.validateFields();
+    setCurrent(current + 1);
+    localStorage.setItem("currentStep", JSON.stringify(current + 1));
+    STORE_STEPS_DATA();
+  };
+
+  // SAVE-VALUES-UNMOUNT
+  useEffect(() => {
+    return () => {
+      STORE_STEPS_DATA();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const prev = () => {
     setCurrent(current - 1);
