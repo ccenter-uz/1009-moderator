@@ -1,7 +1,7 @@
 import { Flex, Form, Tooltip } from "antd";
 import { createSchemaFieldRule } from "antd-zod";
 import i18next from "i18next";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPencilAlt } from "react-icons/fa";
 import { MdRestore } from "react-icons/md";
@@ -82,9 +82,7 @@ export const ManageDistrictPage: FC = () => {
   const [restoreDistrict] = useRestoreDistrictMutation();
 
   const [editingData, setEditingData] = useState<valueProps | null>(null);
-  const [isFilterReset, setIsFilterReset] = useState<
-    string | number | undefined
-  >();
+
   const handleEditOpen = (values: valueProps) => {
     const editingBody = {
       id: values.id,
@@ -110,9 +108,13 @@ export const ManageDistrictPage: FC = () => {
   const handleSearch = ({
     search,
     status = STATUS.ACTIVE,
+    oldName,
+    newName,
   }: {
     search: string;
     status: number;
+    oldName: string;
+    newName: string;
   }) => {
     let inputValue = search;
     if (inputValue === undefined) {
@@ -122,12 +124,21 @@ export const ManageDistrictPage: FC = () => {
     if (inputValue || inputValue === "" || typeof status === "number") {
       setSearchParams({
         ...params,
+        oldName: oldName ? oldName : "",
+        newName: newName ? newName : "",
         search: inputValue.trim(),
         status: status.toString()
           ? status.toString()
           : STATUS.ACTIVE.toString(),
       });
     }
+  };
+  const handleReset = () => {
+    const prevParams = returnAllParams();
+    delete prevParams.search;
+    delete prevParams.oldName;
+    delete prevParams.newName;
+    setSearchParams(prevParams);
   };
 
   const handleSubmit = async (values: valueProps) => {
@@ -168,17 +179,6 @@ export const ManageDistrictPage: FC = () => {
     form.resetFields();
     onOpen();
   };
-
-  useEffect(() => {
-    if (isFilterReset) {
-      setSearchParams({
-        ...params,
-        status: STATUS.ACTIVE.toString(),
-        search: "",
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFilterReset]);
 
   const columns = [
     {
@@ -238,8 +238,9 @@ export const ManageDistrictPage: FC = () => {
         add={handleAdd}
         searchPart={
           <BasicSearchPartUI
+            hasOldAndNewNameFilter
             handleSearch={handleSearch}
-            handleReset={setIsFilterReset}
+            handleReset={handleReset}
             status={Number(params.status)}
           />
         }

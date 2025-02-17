@@ -54,6 +54,9 @@ export const Category: FC = () => {
   const formRule = createSchemaFieldRule(CategoryCreateFormDtoSchema);
   const formRequiredField = getZodRequiredKeys(CategoryCreateFormDtoSchema);
   const [order, setOrder] = useState<"name" | "orderNumber">("orderNumber");
+  const [langCode, setLangCode] = useState<"ru" | "uz" | "cy">(
+    i18next.language as "ru" | "uz" | "cy",
+  );
   const { data, isLoading } = useGetCategoriesQuery(
     cityId
       ? {
@@ -62,7 +65,7 @@ export const Category: FC = () => {
           regionId,
           cityId,
           search,
-          langCode: i18next.language,
+          langCode,
           order,
           status: categoryStatus || STATUS.ACTIVE,
         }
@@ -71,7 +74,7 @@ export const Category: FC = () => {
           limit,
           regionId,
           search,
-          langCode: i18next.language,
+          langCode,
           order,
           status: categoryStatus || STATUS.ACTIVE,
         },
@@ -85,7 +88,6 @@ export const Category: FC = () => {
   const [isFilterReset, setIsFilterReset] = useState<
     string | number | undefined
   >();
-
   const params = returnAllParams();
 
   const handleEditOpen = (values: editCategoryType) => {
@@ -213,12 +215,45 @@ export const Category: FC = () => {
 
   const columns = [
     {
-      title: t("name"),
+      title: t("name-uz"),
       dataIndex: "name",
       key: "name",
-      render: (text: { [key: string]: string }) => text[i18next.language],
+      render: (text: { uz: string }) => text?.uz,
       filterDropdown: () => (
-        <TableOrderFilterUI order={order} setOrder={setOrder} />
+        <TableOrderFilterUI
+          langCode={"uz"}
+          setLangCode={setLangCode}
+          order={order}
+          setOrder={setOrder}
+        />
+      ),
+    },
+    {
+      title: t("name-ru"),
+      dataIndex: "name",
+      key: "name",
+      render: (text: { ru: string }) => text?.ru,
+      filterDropdown: () => (
+        <TableOrderFilterUI
+          langCode="ru"
+          setLangCode={setLangCode}
+          order={order}
+          setOrder={setOrder}
+        />
+      ),
+    },
+    {
+      title: t("name-cyrill"),
+      dataIndex: "name",
+      key: "name",
+      render: (text: { cy: string }) => text?.cy,
+      filterDropdown: () => (
+        <TableOrderFilterUI
+          langCode="cy"
+          setLangCode={setLangCode}
+          order={order}
+          setOrder={setOrder}
+        />
       ),
     },
     ...columnsForCategories,
