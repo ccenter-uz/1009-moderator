@@ -94,22 +94,20 @@ export const OrgEditThirdStepUI: FC = () => {
     e: CheckboxChangeEvent,
     record: { phone: string | number },
   ) => {
-    const filteredData = data
-      ?.filter((item: { phone: string }) => item.phone === record.phone)
-      .map((item: { isSecret: boolean }) => ({
-        ...item,
-        isSecret: e.target.checked,
-      }));
+    const filteredData = data.map(
+      (item: { isSecret: boolean; phone: string }) => {
+        if (item.phone === record.phone) {
+          return {
+            ...item,
+            isSecret: e.target.checked,
+          };
+        } else {
+          return item;
+        }
+      },
+    );
 
-    const otherData = data
-      ?.filter((item: { phone: string }) => item.phone !== record.phone)
-      .map((item: { isSecret: boolean }) => ({
-        ...item,
-        isSecret: false,
-      }));
-    if (!filteredData) return null;
-    const newData = [...otherData, ...filteredData];
-    dispatch(setData(newData));
+    dispatch(setData(filteredData));
   };
 
   const onDelete = async (phone: string) => {
