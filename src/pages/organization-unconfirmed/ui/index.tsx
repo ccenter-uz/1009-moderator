@@ -18,6 +18,7 @@ import {
   CreatedByEnum,
   getEditingStepStorageValues,
   handleEditLocalDatas,
+  notificationResponse,
   returnAllParams,
   setLocalStorage,
   STEPS_EDIT_DATA,
@@ -50,29 +51,33 @@ export const OrgUnconfirmedPage: FC = () => {
   );
 
   const handleCheckOrganization = (
-    id: number,
+    organizationId: number,
     type: string,
     description?: string,
   ) => {
     if (type === TYPE_AND_STATUS.TYPE_CONFIRM) {
       return checkOrganization({
-        id,
+        organizationId,
         status: TYPE_AND_STATUS.STATUS_CONFIRMED,
+      }).then((res) => {
+        notificationResponse(res);
       });
     }
     if (type === TYPE_AND_STATUS.TYPE_REJECT) {
       return checkOrganization({
-        id,
+        organizationId,
         status: TYPE_AND_STATUS.STATUS_REJECTED,
         description,
+      }).then((res) => {
+        notificationResponse(res);
       });
     }
   };
 
-  const checkExistId = (record: { id: number }) => {
+  const checkExistId = (record: { organizationId: number }) => {
     const { editingId, firstStepData } = getEditingStepStorageValues();
 
-    if (editingId && Number(record.id) !== Number(editingId)) {
+    if (editingId && Number(record.organizationId) !== Number(editingId)) {
       AntDesignSwal.fire({
         icon: "warning",
         title: t("oops"),
@@ -97,16 +102,16 @@ export const OrgUnconfirmedPage: FC = () => {
           clearEditStepStorage();
           setLocalStorage(STEPS_EDIT_DATA.CURRENT, STEPS_ENUM.firstStep);
           handleEditLocalDatas(record);
-          navigate(`/orgs/edit/${record.id}`);
+          navigate(`/orgs/edit/${record.organizationId}`);
         }
       });
     } else {
       handleEditLocalDatas(record);
-      navigate(`/orgs/edit/${record.id}`);
+      navigate(`/orgs/edit/${record.organizationId}`);
     }
   };
 
-  const handleReject = async (id: number) => {
+  const handleReject = async (organizationId: number) => {
     const result = await AntDesignSwal.fire({
       input: "textarea",
       inputLabel: t("reject-reason"),
@@ -118,7 +123,11 @@ export const OrgUnconfirmedPage: FC = () => {
     });
 
     if (result.isConfirmed && result.value) {
-      handleCheckOrganization(id, TYPE_AND_STATUS.TYPE_REJECT, result.value);
+      handleCheckOrganization(
+        organizationId,
+        TYPE_AND_STATUS.TYPE_REJECT,
+        result.value,
+      );
     }
   };
 
@@ -129,7 +138,7 @@ export const OrgUnconfirmedPage: FC = () => {
       dataIndex: "actions",
       key: "actions",
       width: 100,
-      render: (_: string, record: { id: number }) => {
+      render: (_: string, record: { organizationId: number }) => {
         return (
           <Flex align="center" gap={10}>
             <Tooltip title={t("edit")}>
@@ -145,7 +154,7 @@ export const OrgUnconfirmedPage: FC = () => {
             <Tooltip title={t("reject")}>
               <Button
                 onClick={() => {
-                  handleReject(record.id);
+                  handleReject(record.organizationId);
                 }}
                 style={{
                   color: "crimson",
@@ -158,7 +167,7 @@ export const OrgUnconfirmedPage: FC = () => {
               <Button
                 onClick={() =>
                   handleCheckOrganization(
-                    record.id,
+                    record.organizationId,
                     TYPE_AND_STATUS.TYPE_CONFIRM,
                   )
                 }
