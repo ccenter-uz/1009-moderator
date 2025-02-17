@@ -1,6 +1,6 @@
 import { Button, Divider, Flex, Form, notification, Steps } from "antd";
 import i18next from "i18next";
-import { CSSProperties, FC, useEffect, useState } from "react";
+import { CSSProperties, FC, useEffect, useState, Suspense, lazy } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -10,18 +10,14 @@ import {
   setCategoryData,
 } from "@widgets/org-add-first-step";
 import {
-  OrgAddFourthStepUI,
   setAllDay,
   setAllType,
   setImages,
   setNoDayoffs,
   setWithoutLunch,
 } from "@widgets/org-add-fourth-step";
-import {
-  OrgAddSecondStepUI,
-  setOrientirData,
-} from "@widgets/org-add-second-step";
-import { OrgAddThirdStepUI, setPhoneData } from "@widgets/org-add-third-step";
+import { setOrientirData } from "@widgets/org-add-second-step";
+import { setPhoneData } from "@widgets/org-add-third-step";
 
 import { useCreateOrganizationMutation } from "@entities/organization";
 
@@ -35,6 +31,22 @@ import {
   STEPS_ENUM,
 } from "@shared/lib/helpers";
 import { IOrganizationBody, RootState } from "@shared/types";
+
+const OrgAddSecondStepUI = lazy(() =>
+  import("@widgets/org-add-second-step").then((module) => ({
+    default: module.OrgAddSecondStepUI,
+  })),
+);
+const OrgAddFourthStepUI = lazy(() =>
+  import("@widgets/org-add-third-step").then((module) => ({
+    default: module.OrgAddThirdStepUI,
+  })),
+);
+const OrgAddThirdStepUI = lazy(() =>
+  import("@widgets/org-add-fourth-step").then((module) => ({
+    default: module.OrgAddFourthStepUI,
+  })),
+);
 
 const contentStyle: CSSProperties = {
   margin: "16px",
@@ -74,22 +86,18 @@ export const OrgAddPage: FC = () => {
     {
       title: i18next.t("personal"),
       description: i18next.t("personal_description"),
-      content: <OrgAddFirstStepUI form={form} />,
     },
     {
       title: i18next.t("address"),
       description: i18next.t("address_description"),
-      content: <OrgAddSecondStepUI />,
     },
     {
       title: i18next.t("contacts"),
       description: i18next.t("contacts_description"),
-      content: <OrgAddThirdStepUI />,
     },
     {
       title: i18next.t("additional"),
       description: i18next.t("additional_description"),
-      content: <OrgAddFourthStepUI />,
     },
   ];
 
@@ -315,7 +323,20 @@ export const OrgAddPage: FC = () => {
           id="create-org-form"
           form={form}
         >
-          {items[current].content}
+          <Suspense fallback={<div>Loading...</div>}>
+            {current === STEPS_ENUM.firstStep && (
+              <OrgAddFirstStepUI form={form} />
+            )}
+          </Suspense>
+          <Suspense fallback={<div>Loading...</div>}>
+            {current === STEPS_ENUM.secondStep && <OrgAddSecondStepUI />}
+          </Suspense>
+          <Suspense fallback={<div>Loading...</div>}>
+            {current === STEPS_ENUM.thirdStep && <OrgAddThirdStepUI />}
+          </Suspense>
+          <Suspense fallback={<div>Loading...</div>}>
+            {current === STEPS_ENUM.fourthStep && <OrgAddFourthStepUI />}
+          </Suspense>
         </Form>
       </div>
       <Divider />
