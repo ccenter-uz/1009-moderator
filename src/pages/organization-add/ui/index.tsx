@@ -40,6 +40,13 @@ const contentStyle: CSSProperties = {
   margin: "16px",
 };
 
+interface IPaymentTypes {
+  cash: boolean;
+  terminal: boolean;
+  transfer: boolean;
+  allType: boolean;
+}
+
 export const OrgAddPage: FC = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -120,14 +127,19 @@ export const OrgAddPage: FC = () => {
   const onSubmit = async () => {
     const formData = new FormData();
 
+    const paymentTypes: IPaymentTypes = [
+      "cash",
+      "terminal",
+      "transfer",
+      "allType",
+    ].reduce((acc, key) => {
+      acc[key as keyof typeof acc] = form.getFieldValue(key) ?? false;
+      return acc;
+    }, {} as IPaymentTypes);
+
     const body: IOrganizationBody = {
       ...omitUndefinedValues(form.getFieldsValue(SEND_BODY)),
-      paymentTypes: {
-        cash: form.getFieldValue("cash"),
-        terminal: form.getFieldValue("terminal"),
-        transfer: form.getFieldValue("transfer"),
-        allType: form.getFieldValue("allType"),
-      },
+      paymentTypes,
       workTime: {
         dayoffs: getDayOffsCheckbox(form),
         worktimeFrom: form.getFieldValue("worktimeFrom"),
