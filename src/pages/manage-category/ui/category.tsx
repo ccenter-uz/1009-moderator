@@ -310,6 +310,7 @@ export const Category: FC = () => {
 
   return (
     <ManageWrapperBox
+      loading={isLoading}
       totalItems={data?.total || 0}
       title={t("category")}
       rowSelect
