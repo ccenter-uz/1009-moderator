@@ -238,12 +238,6 @@ export const OrgAddSecondStepUI: FC = () => {
           <Form.Item
             name={"apartment"}
             label={<ParagraphBold>{t("apartment")}</ParagraphBold>}
-            rules={[
-              {
-                required: true,
-                message: t("required-field"),
-              },
-            ]}
           >
             <Input type="text" placeholder={t("apartment")} allowClear />
           </Form.Item>
