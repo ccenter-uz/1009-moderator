@@ -371,6 +371,8 @@ export function enableVerticalDrag(element: HTMLElement) {
 
 export const omitUndefinedValues = (obj: FormInstance) => {
   return Object.fromEntries(
-    Object.entries(obj).filter(([_, value]) => value !== undefined),
+    Object.entries(obj).filter(
+      ([_, value]) => value !== undefined && value !== null,
+    ),
   );
 };
