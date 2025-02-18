@@ -110,9 +110,15 @@ export const columnsForAddress = [
     render: (text: statusType) => setColorByStatus(status[text]),
   },
   {
+    title: i18next.t("createdAt"),
+    dataIndex: "created_at",
+    key: "created_at",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+  },
+  {
     title: i18next.t("update_date"),
-    dataIndex: "updatedAt",
-    key: "updatedAt",
+    dataIndex: "updated_at",
+    key: "updated_at",
     render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
   },
   {
@@ -131,20 +137,20 @@ export const columnsForForBasicTable = [
   },
   {
     title: i18next.t("createdAt"),
-    dataIndex: "createdAt",
-    key: "createdAt",
+    dataIndex: "created_at",
+    key: "created_at",
     render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
   },
   {
     title: i18next.t("update_date"),
-    dataIndex: "updatedAt",
-    key: "updatedAt",
+    dataIndex: "updated_at",
+    key: "updated_at",
     render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
   },
   {
     title: i18next.t("deletedAt"),
-    dataIndex: "deletedAt",
-    key: "deletedAt",
+    dataIndex: "deleted_at",
+    key: "deleted_at",
     render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
   },
   {
@@ -163,20 +169,20 @@ export const columnsWithSingleName = [
   },
   {
     title: i18next.t("createdAt"),
-    dataIndex: "createdAt",
-    key: "createdAt",
+    dataIndex: "created_at",
+    key: "created_at",
     render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
   },
   {
     title: i18next.t("update_date"),
-    dataIndex: "updatedAt",
-    key: "updatedAt",
+    dataIndex: "updated_at",
+    key: "updated_at",
     render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
   },
   {
     title: i18next.t("deletedAt"),
-    dataIndex: "deletedAt",
-    key: "deletedAt",
+    dataIndex: "deleted_at",
+    key: "deleted_at",
     render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
   },
   {
@@ -195,20 +201,20 @@ export const columnsForPhoneTypeTable = [
   },
   {
     title: i18next.t("createdAt"),
-    dataIndex: "createdAt",
-    key: "createdAt",
+    dataIndex: "created_at",
+    key: "created_at",
     render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
   },
   {
     title: i18next.t("update_date"),
-    dataIndex: "updatedAt",
-    key: "updatedAt",
+    dataIndex: "updated_at",
+    key: "updated_at",
     render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
   },
   {
     title: i18next.t("deletedAt"),
-    dataIndex: "deletedAt",
-    key: "deletedAt",
+    dataIndex: "deleted_at",
+    key: "deleted_at",
     render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
   },
   {
@@ -258,9 +264,15 @@ export const columnsWithRegions = [
     render: (text: statusType) => setColorByStatus(status[text]),
   },
   {
+    title: i18next.t("createdAt"),
+    dataIndex: "created_at",
+    key: "created_at",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+  },
+  {
     title: i18next.t("update_date"),
-    dataIndex: "updatedAt",
-    key: "updatedAt",
+    dataIndex: "updated_at",
+    key: "updated_at",
     render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
   },
   {
@@ -319,9 +331,15 @@ export const columnsWithAddressAndNamings = [
     render: (text: statusType) => setColorByStatus(status[text]),
   },
   {
+    title: i18next.t("createdAt"),
+    dataIndex: "created_at",
+    key: "created_at",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+  },
+  {
     title: i18next.t("update_date"),
-    dataIndex: "updatedAt",
-    key: "updatedAt",
+    dataIndex: "updated_at",
+    key: "updated_at",
     render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
   },
   {
@@ -359,9 +377,15 @@ export const columnsForCategories = [
     render: (text: statusType) => setColorByStatus(status[text]),
   },
   {
+    title: i18next.t("createdAt"),
+    dataIndex: "created_at",
+    key: "created_at",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+  },
+  {
     title: i18next.t("update_date"),
-    dataIndex: "updatedAt",
-    key: "updatedAt",
+    dataIndex: "updated_at",
+    key: "updated_at",
     render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
   },
   {
@@ -384,9 +408,15 @@ export const columnsForSubcategories = [
     render: (text: statusType) => setColorByStatus(status[text]),
   },
   {
+    title: i18next.t("createdAt"),
+    dataIndex: "created_at",
+    key: "created_at",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+  },
+  {
     title: i18next.t("update_date"),
-    dataIndex: "updatedAt",
-    key: "updatedAt",
+    dataIndex: "updated_at",
+    key: "updated_at",
     render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
   },
   {
@@ -409,9 +439,15 @@ export const columnsForCategoriesTu = [
     render: (text: statusType) => setColorByStatus(status[text]),
   },
   {
+    title: i18next.t("createdAt"),
+    dataIndex: "created_at",
+    key: "created_at",
+    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+  },
+  {
     title: i18next.t("update_date"),
-    dataIndex: "updatedAt",
-    key: "updatedAt",
+    dataIndex: "updated_at",
+    key: "updated_at",
     render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
   },
   {
@@ -581,20 +617,20 @@ export const usersTableColumns = [
   },
   {
     title: i18next.t("createdAt"),
-    dataIndex: "createdAt",
-    key: "createdAt",
+    dataIndex: "created_at",
+    key: "created_at",
     render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
   },
   {
     title: i18next.t("updatedAt"),
-    dataIndex: "updatedAt",
-    key: "updatedAt",
+    dataIndex: "updated_at",
+    key: "updated_at",
     render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
   },
   {
     title: i18next.t("deletedAt"),
-    dataIndex: "deletedAt",
-    key: "deletedAt",
+    dataIndex: "deleted_at",
+    key: "deleted_at",
     render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
   },
 ];
@@ -614,20 +650,20 @@ export const rolesTableColumns = [
   },
   {
     title: i18next.t("createdAt"),
-    dataIndex: "createdAt",
-    key: "createdAt",
+    dataIndex: "created_at",
+    key: "created_at",
     render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
   },
   {
     title: i18next.t("updatedAt"),
-    dataIndex: "updatedAt",
-    key: "updatedAt",
+    dataIndex: "updated_at",
+    key: "updated_at",
     render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
   },
   {
     title: i18next.t("deletedAt"),
-    dataIndex: "deletedAt",
-    key: "deletedAt",
+    dataIndex: "deleted_at",
+    key: "deleted_at",
     render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
   },
 ];
@@ -676,7 +712,6 @@ export const unconfirmedTableColumns = [
     key: "createdBy",
     render: (text: string) => i18next.t(text[0] + text.slice(1)),
   },
-
   {
     title: i18next.t("employee"),
     dataIndex: "staff_number",
