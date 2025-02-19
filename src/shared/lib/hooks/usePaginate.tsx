@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import { returnAllParams } from "../helpers";
-
 const pageSizeOptions = [10, 20, 50, 100];
 
 type propsType = {
@@ -12,7 +10,7 @@ type propsType = {
 
 export const usePaginate = (props: propsType) => {
   const { pageName, limitName } = props;
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [page, setPage] = useState<number>(
     searchParams.has(pageName) ? Number(searchParams.get(pageName)) : 1,
   );
@@ -21,14 +19,13 @@ export const usePaginate = (props: propsType) => {
   );
 
   useEffect(() => {
-    setSearchParams({
-      ...returnAllParams(),
-      [pageName]: `${page}`,
-      [limitName]: `${pageSize}`,
-    });
+    if (searchParams.has(pageName) || searchParams.has(limitName)) {
+      setPage(Number(searchParams.get(pageName)));
+      setPageSize(Number(searchParams.get(limitName)));
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, pageSize]);
+  }, [searchParams]);
 
   return {
     page,

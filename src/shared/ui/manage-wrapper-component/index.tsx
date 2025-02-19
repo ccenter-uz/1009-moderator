@@ -4,7 +4,9 @@ import { FC, useState } from "react";
 import "./style.css";
 import { useTranslation } from "react-i18next";
 import { FaPlus } from "react-icons/fa";
+import { useSearchParams } from "react-router-dom";
 
+import { returnAllParams } from "@shared/lib/helpers";
 import { usePaginate } from "@shared/lib/hooks";
 
 type Props = {
@@ -39,9 +41,11 @@ export const ManageWrapperBox: FC<Props> = (props) => {
     pageName = "page",
     limitName = "limit",
   } = props;
-  const { page, pageSize, pageSizeOptions, setPage, setPageSize } = usePaginate(
-    { pageName, limitName },
-  );
+  const [_, setSearchParams] = useSearchParams();
+  const { page, pageSize, pageSizeOptions } = usePaginate({
+    pageName,
+    limitName,
+  });
   const { t } = useTranslation();
   const [selectedRowKey, setSelectedRowKey] = useState<string>("");
 
@@ -90,10 +94,18 @@ export const ManageWrapperBox: FC<Props> = (props) => {
             showSizeChanger: true,
             pageSizeOptions: pageSizeOptions,
             onShowSizeChange: (current, size) => {
-              setPageSize(size);
+              setSearchParams({
+                ...returnAllParams(),
+                [limitName]: `${size}`,
+              });
+              // setPageSize(size);
             },
             onChange: (current) => {
-              setPage(current);
+              setSearchParams({
+                ...returnAllParams(),
+                [pageName]: `${current}`,
+              });
+              // setPage(current);
             },
           }}
         />
