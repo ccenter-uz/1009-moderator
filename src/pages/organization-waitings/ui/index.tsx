@@ -154,11 +154,13 @@ export const OrganizationWaitingsPage = () => {
       delete params.status;
       setSearchParams({
         ...params,
+        page: "1",
         search: search || "",
       });
     } else {
       setSearchParams({
         ...params,
+        page: "1",
         search: search || "",
         status,
       });

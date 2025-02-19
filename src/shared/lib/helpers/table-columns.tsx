@@ -56,12 +56,6 @@ export const columnsForMyOrganizations = [
 
 export const columnsForAddress = [
   {
-    title: i18next.t("order_number"),
-    dataIndex: "order_number",
-    key: "order_number",
-    render: (text: { [key: string]: string }) => text ?? "---",
-  },
-  {
     title: i18next.t("old_name"),
     dataIndex: "oldName",
     key: "oldName",
@@ -283,12 +277,6 @@ export const columnsWithRegions = [
 ];
 
 export const columnsWithAddressAndNamings = [
-  {
-    title: i18next.t("order_number"),
-    dataIndex: "order_number",
-    key: "order_number",
-    render: (text: { [key: string]: string }) => text ?? "---",
-  },
   {
     title: i18next.t("old_name"),
     dataIndex: "oldName",

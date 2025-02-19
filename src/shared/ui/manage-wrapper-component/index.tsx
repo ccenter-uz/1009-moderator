@@ -39,8 +39,11 @@ export const ManageWrapperBox: FC<Props> = (props) => {
     pageName = "page",
     limitName = "limit",
   } = props;
-  const { page, pageSize, pageSizeOptions, setPage, setPageSize } = usePaginate(
-    { pageName, limitName },
+  const { page, pageSize, pageSizeOptions, setPageSize, setPage } = usePaginate(
+    {
+      pageName,
+      limitName,
+    },
   );
   const { t } = useTranslation();
   const [selectedRowKey, setSelectedRowKey] = useState<string>("");

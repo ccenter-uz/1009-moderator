@@ -95,6 +95,7 @@ export const ManagePhoneTypesPage: FC = () => {
     if (inputValue || inputValue === "" || typeof status === "number") {
       setSearchParams({
         ...params,
+        page: "1",
         search: inputValue.trim(),
         status: status.toString()
           ? status.toString()

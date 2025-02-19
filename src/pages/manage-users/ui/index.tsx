@@ -53,7 +53,7 @@ export const ManageUsersPage: FC = () => {
 
   const onSearch = ({ search }: { search: string }) => {
     const prevParams = returnAllParams();
-    setSearchParams({ ...prevParams, search });
+    setSearchParams({ ...prevParams, page: "1", search });
   };
 
   const columns = [
