@@ -122,6 +122,7 @@ export const ManageNearbyPage: FC = () => {
     if (inputValue || inputValue === "") {
       setSearchParams({
         ...params,
+        page: "1",
         nearbyCategoryId: nearbyCategoryId?.toString() || "",
         search: inputValue.trim(),
         status: status.toString()
