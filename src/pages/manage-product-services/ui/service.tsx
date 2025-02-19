@@ -91,6 +91,7 @@ export const Service: FC = () => {
     if (inputValue || inputValue === "" || typeof status === "number") {
       setSearchParams({
         ...params,
+        [ProductServicesEnum.servicePage]: "1",
         [ProductServicesEnum.serviceStatus]: status.toString()
           ? status.toString()
           : STATUS.ACTIVE.toString(),

@@ -99,6 +99,7 @@ export const Product: FC = () => {
     if (inputValue || inputValue === "" || typeof status === "number") {
       setSearchParams({
         ...params,
+        [ProductServicesEnum.productPage]: "1",
         [ProductServicesEnum.productSearch]: inputValue.trim(),
         [ProductServicesEnum.productStatus]: status.toString()
           ? status.toString()

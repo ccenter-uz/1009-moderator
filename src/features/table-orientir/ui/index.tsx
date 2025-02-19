@@ -131,8 +131,8 @@ export const TableOrientirUI: FC<Props> = (props) => {
       <Typography.Title aria-level={4} level={4} style={{ margin: 0 }}>
         {t("nearby")}
       </Typography.Title>
-      <Row gutter={16} align={"middle"}>
-        <Col span={7}>
+      <Row gutter={[16, 16]} align={"middle"}>
+        <Col flex={1}>
           <Flex align="center" gap={8}>
             <label htmlFor="nearbyCategory">{t("nearby-category")}</label>
             <Select
@@ -152,7 +152,7 @@ export const TableOrientirUI: FC<Props> = (props) => {
             />
           </Flex>
         </Col>
-        <Col span={7}>
+        <Col flex={1}>
           <Flex align="center" gap={8}>
             <label htmlFor="nearby">{t("nearby")}</label>
             <Select
@@ -172,7 +172,7 @@ export const TableOrientirUI: FC<Props> = (props) => {
             />
           </Flex>
         </Col>
-        <Col span={7}>
+        <Col flex={1}>
           <Flex align="center" gap={8}>
             <label htmlFor="description">{t("description")}</label>
             <Input.TextArea
