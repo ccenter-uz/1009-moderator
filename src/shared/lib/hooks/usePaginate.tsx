@@ -10,7 +10,7 @@ type propsType = {
 
 export const usePaginate = (props: propsType) => {
   const { pageName, limitName } = props;
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [page, setPage] = useState<number>(
     searchParams.has(pageName) ? Number(searchParams.get(pageName)) : 1,
   );
@@ -19,13 +19,12 @@ export const usePaginate = (props: propsType) => {
   );
 
   useEffect(() => {
-    if (searchParams.has(pageName) || searchParams.has(limitName)) {
-      setPage(Number(searchParams.get(pageName)));
-      setPageSize(Number(searchParams.get(limitName)));
-    }
-
+    setSearchParams({
+      [pageName]: String(page),
+      [limitName]: String(pageSize),
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
+  }, [page, pageSize]);
 
   return {
     page,
