@@ -4,24 +4,40 @@ import { useSearchParams } from "react-router-dom";
 import { SearchPartUI } from "@widgets/search-part";
 import { SearchTableUI } from "@widgets/search-table";
 
-import { useGetOrganizationsQuery } from "@entities/organization";
+import { useLazyGetOrganizationsQuery } from "@entities/organization";
 
-import { returnAllParams } from "@shared/lib/helpers";
+import { omitUndefinedValues, returnAllParams } from "@shared/lib/helpers";
 
 export const OrgAllPage: FC = () => {
   const [searchTableRef, setSearchTableRef] = useState<HTMLElement>();
   const [searchParams] = useSearchParams();
   const [searchValues, setSearchValues] = useState<{
     regionId: number;
-    cityId: number;
   } | null>(null);
-  const { data, isLoading, refetch } = useGetOrganizationsQuery({
-    ...returnAllParams(),
-    ...searchValues,
-  });
+  const [triggerOrg, { data: orgDatas, isLoading }] =
+    useLazyGetOrganizationsQuery();
+  const [data, setData] = useState<{
+    data: {
+      key: string;
+      id: string;
+      name: string;
+      status: number;
+      organizationId?: number;
+    }[];
+    total: number;
+  } | null>(orgDatas || null);
 
   useEffect(() => {
-    refetch();
+    if (searchValues) {
+      triggerOrg({
+        ...returnAllParams(),
+        ...omitUndefinedValues(searchValues),
+      }).then((res) => {
+        res.isSuccess && setData(res.data);
+      });
+    } else {
+      setData(null);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams, searchValues]);
 

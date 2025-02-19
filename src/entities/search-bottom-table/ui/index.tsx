@@ -22,15 +22,17 @@ type TSubCategory = {
 type Props = {
   attrData: TAttr[];
   subCategoryData: TSubCategory[];
+  isLoading: boolean;
 };
 
 export const SearchBottomTable: FC<Props> = (props) => {
-  const { attrData, subCategoryData } = props;
+  const { attrData, subCategoryData, isLoading } = props;
 
   return (
     <Row align={"top"} gutter={[8, 8]} style={{ marginBottom: 30 }}>
       <Col span={16}>
         <Table
+          loading={isLoading}
           columns={attrColumns}
           dataSource={attrData}
           pagination={false}
@@ -40,6 +42,7 @@ export const SearchBottomTable: FC<Props> = (props) => {
       </Col>
       <Col span={8}>
         <Table
+          loading={isLoading}
           columns={subCategoryColumns}
           dataSource={subCategoryData}
           bordered

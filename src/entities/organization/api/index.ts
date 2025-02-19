@@ -155,6 +155,7 @@ export const organizationApi = baseApi.injectEndpoints({
 export const {
   useGetUnconfirmedOrganizationsQuery,
   useGetOrganizationsQuery,
+  useLazyGetOrganizationsQuery,
   useGetMyOrganizationsQuery,
   useCreateOrganizationMutation,
   useUpdateOrganizationMutation,
