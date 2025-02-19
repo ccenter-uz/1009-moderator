@@ -23,7 +23,7 @@ import {
 import { allActives, getLocalStorage } from "@shared/lib/helpers";
 
 type Props = {
-  data: { colId: number | string; description?: string }[];
+  data: AnyObject[];
   setData: any;
   type?: "edit";
 };
@@ -37,9 +37,7 @@ export const TableOrientirUI: FC<Props> = (props) => {
     useGetNearbyCategoryQuery(allActives);
   const [triggerNearby, { data: nearbyOptions, isLoading: isLoadingNearby }] =
     useLazyGetNearbyQuery();
-  const [selectedNearby, setSelectedNearby] = useState<
-    { nearbyId: string; nearbyName: string; nearby?: string }[] | []
-  >([]);
+  const [selectedNearby, setSelectedNearby] = useState<AnyObject[]>([]);
   const [selectedNearbyCategory, setSelectedNearbyCategory] = useState<
     AnyObject[]
   >([]);
@@ -65,7 +63,7 @@ export const TableOrientirUI: FC<Props> = (props) => {
       title: t("action"),
       dataIndex: "action",
       key: "action",
-      render: (_: string, record: { colId: string | number }) => (
+      render: (text: string, record: AnyObject) => (
         <Popconfirm
           title={t("delete")}
           onConfirm={() => onDelete(record?.colId)}
@@ -133,8 +131,8 @@ export const TableOrientirUI: FC<Props> = (props) => {
       <Typography.Title aria-level={4} level={4} style={{ margin: 0 }}>
         {t("nearby")}
       </Typography.Title>
-      <Row gutter={[16, 16]} align={"middle"}>
-        <Col flex={1}>
+      <Row gutter={16} align={"middle"}>
+        <Col span={7}>
           <Flex align="center" gap={8}>
             <label htmlFor="nearbyCategory">{t("nearby-category")}</label>
             <Select
@@ -145,18 +143,16 @@ export const TableOrientirUI: FC<Props> = (props) => {
               allowClear
               disabled={isLoadingNearbyCategory}
               options={
-                nearbyCategoryOptions?.data.map(
-                  (item: Record<string, string>) => ({
-                    value: item.id,
-                    label: item.name,
-                  }),
-                ) || []
+                nearbyCategoryOptions?.data.map((item: AnyObject) => ({
+                  value: item.id,
+                  label: item.name,
+                })) || []
               }
               style={{ flex: 1 }}
             />
           </Flex>
         </Col>
-        <Col flex={1}>
+        <Col span={7}>
           <Flex align="center" gap={8}>
             <label htmlFor="nearby">{t("nearby")}</label>
             <Select
@@ -167,20 +163,16 @@ export const TableOrientirUI: FC<Props> = (props) => {
               onSelect={onSelectSubCategory}
               allowClear
               options={
-                nearbyOptions?.data.map(
-                  (item: Record<string, string | number>) => ({
-                    value: item.id,
-                    label: String(
-                      item.name[i18next.language as keyof typeof item.name],
-                    ),
-                  }),
-                ) || []
+                nearbyOptions?.data.map((item: AnyObject) => ({
+                  value: item.id,
+                  label: item.name[i18next.language],
+                })) || []
               }
               style={{ flex: 1 }}
             />
           </Flex>
         </Col>
-        <Col flex={1}>
+        <Col span={7}>
           <Flex align="center" gap={8}>
             <label htmlFor="description">{t("description")}</label>
             <Input.TextArea

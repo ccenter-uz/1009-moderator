@@ -124,7 +124,6 @@ export const ManageDistrictPage: FC = () => {
     if (inputValue || inputValue === "" || typeof status === "number") {
       setSearchParams({
         ...params,
-        page: "1",
         oldName: oldName ? oldName : "",
         newName: newName ? newName : "",
         search: inputValue.trim(),

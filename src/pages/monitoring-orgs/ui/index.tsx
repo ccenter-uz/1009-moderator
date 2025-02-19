@@ -120,7 +120,6 @@ export const MonitoringOrgsUI: FC = () => {
     const prevParams = returnAllParams();
     setSearchParams({
       ...prevParams,
-      page: "1",
       roleId: roleId ? String(roleId) : "",
       userId: userId ? String(userId) : "",
       search: search || "",

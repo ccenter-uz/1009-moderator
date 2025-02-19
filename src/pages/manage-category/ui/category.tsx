@@ -123,7 +123,6 @@ export const Category: FC = () => {
 
       setSearchParams({
         ...previousParamsCopy,
-        [CategorySubCategoryEnums.categoryPage]: "1",
         [CategorySubCategoryEnums.categoryStatus]: status.toString()
           ? status.toString()
           : STATUS.ACTIVE.toString(),
@@ -134,7 +133,6 @@ export const Category: FC = () => {
         delete previousParams[CategorySubCategoryEnums.cityId];
         setSearchParams({
           ...previousParams,
-          [CategorySubCategoryEnums.categoryPage]: "1",
           [CategorySubCategoryEnums.categoryStatus]: status.toString()
             ? status.toString()
             : STATUS.ACTIVE.toString(),
@@ -144,7 +142,6 @@ export const Category: FC = () => {
       } else {
         setSearchParams({
           ...previousParams,
-          [CategorySubCategoryEnums.categoryPage]: "1",
           [CategorySubCategoryEnums.categoryStatus]: status.toString()
             ? status.toString()
             : STATUS.ACTIVE.toString(),

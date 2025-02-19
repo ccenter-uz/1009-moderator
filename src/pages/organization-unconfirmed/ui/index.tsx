@@ -184,7 +184,6 @@ export const OrgUnconfirmedPage: FC = () => {
   const handleSearch = ({ search }: { search: string }) => {
     setSearchParams({
       ...params,
-      page: "1",
       search: search || "",
       createdBy: String(createdBy),
     });

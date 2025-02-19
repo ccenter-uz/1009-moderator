@@ -86,7 +86,6 @@ export const ManageSegmentsPage = () => {
     if (inputValue || inputValue === "") {
       setSearchParams({
         ...params,
-        page: "1",
         search: inputValue.trim(),
         status: status.toString()
           ? status.toString()

@@ -17,7 +17,7 @@ export const AdditionalSearchAddUI: FC = () => {
 
   const onSubmit = ({ search }: string) => {
     const params = returnAllParams();
-    setSearchParams({ ...params, page: "1", search: String(search) });
+    setSearchParams({ ...params, search } as string);
   };
 
   const onClearLocalStorage = () => clearAllAdditionalStorage();
