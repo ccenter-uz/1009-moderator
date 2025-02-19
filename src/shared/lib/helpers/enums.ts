@@ -72,3 +72,9 @@ export const enum CreatedByEnum {
   Client = "client",
   Operator = "operator",
 }
+export const enum REGION_IDS {
+  TASHKENT = 11,
+}
+export const enum CITY_IDS {
+  TASHKENT = 146,
+}

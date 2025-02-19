@@ -31,6 +31,11 @@ export const SearchTableUI: FC<Props> = (props) => {
   const [subCategoryData, setSubCategoryData] = useState<TSubCategory[]>([]);
 
   useEffect(() => {
+    if (data.length === 0) {
+      setAttrData([]);
+      setSubCategoryData([]);
+      setPhonesData([]);
+    }
     if (attrData.length) {
       setPhonesData(
         attrData[0].Phone.map((item) => ({
@@ -50,7 +55,7 @@ export const SearchTableUI: FC<Props> = (props) => {
         ),
       );
     }
-  }, [attrData]);
+  }, [attrData, data]);
 
   useEffect(() => {
     setRef(tableRef.current as HTMLElement);
@@ -69,6 +74,7 @@ export const SearchTableUI: FC<Props> = (props) => {
         />
         <Divider />
         <SearchBottomTable
+          isLoading={isLoading}
           attrData={attrData}
           subCategoryData={subCategoryData}
         />

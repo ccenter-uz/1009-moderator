@@ -222,6 +222,7 @@ export const SearchTopTable: FC<Props> = (props) => {
       </Col>
       <Col span={8}>
         <Table
+          loading={isLoading}
           columns={phoneColumns}
           dataSource={phonesData}
           bordered

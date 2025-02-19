@@ -369,7 +369,9 @@ export function enableVerticalDrag(element: HTMLElement) {
   element.addEventListener("mousedown", handleMouseDown);
 }
 
-export const omitUndefinedValues = (obj: FormInstance) => {
+export const omitUndefinedValues = (
+  obj: FormInstance | Record<string, string | number>,
+) => {
   return Object.fromEntries(
     Object.entries(obj).filter(
       ([_, value]) => value !== undefined && value !== null,

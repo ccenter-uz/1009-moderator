@@ -88,7 +88,7 @@ export const CategorySubcategorySelect: FC<Props> = (props) => {
     ) {
       triggerCategory({
         regionId,
-        cityId,
+        cityId: cityId ? cityId : "",
         status: GET_ALL_ACTIVE_STATUS.active,
         page: categoryPagination.page,
         limit: categoryPagination.limit,

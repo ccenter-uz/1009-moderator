@@ -81,6 +81,7 @@ export const ManageWrapperBox: FC<Props> = (props) => {
           rowHoverable={rowSelect}
           columns={columns}
           dataSource={data}
+          scroll={{ x: "auto" }}
           pagination={{
             current: page,
             pageSize: pageSize,
