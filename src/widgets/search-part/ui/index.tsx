@@ -8,10 +8,10 @@ import { AddressSearchPartUI } from "@features/address-search-part";
 import { CategorySubcategorySelect } from "@features/category-subCategory-select";
 import { ContactSearchPartUI } from "@features/contact-search-part";
 
+import { REGION_IDS } from "@shared/lib/helpers";
+
 type Props = {
-  setSearchValues: Dispatch<
-    SetStateAction<{ regionId: number; cityId: number } | null>
-  >;
+  setSearchValues: Dispatch<SetStateAction<{ regionId: number } | null>>;
   searchTableRef?: HTMLElement | null;
 };
 
@@ -19,7 +19,7 @@ export const SearchPartUI: FC<Props> = (props) => {
   const { setSearchValues, searchTableRef } = props;
   const { t } = useTranslation();
   const [form] = Form.useForm();
-  const [regionId, setRegionId] = useState<number | null>(null);
+  const [regionId, setRegionId] = useState<number | null>(REGION_IDS.TASHKENT);
   const [cityId, setCityId] = useState<number | null>(null);
 
   const onSubmit = (values: { regionId: number; cityId: number }) => {
@@ -29,22 +29,28 @@ export const SearchPartUI: FC<Props> = (props) => {
   };
 
   const onValueChange = (
-    _: unknown,
+    changingValue: { cityId: number },
     allValues: {
       regionId: number;
       cityId: number;
     },
   ) => {
-    const { regionId, cityId } = allValues;
-    setRegionId(regionId);
-    setCityId(cityId);
+    const { regionId } = allValues;
+    if (changingValue.cityId) {
+      setRegionId(regionId);
+      setCityId(changingValue.cityId);
+    } else {
+      setRegionId(regionId);
+      setCityId(null);
+    }
   };
 
   const onCancel = () => {
     setSearchValues(null);
-    setRegionId(null);
+    setRegionId(REGION_IDS.TASHKENT);
     setCityId(null);
     form.resetFields();
+    form.setFieldValue("regionId", REGION_IDS.TASHKENT);
   };
 
   return (

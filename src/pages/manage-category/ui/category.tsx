@@ -215,20 +215,6 @@ export const Category: FC = () => {
 
   const columns = [
     {
-      title: t("name-uz"),
-      dataIndex: "name",
-      key: "name",
-      render: (text: { uz: string }) => text?.uz,
-      filterDropdown: () => (
-        <TableOrderFilterUI
-          langCode={"uz"}
-          setLangCode={setLangCode}
-          order={order}
-          setOrder={setOrder}
-        />
-      ),
-    },
-    {
       title: t("name-ru"),
       dataIndex: "name",
       key: "name",
@@ -250,6 +236,20 @@ export const Category: FC = () => {
       filterDropdown: () => (
         <TableOrderFilterUI
           langCode="cy"
+          setLangCode={setLangCode}
+          order={order}
+          setOrder={setOrder}
+        />
+      ),
+    },
+    {
+      title: t("name-uz"),
+      dataIndex: "name",
+      key: "name",
+      render: (text: { uz: string }) => text?.uz,
+      filterDropdown: () => (
+        <TableOrderFilterUI
+          langCode={"uz"}
           setLangCode={setLangCode}
           order={order}
           setOrder={setOrder}

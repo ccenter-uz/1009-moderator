@@ -73,7 +73,7 @@ export const AddressSearchPartUI: FC<Props> = (props) => {
     if ((isOpenVillage && cityId) || (isOpenVillage && regionId)) {
       triggerVillage({
         regionId,
-        cityId,
+        cityId: cityId ? cityId : "",
         page: villagePagination.page,
         limit: villagePagination.limit,
         search: searchValueVillage,
@@ -94,7 +94,7 @@ export const AddressSearchPartUI: FC<Props> = (props) => {
     if ((isOpenNearby && cityId) || (isOpenNearby && regionId)) {
       triggerNearby({
         regionId,
-        cityId,
+        cityId: cityId ? cityId : "",
         page: nearbyPagination.page,
         limit: nearbyPagination.limit,
         search: searchValueNearby,
@@ -114,7 +114,7 @@ export const AddressSearchPartUI: FC<Props> = (props) => {
     if ((isOpenStreet && cityId) || (isOpenStreet && regionId)) {
       triggerStreet({
         regionId,
-        cityId,
+        cityId: cityId ? cityId : "",
         page: streetPagination.page,
         limit: streetPagination.limit,
         search: searchValueStreet,

@@ -9,7 +9,7 @@ import {
   useLazyGetCitiesQuery,
 } from "@entities/region-city";
 
-import { GET_ALL_ACTIVE_STATUS } from "@shared/lib/helpers";
+import { GET_ALL_ACTIVE_STATUS, REGION_IDS } from "@shared/lib/helpers";
 import { SearchableSelect } from "@shared/ui";
 
 type Props = {
@@ -39,7 +39,15 @@ export const AddressThreeSearchPartUI: FC<Props> = (props) => {
       all: GET_ALL_ACTIVE_STATUS.all,
       status: GET_ALL_ACTIVE_STATUS.active,
     });
-    form.resetFields(["cityId", "districtId"]);
+    form.resetFields([
+      "cityId",
+      "districtId",
+      "categoryId",
+      "subCategoryId",
+      "villageId",
+      "nearbyId",
+      "streetId",
+    ]);
     setCityDisabled(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -51,7 +59,14 @@ export const AddressThreeSearchPartUI: FC<Props> = (props) => {
       all: GET_ALL_ACTIVE_STATUS.all,
       status: GET_ALL_ACTIVE_STATUS.active,
     });
-    form.resetFields(["districtId"]);
+    form.resetFields([
+      "districtId",
+      "categoryId",
+      "subCategoryId",
+      "villageId",
+      "nearbyId",
+      "streetId",
+    ]);
     setDistrictDisabled(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -70,6 +85,7 @@ export const AddressThreeSearchPartUI: FC<Props> = (props) => {
           name="regionId"
           label={t("region")}
           style={{ marginBottom: 10 }}
+          initialValue={REGION_IDS.TASHKENT}
         >
           <SearchableSelect
             onClear={() => {
@@ -92,17 +108,6 @@ export const AddressThreeSearchPartUI: FC<Props> = (props) => {
               })) || []
             }
             placeholder={t("region")}
-            onChange={() =>
-              form.resetFields([
-                "cityId",
-                "districtId",
-                "categoryId",
-                "subCategoryId",
-                "villageId",
-                "nearbyId",
-                "streetId",
-              ])
-            }
             onSelect={onSelectRegion}
             loading={isLoadingRegions}
           />
@@ -130,16 +135,6 @@ export const AddressThreeSearchPartUI: FC<Props> = (props) => {
               })) || []
             }
             placeholder={t("city")}
-            onChange={() =>
-              form.resetFields([
-                "districtId",
-                "categoryId",
-                "subCategoryId",
-                "villageId",
-                "nearbyId",
-                "streetId",
-              ])
-            }
             onSelect={onSelectCity}
             loading={isLoadingCities}
           />
