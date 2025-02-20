@@ -8,7 +8,8 @@ import { AddressSearchPartUI } from "@features/address-search-part";
 import { CategorySubcategorySelect } from "@features/category-subCategory-select";
 import { ContactSearchPartUI } from "@features/contact-search-part";
 
-import { REGION_IDS } from "@shared/lib/helpers";
+import { SearchContext } from "@shared/lib/context";
+import { CITY_IDS, REGION_IDS, setLocalStorage } from "@shared/lib/helpers";
 
 type Props = {
   setSearchValues: Dispatch<SetStateAction<{ regionId: number } | null>>;
@@ -19,8 +20,7 @@ export const SearchPartUI: FC<Props> = (props) => {
   const { setSearchValues, searchTableRef } = props;
   const { t } = useTranslation();
   const [form] = Form.useForm();
-  const [regionId, setRegionId] = useState<number | null>(REGION_IDS.TASHKENT);
-  const [cityId, setCityId] = useState<number | null>(null);
+  const [formReset, setFormReset] = useState(0);
 
   const onSubmit = (values: { regionId: number; cityId: number }) => {
     setSearchValues(values);
@@ -28,66 +28,38 @@ export const SearchPartUI: FC<Props> = (props) => {
     searchTableRef?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const onValueChange = (
-    changingValue: { cityId: number },
-    allValues: {
-      regionId: number;
-      cityId: number;
-    },
-  ) => {
-    const { regionId } = allValues;
-    if (changingValue.cityId) {
-      setRegionId(regionId);
-      setCityId(changingValue.cityId);
-    } else {
-      setRegionId(regionId);
-      setCityId(null);
-    }
-  };
-
   const onCancel = () => {
     setSearchValues(null);
-    setRegionId(REGION_IDS.TASHKENT);
-    setCityId(null);
     form.resetFields();
-    form.setFieldValue("regionId", REGION_IDS.TASHKENT);
+    setLocalStorage("regionId", REGION_IDS.TASHKENT);
+    setLocalStorage("cityId", CITY_IDS.TASHKENT);
+    setFormReset((prev) => prev + 1);
   };
 
   return (
-    <Form
-      form={form}
-      id="search-part"
-      onFinish={onSubmit}
-      onValuesChange={onValueChange}
-    >
-      <CategorySubcategorySelect
-        form={form}
-        regionId={regionId}
-        cityId={cityId}
-      />
-      <Divider />
-      <Row gutter={24}>
-        <Col span={8}>
-          <PersonalSearchPartUI form={form} />
-        </Col>
-        <Col span={8}>
-          <AddressSearchPartUI
-            form={form}
-            regionId={regionId}
-            cityId={cityId}
-          />
-        </Col>
-        <Col span={8}>
-          <ContactSearchPartUI />
-        </Col>
-      </Row>
-      <Flex justify="end" align="middle" gap={8}>
-        <Button onClick={onCancel}>{t("cancel")}</Button>
-        <Button htmlType="submit" type="primary" form="search-part">
-          {t("search")}
-        </Button>
-      </Flex>
-      <Divider />
-    </Form>
+    <SearchContext.Provider value={formReset}>
+      <Form form={form} id="search-part" onFinish={onSubmit}>
+        <CategorySubcategorySelect form={form} />
+        <Divider />
+        <Row gutter={24}>
+          <Col span={8}>
+            <PersonalSearchPartUI form={form} />
+          </Col>
+          <Col span={8}>
+            <AddressSearchPartUI form={form} />
+          </Col>
+          <Col span={8}>
+            <ContactSearchPartUI />
+          </Col>
+        </Row>
+        <Flex justify="end" align="middle" gap={8}>
+          <Button onClick={onCancel}>{t("cancel")}</Button>
+          <Button htmlType="submit" type="primary" form="search-part">
+            {t("search")}
+          </Button>
+        </Flex>
+        <Divider />
+      </Form>
+    </SearchContext.Provider>
   );
 };

@@ -7,14 +7,12 @@ import {
   useLazyGetSubCategoriesQuery,
 } from "@entities/category-subcategory";
 
-import { GET_ALL_ACTIVE_STATUS } from "@shared/lib/helpers";
+import { GET_ALL_ACTIVE_STATUS, getLocalStorage } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { SearchModal } from "@shared/ui/search-modal";
 
 type Props = {
   form: FormInstance;
-  regionId: number | null;
-  cityId: number | null;
 };
 
 type SelectedDataTypes = {
@@ -32,7 +30,9 @@ const columns = [
 ];
 
 export const CategorySubcategorySelect: FC<Props> = (props) => {
-  const { form, regionId, cityId } = props;
+  const { form } = props;
+  const regionId = form.getFieldValue("regionId");
+  const cityId = form.getFieldValue("cityId");
   const {
     isOpen: categoryIsOpen,
     onOpen: openCategoryModal,
@@ -148,7 +148,7 @@ export const CategorySubcategorySelect: FC<Props> = (props) => {
           style={{ marginBottom: 10 }}
         >
           <Select
-            disabled={!regionId}
+            disabled={!getLocalStorage("regionId")}
             allowClear
             onClear={handleClickCategorySelect}
             dropdownStyle={{ display: "none" }}
