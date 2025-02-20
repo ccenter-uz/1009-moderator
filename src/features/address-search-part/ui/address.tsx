@@ -9,7 +9,11 @@ import {
   useLazyGetCitiesQuery,
 } from "@entities/region-city";
 
-import { GET_ALL_ACTIVE_STATUS, REGION_IDS } from "@shared/lib/helpers";
+import {
+  GET_ALL_ACTIVE_STATUS,
+  getLocalStorage,
+  REGION_IDS,
+} from "@shared/lib/helpers";
 import { SearchableSelect } from "@shared/ui";
 
 type Props = {
@@ -85,7 +89,7 @@ export const AddressThreeSearchPartUI: FC<Props> = (props) => {
           name="regionId"
           label={t("region")}
           style={{ marginBottom: 10 }}
-          initialValue={REGION_IDS.TASHKENT}
+          initialValue={getLocalStorage("regionId") || REGION_IDS.TASHKENT}
         >
           <SearchableSelect
             onClear={() => {

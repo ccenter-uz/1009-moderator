@@ -8,7 +8,11 @@ import { AddressSearchPartUI } from "@features/address-search-part";
 import { CategorySubcategorySelect } from "@features/category-subCategory-select";
 import { ContactSearchPartUI } from "@features/contact-search-part";
 
-import { REGION_IDS } from "@shared/lib/helpers";
+import {
+  getLocalStorage,
+  REGION_IDS,
+  setLocalStorage,
+} from "@shared/lib/helpers";
 
 type Props = {
   setSearchValues: Dispatch<SetStateAction<{ regionId: number } | null>>;
@@ -19,7 +23,9 @@ export const SearchPartUI: FC<Props> = (props) => {
   const { setSearchValues, searchTableRef } = props;
   const { t } = useTranslation();
   const [form] = Form.useForm();
-  const [regionId, setRegionId] = useState<number | null>(REGION_IDS.TASHKENT);
+  const [regionId, setRegionId] = useState<number | null>(
+    Number(getLocalStorage("regionId")) || REGION_IDS.TASHKENT,
+  );
   const [cityId, setCityId] = useState<number | null>(null);
 
   const onSubmit = (values: { regionId: number; cityId: number }) => {
@@ -43,6 +49,7 @@ export const SearchPartUI: FC<Props> = (props) => {
       setRegionId(regionId);
       setCityId(null);
     }
+    setLocalStorage("regionId", regionId);
   };
 
   const onCancel = () => {
@@ -51,6 +58,7 @@ export const SearchPartUI: FC<Props> = (props) => {
     setCityId(null);
     form.resetFields();
     form.setFieldValue("regionId", REGION_IDS.TASHKENT);
+    setLocalStorage("regionId", REGION_IDS.TASHKENT);
   };
 
   return (
