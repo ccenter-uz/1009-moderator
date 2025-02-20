@@ -1,7 +1,7 @@
 import { Col, Form, FormInstance } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import i18next, { t } from "i18next";
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
 import { useLazyGetDistrictsQuery } from "@entities/district";
 import {
@@ -9,10 +9,12 @@ import {
   useLazyGetCitiesQuery,
 } from "@entities/region-city";
 
+import { useSearchContext } from "@shared/lib/context";
 import {
   GET_ALL_ACTIVE_STATUS,
   getLocalStorage,
-  REGION_IDS,
+  removeLocalStorage,
+  setLocalStorage,
 } from "@shared/lib/helpers";
 import { SearchableSelect } from "@shared/ui";
 
@@ -37,7 +39,9 @@ export const AddressThreeSearchPartUI: FC<Props> = (props) => {
     { data: dataDistrict, isLoading: isLoadingDistrict },
   ] = useLazyGetDistrictsQuery();
 
-  const onSelectRegion = useCallback((value: string) => {
+  const formReset = useSearchContext();
+
+  const onSelectRegion = (value: string) => {
     triggerCities({
       regionId: value,
       all: GET_ALL_ACTIVE_STATUS.all,
@@ -53,10 +57,11 @@ export const AddressThreeSearchPartUI: FC<Props> = (props) => {
       "streetId",
     ]);
     setCityDisabled(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    setLocalStorage("regionId", value);
+    removeLocalStorage("cityId");
+  };
 
-  const onSelectCity = useCallback((value: string) => {
+  const onSelectCity = (value: string) => {
     triggerDistrict({
       regionId: form.getFieldValue("regionId"),
       cityId: value,
@@ -72,15 +77,50 @@ export const AddressThreeSearchPartUI: FC<Props> = (props) => {
       "streetId",
     ]);
     setDistrictDisabled(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    setLocalStorage("cityId", value);
+  };
 
   useEffect(() => {
-    if (form.getFieldValue("regionId")) {
-      onSelectRegion(form.getFieldValue("regionId"));
+    const regionId = getLocalStorage("regionId");
+    const cityId = getLocalStorage("cityId");
+    if (regionId) {
+      form.setFieldValue("regionId", regionId);
     }
+    if (cityId) {
+      form.setFieldValue("cityId", cityId);
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [form.getFieldValue("regionId")]);
+  }, [formReset]);
+
+  useEffect(() => {
+    const regionId = getLocalStorage("regionId");
+    const cityId = getLocalStorage("cityId");
+    if (regionId && cityId) {
+      triggerCities({
+        regionId: regionId,
+        all: GET_ALL_ACTIVE_STATUS.all,
+        status: GET_ALL_ACTIVE_STATUS.active,
+      });
+      triggerDistrict({
+        regionId: regionId,
+        cityId: cityId,
+        all: GET_ALL_ACTIVE_STATUS.all,
+        status: GET_ALL_ACTIVE_STATUS.active,
+      });
+      setCityDisabled(false);
+      setDistrictDisabled(false);
+    } else if (regionId) {
+      triggerCities({
+        regionId: regionId,
+        all: GET_ALL_ACTIVE_STATUS.all,
+        status: GET_ALL_ACTIVE_STATUS.active,
+      });
+      setCityDisabled(false);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formReset]);
 
   return (
     <>
@@ -89,7 +129,6 @@ export const AddressThreeSearchPartUI: FC<Props> = (props) => {
           name="regionId"
           label={t("region")}
           style={{ marginBottom: 10 }}
-          initialValue={getLocalStorage("regionId") || REGION_IDS.TASHKENT}
         >
           <SearchableSelect
             onClear={() => {
@@ -104,6 +143,8 @@ export const AddressThreeSearchPartUI: FC<Props> = (props) => {
               ]),
                 setCityDisabled(true),
                 setDistrictDisabled(true);
+              removeLocalStorage("regionId");
+              removeLocalStorage("cityId");
             }}
             options={
               dataRegions?.data.map((region: AnyObject) => ({
@@ -131,6 +172,7 @@ export const AddressThreeSearchPartUI: FC<Props> = (props) => {
                 "streetId",
               ]),
                 setDistrictDisabled(true);
+              removeLocalStorage("cityId");
             }}
             options={
               dataCities?.data.map((city: AnyObject) => ({
