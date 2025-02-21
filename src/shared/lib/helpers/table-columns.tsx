@@ -455,7 +455,6 @@ export const subCategoryColumns: searchColType = [
 
 export const attrColumns: searchColType = [
   {
-    width: 150,
     title: i18next.t("category"),
     dataIndex: "category",
     key: "category",
@@ -463,7 +462,6 @@ export const attrColumns: searchColType = [
       text?.name[i18next.language],
   },
   {
-    width: 150,
     title: i18next.t("sub-category"),
     dataIndex: "subcategory",
     key: "subcategory",
@@ -471,14 +469,12 @@ export const attrColumns: searchColType = [
       text?.name[i18next.language],
   },
   {
-    width: 100,
     title: i18next.t("main-org"),
     dataIndex: "mainorganization",
     key: "mainorganization",
     render: (text: { name: string }) => text?.name,
   },
   {
-    width: 60,
     align: "center",
     title: i18next.t("region"),
     dataIndex: "region",
@@ -487,7 +483,6 @@ export const attrColumns: searchColType = [
       text?.name[i18next.language],
   },
   {
-    width: 60,
     align: "center",
     title: i18next.t("city"),
     dataIndex: "city",
@@ -496,7 +491,6 @@ export const attrColumns: searchColType = [
       text?.name[i18next.language],
   },
   {
-    width: 60,
     align: "center",
     title: i18next.t("district"),
     dataIndex: "district",
@@ -505,7 +499,6 @@ export const attrColumns: searchColType = [
       text?.name[i18next.language],
   },
   {
-    width: 150,
     title: i18next.t("description"),
     dataIndex: "description",
     key: "description",

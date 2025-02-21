@@ -1,4 +1,4 @@
-import { Row, Col, Table } from "antd";
+import { Table, Flex } from "antd";
 import { FC } from "react";
 
 import { attrColumns, subCategoryColumns } from "@shared/lib/helpers";
@@ -29,28 +29,40 @@ export const SearchBottomTable: FC<Props> = (props) => {
   const { attrData, subCategoryData, isLoading } = props;
 
   return (
-    <Row align={"top"} gutter={[8, 8]} style={{ marginBottom: 30 }}>
-      <Col span={16}>
+    <Flex align={"flex-start"} style={{ width: "100%", marginBottom: 30 }} wrap>
+      <div
+        style={{
+          width: "65%",
+          resize: "horizontal",
+          overflow: "auto",
+          border: "1px solid lightgrey",
+        }}
+      >
         <Table
           loading={isLoading}
           columns={attrColumns}
           dataSource={attrData}
           pagination={false}
           bordered
-          size="small"
+          scroll={{ y: 55 * 5 }}
         />
-      </Col>
-      <Col span={8}>
+      </div>
+      <div
+        style={{
+          flex: 1,
+          overflow: "auto",
+          border: "1px solid lightgrey",
+        }}
+      >
         <Table
           loading={isLoading}
           columns={subCategoryColumns}
           dataSource={subCategoryData}
           bordered
-          size="small"
           pagination={false}
           scroll={{ y: 55 * 5 }}
         />
-      </Col>
-    </Row>
+      </div>
+    </Flex>
   );
 };

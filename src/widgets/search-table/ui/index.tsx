@@ -75,7 +75,7 @@ export const SearchTableUI: FC<Props> = (props) => {
           phonesData={phonesData}
           onOpen={onOpen}
         />
-        <Divider />
+        <Divider style={{ margin: "0.5rem 0" }} />
         <SearchBottomTable
           isLoading={isLoading}
           attrData={attrData}

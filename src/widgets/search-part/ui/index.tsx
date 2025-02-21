@@ -58,7 +58,7 @@ export const SearchPartUI: FC<Props> = (props) => {
             {t("search")}
           </Button>
         </Flex>
-        <Divider />
+        <Divider style={{ margin: "0.5rem 0" }} />
       </Form>
     </SearchContext.Provider>
   );
