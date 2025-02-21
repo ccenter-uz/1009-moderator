@@ -13,8 +13,6 @@ import { AddressThreeSearchPartUI } from "./address";
 
 type Props = {
   form: FormInstance;
-  regionId: number | null;
-  cityId: number | null;
 };
 
 const columns = [
@@ -27,7 +25,9 @@ const columns = [
 ];
 
 export const AddressSearchPartUI: FC<Props> = (props) => {
-  const { form, regionId, cityId } = props;
+  const { form } = props;
+  const regionId = form.getFieldValue("regionId");
+  const cityId = form.getFieldValue("cityId");
   const {
     isOpen: isOpenVillage,
     onOpen: onOpenVillage,

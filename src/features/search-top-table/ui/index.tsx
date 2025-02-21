@@ -1,6 +1,6 @@
 import { Table, Flex, Tooltip } from "antd";
 import { ColumnsType } from "antd/es/table";
-import { t } from "i18next";
+import i18next, { t } from "i18next";
 import { FC, useState } from "react";
 import { FaEnvelope, FaPencilAlt } from "react-icons/fa";
 import { MdRestore } from "react-icons/md";
@@ -140,8 +140,10 @@ export const SearchTopTable: FC<Props> = (props) => {
     },
     {
       title: t("address"),
-      dataIndex: "address",
-      key: "address",
+      dataIndex: "street",
+      key: "street",
+      render: (text: { name: Record<string, string> }) =>
+        text?.name[i18next.language as keyof typeof text.name],
     },
     {
       title: t("status"),
