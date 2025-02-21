@@ -99,7 +99,12 @@ export const SMSModal: FC<Props> = (props) => {
       id: 12,
       title: t("transport"),
       name: t("nearby"),
-      value: "test",
+      value: () => {
+        return data.Nearbees?.map(
+          (item: { Nearby: { name: { [key: string]: string } } }) =>
+            item?.Nearby?.name[i18next.language],
+        );
+      },
     },
     {
       id: 13,
@@ -149,7 +154,7 @@ export const SMSModal: FC<Props> = (props) => {
                   id={String(item.value)}
                 />
               </Col>
-              <Col span={16}>{value}</Col>
+              <Col span={16}>{value ?? t("no-data")}</Col>
             </Row>
           </Flex>
         );
