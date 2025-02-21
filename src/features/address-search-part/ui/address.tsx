@@ -83,20 +83,9 @@ export const AddressThreeSearchPartUI: FC<Props> = (props) => {
   useEffect(() => {
     const regionId = getLocalStorage("regionId");
     const cityId = getLocalStorage("cityId");
-    if (regionId) {
-      form.setFieldValue("regionId", regionId);
-    }
-    if (cityId) {
-      form.setFieldValue("cityId", cityId);
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formReset]);
-
-  useEffect(() => {
-    const regionId = getLocalStorage("regionId");
-    const cityId = getLocalStorage("cityId");
     if (regionId && cityId) {
+      form.setFieldValue("regionId", regionId);
+      form.setFieldValue("cityId", cityId);
       triggerCities({
         regionId: regionId,
         all: GET_ALL_ACTIVE_STATUS.all,
@@ -111,6 +100,7 @@ export const AddressThreeSearchPartUI: FC<Props> = (props) => {
       setCityDisabled(false);
       setDistrictDisabled(false);
     } else if (regionId) {
+      form.setFieldValue("regionId", regionId);
       triggerCities({
         regionId: regionId,
         all: GET_ALL_ACTIVE_STATUS.all,
