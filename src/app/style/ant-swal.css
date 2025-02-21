@@ -108,3 +108,9 @@
 .custom-input:hover {
   border-color: #40a9ff; /* Slightly lighter blue for hover */
 }
+
+/* Uppercase all table data */
+
+.ant-table-tbody .ant-table-cell {
+  text-transform: uppercase;
+}
