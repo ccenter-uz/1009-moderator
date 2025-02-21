@@ -1,7 +1,8 @@
 import { Table, Flex, Tooltip } from "antd";
 import { ColumnsType } from "antd/es/table";
-import i18next, { t } from "i18next";
+import i18next from "i18next";
 import { FC, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FaEnvelope, FaPencilAlt } from "react-icons/fa";
 import { MdRestore } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
@@ -26,28 +27,31 @@ import {
   STEPS_EDIT_DATA,
   STEPS_ENUM,
 } from "@shared/lib/helpers";
-import { usePaginate } from "@shared/lib/hooks";
+import { useDisclosure, usePaginate } from "@shared/lib/hooks";
 import { Can } from "@shared/ui";
 
 import { TAttr, TPhone } from "../model/types";
+
+import { SMSModal } from "./modal";
 
 type Props = {
   data: { status: number; id: number | string }[] | [];
   setAttrData: (data: TAttr[]) => void;
   phonesData: TPhone[];
-  onOpen: () => void;
   totalItems: number;
   isLoading?: boolean;
 };
 
 export const SearchTopTable: FC<Props> = (props) => {
-  const { data, totalItems, isLoading, setAttrData, phonesData, onOpen } =
-    props;
+  const { data, totalItems, isLoading, setAttrData, phonesData } = props;
+  const { t } = useTranslation();
+  const { isOpen, onClose, onOpen } = useDisclosure();
   const { page, pageSize, setPage, setPageSize } = usePaginate({
     pageName: "page",
     limitName: "limit",
   });
   const navigate = useNavigate();
+  const [selectedData, setSelectedData] = useState<null | unknown>(null);
   const [selectedRowKeys, setSelectedRowKeys] = useState<number>(0);
   const [deleteOrganization] = useDeleteOrganizationMutation();
   const [restoreOrganization] = useRestoreOrganizationMutation();
@@ -133,7 +137,9 @@ export const SearchTopTable: FC<Props> = (props) => {
           cursor={"pointer"}
           title={t("sms")}
           onClick={() => {
-            onOpen(), setSelectedRowKeys(Number(record.id));
+            onOpen(),
+              setSelectedRowKeys(Number(record.id)),
+              setSelectedData(record);
           }}
         />
       ),
@@ -245,6 +251,13 @@ export const SearchTopTable: FC<Props> = (props) => {
           scroll={{ y: 55 * 5 }}
         />
       </div>
+      {/* SMS */}
+      <SMSModal
+        open={isOpen}
+        onClose={onClose}
+        data={selectedData}
+        title={t("abonent")}
+      />
     </Flex>
   );
 };
