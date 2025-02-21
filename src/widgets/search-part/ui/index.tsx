@@ -9,7 +9,6 @@ import { CategorySubcategorySelect } from "@features/category-subCategory-select
 import { ContactSearchPartUI } from "@features/contact-search-part";
 
 import { SearchContext } from "@shared/lib/context";
-import { CITY_IDS, REGION_IDS, setLocalStorage } from "@shared/lib/helpers";
 
 type Props = {
   setSearchValues: Dispatch<SetStateAction<{ regionId: number } | null>>;
@@ -30,9 +29,10 @@ export const SearchPartUI: FC<Props> = (props) => {
 
   const onCancel = () => {
     setSearchValues(null);
-    form.resetFields();
-    setLocalStorage("regionId", REGION_IDS.TASHKENT);
-    setLocalStorage("cityId", CITY_IDS.TASHKENT);
+    const resetValues = Object.keys(form.getFieldsValue()).filter(
+      (key) => key !== "regionId" && key !== "cityId",
+    );
+    form.resetFields(resetValues);
     setFormReset((prev) => prev + 1);
   };
 
