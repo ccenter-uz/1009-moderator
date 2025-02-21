@@ -66,11 +66,13 @@ export const SMSModal: FC<Props> = (props) => {
       value: () => {
         const types: string[] = [];
 
-        data.PaymentTypes?.map((item: any) => {
-          if (item.Cash) types.push(t("cash"));
-          if (item.Terminal) types.push(t("terminal"));
-          if (item.Transfer) types.push(t("transfer"));
-        });
+        data.PaymentTypes?.map(
+          (item: { Cash: boolean; Terminal: boolean; Transfer: boolean }) => {
+            if (item.Cash) types.push(t("cash"));
+            if (item.Terminal) types.push(t("terminal"));
+            if (item.Transfer) types.push(t("transfer"));
+          },
+        );
 
         return types.join(", ");
       },
