@@ -1,4 +1,4 @@
-import { Row, Col, Table, Flex, Tooltip } from "antd";
+import { Table, Flex, Tooltip } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { t } from "i18next";
 import { FC, useState } from "react";
@@ -115,10 +115,8 @@ export const SearchTopTable: FC<Props> = (props) => {
       title: t("code"),
       dataIndex: "inn",
       key: "inn",
-      width: 80,
     },
     {
-      width: 400,
       title: t("abonent"),
       dataIndex: "name",
       key: "name",
@@ -128,7 +126,7 @@ export const SearchTopTable: FC<Props> = (props) => {
       title: t("sms"),
       dataIndex: "sms",
       key: "sms",
-      width: 20,
+      align: "center",
       render: (_: string, record: { id: number | string; status: number }) => (
         <FaEnvelope
           color="#4e9eff"
@@ -141,7 +139,6 @@ export const SearchTopTable: FC<Props> = (props) => {
       ),
     },
     {
-      width: 400,
       title: t("address"),
       dataIndex: "address",
       key: "address",
@@ -150,10 +147,12 @@ export const SearchTopTable: FC<Props> = (props) => {
       title: t("status"),
       dataIndex: "status",
       key: "status",
-      render: (text: statusType) => setColorByStatus(statusForOrgs[text]),
+      align: "center",
+      render: (text: statusType) => (
+        <Flex justify="center">{setColorByStatus(statusForOrgs[text])}</Flex>
+      ),
     },
     {
-      width: 80,
       title: t("action"),
       key: "action",
       dataIndex: "action",
@@ -192,12 +191,20 @@ export const SearchTopTable: FC<Props> = (props) => {
   ];
 
   return (
-    <Row align={"top"} gutter={[8, 8]}>
-      <Col span={16}>
+    <Flex align={"flex-start"} style={{ width: "100%" }} wrap>
+      <div
+        style={{
+          width: "65%",
+          resize: "horizontal",
+          overflow: "auto",
+          border: "1px solid lightgrey",
+        }}
+      >
         <Table
           loading={isLoading}
           columns={columns as ColumnsType<{ id: number | string }>}
           dataSource={data}
+          scroll={{ y: 55 * 5 }}
           pagination={{
             current: page,
             pageSize: pageSize,
@@ -219,18 +226,23 @@ export const SearchTopTable: FC<Props> = (props) => {
             row.id === selectedRowKeys ? "selected-row" : ""
           }
         />
-      </Col>
-      <Col span={8}>
+      </div>
+      <div
+        style={{
+          flex: 1,
+          overflow: "auto",
+          border: "1px solid lightgrey",
+        }}
+      >
         <Table
           loading={isLoading}
           columns={phoneColumns}
           dataSource={phonesData}
           bordered
-          size="small"
           pagination={false}
           scroll={{ y: 55 * 5 }}
         />
-      </Col>
-    </Row>
+      </div>
+    </Flex>
   );
 };
