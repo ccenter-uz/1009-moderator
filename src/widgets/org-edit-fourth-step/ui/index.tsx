@@ -80,7 +80,7 @@ export const OrgEditFourthStepUI: FC = () => {
                       },
                     ]}
                   >
-                    <Input type="time" disabled={allDay} />
+                    <Input type="time" />
                   </Form.Item>
                 </Col>
                 <Col span={6}>
@@ -94,7 +94,7 @@ export const OrgEditFourthStepUI: FC = () => {
                       },
                     ]}
                   >
-                    <Input type="time" disabled={allDay} />
+                    <Input type="time" />
                   </Form.Item>
                 </Col>
                 <Col span={6}>
