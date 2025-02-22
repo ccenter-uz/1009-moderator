@@ -3,9 +3,13 @@ import i18next from "i18next";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
 
+import { returnDayOffsInProperLanguage } from "@shared/lib/helpers";
+
+import { TSelectedData } from "../model/types";
+
 type Props = {
   title: string;
-  data: any;
+  data: TSelectedData | null;
   open: boolean;
   onClose: () => void;
 };
@@ -36,6 +40,7 @@ export const SMSModal: FC<Props> = (props) => {
       id: 4,
       name: t("phone"),
       value: () => {
+        if (data.Phone?.length === 0) return t("no-data");
         return data.Phone?.map((item: { phone: string }) => item?.phone);
       },
     },
@@ -64,6 +69,7 @@ export const SMSModal: FC<Props> = (props) => {
       id: 8,
       name: t("payment_type"),
       value: () => {
+        if (data.PaymentTypes?.length === 0) return t("no-data");
         const types: string[] = [];
 
         data.PaymentTypes?.map(
@@ -82,26 +88,40 @@ export const SMSModal: FC<Props> = (props) => {
       title: t("worktime"),
       name: t("worktime"),
       value: () => {
-        return `${data.workTime?.worktimeFrom} - ${data.workTime?.worktimeTo}`;
+        if (data.workTime) {
+          return `${data.workTime?.worktimeFrom} - ${
+            data.workTime?.worktimeTo
+          }, ${data.workTime?.allDay ? t("allDay") : ""}`;
+        }
       },
     },
     {
       id: 10,
       name: t("lunch"),
       value: () => {
-        return `${data.workTime?.lunchFrom} - ${data.workTime?.lunchTo}`;
+        if (data.workTime) {
+          if (data.workTime?.withoutLunch) return t("withoutLunch");
+          return `${data.workTime?.lunchFrom} - ${data.workTime?.lunchTo}`;
+        }
       },
     },
     {
       id: 11,
       name: t("dayoffs"),
-      value: () => data.workTime?.dayoffs?.join(", "),
+      value: () => {
+        if (data.workTime) {
+          if (data.workTime?.noDayoffs) return t("noDayoffs");
+          if (data.workTime?.dayoffs.length === 0) return t("no-data");
+          return returnDayOffsInProperLanguage(data.workTime?.dayoffs);
+        }
+      },
     },
     {
       id: 12,
       title: t("transport"),
       name: t("nearby"),
       value: () => {
+        if (data.Nearbees?.length === 0) return t("no-data");
         return data.Nearbees?.map(
           (item: { Nearby: { name: { [key: string]: string } } }) =>
             item?.Nearby?.name[i18next.language],
@@ -151,7 +171,7 @@ export const SMSModal: FC<Props> = (props) => {
               </Col>
               <Col span={2}>
                 <Checkbox
-                  name={item.value}
+                  name={item.value as string}
                   type="checkbox"
                   id={String(item.value)}
                 />

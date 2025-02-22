@@ -188,6 +188,11 @@ export const getDayOffsCheckbox = (form: AnyObject) => {
   return dayOffs;
 };
 
+export const returnDayOffsInProperLanguage = (dayOffs: string[]) => {
+  return dayOffs.map((day) => {
+    return i18next.t(day);
+  });
+};
 export const setDatyOffsCheckbox = (form: AnyObject, dayOffs: string[]) => {
   dayOffs?.forEach((day) => {
     form.setFieldsValue({ [day]: true });

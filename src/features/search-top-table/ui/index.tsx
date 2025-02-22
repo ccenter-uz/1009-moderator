@@ -30,7 +30,7 @@ import {
 import { useDisclosure, usePaginate } from "@shared/lib/hooks";
 import { Can } from "@shared/ui";
 
-import { TAttr, TPhone } from "../model/types";
+import { TAttr, TPhone, TSelectedData } from "../model/types";
 
 import { SMSModal } from "./modal";
 
@@ -51,7 +51,7 @@ export const SearchTopTable: FC<Props> = (props) => {
     limitName: "limit",
   });
   const navigate = useNavigate();
-  const [selectedData, setSelectedData] = useState<null | unknown>(null);
+  const [selectedData, setSelectedData] = useState<null | TSelectedData>(null);
   const [selectedRowKeys, setSelectedRowKeys] = useState<number>(0);
   const [deleteOrganization] = useDeleteOrganizationMutation();
   const [restoreOrganization] = useRestoreOrganizationMutation();
@@ -114,7 +114,7 @@ export const SearchTopTable: FC<Props> = (props) => {
     }
   };
 
-  const columns: unknown = [
+  const columns = [
     {
       title: t("code"),
       dataIndex: "inn",
@@ -131,7 +131,7 @@ export const SearchTopTable: FC<Props> = (props) => {
       dataIndex: "sms",
       key: "sms",
       align: "center",
-      render: (_: string, record: { id: number | string; status: number }) => (
+      render: (_: string, record: TSelectedData) => (
         <FaEnvelope
           color="#4e9eff"
           cursor={"pointer"}
