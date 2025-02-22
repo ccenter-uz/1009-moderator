@@ -15,3 +15,31 @@ export type TPhone = {
   isSecret: boolean;
   phoneType: string;
 };
+
+export type TSelectedData = {
+  id: number | string;
+  name: string;
+  street: { name: { [key: string]: string } };
+  legalName: string;
+  index: string;
+  Phone: { phone: string }[];
+  mainorganization: { name: string };
+  mail: string;
+  PaymentTypes: { Cash: boolean; Terminal: boolean; Transfer: boolean }[];
+  workTime: {
+    dayoffs: string[];
+    worktimeFrom: string;
+    worktimeTo: string;
+    allDay: boolean;
+    noDayoffs: boolean;
+    withoutLunch: boolean;
+    lunchFrom: string;
+    lunchTo: string;
+  };
+  Nearbees: { Nearby: { name: { [key: string]: string } } }[];
+  transport: {
+    metroStation: string;
+    bus: string;
+    microBus: string;
+  };
+};

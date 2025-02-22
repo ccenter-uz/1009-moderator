@@ -1,15 +1,10 @@
 import { Divider } from "antd";
 import i18next from "i18next";
 import { FC, useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
 
 import { SearchTopTable, TAttr, TPhone } from "@features/search-top-table";
 
 import { SearchBottomTable } from "@entities/search-bottom-table";
-
-import { useDisclosure } from "@shared/lib/hooks";
-
-import { MoreModalUI } from "./modal";
 
 interface Props {
   data: { status: number; id: number | string }[] | [];
@@ -23,8 +18,6 @@ type TSubCategory = {
 
 export const SearchTableUI: FC<Props> = (props) => {
   const { data, totalItems, isLoading, setRef } = props;
-  const { t } = useTranslation();
-  const { isOpen, onClose, onOpen } = useDisclosure();
   const tableRef = useRef<HTMLDivElement>(null);
   const [attrData, setAttrData] = useState<TAttr[] | []>([]);
   const [phonesData, setPhonesData] = useState<TPhone[]>([]);
@@ -73,7 +66,6 @@ export const SearchTableUI: FC<Props> = (props) => {
           isLoading={isLoading}
           setAttrData={setAttrData}
           phonesData={phonesData}
-          onOpen={onOpen}
         />
         <Divider style={{ margin: "0.5rem 0" }} />
         <SearchBottomTable
@@ -81,7 +73,6 @@ export const SearchTableUI: FC<Props> = (props) => {
           attrData={attrData}
           subCategoryData={subCategoryData}
         />
-        <MoreModalUI open={isOpen} onClose={onClose} title={t("abonent")} />
       </div>
     </>
   );
