@@ -9,14 +9,16 @@ import { CategorySubcategorySelect } from "@features/category-subCategory-select
 import { ContactSearchPartUI } from "@features/contact-search-part";
 
 import { SearchContext } from "@shared/lib/context";
+import { removeSessionStorage } from "@shared/lib/helpers";
 
 type Props = {
   setSearchValues: Dispatch<SetStateAction<{ regionId: number } | null>>;
   searchTableRef?: HTMLElement | null;
+  setFromEdit: Dispatch<SetStateAction<boolean>>;
 };
 
 export const SearchPartUI: FC<Props> = (props) => {
-  const { setSearchValues, searchTableRef } = props;
+  const { setSearchValues, searchTableRef, setFromEdit } = props;
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const [formReset, setFormReset] = useState(0);
@@ -33,6 +35,8 @@ export const SearchPartUI: FC<Props> = (props) => {
       (key) => key !== "regionId" && key !== "cityId",
     );
     form.resetFields(resetValues);
+    removeSessionStorage("fromEdit");
+    setFromEdit(false);
     setFormReset((prev) => prev + 1);
   };
 

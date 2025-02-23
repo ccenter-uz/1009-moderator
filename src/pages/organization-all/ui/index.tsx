@@ -6,11 +6,19 @@ import { SearchTableUI } from "@widgets/search-table";
 
 import { useLazyGetOrganizationsQuery } from "@entities/organization";
 
-import { omitUndefinedValues, returnAllParams } from "@shared/lib/helpers";
+import {
+  getLocalStorage,
+  getSessionStorage,
+  omitUndefinedValues,
+  returnAllParams,
+} from "@shared/lib/helpers";
 
 export const OrgAllPage: FC = () => {
   const [searchTableRef, setSearchTableRef] = useState<HTMLElement>();
   const [searchParams] = useSearchParams();
+  const [fromEdit, setFromEdit] = useState<boolean>(
+    getSessionStorage("fromEdit") || false,
+  );
   const [searchValues, setSearchValues] = useState<{
     regionId: number;
   } | null>(null);
@@ -35,15 +43,24 @@ export const OrgAllPage: FC = () => {
       }).then((res) => {
         res.isSuccess && setData(res.data);
       });
+    } else if (fromEdit) {
+      triggerOrg({
+        ...returnAllParams(),
+        ...omitUndefinedValues({ regionId: getLocalStorage("regionId") }),
+      }).then((res) => {
+        res.isSuccess && setData(res.data);
+      });
     } else {
       setData(null);
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams, searchValues]);
+  }, [searchParams, searchValues, fromEdit]);
 
   return (
     <div>
       <SearchPartUI
+        setFromEdit={setFromEdit}
         setSearchValues={setSearchValues}
         searchTableRef={searchTableRef}
       />

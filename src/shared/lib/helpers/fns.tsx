@@ -40,6 +40,22 @@ export const clearLocalStorage = () => {
   localStorage.clear();
 };
 
+export const getSessionStorage = (sessionName: string) => {
+  return JSON.parse(sessionStorage.getItem(sessionName) as string);
+};
+
+export const setSessionStorage = (sessionName: string, data: any) => {
+  sessionStorage.setItem(sessionName, JSON.stringify(data));
+};
+
+export const removeSessionStorage = (sessionName: string) => {
+  sessionStorage.removeItem(sessionName);
+};
+
+export const clearSessionStorage = () => {
+  sessionStorage.clear();
+};
+
 const enum LOCAL_STEP_NAME {
   ADDITIONAL_EDIT_FIRST_STEP = "additionalEditFirstStep",
   ADDITIONAL_EDIT_SECOND_STEP = "additionalEditSecondStep",
