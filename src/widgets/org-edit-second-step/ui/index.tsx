@@ -29,6 +29,7 @@ export const OrgEditSecondStepUI: FC = () => {
     ...allActives,
     regionId: getLocalStorage("firstStepDataEdit")?.regionId,
     cityId: getLocalStorage("firstStepDataEdit")?.cityId,
+    districtId: getLocalStorage("firstStepDataEdit")?.districtId,
   };
   const { data } = useSelector(
     ({ useEditOrgSecondStepSlice }: RootState) => useEditOrgSecondStepSlice,

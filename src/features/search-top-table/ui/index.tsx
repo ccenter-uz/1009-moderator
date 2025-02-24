@@ -1,4 +1,5 @@
 import { Table, Flex, Tooltip } from "antd";
+import { AnyObject } from "antd/es/_util/type";
 import { ColumnsType } from "antd/es/table";
 import i18next from "i18next";
 import { FC, useState } from "react";
@@ -40,6 +41,24 @@ type Props = {
   phonesData: TPhone[];
   totalItems: number;
   isLoading?: boolean;
+};
+
+const returnAddressColumnData = (record: AnyObject) => {
+  if (!record) return;
+
+  return (
+    <p>
+      {i18next.t("reg.")}
+      {record.region?.name[i18next.language]}{" "}
+      {record.city?.name[i18next.language]}, {i18next.t("dist.")}{" "}
+      {record.district?.name[i18next.language]}, {i18next.t("vill.")}{" "}
+      {record.village?.name[i18next.language]}, {i18next.t("str.")}{" "}
+      {record.street?.name[i18next.language]}, {i18next.t("kv-l.")}{" "}
+      {record?.kvartal} , {i18next.t("ave.")}{" "}
+      {record.avenue?.name[i18next.language]}, {i18next.t("are.")}
+      {record.area?.name[i18next.language]}, {i18next.t("h.")} {record?.home},
+    </p>
+  );
 };
 
 export const SearchTopTable: FC<Props> = (props) => {
@@ -116,17 +135,20 @@ export const SearchTopTable: FC<Props> = (props) => {
 
   const columns = [
     {
+      width: "10%",
       title: t("code"),
       dataIndex: "inn",
       key: "inn",
     },
     {
+      width: "20%",
       title: t("abonent"),
       dataIndex: "name",
       key: "name",
       render: (text: string) => <p style={{ margin: 0 }}>{text}</p>,
     },
     {
+      width: "5%",
       title: t("sms"),
       dataIndex: "sms",
       key: "sms",
@@ -145,13 +167,14 @@ export const SearchTopTable: FC<Props> = (props) => {
       ),
     },
     {
+      width: "40%",
       title: t("address"),
-      dataIndex: "street",
-      key: "street",
-      render: (text: { name: Record<string, string> }) =>
-        text?.name[i18next.language as keyof typeof text.name],
+      dataIndex: "address",
+      key: "address",
+      render: (_: string, record: AnyObject) => returnAddressColumnData(record),
     },
     {
+      width: "10%",
       title: t("status"),
       dataIndex: "status",
       key: "status",
@@ -161,6 +184,7 @@ export const SearchTopTable: FC<Props> = (props) => {
       ),
     },
     {
+      width: "10%",
       title: t("action"),
       key: "action",
       dataIndex: "action",
@@ -202,6 +226,7 @@ export const SearchTopTable: FC<Props> = (props) => {
     <Flex align={"flex-start"} style={{ width: "100%" }} wrap>
       <div
         style={{
+          minWidth: "40%",
           width: "65%",
           resize: "horizontal",
           overflow: "auto",
@@ -238,6 +263,7 @@ export const SearchTopTable: FC<Props> = (props) => {
       <div
         style={{
           flex: 1,
+          minWidth: "25rem",
           overflow: "auto",
           border: "1px solid lightgrey",
         }}

@@ -319,11 +319,9 @@ export const OrgAddPage: FC = () => {
           id="create-org-form"
           form={form}
         >
-          <Suspense fallback={<div>Loading...</div>}>
-            {current === STEPS_ENUM.firstStep && (
-              <OrgAddFirstStepUI form={form} />
-            )}
-          </Suspense>
+          {current === STEPS_ENUM.firstStep && (
+            <OrgAddFirstStepUI form={form} />
+          )}
           <Suspense fallback={<div>Loading...</div>}>
             {current === STEPS_ENUM.secondStep && <OrgAddSecondStepUI />}
           </Suspense>
