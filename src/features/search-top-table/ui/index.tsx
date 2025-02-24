@@ -43,27 +43,76 @@ type Props = {
   isLoading?: boolean;
 };
 
+const recordNames: Record<string, { text: string }> = {
+  region: {
+    text: "reg.",
+  },
+  city: {
+    text: "",
+  },
+  district: {
+    text: "dist.",
+  },
+  village: {
+    text: "vill.",
+  },
+  street: {
+    text: "str.",
+  },
+  kvartal: {
+    text: "kv-l.",
+  },
+  avenue: {
+    text: "ave.",
+  },
+  area: {
+    text: "are.",
+  },
+  home: {
+    text: "h.",
+  },
+};
+
 const returnAddressColumnData = (record: AnyObject) => {
   if (!record) return;
 
+  // recordNames.forEach((name) => {
+  //   if (["kvartal", "home"].includes(name)) {
+  //   }
+  // });
+
   return (
     <p>
-      <span style={{ fontWeight: "500" }}>{i18next.t("reg.")}</span>{" "}
-      {record.region?.name[i18next.language]}{" "}
-      {record.city?.name[i18next.language]},{" "}
-      <span style={{ fontWeight: "500" }}>{i18next.t("dist.")}</span>{" "}
-      {record.district?.name[i18next.language]},{" "}
-      <span style={{ fontWeight: "500" }}>{i18next.t("vill.")}</span>{" "}
-      {record.village?.name[i18next.language]},{" "}
-      <span style={{ fontWeight: "500" }}>{i18next.t("str.")}</span>{" "}
-      {record.street?.name[i18next.language]},{" "}
-      <span style={{ fontWeight: "500" }}>{i18next.t("kv-l.")}</span>{" "}
-      {record?.kvartal} , {i18next.t("ave.")}{" "}
-      {record.avenue?.name[i18next.language]},{" "}
-      <span style={{ fontWeight: "500" }}>{i18next.t("are.")}</span>
-      {record.area?.name[i18next.language]},{" "}
-      <span style={{ fontWeight: "500" }}>{i18next.t("h.")}</span>{" "}
-      {record?.home},
+      {Object.keys(recordNames).map((name) => {
+        if (["kvartal", "home"].includes(name)) {
+          return (
+            record[name] && (
+              <>
+                <span
+                  style={{ fontWeight: "500", marginLeft: 5, marginRight: 2 }}
+                  key={name}
+                >
+                  {i18next.t(recordNames[name].text)}
+                </span>
+                <span>{record[name]}</span>,
+              </>
+            )
+          );
+        }
+        return (
+          record[name]?.name[i18next.language] && (
+            <>
+              <span
+                style={{ fontWeight: "500", marginLeft: 5, marginRight: 2 }}
+                key={name}
+              >
+                {i18next.t(recordNames[name].text)}
+              </span>
+              <span>{record[name]?.name[i18next.language]},</span>
+            </>
+          )
+        );
+      })}
     </p>
   );
 };
