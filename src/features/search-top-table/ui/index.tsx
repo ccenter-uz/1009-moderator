@@ -48,15 +48,22 @@ const returnAddressColumnData = (record: AnyObject) => {
 
   return (
     <p>
-      {i18next.t("reg.")}
+      <span style={{ fontWeight: "500" }}>{i18next.t("reg.")}</span>{" "}
       {record.region?.name[i18next.language]}{" "}
-      {record.city?.name[i18next.language]}, {i18next.t("dist.")}{" "}
-      {record.district?.name[i18next.language]}, {i18next.t("vill.")}{" "}
-      {record.village?.name[i18next.language]}, {i18next.t("str.")}{" "}
-      {record.street?.name[i18next.language]}, {i18next.t("kv-l.")}{" "}
+      {record.city?.name[i18next.language]},{" "}
+      <span style={{ fontWeight: "500" }}>{i18next.t("dist.")}</span>{" "}
+      {record.district?.name[i18next.language]},{" "}
+      <span style={{ fontWeight: "500" }}>{i18next.t("vill.")}</span>{" "}
+      {record.village?.name[i18next.language]},{" "}
+      <span style={{ fontWeight: "500" }}>{i18next.t("str.")}</span>{" "}
+      {record.street?.name[i18next.language]},{" "}
+      <span style={{ fontWeight: "500" }}>{i18next.t("kv-l.")}</span>{" "}
       {record?.kvartal} , {i18next.t("ave.")}{" "}
-      {record.avenue?.name[i18next.language]}, {i18next.t("are.")}
-      {record.area?.name[i18next.language]}, {i18next.t("h.")} {record?.home},
+      {record.avenue?.name[i18next.language]},{" "}
+      <span style={{ fontWeight: "500" }}>{i18next.t("are.")}</span>
+      {record.area?.name[i18next.language]},{" "}
+      <span style={{ fontWeight: "500" }}>{i18next.t("h.")}</span>{" "}
+      {record?.home},
     </p>
   );
 };
