@@ -46,11 +46,9 @@ export const SearchTableUI: FC<Props> = (props) => {
   }, [attrData]);
 
   useEffect(() => {
-    if (data.length === 0) {
-      setAttrData([]);
-      setSubCategoryData([]);
-      setPhonesData([]);
-    }
+    setAttrData([]);
+    setSubCategoryData([]);
+    setPhonesData([]);
   }, [data]);
 
   useEffect(() => {
