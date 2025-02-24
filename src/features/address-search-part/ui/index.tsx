@@ -28,6 +28,7 @@ export const AddressSearchPartUI: FC<Props> = (props) => {
   const { form } = props;
   const regionId = form.getFieldValue("regionId");
   const cityId = form.getFieldValue("cityId");
+  const districtId = form.getFieldValue("districtId");
   const {
     isOpen: isOpenVillage,
     onOpen: onOpenVillage,
@@ -70,16 +71,21 @@ export const AddressSearchPartUI: FC<Props> = (props) => {
   const [searchValueStreet, setSearchValueStreet] = useState("");
 
   useEffect(() => {
-    if ((isOpenVillage && cityId) || (isOpenVillage && regionId)) {
+    if (
+      (isOpenVillage && cityId) ||
+      (isOpenVillage && regionId) ||
+      (isOpenVillage && districtId)
+    ) {
       triggerVillage({
         regionId,
         cityId: cityId ? cityId : "",
+        districtId: districtId ? districtId : "",
         page: villagePagination.page,
         limit: villagePagination.limit,
         search: searchValueVillage,
       });
     }
-    if (!regionId && !cityId && isOpenVillage) {
+    if (!regionId && !cityId && !districtId && isOpenVillage) {
       triggerVillage({
         page: villagePagination.page,
         limit: villagePagination.limit,
@@ -91,16 +97,21 @@ export const AddressSearchPartUI: FC<Props> = (props) => {
   }, [villagePagination, searchValueVillage, isOpenVillage]);
 
   useEffect(() => {
-    if ((isOpenNearby && cityId) || (isOpenNearby && regionId)) {
+    if (
+      (isOpenNearby && cityId) ||
+      (isOpenNearby && regionId) ||
+      (isOpenNearby && districtId)
+    ) {
       triggerNearby({
         regionId,
         cityId: cityId ? cityId : "",
+        districtId: districtId ? districtId : "",
         page: nearbyPagination.page,
         limit: nearbyPagination.limit,
         search: searchValueNearby,
       });
     }
-    if (!regionId && !cityId && isOpenNearby) {
+    if (!regionId && !cityId && !districtId && isOpenNearby) {
       triggerNearby({
         page: nearbyPagination.page,
         limit: nearbyPagination.limit,
@@ -111,16 +122,21 @@ export const AddressSearchPartUI: FC<Props> = (props) => {
   }, [nearbyPagination, searchValueNearby, isOpenNearby]);
 
   useEffect(() => {
-    if ((isOpenStreet && cityId) || (isOpenStreet && regionId)) {
+    if (
+      (isOpenStreet && cityId) ||
+      (isOpenStreet && regionId) ||
+      (isOpenStreet && districtId)
+    ) {
       triggerStreet({
         regionId,
         cityId: cityId ? cityId : "",
+        districtId: districtId ? districtId : "",
         page: streetPagination.page,
         limit: streetPagination.limit,
         search: searchValueStreet,
       });
     }
-    if (!regionId && !cityId && isOpenStreet) {
+    if (!regionId && !cityId && !districtId && isOpenStreet) {
       triggerStreet({
         page: streetPagination.page,
         limit: streetPagination.limit,
