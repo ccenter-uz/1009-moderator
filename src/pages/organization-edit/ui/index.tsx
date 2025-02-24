@@ -33,6 +33,7 @@ import {
   removeLocalStorage,
   SEND_BODY,
   setDatyOffsCheckbox,
+  setSessionStorage,
   STEPS_DATA,
   STEPS_EDIT_DATA,
   STEPS_ENUM,
@@ -232,7 +233,10 @@ export const OrgEditPage: FC = () => {
 
     notificationResponse(response);
 
-    response?.data.status === 200 && (onClearAllData(), navigate("/orgs/all"));
+    response?.data.status === 200 &&
+      (onClearAllData(),
+      setSessionStorage("fromEdit", true),
+      navigate("/orgs/all"));
   };
   const onValuesChange = (
     _: {
@@ -254,12 +258,7 @@ export const OrgEditPage: FC = () => {
     if (withoutLunch) {
       form.resetFields(["lunchFrom", "lunchTo"]);
     }
-    if (allDay) {
-      form.setFieldsValue({
-        worktimeFrom: "00:00",
-        worktimeTo: "23:59",
-      });
-    }
+
     if (allType) {
       form.setFieldsValue({ cash: true, terminal: true, transfer: true });
     }

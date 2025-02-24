@@ -1,7 +1,8 @@
-import { Row, Col, Table, Flex, Tooltip } from "antd";
+import { Table, Flex, Tooltip } from "antd";
 import { ColumnsType } from "antd/es/table";
-import { t } from "i18next";
+import i18next from "i18next";
 import { FC, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FaEnvelope, FaPencilAlt } from "react-icons/fa";
 import { MdRestore } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
@@ -26,28 +27,31 @@ import {
   STEPS_EDIT_DATA,
   STEPS_ENUM,
 } from "@shared/lib/helpers";
-import { usePaginate } from "@shared/lib/hooks";
+import { useDisclosure, usePaginate } from "@shared/lib/hooks";
 import { Can } from "@shared/ui";
 
-import { TAttr, TPhone } from "../model/types";
+import { TAttr, TPhone, TSelectedData } from "../model/types";
+
+import { SMSModal } from "./modal";
 
 type Props = {
   data: { status: number; id: number | string }[] | [];
   setAttrData: (data: TAttr[]) => void;
   phonesData: TPhone[];
-  onOpen: () => void;
   totalItems: number;
   isLoading?: boolean;
 };
 
 export const SearchTopTable: FC<Props> = (props) => {
-  const { data, totalItems, isLoading, setAttrData, phonesData, onOpen } =
-    props;
+  const { data, totalItems, isLoading, setAttrData, phonesData } = props;
+  const { t } = useTranslation();
+  const { isOpen, onClose, onOpen } = useDisclosure();
   const { page, pageSize, setPage, setPageSize } = usePaginate({
     pageName: "page",
     limitName: "limit",
   });
   const navigate = useNavigate();
+  const [selectedData, setSelectedData] = useState<null | TSelectedData>(null);
   const [selectedRowKeys, setSelectedRowKeys] = useState<number>(0);
   const [deleteOrganization] = useDeleteOrganizationMutation();
   const [restoreOrganization] = useRestoreOrganizationMutation();
@@ -110,15 +114,13 @@ export const SearchTopTable: FC<Props> = (props) => {
     }
   };
 
-  const columns: unknown = [
+  const columns = [
     {
       title: t("code"),
       dataIndex: "inn",
       key: "inn",
-      width: 80,
     },
     {
-      width: 400,
       title: t("abonent"),
       dataIndex: "name",
       key: "name",
@@ -128,32 +130,37 @@ export const SearchTopTable: FC<Props> = (props) => {
       title: t("sms"),
       dataIndex: "sms",
       key: "sms",
-      width: 20,
-      render: (_: string, record: { id: number | string; status: number }) => (
+      align: "center",
+      render: (_: string, record: TSelectedData) => (
         <FaEnvelope
           color="#4e9eff"
           cursor={"pointer"}
           title={t("sms")}
           onClick={() => {
-            onOpen(), setSelectedRowKeys(Number(record.id));
+            onOpen(),
+              setSelectedRowKeys(Number(record.id)),
+              setSelectedData(record);
           }}
         />
       ),
     },
     {
-      width: 400,
       title: t("address"),
-      dataIndex: "address",
-      key: "address",
+      dataIndex: "street",
+      key: "street",
+      render: (text: { name: Record<string, string> }) =>
+        text?.name[i18next.language as keyof typeof text.name],
     },
     {
       title: t("status"),
       dataIndex: "status",
       key: "status",
-      render: (text: statusType) => setColorByStatus(statusForOrgs[text]),
+      align: "center",
+      render: (text: statusType) => (
+        <Flex justify="center">{setColorByStatus(statusForOrgs[text])}</Flex>
+      ),
     },
     {
-      width: 80,
       title: t("action"),
       key: "action",
       dataIndex: "action",
@@ -192,12 +199,20 @@ export const SearchTopTable: FC<Props> = (props) => {
   ];
 
   return (
-    <Row align={"top"} gutter={[8, 8]}>
-      <Col span={16}>
+    <Flex align={"flex-start"} style={{ width: "100%" }} wrap>
+      <div
+        style={{
+          width: "65%",
+          resize: "horizontal",
+          overflow: "auto",
+          border: "1px solid lightgrey",
+        }}
+      >
         <Table
           loading={isLoading}
           columns={columns as ColumnsType<{ id: number | string }>}
           dataSource={data}
+          scroll={{ y: 55 * 5 }}
           pagination={{
             current: page,
             pageSize: pageSize,
@@ -219,18 +234,30 @@ export const SearchTopTable: FC<Props> = (props) => {
             row.id === selectedRowKeys ? "selected-row" : ""
           }
         />
-      </Col>
-      <Col span={8}>
+      </div>
+      <div
+        style={{
+          flex: 1,
+          overflow: "auto",
+          border: "1px solid lightgrey",
+        }}
+      >
         <Table
           loading={isLoading}
           columns={phoneColumns}
           dataSource={phonesData}
           bordered
-          size="small"
           pagination={false}
           scroll={{ y: 55 * 5 }}
         />
-      </Col>
-    </Row>
+      </div>
+      {/* SMS */}
+      <SMSModal
+        open={isOpen}
+        onClose={onClose}
+        data={selectedData}
+        title={t("abonent")}
+      />
+    </Flex>
   );
 };

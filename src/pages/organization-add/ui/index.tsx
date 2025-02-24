@@ -206,12 +206,7 @@ export const OrgAddPage: FC = () => {
     if (withoutLunch) {
       form.resetFields(["lunchFrom", "lunchTo"]);
     }
-    if (allDay) {
-      form.setFieldsValue({
-        worktimeFrom: "00:00",
-        worktimeTo: "23:59",
-      });
-    }
+
     if (allType) {
       form.setFieldsValue({ cash: true, terminal: true, transfer: true });
     }

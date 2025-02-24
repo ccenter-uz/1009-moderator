@@ -13,8 +13,6 @@ import { SearchModal } from "@shared/ui/search-modal";
 
 type Props = {
   form: FormInstance;
-  regionId: number | null;
-  cityId: number | null;
 };
 
 type SelectedDataTypes = {
@@ -32,7 +30,9 @@ const columns = [
 ];
 
 export const CategorySubcategorySelect: FC<Props> = (props) => {
-  const { form, regionId, cityId } = props;
+  const { form } = props;
+  const regionId = form.getFieldValue("regionId");
+  const cityId = form.getFieldValue("cityId");
   const {
     isOpen: categoryIsOpen,
     onOpen: openCategoryModal,
@@ -148,7 +148,6 @@ export const CategorySubcategorySelect: FC<Props> = (props) => {
           style={{ marginBottom: 10 }}
         >
           <Select
-            disabled={!regionId}
             allowClear
             onClear={handleClickCategorySelect}
             dropdownStyle={{ display: "none" }}
