@@ -83,13 +83,17 @@ const returnAddressColumnData = (record: AnyObject) => {
 
   return (
     <p>
-      {Object.keys(recordNames).map((name) => {
+      {Object.keys(recordNames).map((name, index) => {
         if (["kvartal", "home"].includes(name)) {
           return (
             record[name] && (
               <>
                 <span
-                  style={{ fontWeight: "500", marginLeft: 5, marginRight: 2 }}
+                  style={{
+                    fontWeight: "500",
+                    marginLeft: index !== 0 ? 5 : 0,
+                    marginRight: 2,
+                  }}
                   key={name}
                 >
                   {i18next.t(recordNames[name].text)}
@@ -103,7 +107,11 @@ const returnAddressColumnData = (record: AnyObject) => {
           record[name]?.name[i18next.language] && (
             <>
               <span
-                style={{ fontWeight: "500", marginLeft: 5, marginRight: 2 }}
+                style={{
+                  fontWeight: "500",
+                  marginLeft: index !== 0 ? 5 : 0,
+                  marginRight: 2,
+                }}
                 key={name}
               >
                 {i18next.t(recordNames[name].text)}
