@@ -202,6 +202,7 @@ export const SearchTopTable: FC<Props> = (props) => {
     <Flex align={"flex-start"} style={{ width: "100%" }} wrap>
       <div
         style={{
+          minWidth: "40%",
           width: "65%",
           resize: "horizontal",
           overflow: "auto",
@@ -238,6 +239,7 @@ export const SearchTopTable: FC<Props> = (props) => {
       <div
         style={{
           flex: 1,
+          minWidth: "25rem",
           overflow: "auto",
           border: "1px solid lightgrey",
         }}
