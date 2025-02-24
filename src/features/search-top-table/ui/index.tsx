@@ -76,11 +76,6 @@ const recordNames: Record<string, { text: string }> = {
 const returnAddressColumnData = (record: AnyObject) => {
   if (!record) return;
 
-  // recordNames.forEach((name) => {
-  //   if (["kvartal", "home"].includes(name)) {
-  //   }
-  // });
-
   return (
     <p>
       {Object.keys(recordNames).map((name, index) => {
