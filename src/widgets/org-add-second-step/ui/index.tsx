@@ -29,6 +29,7 @@ export const OrgAddSecondStepUI: FC = () => {
     ...allActives,
     regionId: getLocalStorage("firstStepData")?.regionId,
     cityId: getLocalStorage("firstStepData")?.cityId,
+    districtId: getLocalStorage("firstStepData")?.districtId,
   };
   const { data } = useSelector(
     ({ useAddOrgSecondStepSlice }: RootState) => useAddOrgSecondStepSlice,
