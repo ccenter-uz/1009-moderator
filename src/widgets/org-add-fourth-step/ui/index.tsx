@@ -15,7 +15,6 @@ export const OrgAddFourthStepUI: FC = () => {
   const {
     data: fileListData,
     allType,
-    allDay,
     noDayoffs,
     withoutLunch,
   } = useSelector(
@@ -70,41 +69,40 @@ export const OrgAddFourthStepUI: FC = () => {
             <Col span={24}>
               <Row gutter={16}>
                 <Col span={6}>
-                  <Form.Item
-                    name={"worktimeFrom"}
-                    label={t("from")}
-                    rules={[
-                      {
-                        required: !allDay,
-                        message: t("required-field"),
-                      },
-                    ]}
-                  >
+                  <Form.Item name={"worktimeFrom"} label={t("from")}>
                     <Input type="time" />
                   </Form.Item>
                 </Col>
                 <Col span={6}>
-                  <Form.Item
-                    name={"worktimeTo"}
-                    label={t("to")}
-                    rules={[
-                      {
-                        required: !allDay,
-                        message: t("required-field"),
-                      },
-                    ]}
-                  >
+                  <Form.Item name={"worktimeTo"} label={t("to")}>
                     <Input type="time" />
                   </Form.Item>
                 </Col>
-                <Col span={6}>
-                  <Form.Item
-                    name={"allDay"}
-                    label={<ParagraphBold>{t("allDay")}</ParagraphBold>}
-                    valuePropName="checked"
-                  >
-                    <Checkbox />
+                <Col span={10}>
+                  <Form.Item name={"workTimeDescription"}>
+                    <Input type="text" placeholder={t("workTimeDescription")} />
                   </Form.Item>
+                </Col>
+                <Col span={24}>
+                  <Row gutter={16}>
+                    <Col span={5}>
+                      <Form.Item
+                        name={"allDay"}
+                        label={<ParagraphBold>{t("allDay")}</ParagraphBold>}
+                        valuePropName="checked"
+                      >
+                        <Checkbox />
+                      </Form.Item>
+                    </Col>
+                    <Col span={17}>
+                      <Form.Item name={"allDayDescription"}>
+                        <Input
+                          type="text"
+                          placeholder={t("allDayDescription")}
+                        />
+                      </Form.Item>
+                    </Col>
+                  </Row>
                 </Col>
               </Row>
             </Col>

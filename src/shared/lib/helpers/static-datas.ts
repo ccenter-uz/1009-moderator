@@ -47,6 +47,8 @@ export const STEPS_DATA = {
     "noDayoffs",
     "allType",
     "withoutLunch",
+    "workTimeDescription",
+    "allDayDescription",
   ],
 };
 
