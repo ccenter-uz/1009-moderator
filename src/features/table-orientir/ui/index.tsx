@@ -3,13 +3,14 @@ import {
   Typography,
   Row,
   Col,
-  Select,
   Button,
   Table,
   Popconfirm,
   Input,
+  SelectProps,
 } from "antd";
 import { AnyObject } from "antd/es/_util/type";
+import { DefaultOptionType } from "antd/es/select";
 import i18next, { t } from "i18next";
 import { FC, useState } from "react";
 import { FaTrashAlt } from "react-icons/fa";
@@ -21,6 +22,7 @@ import {
 } from "@entities/nearby";
 
 import { allActives, getLocalStorage } from "@shared/lib/helpers";
+import { SearchableSelect } from "@shared/ui";
 
 type Props = {
   data: AnyObject[];
@@ -103,10 +105,7 @@ export const TableOrientirUI: FC<Props> = (props) => {
     setDescription("");
   };
 
-  const onSelectNearbyCategory = (
-    value: string,
-    option: { value: string | number; label: string },
-  ) => {
+  const onSelectNearbyCategory: SelectProps["onSelect"] = (value, option) => {
     setSelectedNearbyCategory([
       { nearbyCategoryId: value, nearbyCategoryName: option.label },
     ]);
@@ -119,9 +118,9 @@ export const TableOrientirUI: FC<Props> = (props) => {
     });
   };
 
-  const onSelectSubCategory = (
+  const onSelectSubCategory: SelectProps["onSelect"] = (
     value: string,
-    option: { value: string | number; label: string },
+    option: DefaultOptionType,
   ) => {
     setSelectedNearby([{ nearbyId: value, nearbyName: option.label }]);
   };
@@ -135,7 +134,7 @@ export const TableOrientirUI: FC<Props> = (props) => {
         <Col flex={1}>
           <Flex align="center" gap={8}>
             <label htmlFor="nearbyCategory">{t("nearby-category")}</label>
-            <Select
+            <SearchableSelect
               showSearch
               id="nearbyCategory"
               value={selectedNearbyCategory[0]?.nearbyCategoryId}
@@ -155,7 +154,7 @@ export const TableOrientirUI: FC<Props> = (props) => {
         <Col flex={1}>
           <Flex align="center" gap={8}>
             <label htmlFor="nearby">{t("nearby")}</label>
-            <Select
+            <SearchableSelect
               disabled={isLoadingNearby}
               showSearch
               id="nearby"

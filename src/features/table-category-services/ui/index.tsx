@@ -3,10 +3,10 @@ import {
   Typography,
   Row,
   Col,
-  Select,
   Button,
   Table,
   Popconfirm,
+  SelectProps,
 } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import i18next, { t } from "i18next";
@@ -20,6 +20,7 @@ import {
 } from "@entities/product-services";
 
 import { allActives } from "@shared/lib/helpers";
+import { SearchableSelect } from "@shared/ui";
 
 type Props = {
   data: AnyObject[];
@@ -92,10 +93,7 @@ export const TableCategoryServices: FC<Props> = (props) => {
     setSelectedCategory([]);
   };
 
-  const onSelectCategory = (
-    value: string,
-    option: { value: string | number; label: string },
-  ) => {
+  const onSelectCategory: SelectProps["onSelect"] = (value, option) => {
     setSelectedCategory([
       {
         productServiceCategoryId: value,
@@ -106,10 +104,7 @@ export const TableCategoryServices: FC<Props> = (props) => {
     triggerSubcategoryTu({ categoryId: value, ...allActives });
   };
 
-  const onSelectSubCategory = (
-    value: string,
-    option: { value: string | number; label: string },
-  ) => {
+  const onSelectSubCategory: SelectProps["onSelect"] = (value, option) => {
     setSelectedSubCategory([
       {
         productServiceSubCategoryId: value,
@@ -127,7 +122,7 @@ export const TableCategoryServices: FC<Props> = (props) => {
         <Col span={11}>
           <Flex align="center" gap={8}>
             <label htmlFor="productServiceCategoryId">{t("category-tu")}</label>
-            <Select
+            <SearchableSelect
               showSearch
               id="productServiceCategoryId"
               value={selectedCategory[0]?.productServiceCategoryId}
@@ -149,7 +144,7 @@ export const TableCategoryServices: FC<Props> = (props) => {
             <label htmlFor="productServiceSubCategoryId">
               {t("sub-category-tu")}
             </label>
-            <Select
+            <SearchableSelect
               showSearch
               id="productServiceSubCategoryId"
               value={selectedSubCategory[0]?.productServiceSubCategoryId}
