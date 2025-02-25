@@ -14,6 +14,34 @@ type Props = {
   onClose: () => void;
 };
 
+const workTimeReturnList = (data: TSelectedData) => {
+  if (data.workTime) {
+    if (
+      data.workTime?.allDay &&
+      data.workTime?.workTimeDescription &&
+      data.workTime?.allDayDescription
+    ) {
+      return `${data.workTime?.worktimeFrom} - ${data.workTime?.worktimeTo} - ${
+        data.workTime?.workTimeDescription
+      }, ${i18next.t("allDay")} - ${data.workTime?.allDayDescription}`;
+    } else if (data.workTime?.allDay && data.workTime?.workTimeDescription) {
+      return `${data.workTime?.worktimeFrom} - ${data.workTime?.worktimeTo} - ${
+        data.workTime?.workTimeDescription
+      }, ${i18next.t("allDay")}`;
+    } else if (data.workTime?.allDay && data.workTime?.allDayDescription) {
+      return `${data.workTime?.worktimeFrom} - ${
+        data.workTime?.worktimeTo
+      } - ${i18next.t("allDay")} - ${data.workTime?.allDayDescription}`;
+    } else if (data.workTime?.allDay) {
+      return `${data.workTime?.worktimeFrom} - ${
+        data.workTime?.worktimeTo
+      } - ${i18next.t("allDay")}`;
+    } else {
+      return `${data.workTime?.worktimeFrom} - ${data.workTime?.worktimeTo} `;
+    }
+  }
+};
+
 export const SMSModal: FC<Props> = (props) => {
   const { t } = useTranslation();
   const { open, onClose, title, data } = props;
@@ -87,13 +115,7 @@ export const SMSModal: FC<Props> = (props) => {
       id: 9,
       title: t("worktime"),
       name: t("worktime"),
-      value: () => {
-        if (data.workTime) {
-          return `${data.workTime?.worktimeFrom} - ${
-            data.workTime?.worktimeTo
-          }, ${data.workTime?.allDay ? t("allDay") : ""}`;
-        }
-      },
+      value: () => workTimeReturnList(data),
     },
     {
       id: 10,

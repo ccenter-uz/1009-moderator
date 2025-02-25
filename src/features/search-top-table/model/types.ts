@@ -29,6 +29,8 @@ export type TSelectedData = {
   workTime: {
     dayoffs: string[];
     worktimeFrom: string;
+    workTimeDescription: string;
+    allDayDescription: string;
     worktimeTo: string;
     allDay: boolean;
     noDayoffs: boolean;
