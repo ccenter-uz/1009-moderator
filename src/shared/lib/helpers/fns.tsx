@@ -340,6 +340,8 @@ export const handleEditLocalDatas = (record: AnyObject) => {
     transfer: record[paymentName][0]?.Transfer,
     worktimeFrom: record.workTime?.worktimeFrom,
     worktimeTo: record.workTime?.worktimeTo,
+    workTimeDescription: record.workTime?.workTimeDescription,
+    allDayDescription: record.workTime?.allDayDescription,
     lunchFrom: record.workTime?.lunchFrom,
     lunchTo: record.workTime?.lunchTo,
     dayoffs: record.workTime?.dayoffs,

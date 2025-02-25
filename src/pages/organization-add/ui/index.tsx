@@ -155,6 +155,8 @@ export const OrgAddPage: FC = () => {
         dayoffs: getDayOffsCheckbox(form),
         worktimeFrom: form.getFieldValue("worktimeFrom"),
         worktimeTo: form.getFieldValue("worktimeTo"),
+        workTimeDescription: form.getFieldValue("workTimeDescription"),
+        allDayDescription: form.getFieldValue("allDayDescription"),
         allDay: form.getFieldValue("allDay"),
         noDayoffs: form.getFieldValue("noDayoffs"),
         withoutLunch: form.getFieldValue("withoutLunch"),
