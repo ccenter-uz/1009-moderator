@@ -1,9 +1,13 @@
 import { Button, Flex, Select, Table, Tooltip } from "antd";
-import { FC, useState } from "react";
+import { Dispatch, FC, SetStateAction, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaCheck, FaPen } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import {
+  useNavigate,
+  useOutletContext,
+  useSearchParams,
+} from "react-router-dom";
 
 import { BasicSearchPartUI } from "@features/basic-search-part";
 
@@ -37,6 +41,9 @@ enum TYPE_AND_STATUS {
 export const OrgUnconfirmedPage: FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { setEditId } = useOutletContext<{
+    setEditId: Dispatch<SetStateAction<number | string>>;
+  }>();
   const [_, setSearchParams] = useSearchParams();
   const { page, pageSize, pageSizeOptions, setPage, setPageSize } = usePaginate(
     { pageName: "page", limitName: "limit" },
@@ -93,6 +100,7 @@ export const OrgUnconfirmedPage: FC = () => {
         allowEscapeKey: false,
       }).then((result) => {
         if (result.isConfirmed) {
+          setEditId(editingId);
           navigate(`/orgs/edit/${editingId}`, { replace: true });
         } else if (
           !result.isConfirmed &&
@@ -102,11 +110,13 @@ export const OrgUnconfirmedPage: FC = () => {
           clearEditStepStorage();
           setLocalStorage(STEPS_EDIT_DATA.CURRENT, STEPS_ENUM.firstStep);
           handleEditLocalDatas(record);
+          setEditId(record.organizationId);
           navigate(`/orgs/edit/${record.organizationId}`);
         }
       });
     } else {
       handleEditLocalDatas(record);
+      setEditId(record.organizationId);
       navigate(`/orgs/edit/${record.organizationId}`);
     }
   };
