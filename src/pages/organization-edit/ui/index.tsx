@@ -1,27 +1,29 @@
 import { Button, Divider, Flex, Form, notification, Steps } from "antd";
 import i18next from "i18next";
-import { CSSProperties, FC, useEffect, useState } from "react";
+import {
+  CSSProperties,
+  Dispatch,
+  FC,
+  lazy,
+  SetStateAction,
+  Suspense,
+  useEffect,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 
+import { setCategoryData } from "@widgets/org-edit-first-step";
 import {
-  OrgEditFirstStepUI,
-  setCategoryData,
-} from "@widgets/org-edit-first-step";
-import {
-  OrgEditFourthStepUI,
   setEditAllDay,
   setEditAllType,
   setEditNoDayoffs,
   setEditWithoutLunch,
   setImages,
 } from "@widgets/org-edit-fourth-step";
-import {
-  OrgEditSecondStepUI,
-  setOrientirData,
-} from "@widgets/org-edit-second-step";
-import { OrgEditThirdStepUI, setPhoneData } from "@widgets/org-edit-third-step";
+import { setOrientirData } from "@widgets/org-edit-second-step";
+import { setPhoneData } from "@widgets/org-edit-third-step";
 
 import { useUpdateOrganizationMutation } from "@entities/organization";
 
@@ -39,15 +41,41 @@ import {
   STEPS_ENUM,
 } from "@shared/lib/helpers";
 import { IOrganizationBody, RootState } from "@shared/types";
+import { LoadingSpinner } from "@shared/ui";
 
 // STYLE
 const contentStyle: CSSProperties = {
   margin: "16px",
 };
 
+// LAZY LOAD
+const OrgEditFirstStepUI = lazy(() =>
+  import("@widgets/org-edit-first-step").then((module) => ({
+    default: module.OrgEditFirstStepUI,
+  })),
+);
+const OrgEditSecondStepUI = lazy(() =>
+  import("@widgets/org-edit-second-step").then((module) => ({
+    default: module.OrgEditSecondStepUI,
+  })),
+);
+const OrgEditThirdStepUI = lazy(() =>
+  import("@widgets/org-edit-third-step").then((module) => ({
+    default: module.OrgEditThirdStepUI,
+  })),
+);
+const OrgEditFourthStepUI = lazy(() =>
+  import("@widgets/org-edit-fourth-step").then((module) => ({
+    default: module.OrgEditFourthStepUI,
+  })),
+);
+
 export const OrgEditPage: FC = () => {
   const { t } = useTranslation();
   const { id } = useParams<string>();
+  const { setEditId } = useOutletContext<{
+    setEditId: Dispatch<SetStateAction<string | number | null>>;
+  }>();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [updateOrganization, { isLoading }] = useUpdateOrganizationMutation();
@@ -73,22 +101,18 @@ export const OrgEditPage: FC = () => {
     {
       title: i18next.t("personal"),
       description: i18next.t("personal_description"),
-      content: <OrgEditFirstStepUI form={form} />,
     },
     {
       title: i18next.t("address"),
       description: i18next.t("address_description"),
-      content: <OrgEditSecondStepUI />,
     },
     {
       title: i18next.t("contacts"),
       description: i18next.t("contacts_description"),
-      content: <OrgEditThirdStepUI />,
     },
     {
       title: i18next.t("additional"),
       description: i18next.t("additional_description"),
-      content: <OrgEditFourthStepUI />,
     },
   ];
 
@@ -236,9 +260,10 @@ export const OrgEditPage: FC = () => {
     notificationResponse(response);
 
     response?.data.status === 200 &&
-      (onClearAllData(),
+      (onClearAllData({ fromSubmit: true }),
       setSessionStorage("fromEdit", true),
-      navigate("/orgs/all"));
+      navigate("/orgs/all"),
+      setEditId(null));
   };
   const onValuesChange = (
     _: {
@@ -277,7 +302,7 @@ export const OrgEditPage: FC = () => {
     }
   };
 
-  const onClearAllData = () => {
+  const onClearAllData = ({ fromSubmit = false }: { fromSubmit?: boolean }) => {
     removeLocalStorage("firstStepDataEdit");
     removeLocalStorage("secondStepDataEdit");
     removeLocalStorage("thirdStepDataEdit");
@@ -291,11 +316,12 @@ export const OrgEditPage: FC = () => {
     dispatch(setEditAllType(false));
     dispatch(setEditNoDayoffs(false));
     dispatch(setEditWithoutLunch(false));
-    notification.success({
-      message: t("erased"),
-      placement: "bottomRight",
-      duration: 1,
-    });
+    !fromSubmit &&
+      notification.success({
+        message: t("erased"),
+        placement: "bottomRight",
+        duration: 1,
+      });
     setCurrent(0);
   };
 
@@ -348,7 +374,20 @@ export const OrgEditPage: FC = () => {
           id="edit-org-form"
           form={form}
         >
-          {items[current].content}
+          <Suspense fallback={<LoadingSpinner />}>
+            {current === STEPS_ENUM.firstStep && (
+              <OrgEditFirstStepUI form={form} />
+            )}
+          </Suspense>
+          <Suspense fallback={<LoadingSpinner />}>
+            {current === STEPS_ENUM.secondStep && <OrgEditSecondStepUI />}
+          </Suspense>
+          <Suspense fallback={<LoadingSpinner />}>
+            {current === STEPS_ENUM.thirdStep && <OrgEditThirdStepUI />}
+          </Suspense>
+          <Suspense fallback={<LoadingSpinner />}>
+            {current === STEPS_ENUM.fourthStep && <OrgEditFourthStepUI />}
+          </Suspense>
         </Form>
       </div>
       <Divider />

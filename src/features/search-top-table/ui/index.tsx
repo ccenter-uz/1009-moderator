@@ -2,11 +2,11 @@ import { Table, Flex, Tooltip } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { ColumnsType } from "antd/es/table";
 import i18next from "i18next";
-import { FC, useState } from "react";
+import { Dispatch, FC, SetStateAction, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaEnvelope, FaPencilAlt } from "react-icons/fa";
 import { MdRestore } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 
 import { DeleteTableItemUI } from "@features/delete-table-item";
 
@@ -133,6 +133,9 @@ export const SearchTopTable: FC<Props> = (props) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<number>(0);
   const [deleteOrganization] = useDeleteOrganizationMutation();
   const [restoreOrganization] = useRestoreOrganizationMutation();
+  const { setEditId } = useOutletContext<{
+    setEditId: Dispatch<SetStateAction<number | string>>;
+  }>();
 
   const checkExistId = (record: { id: number | string; status: number }) => {
     const { editingId, firstStepData } = getEditingStepStorageValues();
@@ -153,6 +156,7 @@ export const SearchTopTable: FC<Props> = (props) => {
         allowEscapeKey: false,
       }).then((result) => {
         if (result.isConfirmed) {
+          setEditId(editingId);
           navigate(`/orgs/edit/${editingId}`, { replace: true });
         } else if (
           !result.isConfirmed &&
@@ -162,11 +166,13 @@ export const SearchTopTable: FC<Props> = (props) => {
           clearEditStepStorage();
           setLocalStorage(STEPS_EDIT_DATA.CURRENT, STEPS_ENUM.firstStep);
           handleEditLocalDatas(record);
+          setEditId(record.id);
           navigate(`/orgs/edit/${record.id}`);
         }
       });
     } else {
       handleEditLocalDatas(record);
+      setEditId(record.id);
       navigate(`/orgs/edit/${record.id}`);
     }
   };

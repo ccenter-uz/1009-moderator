@@ -353,7 +353,7 @@ export const handleEditLocalDatas = (record: AnyObject) => {
     metroStation: record.transport?.metroStation,
     images: record[pictureName],
   };
-
+  setLocalStorage(STEPS_EDIT_DATA.EDIT_ID, record.id);
   setLocalStorage(STEPS_EDIT_DATA.FIRST, firstEditStep);
   setLocalStorage(STEPS_EDIT_DATA.SECOND, secondEditStep);
   setLocalStorage(STEPS_EDIT_DATA.THIRD, thirdEditStep);
