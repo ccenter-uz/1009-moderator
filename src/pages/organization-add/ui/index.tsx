@@ -5,10 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import {
-  OrgAddFirstStepUI,
-  setCategoryData,
-} from "@widgets/org-add-first-step";
+import { setCategoryData } from "@widgets/org-add-first-step";
 import {
   setAllDay,
   setAllType,
@@ -31,7 +28,14 @@ import {
   STEPS_ENUM,
 } from "@shared/lib/helpers";
 import { IOrganizationBody, RootState } from "@shared/types";
+import { LoadingSpinner } from "@shared/ui";
 
+// LAZY LOAD
+const OrgAddFirstStepUI = lazy(() =>
+  import("@widgets/org-add-first-step").then((module) => ({
+    default: module.OrgAddFirstStepUI,
+  })),
+);
 const OrgAddSecondStepUI = lazy(() =>
   import("@widgets/org-add-second-step").then((module) => ({
     default: module.OrgAddSecondStepUI,
@@ -185,7 +189,8 @@ export const OrgAddPage: FC = () => {
 
     notificationResponse(response);
 
-    response?.data.status === 201 && (onClearAllData(), navigate("/orgs/all"));
+    response?.data.status === 201 &&
+      (onClearAllData({ fromSubmit: true }), navigate("/orgs/all"));
   };
 
   const onValuesChange = (
@@ -225,7 +230,7 @@ export const OrgAddPage: FC = () => {
     }
   };
 
-  const onClearAllData = () => {
+  const onClearAllData = ({ fromSubmit = false }: { fromSubmit?: boolean }) => {
     removeLocalStorage("firstStepData");
     removeLocalStorage("secondStepData");
     removeLocalStorage("thirdStepData");
@@ -239,11 +244,12 @@ export const OrgAddPage: FC = () => {
     dispatch(setAllType(false));
     dispatch(setNoDayoffs(false));
     dispatch(setWithoutLunch(false));
-    notification.success({
-      message: t("erased"),
-      placement: "bottomRight",
-      duration: 1,
-    });
+    !fromSubmit &&
+      notification.success({
+        message: t("erased"),
+        placement: "bottomRight",
+        duration: 1,
+      });
     setCurrent(0);
   };
 
@@ -321,16 +327,18 @@ export const OrgAddPage: FC = () => {
           id="create-org-form"
           form={form}
         >
-          {current === STEPS_ENUM.firstStep && (
-            <OrgAddFirstStepUI form={form} />
-          )}
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<LoadingSpinner />}>
+            {current === STEPS_ENUM.firstStep && (
+              <OrgAddFirstStepUI form={form} />
+            )}
+          </Suspense>
+          <Suspense fallback={<LoadingSpinner />}>
             {current === STEPS_ENUM.secondStep && <OrgAddSecondStepUI />}
           </Suspense>
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<LoadingSpinner />}>
             {current === STEPS_ENUM.thirdStep && <OrgAddThirdStepUI />}
           </Suspense>
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<LoadingSpinner />}>
             {current === STEPS_ENUM.fourthStep && <OrgAddFourthStepUI />}
           </Suspense>
         </Form>
@@ -342,7 +350,7 @@ export const OrgAddPage: FC = () => {
           type="primary"
           danger
           style={{ margin: "0 8px" }}
-          onClick={onClearAllData}
+          onClick={() => onClearAllData({ fromSubmit: false })}
         >
           {t("erase-all")}
         </Button>

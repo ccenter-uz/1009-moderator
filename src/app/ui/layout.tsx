@@ -1,14 +1,19 @@
 import { Layout } from "antd";
 import { Content, Header } from "antd/es/layout/layout";
 import Sider from "antd/es/layout/Sider";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { Outlet } from "react-router-dom";
 
 import { HeaderUI } from "@widgets/header";
 import { SiderUI } from "@widgets/sider";
 
-import { CustomizeUI, LoadingSpinner } from "@shared/ui";
+import { getLocalStorage, STEPS_EDIT_DATA } from "@shared/lib/helpers";
+import { CustomizeUI, FloatBtn, LoadingSpinner } from "@shared/ui";
 const MainLayout = () => {
+  const [editId, setEditId] = useState<string | number | null>(
+    getLocalStorage(STEPS_EDIT_DATA.EDIT_ID),
+  );
+
   return (
     <Layout style={{ height: "100dvh" }}>
       {/* HEADER */}
@@ -39,9 +44,10 @@ const MainLayout = () => {
               }}
             >
               <Suspense fallback={<LoadingSpinner />}>
-                <Outlet />
+                <Outlet context={{ editId, setEditId }} />
               </Suspense>
               <CustomizeUI />
+              {editId && <FloatBtn setEditId={setEditId} />}
             </div>
           </Content>
         </Layout>
