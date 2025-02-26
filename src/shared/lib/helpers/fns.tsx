@@ -206,7 +206,7 @@ export const getDayOffsCheckbox = (form: AnyObject) => {
 
 export const returnDayOffsInProperLanguage = (dayOffs: string[]) => {
   return dayOffs.map((day) => {
-    return i18next.t(day);
+    return ` ${i18next.t(day)}, `;
   });
 };
 export const setDatyOffsCheckbox = (form: AnyObject, dayOffs: string[]) => {

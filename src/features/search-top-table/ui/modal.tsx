@@ -146,7 +146,7 @@ export const SMSModal: FC<Props> = (props) => {
         if (data.Nearbees?.length === 0) return t("no-data");
         return data.Nearbees?.map(
           (item: { Nearby: { name: { [key: string]: string } } }) =>
-            item?.Nearby?.name[i18next.language],
+            ` ${item?.Nearby?.name[i18next.language]}, `,
         );
       },
     },

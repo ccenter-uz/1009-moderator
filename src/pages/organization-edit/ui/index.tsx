@@ -303,10 +303,12 @@ export const OrgEditPage: FC = () => {
   };
 
   const onClearAllData = ({ fromSubmit = false }: { fromSubmit?: boolean }) => {
-    removeLocalStorage("firstStepDataEdit");
-    removeLocalStorage("secondStepDataEdit");
-    removeLocalStorage("thirdStepDataEdit");
-    removeLocalStorage("currentStepEdit");
+    removeLocalStorage(STEPS_EDIT_DATA.FIRST);
+    removeLocalStorage(STEPS_EDIT_DATA.SECOND);
+    removeLocalStorage(STEPS_EDIT_DATA.THIRD);
+    removeLocalStorage(STEPS_EDIT_DATA.FOURTH);
+    removeLocalStorage(STEPS_EDIT_DATA.CURRENT);
+    removeLocalStorage(STEPS_EDIT_DATA.EDIT_ID);
     form.resetFields();
     dispatch(setCategoryData([]));
     dispatch(setOrientirData([]));
