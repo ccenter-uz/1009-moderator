@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
+import { returnAllParams } from "../helpers";
+
 const pageSizeOptions = [10, 20, 50, 100];
 
 type propsType = {
@@ -20,6 +22,7 @@ export const usePaginate = (props: propsType) => {
 
   useEffect(() => {
     setSearchParams({
+      ...returnAllParams(),
       [pageName]: String(page),
       [limitName]: String(pageSize),
     });
