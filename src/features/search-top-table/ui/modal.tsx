@@ -18,6 +18,13 @@ const workTimeReturnList = (data: TSelectedData) => {
   if (data.workTime) {
     if (
       data.workTime?.allDay &&
+      data.workTime?.worktimeFrom === "00:00" &&
+      data.workTime?.worktimeTo === "00:00"
+    ) {
+      return `${i18next.t("allDay")} - ${data.workTime?.allDayDescription}`;
+    }
+    if (
+      data.workTime?.allDay &&
       data.workTime?.workTimeDescription &&
       data.workTime?.allDayDescription
     ) {
