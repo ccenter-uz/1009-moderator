@@ -60,6 +60,7 @@ export const SearchPartUI: FC<Props> = (props) => {
       form.setFieldsValue(initialValues);
       setSearchValues(initialValues);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
