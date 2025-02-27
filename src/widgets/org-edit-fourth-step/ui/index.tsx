@@ -16,7 +16,6 @@ export const OrgEditFourthStepUI: FC = () => {
     data: fileListData,
     allType,
     noDayoffs,
-    withoutLunch,
   } = useSelector(
     ({ useEditOrgFourthStepSlice }: RootState) => useEditOrgFourthStepSlice,
   );
@@ -116,31 +115,13 @@ export const OrgEditFourthStepUI: FC = () => {
             <Col span={24}>
               <Row gutter={16}>
                 <Col span={6}>
-                  <Form.Item
-                    name={"lunchFrom"}
-                    label={t("from")}
-                    rules={[
-                      {
-                        required: !withoutLunch,
-                        message: t("required-field"),
-                      },
-                    ]}
-                  >
-                    <Input type="time" disabled={withoutLunch} />
+                  <Form.Item name={"lunchFrom"} label={t("from")}>
+                    <Input type="time" />
                   </Form.Item>
                 </Col>
                 <Col span={6}>
-                  <Form.Item
-                    name={"lunchTo"}
-                    label={t("to")}
-                    rules={[
-                      {
-                        required: !withoutLunch,
-                        message: t("required-field"),
-                      },
-                    ]}
-                  >
-                    <Input type="time" disabled={withoutLunch} />
+                  <Form.Item name={"lunchTo"} label={t("to")}>
+                    <Input type="time" />
                   </Form.Item>
                 </Col>
                 <Col span={6}>
