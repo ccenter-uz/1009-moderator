@@ -60,6 +60,7 @@ export const OrgAllPage: FC = () => {
   return (
     <div>
       <SearchPartUI
+        searchValues={searchValues}
         setFromEdit={setFromEdit}
         setSearchValues={setSearchValues}
         searchTableRef={searchTableRef}
