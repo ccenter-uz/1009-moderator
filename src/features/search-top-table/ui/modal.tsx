@@ -68,7 +68,7 @@ export const SMSModal: FC<Props> = (props) => {
       id: 4,
       name: t("phone"),
       value: () => {
-        if (data.Phone?.length === 0) return t("no-data");
+        if (data.Phone?.length === 0) return;
         return data.Phone?.map((item: { phone: string }) => item?.phone);
       },
     },
@@ -97,7 +97,7 @@ export const SMSModal: FC<Props> = (props) => {
       id: 8,
       name: t("payment_type"),
       value: () => {
-        if (data.PaymentTypes?.length === 0) return t("no-data");
+        if (data.PaymentTypes?.length === 0) return;
         const types: string[] = [];
 
         data.PaymentTypes?.map(
@@ -143,7 +143,7 @@ export const SMSModal: FC<Props> = (props) => {
       title: t("transport"),
       name: t("nearby"),
       value: () => {
-        if (data.Nearbees?.length === 0) return t("no-data");
+        if (data.Nearbees?.length === 0) return;
         return data.Nearbees?.map(
           (item: { Nearby: { name: { [key: string]: string } } }) =>
             ` ${item?.Nearby?.name[i18next.language]}, `,
@@ -198,7 +198,7 @@ export const SMSModal: FC<Props> = (props) => {
                   id={String(item.value)}
                 />
               </Col>
-              <Col span={16}>{value ?? t("no-data")}</Col>
+              <Col span={16}>{value ?? "-"}</Col>
             </Row>
           </Flex>
         );
