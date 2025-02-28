@@ -3,6 +3,7 @@ import { AnyObject } from "antd/es/_util/type";
 import { t } from "i18next";
 import { FC, SetStateAction, Dispatch, useEffect, useState } from "react";
 
+import { getLocalStorage, SEARCHPART_KEYS } from "@shared/lib/helpers";
 import { SearchModal } from "@shared/ui/search-modal";
 
 type Props = {
@@ -37,10 +38,17 @@ export const SingleInputWithModalUI: FC<Props> = (props) => {
     setSearchValue,
     setPagination,
   } = props;
-  const [selectedData, setSelectedData] = useState<AnyObject | null>(null);
+  const [selectedData, setSelectedData] = useState<AnyObject | null>(
+    getLocalStorage(SEARCHPART_KEYS.SEARCHVALUE_KEY)?.[name] || null,
+  );
 
   useEffect(() => {
-    selectedData && form && form.setFieldValue(`${name}`, selectedData?.id);
+    selectedData &&
+      form &&
+      form.setFieldValue(`${name}`, {
+        id: selectedData?.id,
+        name: selectedData?.name,
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedData]);
 

@@ -2,7 +2,7 @@ import { Table, Flex, Tooltip } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { ColumnsType } from "antd/es/table";
 import i18next from "i18next";
-import { Dispatch, FC, SetStateAction, useState } from "react";
+import { Dispatch, FC, Fragment, SetStateAction, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaEnvelope, FaPencilAlt } from "react-icons/fa";
 import { MdRestore } from "react-icons/md";
@@ -73,7 +73,7 @@ const recordNames: Record<string, { text: string }> = {
   },
 };
 
-const returnAddressColumnData = (record: AnyObject) => {
+export const returnAddressColumnData = (record: AnyObject) => {
   if (!record) return;
 
   return (
@@ -82,7 +82,7 @@ const returnAddressColumnData = (record: AnyObject) => {
         if (["kvartal", "home"].includes(name)) {
           return (
             record[name] && (
-              <>
+              <Fragment key={name}>
                 <span
                   style={{
                     fontWeight: "500",
@@ -94,13 +94,13 @@ const returnAddressColumnData = (record: AnyObject) => {
                   {i18next.t(recordNames[name].text)}
                 </span>
                 <span>{record[name]}</span>,
-              </>
+              </Fragment>
             )
           );
         }
         return (
           record[name]?.name[i18next.language] && (
-            <>
+            <Fragment key={name}>
               <span
                 style={{
                   fontWeight: "500",
@@ -112,7 +112,7 @@ const returnAddressColumnData = (record: AnyObject) => {
                 {i18next.t(recordNames[name].text)}
               </span>
               <span>{record[name]?.name[i18next.language]},</span>
-            </>
+            </Fragment>
           )
         );
       })}

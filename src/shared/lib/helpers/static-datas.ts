@@ -123,3 +123,16 @@ export const allActives = {
 
 export const passwordPattern =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&\-_\\(\\)])/;
+
+export const SEARCHPART_KEYS = {
+  SEARCHVALUE_KEY: "searchValues",
+  FROM_EDIT_KEY: "fromEdit",
+  REGION_KEY: "regionId",
+  CITY_KEY: "cityId",
+  DISTRICT_KEY: "districtId",
+  CATEGORY_KEY: "categoryId",
+  SUBCATEGORY_KEY: "subCategoryId",
+  VILLAGE_KEY: "villageId",
+  NEARBY_KEY: "nearbyId",
+  STREET_KEY: "streetId",
+};

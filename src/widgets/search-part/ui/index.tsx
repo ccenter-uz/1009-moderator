@@ -1,5 +1,4 @@
 import { Button, Col, Divider, Flex, Form, Row } from "antd";
-import { AnyObject } from "antd/es/_util/type";
 import { FC, SetStateAction, Dispatch, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -14,20 +13,33 @@ import {
   getLocalStorage,
   removeLocalStorage,
   removeSessionStorage,
+  SEARCHPART_KEYS,
   setLocalStorage,
 } from "@shared/lib/helpers";
 
+import { TReturnProperValues, TSearchValues } from "../model/type";
+
 type Props = {
-  searchValues: AnyObject | null;
-  setSearchValues: Dispatch<SetStateAction<{ regionId: number } | null>>;
+  searchValues: TSearchValues | null;
+  setSearchValues: Dispatch<SetStateAction<TSearchValues | null>>;
   searchTableRef?: HTMLElement | null;
   setFromEdit: Dispatch<SetStateAction<boolean>>;
 };
 
-const SEARCHVALUE_KEY = "searchValues";
-const FROM_EDIT_KEY = "fromEdit";
-const REGION_KEY = "regionId";
-const CITY_KEY = "cityId";
+const returnProperValues = (values: TReturnProperValues) => {
+  return {
+    ...values,
+    categoryId: values.categoryId?.id,
+    subCategoryId: values.subCategoryId?.id,
+    categoryTuId: values.categoryTuId?.id,
+    subCategoryTuId: values.subCategoryTuId?.id,
+    mainOrg: values.mainOrg?.id,
+    phoneType: values.phoneType?.id,
+    streetId: values.streetId?.id,
+    villageId: values.villageId?.id,
+    nearbyId: values.nearbyId?.id,
+  };
+};
 
 export const SearchPartUI: FC<Props> = (props) => {
   const { setSearchValues, searchTableRef, setFromEdit } = props;
@@ -35,9 +47,9 @@ export const SearchPartUI: FC<Props> = (props) => {
   const [form] = Form.useForm();
   const [formReset, setFormReset] = useState(0);
 
-  const onSubmit = (values: { regionId: number; cityId: number }) => {
-    setSearchValues(values);
-    setLocalStorage(SEARCHVALUE_KEY, values);
+  const onSubmit = (values: TReturnProperValues) => {
+    setSearchValues(returnProperValues(values));
+    setLocalStorage(SEARCHPART_KEYS.SEARCHVALUE_KEY, values);
 
     searchTableRef?.scrollIntoView({ behavior: "smooth" });
   };
@@ -45,20 +57,21 @@ export const SearchPartUI: FC<Props> = (props) => {
   const onCancel = () => {
     setSearchValues(null);
     const resetValues = Object.keys(form.getFieldsValue()).filter(
-      (key) => key !== REGION_KEY && key !== CITY_KEY,
+      (key) =>
+        key !== SEARCHPART_KEYS.REGION_KEY && key !== SEARCHPART_KEYS.CITY_KEY,
     );
     form.resetFields(resetValues);
-    removeSessionStorage(FROM_EDIT_KEY);
-    removeLocalStorage(SEARCHVALUE_KEY);
+    removeSessionStorage(SEARCHPART_KEYS.FROM_EDIT_KEY);
+    removeLocalStorage(SEARCHPART_KEYS.SEARCHVALUE_KEY);
     setFromEdit(false);
     setFormReset((prev) => prev + 1);
   };
 
   useEffect(() => {
-    const initialValues = getLocalStorage(SEARCHVALUE_KEY);
+    const initialValues = getLocalStorage(SEARCHPART_KEYS.SEARCHVALUE_KEY);
     if (initialValues) {
       form.setFieldsValue(initialValues);
-      setSearchValues(initialValues);
+      setSearchValues(returnProperValues(initialValues));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

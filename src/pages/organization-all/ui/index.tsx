@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import { SearchPartUI } from "@widgets/search-part";
+import { SearchPartUI, TSearchValues } from "@widgets/search-part";
 import { SearchTableUI } from "@widgets/search-table";
 
 import { useLazyGetOrganizationsQuery } from "@entities/organization";
@@ -11,17 +11,16 @@ import {
   getSessionStorage,
   omitUndefinedValues,
   returnAllParams,
+  SEARCHPART_KEYS,
 } from "@shared/lib/helpers";
 
 export const OrgAllPage: FC = () => {
   const [searchTableRef, setSearchTableRef] = useState<HTMLElement>();
   const [searchParams] = useSearchParams();
   const [fromEdit, setFromEdit] = useState<boolean>(
-    getSessionStorage("fromEdit") || false,
+    getSessionStorage(SEARCHPART_KEYS.FROM_EDIT_KEY) || false,
   );
-  const [searchValues, setSearchValues] = useState<{
-    regionId: number;
-  } | null>(null);
+  const [searchValues, setSearchValues] = useState<TSearchValues | null>(null);
   const [triggerOrg, { data: orgDatas, isLoading }] =
     useLazyGetOrganizationsQuery();
   const [data, setData] = useState<{
@@ -67,7 +66,7 @@ export const OrgAllPage: FC = () => {
       />
       <SearchTableUI
         setRef={setSearchTableRef}
-        data={data?.data || []}
+        data={data?.data.map((item) => ({ ...item, key: item.id })) || []}
         totalItems={data?.total || 0}
         isLoading={isLoading}
       />
