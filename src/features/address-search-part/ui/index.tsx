@@ -6,6 +6,7 @@ import { useLazyGetNearbyQuery } from "@entities/nearby";
 import { useLazyGetStreetsQuery } from "@entities/street";
 import { useLazyGetVillagesQuery } from "@entities/village";
 
+import { SEARCHPART_KEYS } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { SingleInputWithModalUI } from "@shared/ui/single-input-with-modal";
 
@@ -26,9 +27,9 @@ const columns = [
 
 export const AddressSearchPartUI: FC<Props> = (props) => {
   const { form } = props;
-  const regionId = form.getFieldValue("regionId");
-  const cityId = form.getFieldValue("cityId");
-  const districtId = form.getFieldValue("districtId");
+  const regionId = form.getFieldValue(SEARCHPART_KEYS.REGION_KEY);
+  const cityId = form.getFieldValue(SEARCHPART_KEYS.CITY_KEY);
+  const districtId = form.getFieldValue(SEARCHPART_KEYS.DISTRICT_KEY);
   const {
     isOpen: isOpenVillage,
     onOpen: onOpenVillage,

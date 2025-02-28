@@ -7,7 +7,7 @@ import {
   useLazyGetSubCategoryQuery,
 } from "@entities/product-services";
 
-import { GET_ALL_ACTIVE_STATUS } from "@shared/lib/helpers";
+import { GET_ALL_ACTIVE_STATUS, getLocalStorage } from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { SearchModal } from "@shared/ui/search-modal";
 
@@ -39,9 +39,13 @@ export const ProductServiceSelect: FC<Props> = (props) => {
   } = useDisclosure();
   // SELECTED_DATAS
   const [selectedDataProduct, setSelectedDataProduct] =
-    useState<SelectedDataTypes | null>(null);
+    useState<SelectedDataTypes | null>(
+      getLocalStorage("searchValues")?.categoryTuId || null,
+    );
   const [selectedDataService, setSelectedDataService] =
-    useState<SelectedDataTypes | null>(null);
+    useState<SelectedDataTypes | null>(
+      getLocalStorage("searchValues")?.subCategoryTuId || null,
+    );
   // FETCHERS
   const [triggerProduct, { data: productData, isLoading: isLoadingProduct }] =
     useLazyGetProductsQuery();
@@ -95,8 +99,14 @@ export const ProductServiceSelect: FC<Props> = (props) => {
 
   useEffect(() => {
     form.setFieldsValue({
-      categoryTuId: selectedDataProduct?.id,
-      subCategoryTuId: selectedDataService?.id,
+      categoryTuId: {
+        id: selectedDataProduct?.id,
+        name: selectedDataProduct?.name,
+      },
+      subCategoryTuId: {
+        id: selectedDataService?.id,
+        name: selectedDataService?.name,
+      },
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
