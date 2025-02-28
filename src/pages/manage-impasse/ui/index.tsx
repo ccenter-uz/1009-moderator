@@ -111,13 +111,9 @@ export const ManageImpassePage: FC = () => {
   const handleSearch = ({
     search,
     status = STATUS.ACTIVE,
-    oldName,
-    newName,
   }: {
     search: string;
     status: number;
-    oldName: string;
-    newName: string;
   }) => {
     let inputValue = search;
     if (inputValue === undefined) {
@@ -128,8 +124,6 @@ export const ManageImpassePage: FC = () => {
       setSearchParams({
         ...params,
         page: "1",
-        oldName: oldName ? oldName : "",
-        newName: newName ? newName : "",
         search: inputValue.trim(),
         status: status.toString()
           ? status.toString()
@@ -242,7 +236,6 @@ export const ManageImpassePage: FC = () => {
         add={handleAdd}
         searchPart={
           <BasicSearchPartUI
-            hasOldAndNewNameFilter
             handleSearch={handleSearch}
             handleReset={handleReset}
             status={Number(params.status)}

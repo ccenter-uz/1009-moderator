@@ -7,6 +7,8 @@ import { returnDayOffsInProperLanguage } from "@shared/lib/helpers";
 
 import { TSelectedData } from "../model/types";
 
+import { returnAddressColumnData } from ".";
+
 type Props = {
   title: string;
   data: TSelectedData | null;
@@ -16,6 +18,13 @@ type Props = {
 
 const workTimeReturnList = (data: TSelectedData) => {
   if (data.workTime) {
+    if (
+      data.workTime?.allDay &&
+      data.workTime?.worktimeFrom === "00:00" &&
+      data.workTime?.worktimeTo === "00:00"
+    ) {
+      return `${i18next.t("allDay")} - ${data.workTime?.allDayDescription}`;
+    }
     if (
       data.workTime?.allDay &&
       data.workTime?.workTimeDescription &&
@@ -57,7 +66,7 @@ export const SMSModal: FC<Props> = (props) => {
     {
       id: 2,
       name: t("address"),
-      value: data.street?.name[i18next.language],
+      value: () => returnAddressColumnData(data),
     },
     {
       id: 3,
@@ -173,8 +182,8 @@ export const SMSModal: FC<Props> = (props) => {
       onCancel={onClose}
       title={title}
       centered
-      style={{ minWidth: "32rem" }}
-      width={"auto"}
+      style={{ overflowY: "auto" }}
+      width={"35rem"}
     >
       {renderList.map((item, index) => {
         const value =

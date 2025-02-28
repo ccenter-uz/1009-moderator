@@ -7,7 +7,11 @@ import {
   useLazyGetSubCategoriesQuery,
 } from "@entities/category-subcategory";
 
-import { GET_ALL_ACTIVE_STATUS } from "@shared/lib/helpers";
+import {
+  GET_ALL_ACTIVE_STATUS,
+  getLocalStorage,
+  SEARCHPART_KEYS,
+} from "@shared/lib/helpers";
 import { useDisclosure } from "@shared/lib/hooks";
 import { SearchModal } from "@shared/ui/search-modal";
 
@@ -31,8 +35,8 @@ const columns = [
 
 export const CategorySubcategorySelect: FC<Props> = (props) => {
   const { form } = props;
-  const regionId = form.getFieldValue("regionId");
-  const cityId = form.getFieldValue("cityId");
+  const regionId = form.getFieldValue(SEARCHPART_KEYS.REGION_KEY);
+  const cityId = form.getFieldValue(SEARCHPART_KEYS.CITY_KEY);
   const {
     isOpen: categoryIsOpen,
     onOpen: openCategoryModal,
@@ -45,9 +49,13 @@ export const CategorySubcategorySelect: FC<Props> = (props) => {
   } = useDisclosure();
   // SELECTED_DATAS
   const [selectedDataCategory, setSelectedDataCategory] =
-    useState<SelectedDataTypes | null>(null);
+    useState<SelectedDataTypes | null>(
+      getLocalStorage(SEARCHPART_KEYS.SEARCHVALUE_KEY)?.categoryId || null,
+    );
   const [selectedDataSubCategory, setSelectedDataSubCategory] =
-    useState<SelectedDataTypes | null>(null);
+    useState<SelectedDataTypes | null>(
+      getLocalStorage(SEARCHPART_KEYS.SEARCHVALUE_KEY)?.subCategoryId || null,
+    );
   // FETCHERS
   const [
     triggerCategory,
@@ -132,8 +140,14 @@ export const CategorySubcategorySelect: FC<Props> = (props) => {
 
   useEffect(() => {
     form.setFieldsValue({
-      categoryId: selectedDataCategory?.id,
-      subCategoryId: selectedDataSubCategory?.id,
+      categoryId: {
+        id: selectedDataCategory?.id,
+        name: selectedDataCategory?.name,
+      },
+      subCategoryId: {
+        id: selectedDataSubCategory?.id,
+        name: selectedDataSubCategory?.name,
+      },
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -143,7 +157,7 @@ export const CategorySubcategorySelect: FC<Props> = (props) => {
     <>
       <Col span={24}>
         <Form.Item
-          name={"categoryId"}
+          name={SEARCHPART_KEYS.CATEGORY_KEY}
           label={t(`category`)}
           style={{ marginBottom: 10 }}
         >
@@ -159,7 +173,7 @@ export const CategorySubcategorySelect: FC<Props> = (props) => {
       </Col>
       <Col span={24}>
         <Form.Item
-          name={`subCategoryId`}
+          name={SEARCHPART_KEYS.SUBCATEGORY_KEY}
           label={t(`sub-category`)}
           style={{ marginBottom: 10 }}
         >
