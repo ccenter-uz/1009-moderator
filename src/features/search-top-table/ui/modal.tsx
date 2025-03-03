@@ -18,42 +18,21 @@ type Props = {
 
 const workTimeReturnList = (data: TSelectedData) => {
   if (data.workTime) {
-    if (
-      data.workTime?.allDay &&
-      data.workTime?.worktimeFrom === "00:00" &&
-      data.workTime?.worktimeTo === "00:00"
-    ) {
-      return `${i18next.t("allDay")} - ${data.workTime?.allDayDescription}`;
-    }
-    if (
-      data.workTime?.allDay &&
-      data.workTime?.workTimeDescription &&
-      data.workTime?.allDayDescription
-    ) {
-      return `${data.workTime?.worktimeFrom} - ${data.workTime?.worktimeTo} - ${
-        data.workTime?.workTimeDescription
-      }, ${i18next.t("allDay")} - ${data.workTime?.allDayDescription}`;
-    } else if (data.workTime?.allDay && data.workTime?.workTimeDescription) {
-      return `${data.workTime?.worktimeFrom} - ${data.workTime?.worktimeTo} - ${
-        data.workTime?.workTimeDescription
-      }, ${i18next.t("allDay")}`;
-    } else if (data.workTime?.allDay && data.workTime?.allDayDescription) {
-      return `${data.workTime?.worktimeFrom} - ${
-        data.workTime?.worktimeTo
-      } - ${i18next.t("allDay")} - ${data.workTime?.allDayDescription}`;
-    } else if (
-      data.workTime?.allDay &&
-      data.workTime?.worktimeFrom &&
-      data.workTime?.worktimeTo
-    ) {
-      return `${data.workTime?.worktimeFrom} - ${
-        data.workTime?.worktimeTo
-      } - ${i18next.t("allDay")}`;
-    } else if (data.workTime?.allDay) {
-      return `${i18next.t("allDay")}`;
-    } else {
-      return `${data.workTime?.worktimeFrom} - ${data.workTime?.worktimeTo} `;
-    }
+    return `${
+      data.workTime?.worktimeFrom && data.workTime?.worktimeFrom !== "00:00"
+        ? data.workTime?.worktimeFrom + " - "
+        : ""
+    }  ${
+      data.workTime?.worktimeTo && data.workTime?.worktimeTo !== "00:00"
+        ? data.workTime?.worktimeTo + " - "
+        : ""
+    }  ${
+      data.workTime?.workTimeDescription
+        ? data.workTime?.workTimeDescription + ", "
+        : ""
+    }  ${data.workTime.allDay ? i18next.t("allDay") + " - " : ""} ${
+      data.workTime?.allDayDescription ?? ""
+    }`;
   }
 };
 
