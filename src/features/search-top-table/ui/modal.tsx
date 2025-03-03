@@ -138,8 +138,7 @@ export const SMSModal: FC<Props> = (props) => {
       value: () => {
         if (data.workTime) {
           if (data.workTime?.withoutLunch) return t("withoutLunch");
-          if (!data.workTime?.lunchFrom && !data.workTime?.lunchTo)
-            return t("no-data");
+          if (!data.workTime?.lunchFrom && !data.workTime?.lunchTo) return "-";
           return `${data.workTime?.lunchFrom} - ${data.workTime?.lunchTo}`;
         }
       },
@@ -150,7 +149,7 @@ export const SMSModal: FC<Props> = (props) => {
       value: () => {
         if (data.workTime) {
           if (data.workTime?.noDayoffs) return t("noDayoffs");
-          if (data.workTime?.dayoffs.length === 0) return t("no-data");
+          if (data.workTime?.dayoffs.length === 0) return "-";
           return returnDayOffsInProperLanguage(data.workTime?.dayoffs);
         }
       },
