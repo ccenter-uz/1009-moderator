@@ -41,10 +41,16 @@ const workTimeReturnList = (data: TSelectedData) => {
       return `${data.workTime?.worktimeFrom} - ${
         data.workTime?.worktimeTo
       } - ${i18next.t("allDay")} - ${data.workTime?.allDayDescription}`;
-    } else if (data.workTime?.allDay) {
+    } else if (
+      data.workTime?.allDay &&
+      data.workTime?.worktimeFrom &&
+      data.workTime?.worktimeTo
+    ) {
       return `${data.workTime?.worktimeFrom} - ${
         data.workTime?.worktimeTo
       } - ${i18next.t("allDay")}`;
+    } else if (data.workTime?.allDay) {
+      return `${i18next.t("allDay")}`;
     } else {
       return `${data.workTime?.worktimeFrom} - ${data.workTime?.worktimeTo} `;
     }
@@ -132,6 +138,8 @@ export const SMSModal: FC<Props> = (props) => {
       value: () => {
         if (data.workTime) {
           if (data.workTime?.withoutLunch) return t("withoutLunch");
+          if (!data.workTime?.lunchFrom && !data.workTime?.lunchTo)
+            return t("no-data");
           return `${data.workTime?.lunchFrom} - ${data.workTime?.lunchTo}`;
         }
       },
