@@ -63,7 +63,9 @@ export const SMSModal: FC<Props> = (props) => {
       name: t("phone"),
       value: () => {
         if (data.Phone?.length === 0) return;
-        return data.Phone?.map((item: { phone: string }) => item?.phone);
+        return data.Phone?.map((item: { phone: string }) => item?.phone).join(
+          ", ",
+        );
       },
     },
     {
