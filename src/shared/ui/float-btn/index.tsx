@@ -8,7 +8,7 @@ import {
   AntDesignSwal,
   getLocalStorage,
   removeLocalStorage,
-  STEPS_EDIT_DATA,
+  STEPS_EDIT_KEYS,
 } from "@shared/lib/helpers";
 
 interface IProps {
@@ -19,8 +19,8 @@ export const FloatBtn: FC<IProps> = (props) => {
   const { setEditId } = props;
   const { t } = useTranslation();
   const location = useLocation();
-  const editName = getLocalStorage(STEPS_EDIT_DATA.FIRST)?.name;
-  const editId = getLocalStorage(STEPS_EDIT_DATA.EDIT_ID);
+  const editName = getLocalStorage(STEPS_EDIT_KEYS.FIRST)?.name;
+  const editId = getLocalStorage(STEPS_EDIT_KEYS.EDIT_ID);
 
   if (location.pathname.includes("/orgs/edit")) return null;
 
@@ -38,12 +38,12 @@ export const FloatBtn: FC<IProps> = (props) => {
       allowEscapeKey: false,
     }).then((result) => {
       if (result.isConfirmed) {
-        removeLocalStorage(STEPS_EDIT_DATA.FIRST);
-        removeLocalStorage(STEPS_EDIT_DATA.SECOND);
-        removeLocalStorage(STEPS_EDIT_DATA.THIRD);
-        removeLocalStorage(STEPS_EDIT_DATA.FOURTH);
-        removeLocalStorage(STEPS_EDIT_DATA.CURRENT);
-        removeLocalStorage(STEPS_EDIT_DATA.EDIT_ID);
+        removeLocalStorage(STEPS_EDIT_KEYS.FIRST);
+        removeLocalStorage(STEPS_EDIT_KEYS.SECOND);
+        removeLocalStorage(STEPS_EDIT_KEYS.THIRD);
+        removeLocalStorage(STEPS_EDIT_KEYS.FOURTH);
+        removeLocalStorage(STEPS_EDIT_KEYS.CURRENT);
+        removeLocalStorage(STEPS_EDIT_KEYS.EDIT_ID);
         setEditId(null);
       }
     });

@@ -7,11 +7,11 @@ import { Outlet } from "react-router-dom";
 import { HeaderUI } from "@widgets/header";
 import { SiderUI } from "@widgets/sider";
 
-import { getLocalStorage, STEPS_EDIT_DATA } from "@shared/lib/helpers";
+import { getLocalStorage, STEPS_EDIT_KEYS } from "@shared/lib/helpers";
 import { CustomizeUI, FloatBtn, LoadingSpinner } from "@shared/ui";
 const MainLayout = () => {
   const [editId, setEditId] = useState<string | number | null>(
-    getLocalStorage(STEPS_EDIT_DATA.EDIT_ID),
+    getLocalStorage(STEPS_EDIT_KEYS.EDIT_ID),
   );
 
   return (

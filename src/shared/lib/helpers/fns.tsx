@@ -7,7 +7,7 @@ import { FaCheck } from "react-icons/fa";
 import { GoClock } from "react-icons/go";
 import { IoClose, IoWarning } from "react-icons/io5";
 
-import { STEPS_EDIT_DATA } from "./enums";
+import { STEPS_EDIT_KEYS } from "./enums";
 import { STEPS_DATA } from "./static-datas";
 
 export const returnAllParams = () => {
@@ -104,13 +104,22 @@ export const clearCookie = () => {
   deleteCookie("refreshToken");
 };
 
-export const notificationResponse = (res: AnyObject, onClose?: () => void) => {
-  if (res.data.status >= 200 && res.data.status < 300) {
+export const notificationResponse = (
+  res: AnyObject | null,
+  message?: string,
+  onClose?: () => void,
+) => {
+  if (res && res.data.status >= 200 && res.data.status < 300) {
     notification.success({
       message: i18next.t("success"),
       placement: "bottomRight",
     });
     onClose && onClose();
+  } else if (res === null && message) {
+    notification.error({
+      message: message,
+      placement: "bottomRight",
+    });
   } else {
     notification.error({
       message: i18next.t("error"),
@@ -227,22 +236,22 @@ export const getStepsValueByKey = (stepKeys: string[], getFrom: AnyObject) => {
 
 export const getEditingStepStorageValues = () => {
   const firstStepData = JSON.parse(
-    localStorage.getItem(STEPS_EDIT_DATA.FIRST) as string,
+    localStorage.getItem(STEPS_EDIT_KEYS.FIRST) as string,
   );
   const secondStepData = JSON.parse(
-    localStorage.getItem(STEPS_EDIT_DATA.SECOND) as string,
+    localStorage.getItem(STEPS_EDIT_KEYS.SECOND) as string,
   );
   const thirdStepData = JSON.parse(
-    localStorage.getItem(STEPS_EDIT_DATA.THIRD) as string,
+    localStorage.getItem(STEPS_EDIT_KEYS.THIRD) as string,
   );
   const fourthStepData = JSON.parse(
-    localStorage.getItem(STEPS_EDIT_DATA.FOURTH) as string,
+    localStorage.getItem(STEPS_EDIT_KEYS.FOURTH) as string,
   );
   const currentStep = JSON.parse(
-    localStorage.getItem(STEPS_EDIT_DATA.CURRENT) as string,
+    localStorage.getItem(STEPS_EDIT_KEYS.CURRENT) as string,
   );
   const editingId = JSON.parse(
-    localStorage.getItem(STEPS_EDIT_DATA.EDIT_ID) as string,
+    localStorage.getItem(STEPS_EDIT_KEYS.EDIT_ID) as string,
   );
   return {
     firstStepData,
@@ -255,12 +264,12 @@ export const getEditingStepStorageValues = () => {
 };
 
 export const clearEditStepStorage = () => {
-  localStorage.removeItem(STEPS_EDIT_DATA.FIRST);
-  localStorage.removeItem(STEPS_EDIT_DATA.SECOND);
-  localStorage.removeItem(STEPS_EDIT_DATA.THIRD);
-  localStorage.removeItem(STEPS_EDIT_DATA.FOURTH);
-  localStorage.removeItem(STEPS_EDIT_DATA.CURRENT);
-  localStorage.removeItem(STEPS_EDIT_DATA.EDIT_ID);
+  localStorage.removeItem(STEPS_EDIT_KEYS.FIRST);
+  localStorage.removeItem(STEPS_EDIT_KEYS.SECOND);
+  localStorage.removeItem(STEPS_EDIT_KEYS.THIRD);
+  localStorage.removeItem(STEPS_EDIT_KEYS.FOURTH);
+  localStorage.removeItem(STEPS_EDIT_KEYS.CURRENT);
+  localStorage.removeItem(STEPS_EDIT_KEYS.EDIT_ID);
 };
 
 const PRODUCT_FILED_NAMES = ["ProductServices", "ProductServicesVersion"];
@@ -353,11 +362,11 @@ export const handleEditLocalDatas = (record: AnyObject) => {
     metroStation: record.transport?.metroStation,
     images: record[pictureName],
   };
-  setLocalStorage(STEPS_EDIT_DATA.EDIT_ID, record.id);
-  setLocalStorage(STEPS_EDIT_DATA.FIRST, firstEditStep);
-  setLocalStorage(STEPS_EDIT_DATA.SECOND, secondEditStep);
-  setLocalStorage(STEPS_EDIT_DATA.THIRD, thirdEditStep);
-  setLocalStorage(STEPS_EDIT_DATA.FOURTH, fourthEditStep);
+  setLocalStorage(STEPS_EDIT_KEYS.EDIT_ID, record.id);
+  setLocalStorage(STEPS_EDIT_KEYS.FIRST, firstEditStep);
+  setLocalStorage(STEPS_EDIT_KEYS.SECOND, secondEditStep);
+  setLocalStorage(STEPS_EDIT_KEYS.THIRD, thirdEditStep);
+  setLocalStorage(STEPS_EDIT_KEYS.FOURTH, fourthEditStep);
 };
 
 // DRAGGABLE-ELEMENT-FUNCTION

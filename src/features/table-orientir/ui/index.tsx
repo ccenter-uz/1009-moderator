@@ -140,6 +140,7 @@ export const TableOrientirUI: FC<Props> = (props) => {
               value={selectedNearbyCategory[0]?.nearbyCategoryId}
               onSelect={onSelectNearbyCategory}
               allowClear
+              onClear={() => setSelectedNearbyCategory([])}
               disabled={isLoadingNearbyCategory}
               options={
                 nearbyCategoryOptions?.data.map((item: AnyObject) => ({

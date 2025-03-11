@@ -25,7 +25,7 @@ import {
   setLocalStorage,
   statusForOrgs,
   statusType,
-  STEPS_EDIT_DATA,
+  STEPS_EDIT_KEYS,
   STEPS_ENUM,
 } from "@shared/lib/helpers";
 import { useDisclosure, usePaginate } from "@shared/lib/hooks";
@@ -164,7 +164,7 @@ export const SearchTopTable: FC<Props> = (props) => {
           !!result.dismiss
         ) {
           clearEditStepStorage();
-          setLocalStorage(STEPS_EDIT_DATA.CURRENT, STEPS_ENUM.firstStep);
+          setLocalStorage(STEPS_EDIT_KEYS.CURRENT, STEPS_ENUM.firstStep);
           handleEditLocalDatas(record);
           setEditId(record.id);
           navigate(`/orgs/edit/${record.id}`);

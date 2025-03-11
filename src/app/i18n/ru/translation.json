@@ -287,5 +287,6 @@
   "you-have-been-editing-this-org": "Вы редактировали эту организацию",
   "navigate-to-edit": "Перейти к редактированию",
   "remove-editing": "Сбросить редактирование",
-  "are-you-sure-you-want-to-reset": "Вы уверены, что хотите сбросить?"
+  "are-you-sure-you-want-to-reset": "Вы уверены, что хотите сбросить?",
+  "you_have_not_filled_the_required_fields": "Вы не заполнили обязательные поля"
 }

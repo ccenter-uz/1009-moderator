@@ -128,6 +128,7 @@ export const TableCategoryServices: FC<Props> = (props) => {
               value={selectedCategory[0]?.productServiceCategoryId}
               onSelect={onSelectCategory}
               allowClear
+              onClear={() => setSelectedCategory([])}
               disabled={isLoadingCategoryTu}
               options={
                 categoryTuOptions?.data.map((item: AnyObject) => ({
@@ -150,6 +151,7 @@ export const TableCategoryServices: FC<Props> = (props) => {
               value={selectedSubCategory[0]?.productServiceSubCategoryId}
               onSelect={onSelectSubCategory}
               allowClear
+              onClear={() => setSelectedSubCategory([])}
               disabled={isLoadingSubcategoryTu}
               options={
                 subcategoryTuOptions?.data.map((item: AnyObject) => ({
