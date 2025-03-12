@@ -184,6 +184,8 @@ export const OrgEditThirdStepUI: FC = () => {
               loading={phoneTypesLoading}
               id="phone-type"
               value={selectedPhoneType[0]?.phoneTypeId}
+              allowClear
+              onClear={() => setSelectedPhoneType([])}
               onSelect={onSelectType}
               options={phoneTypesData?.data?.map(
                 (item: Record<string, string | number>) => ({

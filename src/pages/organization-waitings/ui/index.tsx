@@ -23,7 +23,7 @@ import {
   handleEditLocalDatas,
   returnAllParams,
   setLocalStorage,
-  STEPS_EDIT_DATA,
+  STEPS_EDIT_KEYS,
   STEPS_ENUM,
 } from "@shared/lib/helpers";
 import { ManageWrapperBox } from "@shared/ui";
@@ -79,7 +79,7 @@ export const OrganizationWaitingsPage = () => {
           !!result.dismiss
         ) {
           clearEditStepStorage();
-          setLocalStorage(STEPS_EDIT_DATA.CURRENT, STEPS_ENUM.firstStep);
+          setLocalStorage(STEPS_EDIT_KEYS.CURRENT, STEPS_ENUM.firstStep);
           handleEditLocalDatas(record);
           navigate(`/orgs/edit/${record.id}`);
         }

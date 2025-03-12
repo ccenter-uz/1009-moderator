@@ -25,7 +25,7 @@ import {
   notificationResponse,
   returnAllParams,
   setLocalStorage,
-  STEPS_EDIT_DATA,
+  STEPS_EDIT_KEYS,
   STEPS_ENUM,
   unconfirmedTableColumns,
 } from "@shared/lib/helpers";
@@ -108,7 +108,7 @@ export const OrgUnconfirmedPage: FC = () => {
           !!result.dismiss
         ) {
           clearEditStepStorage();
-          setLocalStorage(STEPS_EDIT_DATA.CURRENT, STEPS_ENUM.firstStep);
+          setLocalStorage(STEPS_EDIT_KEYS.CURRENT, STEPS_ENUM.firstStep);
           handleEditLocalDatas(record);
           setEditId(record.organizationId);
           navigate(`/orgs/edit/${record.organizationId}`);

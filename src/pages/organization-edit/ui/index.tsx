@@ -25,19 +25,27 @@ import {
 import { setOrientirData } from "@widgets/org-edit-second-step";
 import { setPhoneData } from "@widgets/org-edit-third-step";
 
-import { useUpdateOrganizationMutation } from "@entities/organization";
+import {
+  useLazyGetOneOrganizationQuery,
+  useUpdateOrganizationMutation,
+} from "@entities/organization";
 
 import {
+  ERROR_STEPS,
   getDayOffsCheckbox,
   getEditingStepStorageValues,
+  getLocalStorage,
+  handleEditLocalDatas,
+  handleResetCurrentEditingToInitial,
   notificationResponse,
   omitUndefinedValues,
   removeLocalStorage,
   SEND_BODY,
   setDatyOffsCheckbox,
+  setLocalStorage,
   setSessionStorage,
   STEPS_DATA,
-  STEPS_EDIT_DATA,
+  STEPS_EDIT_KEYS,
   STEPS_ENUM,
 } from "@shared/lib/helpers";
 import { IOrganizationBody, RootState } from "@shared/types";
@@ -78,6 +86,20 @@ export const OrgEditPage: FC = () => {
   }>();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [triggerOneOrg, { isLoading: isLoadingOneOrg }] =
+    useLazyGetOneOrganizationQuery();
+  const [firstErrorStep, setFirstErrorStep] = useState<number | null>(
+    getLocalStorage(ERROR_STEPS.FIRST) ?? null,
+  );
+  const [secondErrorStep, setSecondErrorStep] = useState<number | null>(
+    getLocalStorage(ERROR_STEPS.SECOND) ?? null,
+  );
+  const [thirdErrorStep, setThirdErrorStep] = useState<number | null>(
+    getLocalStorage(ERROR_STEPS.THIRD) ?? null,
+  );
+  const [fourErrorStep, setFourErrorStep] = useState<number | null>(
+    getLocalStorage(ERROR_STEPS.FOURTH) ?? null,
+  );
   const [updateOrganization, { isLoading }] = useUpdateOrganizationMutation();
   const [form] = Form.useForm();
   const { data: categoryTu } = useSelector(
@@ -93,7 +115,7 @@ export const OrgEditPage: FC = () => {
     ({ useEditOrgFourthStepSlice }: RootState) => useEditOrgFourthStepSlice,
   );
   const [current, setCurrent] = useState(
-    Number(localStorage.getItem(STEPS_EDIT_DATA.CURRENT)) || 0,
+    Number(localStorage.getItem(STEPS_EDIT_KEYS.CURRENT)) || 0,
   );
 
   // STEPS
@@ -101,18 +123,23 @@ export const OrgEditPage: FC = () => {
     {
       title: i18next.t("personal"),
       description: i18next.t("personal_description"),
+      status:
+        firstErrorStep == STEPS_ENUM.firstStep ? ("error" as const) : undefined,
     },
     {
       title: i18next.t("address"),
       description: i18next.t("address_description"),
+      status: secondErrorStep ? ("error" as const) : undefined,
     },
     {
       title: i18next.t("contacts"),
       description: i18next.t("contacts_description"),
+      status: thirdErrorStep ? ("error" as const) : undefined,
     },
     {
       title: i18next.t("additional"),
       description: i18next.t("additional_description"),
+      status: fourErrorStep ? ("error" as const) : undefined,
     },
   ];
 
@@ -145,10 +172,8 @@ export const OrgEditPage: FC = () => {
       dispatch(setEditWithoutLunch(fourthStepData.withoutLunch));
     }
   };
-  const next = async () => {
-    await form.validateFields();
-    setCurrent(current + 1);
-    localStorage.setItem(STEPS_EDIT_DATA.CURRENT, JSON.stringify(current + 1));
+
+  const STORE_STEPS_DATA = (current: number) => {
     // STORE STEPS DATA
     if (current === STEPS_ENUM.firstStep) {
       const firstStepData = {
@@ -156,17 +181,17 @@ export const OrgEditPage: FC = () => {
         categoryTu,
       };
       localStorage.setItem(
-        STEPS_EDIT_DATA.FIRST,
+        STEPS_EDIT_KEYS.FIRST,
         JSON.stringify(firstStepData),
       );
-      localStorage.setItem(STEPS_EDIT_DATA.EDIT_ID, JSON.stringify(id));
+      localStorage.setItem(STEPS_EDIT_KEYS.EDIT_ID, JSON.stringify(id));
     } else if (current === STEPS_ENUM.secondStep) {
       const secondStepData = {
         ...form.getFieldsValue(STEPS_DATA.SECOND_FORMDATA),
         nearbees: orientirData,
       };
       localStorage.setItem(
-        STEPS_EDIT_DATA.SECOND,
+        STEPS_EDIT_KEYS.SECOND,
         JSON.stringify(secondStepData),
       );
     } else if (current === STEPS_ENUM.thirdStep) {
@@ -175,14 +200,58 @@ export const OrgEditPage: FC = () => {
         phone: phoneData,
       };
       localStorage.setItem(
-        STEPS_EDIT_DATA.THIRD,
+        STEPS_EDIT_KEYS.THIRD,
         JSON.stringify(thirdStepData),
       );
     }
   };
+
+  const handleErrorStep = (isNull: boolean) => {
+    switch (current) {
+      case STEPS_ENUM.firstStep:
+        return (
+          setFirstErrorStep(isNull ? null : current),
+          setLocalStorage(ERROR_STEPS.FIRST, isNull ? null : current)
+        );
+      case STEPS_ENUM.secondStep:
+        return (
+          setSecondErrorStep(isNull ? null : current),
+          setLocalStorage(ERROR_STEPS.SECOND, isNull ? null : current)
+        );
+      case STEPS_ENUM.thirdStep:
+        return (
+          setThirdErrorStep(isNull ? null : current),
+          setLocalStorage(ERROR_STEPS.THIRD, isNull ? null : current)
+        );
+      case STEPS_ENUM.fourthStep:
+        return (
+          setFourErrorStep(isNull ? null : current),
+          setLocalStorage(ERROR_STEPS.FOURTH, isNull ? null : current)
+        );
+    }
+  };
+
+  const handleStepChange = async (step: number, isNext: boolean) => {
+    try {
+      await form.validateFields();
+      handleErrorStep(true);
+    } catch (e) {
+      handleErrorStep(false);
+    } finally {
+      setCurrent(isNext ? step + 1 : step);
+      localStorage.setItem(
+        STEPS_EDIT_KEYS.CURRENT,
+        JSON.stringify(isNext ? step + 1 : step),
+      );
+      STORE_STEPS_DATA(step);
+    }
+  };
+  const next = async () => {
+    handleStepChange(current, true);
+  };
   const prev = () => {
     setCurrent(current - 1);
-    localStorage.setItem(STEPS_EDIT_DATA.CURRENT, JSON.stringify(current - 1));
+    localStorage.setItem(STEPS_EDIT_KEYS.CURRENT, JSON.stringify(current - 1));
   };
 
   const extractPictures = (pictures: unknown[], images: { link: string }[]) => {
@@ -194,76 +263,88 @@ export const OrgEditPage: FC = () => {
   };
 
   const onSubmit = async () => {
-    const formData = new FormData();
+    if (
+      firstErrorStep !== null ||
+      secondErrorStep !== null ||
+      thirdErrorStep !== null ||
+      fourErrorStep !== null
+    ) {
+      return notificationResponse(
+        null,
+        t("you_have_not_filled_the_required_fields"),
+      );
+    } else {
+      const formData = new FormData();
 
-    const body: IOrganizationBody = {
-      ...omitUndefinedValues(form.getFieldsValue(SEND_BODY)),
-      id: id as string,
-      paymentTypes: {
-        cash: form.getFieldValue("cash"),
-        terminal: form.getFieldValue("terminal"),
-        transfer: form.getFieldValue("transfer"),
-        allType: form.getFieldValue("allType"),
-      },
-      workTime: {
-        dayoffs: getDayOffsCheckbox(form),
-        worktimeFrom: form.getFieldValue("worktimeFrom"),
-        worktimeTo: form.getFieldValue("worktimeTo"),
-        workTimeDescription: form.getFieldValue("workTimeDescription"),
-        allDayDescription: form.getFieldValue("allDayDescription"),
-        allDay: form.getFieldValue("allDay"),
-        noDayoffs: form.getFieldValue("noDayoffs"),
-        withoutLunch: form.getFieldValue("withoutLunch"),
-        lunchFrom: form.getFieldValue("lunchFrom"),
-        lunchTo: form.getFieldValue("lunchTo"),
-      },
-      transport: {
-        bus: form.getFieldValue("bus"),
-        microBus: form.getFieldValue("microBus"),
-        metroStation: form.getFieldValue("metroStation"),
-      },
-      productService: { productServices: categoryTu },
-      nearby: {
-        nearbees: orientirData,
-      },
-      phone: {
-        phones: phoneData.map(
-          (item: {
-            phone: string;
-            phoneTypeId: number;
-            id: string;
-            isSecret: boolean;
-          }) => ({
-            key: item.id,
-            phone: item.phone,
-            phoneTypeId: item.phoneTypeId,
-            isSecret: item.isSecret,
-          }),
-        ),
-      },
-      picture: {
-        pictures: extractPictures(pictures, images),
-      },
-    };
-    for (const key in body) {
-      formData.append(key, JSON.stringify(body[key]));
-    }
-
-    images.forEach((image: { link: string; file?: Blob }) => {
-      if (!image.link && image.file) {
-        formData.append("photos", image.file);
+      const body: IOrganizationBody = {
+        ...omitUndefinedValues(form.getFieldsValue(SEND_BODY)),
+        id: id as string,
+        paymentTypes: {
+          cash: form.getFieldValue("cash"),
+          terminal: form.getFieldValue("terminal"),
+          transfer: form.getFieldValue("transfer"),
+          allType: form.getFieldValue("allType"),
+        },
+        workTime: {
+          dayoffs: getDayOffsCheckbox(form),
+          worktimeFrom: form.getFieldValue("worktimeFrom"),
+          worktimeTo: form.getFieldValue("worktimeTo"),
+          workTimeDescription: form.getFieldValue("workTimeDescription"),
+          allDayDescription: form.getFieldValue("allDayDescription"),
+          allDay: form.getFieldValue("allDay"),
+          noDayoffs: form.getFieldValue("noDayoffs"),
+          withoutLunch: form.getFieldValue("withoutLunch"),
+          lunchFrom: form.getFieldValue("lunchFrom"),
+          lunchTo: form.getFieldValue("lunchTo"),
+        },
+        transport: {
+          bus: form.getFieldValue("bus"),
+          microBus: form.getFieldValue("microBus"),
+          metroStation: form.getFieldValue("metroStation"),
+        },
+        productService: { productServices: categoryTu },
+        nearby: {
+          nearbees: orientirData,
+        },
+        phone: {
+          phones: phoneData.map(
+            (item: {
+              phone: string;
+              phoneTypeId: number;
+              id: string;
+              isSecret: boolean;
+            }) => ({
+              key: item.id,
+              phone: item.phone,
+              phoneTypeId: item.phoneTypeId,
+              isSecret: item.isSecret,
+            }),
+          ),
+        },
+        picture: {
+          pictures: extractPictures(pictures, images),
+        },
+      };
+      for (const key in body) {
+        formData.append(key, JSON.stringify(body[key]));
       }
-    });
 
-    const response = await updateOrganization(formData);
+      images.forEach((image: { link: string; file?: Blob }) => {
+        if (!image.link && image.file) {
+          formData.append("photos", image.file);
+        }
+      });
 
-    notificationResponse(response);
+      const response = await updateOrganization(formData);
 
-    response?.data.status === 200 &&
-      (onClearAllData({ fromSubmit: true }),
-      setSessionStorage("fromEdit", true),
-      navigate("/orgs/all"),
-      setEditId(null));
+      notificationResponse(response);
+
+      response?.data.status === 200 &&
+        (onClearAllData({ fromSubmit: true }),
+        setSessionStorage("fromEdit", true),
+        navigate("/orgs/all"),
+        setEditId(null));
+    }
   };
   const onValuesChange = (
     _: {
@@ -303,12 +384,13 @@ export const OrgEditPage: FC = () => {
   };
 
   const onClearAllData = ({ fromSubmit = false }: { fromSubmit?: boolean }) => {
-    removeLocalStorage(STEPS_EDIT_DATA.FIRST);
-    removeLocalStorage(STEPS_EDIT_DATA.SECOND);
-    removeLocalStorage(STEPS_EDIT_DATA.THIRD);
-    removeLocalStorage(STEPS_EDIT_DATA.FOURTH);
-    removeLocalStorage(STEPS_EDIT_DATA.CURRENT);
-    removeLocalStorage(STEPS_EDIT_DATA.EDIT_ID);
+    removeLocalStorage(STEPS_EDIT_KEYS.FIRST);
+    removeLocalStorage(STEPS_EDIT_KEYS.SECOND);
+    removeLocalStorage(STEPS_EDIT_KEYS.THIRD);
+    removeLocalStorage(STEPS_EDIT_KEYS.FOURTH);
+    removeLocalStorage(STEPS_EDIT_KEYS.CURRENT);
+    removeLocalStorage(STEPS_EDIT_KEYS.EDIT_ID);
+    clearErrorSteps({ clearAllWithState: true });
     form.resetFields();
     dispatch(setCategoryData([]));
     dispatch(setOrientirData([]));
@@ -327,36 +409,69 @@ export const OrgEditPage: FC = () => {
     setCurrent(0);
   };
 
-  const onClearCurrentStep = () => {
-    if (current === STEPS_ENUM.firstStep) {
-      form.resetFields(STEPS_DATA.FIRST_FORMDATA);
-      dispatch(setCategoryData([]));
-    } else if (current === STEPS_ENUM.secondStep) {
-      form.resetFields(STEPS_DATA.SECOND_FORMDATA);
-      dispatch(setOrientirData([]));
-    } else if (current === STEPS_ENUM.thirdStep) {
-      form.resetFields(STEPS_DATA.THIRD_FORMDATA);
-      dispatch(setPhoneData([]));
-    } else if (current === STEPS_ENUM.fourthStep) {
-      form.resetFields([
-        ...STEPS_DATA.FOURTH_FORMDATA,
-        "cash",
-        "terminal",
-        "transfer",
-        "monday",
-        "tuesday",
-        "wednesday",
-        "thursday",
-        "friday",
-        "saturday",
-        "sunday",
-      ]);
-      dispatch(setEditAllDay(false));
-      dispatch(setEditAllType(false));
-      dispatch(setEditNoDayoffs(false));
-      dispatch(setEditWithoutLunch(false));
-      dispatch(setImages([]));
+  const clearErrorSteps = ({
+    clearAllWithState = false,
+    currentStep,
+  }: {
+    clearAllWithState?: boolean;
+    currentStep?: number;
+  }) => {
+    if (currentStep === 0) {
+      setFirstErrorStep(null);
+      removeLocalStorage(ERROR_STEPS.FIRST);
+    } else if (currentStep === 1) {
+      setSecondErrorStep(null);
+      removeLocalStorage(ERROR_STEPS.SECOND);
+    } else if (currentStep === 2) {
+      setThirdErrorStep(null);
+      removeLocalStorage(ERROR_STEPS.THIRD);
+    } else if (currentStep === 3) {
+      setFourErrorStep(null);
+      removeLocalStorage(ERROR_STEPS.FOURTH);
     }
+
+    if (clearAllWithState) {
+      setFirstErrorStep(null);
+      setSecondErrorStep(null);
+      setThirdErrorStep(null);
+      setFourErrorStep(null);
+      removeLocalStorage(ERROR_STEPS.FIRST);
+      removeLocalStorage(ERROR_STEPS.SECOND);
+      removeLocalStorage(ERROR_STEPS.THIRD);
+      removeLocalStorage(ERROR_STEPS.FOURTH);
+    } else {
+      removeLocalStorage(ERROR_STEPS.FIRST);
+      removeLocalStorage(ERROR_STEPS.SECOND);
+      removeLocalStorage(ERROR_STEPS.THIRD);
+      removeLocalStorage(ERROR_STEPS.FOURTH);
+    }
+  };
+
+  const onResetInitial = () => {
+    triggerOneOrg(id).then((res) => {
+      if (res.isSuccess) {
+        handleEditLocalDatas(res.data?.data[0]);
+        initializeFormValues();
+        notification.success({
+          placement: "bottomRight",
+          message: t("erased"),
+        });
+      }
+    });
+  };
+
+  const onResetCurrentStep = () => {
+    triggerOneOrg(id).then((res) => {
+      if (res.isSuccess) {
+        handleResetCurrentEditingToInitial(current, res.data?.data[0]);
+        initializeFormValues();
+        notification.success({
+          placement: "bottomRight",
+          message: t("erased"),
+        });
+        clearErrorSteps({ currentStep: current });
+      }
+    });
   };
 
   useEffect(() => {
@@ -367,7 +482,11 @@ export const OrgEditPage: FC = () => {
 
   return (
     <>
-      <Steps current={current} items={items} />
+      <Steps
+        current={current}
+        items={items}
+        onChange={(step) => handleStepChange(step, false)}
+      />
       <Divider />
       <div className="step-content" style={contentStyle}>
         <Form
@@ -394,8 +513,20 @@ export const OrgEditPage: FC = () => {
       </div>
       <Divider />
       <Flex align="center" justify="end" gap={8} style={{ marginTop: 24 }}>
-        <Button disabled={isLoading} onClick={onClearCurrentStep}>
-          {t("erase-current-step")}
+        <Button
+          danger
+          disabled={isLoading}
+          loading={isLoadingOneOrg}
+          onClick={onResetInitial}
+        >
+          {t("reset-to-initial")}
+        </Button>
+        <Button
+          disabled={isLoading}
+          loading={isLoadingOneOrg}
+          onClick={onResetCurrentStep}
+        >
+          {t("reset-current-to-initial")}
         </Button>
         {current > 0 && (
           <Button
