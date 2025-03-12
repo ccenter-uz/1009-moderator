@@ -59,17 +59,35 @@ const recordNames: Record<string, { text: string }> = {
   street: {
     text: "str.",
   },
-  kvartal: {
-    text: "kv-l.",
+  area: {
+    text: "are.",
+  },
+  lane: {
+    text: "pere-k.",
+  },
+  residentialarea: {
+    text: "res-a.",
+  },
+  neighborhood: {
+    text: "neigh.",
+  },
+  impasse: {
+    text: "impas.",
   },
   avenue: {
     text: "ave.",
   },
-  area: {
-    text: "are.",
+  passage: {
+    text: "passa.",
+  },
+  kvartal: {
+    text: "kv-l.",
   },
   home: {
     text: "h.",
+  },
+  apartment: {
+    text: "kv-a.",
   },
 };
 
@@ -79,7 +97,7 @@ export const returnAddressColumnData = (record: AnyObject) => {
   return (
     <p>
       {Object.keys(recordNames).map((name, index) => {
-        if (["kvartal", "home"].includes(name)) {
+        if (["kvartal", "home", "apartment"].includes(name)) {
           return (
             record[name] && (
               <Fragment key={name}>

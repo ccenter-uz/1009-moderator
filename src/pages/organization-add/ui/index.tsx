@@ -208,10 +208,10 @@ export const OrgAddPage: FC = () => {
       thirdErrorStep !== null ||
       fourErrorStep !== null
     ) {
-      return notificationResponse(
-        null,
-        t("you_have_not_filled_the_required_fields"),
-      );
+      return notification.warning({
+        placement: "bottomRight",
+        message: t("you_have_not_filled_the_required_fields"),
+      });
     } else {
       const formData = new FormData();
       const paymentTypes: IPaymentTypes = [
