@@ -4,6 +4,7 @@ const initialState = {
   organization: [],
   unconfirmedOrganization: [],
   myOrganization: [],
+  oneOrganization: [],
 };
 
 export const useManageOrgSlice = createSlice({
@@ -19,6 +20,9 @@ export const useManageOrgSlice = createSlice({
     setMyOrganization(state, action) {
       state.myOrganization = action.payload;
     },
+    setOneOrganization(state, action) {
+      state.oneOrganization = action.payload;
+    },
   },
 });
 
@@ -26,5 +30,6 @@ export const {
   setOrganization,
   setUnconfirmedOrganization,
   setMyOrganization,
+  setOneOrganization,
 } = useManageOrgSlice.actions;
 export default useManageOrgSlice.reducer;

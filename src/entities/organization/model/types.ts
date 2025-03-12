@@ -9,3 +9,12 @@ export type getOrganizationType = {
     totalDocs: number;
   };
 };
+export type getOneOrganizationType = {
+  result: {
+    id: string;
+    name: string;
+    status: number;
+    organizationId?: number;
+    totalDocs: number;
+  };
+};

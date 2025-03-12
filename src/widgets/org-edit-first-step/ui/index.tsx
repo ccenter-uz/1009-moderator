@@ -106,6 +106,11 @@ export const OrgEditFirstStepUI: FC<IProps> = (props) => {
           regionId: Number(regionId),
           ...allActives,
         });
+        triggerDistrict({
+          regionId: Number(regionId),
+          cityId: Number(cityId),
+          ...allActives,
+        });
       }
       if (districtId && regionId && cityId) {
         triggerDistrict({

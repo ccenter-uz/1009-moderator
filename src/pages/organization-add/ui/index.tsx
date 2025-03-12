@@ -299,19 +299,30 @@ export const OrgAddPage: FC = () => {
     }
   };
 
+  const clearErrorSteps = ({ withState }: { withState: boolean }) => {
+    if (withState) {
+      removeLocalStorage(ERROR_STEPS.FIRST);
+      removeLocalStorage(ERROR_STEPS.SECOND);
+      removeLocalStorage(ERROR_STEPS.THIRD);
+      removeLocalStorage(ERROR_STEPS.FOURTH);
+      setFirstErrorStep(null);
+      setSecondErrorStep(null);
+      setThirdErrorStep(null);
+      setFourErrorStep(null);
+    } else {
+      removeLocalStorage(ERROR_STEPS.FIRST);
+      removeLocalStorage(ERROR_STEPS.SECOND);
+      removeLocalStorage(ERROR_STEPS.THIRD);
+      removeLocalStorage(ERROR_STEPS.FOURTH);
+    }
+  };
+
   const onClearAllData = ({ fromSubmit = false }: { fromSubmit?: boolean }) => {
     removeLocalStorage(STEPS_ADD_KEYS.FIRST);
     removeLocalStorage(STEPS_ADD_KEYS.SECOND);
     removeLocalStorage(STEPS_ADD_KEYS.THIRD);
     removeLocalStorage(STEPS_ADD_KEYS.CURRENT);
-    removeLocalStorage(ERROR_STEPS.FIRST);
-    removeLocalStorage(ERROR_STEPS.SECOND);
-    removeLocalStorage(ERROR_STEPS.THIRD);
-    removeLocalStorage(ERROR_STEPS.FOURTH);
-    setFirstErrorStep(null);
-    setSecondErrorStep(null);
-    setThirdErrorStep(null);
-    setFourErrorStep(null);
+    clearErrorSteps({ withState: true });
     form.resetFields();
     dispatch(setCategoryData([]));
     dispatch(setOrientirData([]));
@@ -397,10 +408,7 @@ export const OrgAddPage: FC = () => {
       const currentStep = Number(localStorage.getItem(STEPS_ADD_KEYS.CURRENT));
 
       STORE_STEPS_DATA(currentStep);
-      removeLocalStorage(ERROR_STEPS.FIRST);
-      removeLocalStorage(ERROR_STEPS.SECOND);
-      removeLocalStorage(ERROR_STEPS.THIRD);
-      removeLocalStorage(ERROR_STEPS.FOURTH);
+      clearErrorSteps({ withState: false });
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

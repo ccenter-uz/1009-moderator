@@ -25,13 +25,18 @@ import {
 import { setOrientirData } from "@widgets/org-edit-second-step";
 import { setPhoneData } from "@widgets/org-edit-third-step";
 
-import { useUpdateOrganizationMutation } from "@entities/organization";
+import {
+  useLazyGetOneOrganizationQuery,
+  useUpdateOrganizationMutation,
+} from "@entities/organization";
 
 import {
   ERROR_STEPS,
   getDayOffsCheckbox,
   getEditingStepStorageValues,
   getLocalStorage,
+  handleEditLocalDatas,
+  handleResetCurrentEditingToInitial,
   notificationResponse,
   omitUndefinedValues,
   removeLocalStorage,
@@ -81,6 +86,8 @@ export const OrgEditPage: FC = () => {
   }>();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [triggerOneOrg, { isLoading: isLoadingOneOrg }] =
+    useLazyGetOneOrganizationQuery();
   const [firstErrorStep, setFirstErrorStep] = useState<number | null>(
     getLocalStorage(ERROR_STEPS.FIRST) ?? null,
   );
@@ -383,14 +390,7 @@ export const OrgEditPage: FC = () => {
     removeLocalStorage(STEPS_EDIT_KEYS.FOURTH);
     removeLocalStorage(STEPS_EDIT_KEYS.CURRENT);
     removeLocalStorage(STEPS_EDIT_KEYS.EDIT_ID);
-    removeLocalStorage(ERROR_STEPS.FIRST);
-    removeLocalStorage(ERROR_STEPS.SECOND);
-    removeLocalStorage(ERROR_STEPS.THIRD);
-    removeLocalStorage(ERROR_STEPS.FOURTH);
-    setFirstErrorStep(null);
-    setSecondErrorStep(null);
-    setThirdErrorStep(null);
-    setFourErrorStep(null);
+    clearErrorSteps({ clearAllWithState: true });
     form.resetFields();
     dispatch(setCategoryData([]));
     dispatch(setOrientirData([]));
@@ -409,55 +409,73 @@ export const OrgEditPage: FC = () => {
     setCurrent(0);
   };
 
-  const onClearCurrentStep = () => {
-    if (current === STEPS_ENUM.firstStep) {
-      form.resetFields(STEPS_DATA.FIRST_FORMDATA);
-      dispatch(setCategoryData([]));
-      removeLocalStorage(ERROR_STEPS.FIRST);
+  const clearErrorSteps = ({
+    clearAllWithState = false,
+    currentStep,
+  }: {
+    clearAllWithState?: boolean;
+    currentStep?: number;
+  }) => {
+    if (currentStep === 0) {
       setFirstErrorStep(null);
-    } else if (current === STEPS_ENUM.secondStep) {
-      form.resetFields(STEPS_DATA.SECOND_FORMDATA);
-      dispatch(setOrientirData([]));
-      removeLocalStorage(ERROR_STEPS.SECOND);
+      removeLocalStorage(ERROR_STEPS.FIRST);
+    } else if (currentStep === 1) {
       setSecondErrorStep(null);
-    } else if (current === STEPS_ENUM.thirdStep) {
-      form.resetFields(STEPS_DATA.THIRD_FORMDATA);
-      dispatch(setPhoneData([]));
-      removeLocalStorage(ERROR_STEPS.THIRD);
+      removeLocalStorage(ERROR_STEPS.SECOND);
+    } else if (currentStep === 2) {
       setThirdErrorStep(null);
-    } else if (current === STEPS_ENUM.fourthStep) {
-      form.resetFields([
-        ...STEPS_DATA.FOURTH_FORMDATA,
-        "cash",
-        "terminal",
-        "transfer",
-        "monday",
-        "tuesday",
-        "wednesday",
-        "thursday",
-        "friday",
-        "saturday",
-        "sunday",
-      ]);
-      dispatch(setEditAllDay(false));
-      dispatch(setEditAllType(false));
-      dispatch(setEditNoDayoffs(false));
-      dispatch(setEditWithoutLunch(false));
-      dispatch(setImages([]));
-      removeLocalStorage(ERROR_STEPS.FOURTH);
+      removeLocalStorage(ERROR_STEPS.THIRD);
+    } else if (currentStep === 3) {
       setFourErrorStep(null);
+      removeLocalStorage(ERROR_STEPS.FOURTH);
     }
+
+    if (clearAllWithState) {
+      setFirstErrorStep(null);
+      setSecondErrorStep(null);
+      setThirdErrorStep(null);
+      setFourErrorStep(null);
+      removeLocalStorage(ERROR_STEPS.FIRST);
+      removeLocalStorage(ERROR_STEPS.SECOND);
+      removeLocalStorage(ERROR_STEPS.THIRD);
+      removeLocalStorage(ERROR_STEPS.FOURTH);
+    } else {
+      removeLocalStorage(ERROR_STEPS.FIRST);
+      removeLocalStorage(ERROR_STEPS.SECOND);
+      removeLocalStorage(ERROR_STEPS.THIRD);
+      removeLocalStorage(ERROR_STEPS.FOURTH);
+    }
+  };
+
+  const onResetInitial = () => {
+    triggerOneOrg(id).then((res) => {
+      if (res.isSuccess) {
+        handleEditLocalDatas(res.data?.data[0]);
+        initializeFormValues();
+        notification.success({
+          placement: "bottomRight",
+          message: t("erased"),
+        });
+      }
+    });
+  };
+
+  const onResetCurrentStep = () => {
+    triggerOneOrg(id).then((res) => {
+      if (res.isSuccess) {
+        handleResetCurrentEditingToInitial(current, res.data?.data[0]);
+        initializeFormValues();
+        notification.success({
+          placement: "bottomRight",
+          message: t("erased"),
+        });
+        clearErrorSteps({ currentStep: current });
+      }
+    });
   };
 
   useEffect(() => {
     initializeFormValues();
-
-    return () => {
-      removeLocalStorage(ERROR_STEPS.FIRST);
-      removeLocalStorage(ERROR_STEPS.SECOND);
-      removeLocalStorage(ERROR_STEPS.THIRD);
-      removeLocalStorage(ERROR_STEPS.FOURTH);
-    };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -495,8 +513,20 @@ export const OrgEditPage: FC = () => {
       </div>
       <Divider />
       <Flex align="center" justify="end" gap={8} style={{ marginTop: 24 }}>
-        <Button disabled={isLoading} onClick={onClearCurrentStep}>
-          {t("erase-current-step")}
+        <Button
+          danger
+          disabled={isLoading}
+          loading={isLoadingOneOrg}
+          onClick={onResetInitial}
+        >
+          {t("reset-to-initial")}
+        </Button>
+        <Button
+          disabled={isLoading}
+          loading={isLoadingOneOrg}
+          onClick={onResetCurrentStep}
+        >
+          {t("reset-current-to-initial")}
         </Button>
         {current > 0 && (
           <Button

@@ -1,4 +1,4 @@
-import { FormInstance, notification } from "antd";
+import { FormInstance, notification, NotificationArgsProps } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import DOMPurify from "dompurify";
 import i18next from "i18next";
@@ -115,7 +115,7 @@ export const notificationResponse = (
       placement: "bottomRight",
     });
     onClose && onClose();
-  } else if (res === null && message) {
+  } else if (res === null && message && status) {
     notification.error({
       message: message,
       placement: "bottomRight",
@@ -337,6 +337,7 @@ export const handleEditLocalDatas = (record: AnyObject) => {
 
   // Fourth step
   const paymentName = getDynamicPropKey(record, PAYMENT_TYPES_FILED_NAMES);
+
   const pictureName = getDynamicPropKey(record, PICTURE_FILED_NAMES);
   const fourthEditStep = {
     ...getStepsValueByKey(STEPS_DATA.FOURTH_FORMDATA, record),
@@ -367,6 +368,98 @@ export const handleEditLocalDatas = (record: AnyObject) => {
   setLocalStorage(STEPS_EDIT_KEYS.SECOND, secondEditStep);
   setLocalStorage(STEPS_EDIT_KEYS.THIRD, thirdEditStep);
   setLocalStorage(STEPS_EDIT_KEYS.FOURTH, fourthEditStep);
+};
+
+export const handleResetCurrentEditingToInitial = (
+  step: number,
+  record: AnyObject,
+) => {
+  if (step === 0) {
+    // First step
+    const productName = getDynamicPropKey(record, PRODUCT_FILED_NAMES);
+    const firstEditStep = {
+      ...getStepsValueByKey(STEPS_DATA.FIRST_FORMDATA, record),
+      cityId: record.city?.id,
+      regionId: record.region?.id,
+      districtId: record.district?.id,
+      segmentId: record.segment?.id,
+      categoryId: record.category?.id,
+      categoryTu: record[productName]?.map((item: AnyObject) => ({
+        key: item.id,
+        productServiceCategoryId: item.ProductServiceCategory?.id,
+        productServiceSubCategoryId: item.ProductServiceSubCategory?.id,
+        productServiceCategoryName:
+          item.ProductServiceCategory?.name[i18next.language],
+        productServiceSubCategoryName:
+          item.ProductServiceSubCategory?.name[i18next.language],
+      })),
+    };
+    setLocalStorage(STEPS_EDIT_KEYS.FIRST, firstEditStep);
+  } else if (step === 1) {
+    // Second step
+    const nearbyName = getDynamicPropKey(record, NEARBEES_FILED_NAMES);
+    const secondEditStep = {
+      ...getStepsValueByKey(STEPS_DATA.SECOND_FORMDATA, record),
+      areaId: record.area?.id,
+      avenueId: record.avenue?.id,
+      streetId: record.street?.id,
+      impasseId: record.impasse?.id,
+      villageId: record.village?.id,
+      laneId: record.lane?.id,
+      nearbees: record[nearbyName]?.map((item: AnyObject) => ({
+        key: item.Nearby?.id,
+        nearbyId: item.Nearby?.id,
+        nearbyCategoryId: item?.NearbyCategory?.id,
+        nearbyCategoryName: item?.NearbyCategory?.name,
+        nearbyName: item.Nearby?.name[i18next.language],
+        description: item?.description,
+      })),
+    };
+    setLocalStorage(STEPS_EDIT_KEYS.SECOND, secondEditStep);
+  } else if (step === 2) {
+    // Third step
+    const phoneName = getDynamicPropKey(record, PHONE_FILED_NAMES);
+    const thirdEditStep = {
+      ...getStepsValueByKey(STEPS_DATA.THIRD_FORMDATA, record),
+      phone: record[phoneName]?.map((item: AnyObject) => ({
+        ...item,
+        key: item.id,
+        phone: item.phone,
+        phoneTypeId: item.PhoneTypeId,
+        "phone-type": item.PhoneTypes?.name[i18next.language],
+      })),
+    };
+    setLocalStorage(STEPS_EDIT_KEYS.THIRD, thirdEditStep);
+  } else if (step === 3) {
+    // Fourth step
+    const paymentName = getDynamicPropKey(record, PAYMENT_TYPES_FILED_NAMES);
+    const pictureName = getDynamicPropKey(record, PICTURE_FILED_NAMES);
+    const fourthEditStep = {
+      ...getStepsValueByKey(STEPS_DATA.FOURTH_FORMDATA, record),
+      allType:
+        record[paymentName][0]?.Cash &&
+        record[paymentName][0]?.Terminal &&
+        record[paymentName][0]?.Transfer,
+      cash: record[paymentName][0]?.Cash,
+      terminal: record[paymentName][0]?.Terminal,
+      transfer: record[paymentName][0]?.Transfer,
+      worktimeFrom: record.workTime?.worktimeFrom,
+      worktimeTo: record.workTime?.worktimeTo,
+      workTimeDescription: record.workTime?.workTimeDescription,
+      allDayDescription: record.workTime?.allDayDescription,
+      lunchFrom: record.workTime?.lunchFrom,
+      lunchTo: record.workTime?.lunchTo,
+      dayoffs: record.workTime?.dayoffs,
+      allDay: record.workTime?.allDay,
+      noDayoffs: record.workTime?.noDayoffs,
+      withoutLunch: record.workTime?.withoutLunch,
+      bus: record.transport?.bus,
+      microBus: record.transport?.microBus,
+      metroStation: record.transport?.metroStation,
+      images: record[pictureName],
+    };
+    setLocalStorage(STEPS_EDIT_KEYS.FOURTH, fourthEditStep);
+  }
 };
 
 // DRAGGABLE-ELEMENT-FUNCTION
