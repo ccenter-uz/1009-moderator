@@ -12,7 +12,7 @@ import {
 import { AnyObject } from "antd/es/_util/type";
 import { DefaultOptionType } from "antd/es/select";
 import i18next, { t } from "i18next";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { FaTrashAlt } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 
@@ -104,6 +104,11 @@ export const TableOrientirUI: FC<Props> = (props) => {
     setSelectedNearby([]);
     setSelectedNearbyCategory([]);
     setDescription("");
+    triggerNearby({
+      regionId: getLocalStorage(localGetDataName)?.regionId,
+      cityId: getLocalStorage(localGetDataName)?.cityId,
+      ...allActives,
+    });
   };
 
   const onSelectNearbyCategory: SelectProps["onSelect"] = (value, option) => {
@@ -124,7 +129,22 @@ export const TableOrientirUI: FC<Props> = (props) => {
     option: DefaultOptionType,
   ) => {
     setSelectedNearby([{ nearbyId: value, nearbyName: option.label }]);
+    setSelectedNearbyCategory([
+      {
+        nearbyCategoryId: option?.categoryValue,
+        nearbyCategoryName: option.categoryLabel,
+      },
+    ]);
   };
+
+  useEffect(() => {
+    triggerNearby({
+      regionId: getLocalStorage(localGetDataName)?.regionId,
+      cityId: getLocalStorage(localGetDataName)?.cityId,
+      ...allActives,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Flex vertical gap={16}>
@@ -141,10 +161,19 @@ export const TableOrientirUI: FC<Props> = (props) => {
               value={selectedNearbyCategory[0]?.nearbyCategoryId}
               onSelect={onSelectNearbyCategory}
               allowClear
-              onClear={() => setSelectedNearbyCategory([])}
+              onClear={() => {
+                setSelectedNearbyCategory([]);
+                setSelectedNearby([]);
+                triggerNearby({
+                  regionId: getLocalStorage(localGetDataName)?.regionId,
+                  cityId: getLocalStorage(localGetDataName)?.cityId,
+                  ...allActives,
+                });
+              }}
               disabled={isLoadingNearbyCategory}
               options={
                 nearbyCategoryOptions?.data.map((item: AnyObject) => ({
+                  key: item.id,
                   value: item.id,
                   label: item.name,
                 })) || []
@@ -166,6 +195,9 @@ export const TableOrientirUI: FC<Props> = (props) => {
               onClear={() => setSelectedNearby([])}
               options={
                 nearbyOptions?.data.map((item: AnyObject) => ({
+                  key: item.id,
+                  categoryValue: item?.category?.id,
+                  categoryLabel: item?.category?.name,
                   value: item.id,
                   label: item.name[i18next.language],
                 })) || []

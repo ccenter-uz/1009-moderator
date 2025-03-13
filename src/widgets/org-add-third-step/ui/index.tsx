@@ -15,7 +15,7 @@ import TextArea from "antd/es/input/TextArea";
 import { DefaultOptionType } from "antd/es/select";
 import i18next, { t } from "i18next";
 import { FC, ReactNode, useState } from "react";
-import { FaTrashAlt } from "react-icons/fa";
+import { FaPen, FaTrashAlt } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useGetPhoneTypeQuery } from "@entities/phone";
@@ -43,6 +43,7 @@ export const OrgAddThirdStepUI: FC = () => {
   >([]);
 
   const [phone, setPhone] = useState<string>("");
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
   const columns = [
     {
@@ -74,19 +75,27 @@ export const OrgAddThirdStepUI: FC = () => {
       dataIndex: "action",
       key: "action",
       render: (_: string, record: { phone: string }) => (
-        <Popconfirm
-          title={t("delete")}
-          onConfirm={() => onDelete(record?.phone)}
-          okText="Да"
-          cancelText="Нет"
-        >
-          <FaTrashAlt
-            color="crimson"
-            fontSize={16}
+        <Flex align="center" gap={8}>
+          <FaPen
             cursor={"pointer"}
-            title={t("delete")}
+            color="grey"
+            title={t("edit")}
+            onClick={() => handleEditItem(record)}
           />
-        </Popconfirm>
+          <Popconfirm
+            title={t("delete")}
+            onConfirm={() => onDelete(record?.phone)}
+            okText="Да"
+            cancelText="Нет"
+          >
+            <FaTrashAlt
+              color="crimson"
+              fontSize={16}
+              cursor={"pointer"}
+              title={t("delete")}
+            />
+          </Popconfirm>
+        </Flex>
       ),
     },
   ];
@@ -122,17 +131,40 @@ export const OrgAddThirdStepUI: FC = () => {
         ...selectedPhoneType[0],
         phone,
         isSecret: false,
+        key: Date.now(),
       },
     ];
     dispatch(setData(newData));
     setSelectedPhoneType([]);
     setPhone("");
+    setIsEditing(false);
   };
 
   const onSelectType = (value: string, option: DefaultOptionType) => {
     setSelectedPhoneType([
       { phoneTypeId: value, "phone-type": option.label as string },
     ]);
+  };
+
+  const handleEditItem = (record: {
+    phone: string;
+    phoneTypeId?: number;
+    "phone-type"?: string;
+  }) => {
+    if (record.phoneTypeId && record["phone-type"]) {
+      setIsEditing(true);
+      const newData = data.filter(
+        (item: { phone: string }) => item.phone !== record.phone,
+      );
+      dispatch(setData(newData));
+      setPhone(record.phone);
+      setSelectedPhoneType([
+        {
+          phoneTypeId: record.phoneTypeId,
+          "phone-type": record["phone-type"],
+        },
+      ]);
+    }
   };
 
   return (
@@ -218,7 +250,7 @@ export const OrgAddThirdStepUI: FC = () => {
             type="primary"
             onClick={addSubCategory}
           >
-            {t("add")}
+            {isEditing ? t("edit") : t("add")}
           </Button>
         </Col>
       </Row>
