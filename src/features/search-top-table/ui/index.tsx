@@ -29,7 +29,7 @@ import {
   STEPS_ENUM,
 } from "@shared/lib/helpers";
 import { useDisclosure, usePaginate } from "@shared/lib/hooks";
-import { Can } from "@shared/ui";
+import { Can, EditingHistoryDrawer } from "@shared/ui";
 
 import { TAttr, TPhone, TSelectedData } from "../model/types";
 
@@ -277,7 +277,10 @@ export const SearchTopTable: FC<Props> = (props) => {
             <Flex justify="center" align="center" gap={8}>
               <Can i="update">
                 <FaPencilAlt
-                  onClick={() => checkExistId(record)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    checkExistId(record);
+                  }}
                   color="grey"
                   fontSize={16}
                   cursor={"pointer"}
@@ -285,8 +288,11 @@ export const SearchTopTable: FC<Props> = (props) => {
                 />
               </Can>
               <Can i="delete">
-                <DeleteTableItemUI fetch={() => handleDelete(record.id)} />
+                <div onClick={(e) => e.stopPropagation()}>
+                  <DeleteTableItemUI fetch={() => handleDelete(record.id)} />
+                </div>
               </Can>
+              <EditingHistoryDrawer record={record} />
             </Flex>
           );
         } else if (record.status === -1) {
@@ -335,7 +341,8 @@ export const SearchTopTable: FC<Props> = (props) => {
           bordered
           onRow={(row: { id: number | string }) => ({
             onClick: () => {
-              setSelectedRowKeys(Number(row.id)), setAttrData([row as TAttr]);
+              setSelectedRowKeys(Number(row.id)),
+                setAttrData([{ key: row.id, ...row } as TAttr]);
             },
           })}
           rowClassName={(row) =>
