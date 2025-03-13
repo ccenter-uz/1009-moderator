@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { FaTrashAlt } from "react-icons/fa";
 
 type Props = {
-  fetch: () => void;
+  fetch: (e?: React.MouseEvent) => void;
 };
 
 export const DeleteTableItemUI: FC<Props> = (props) => {
