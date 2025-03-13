@@ -8,6 +8,9 @@ import { notification } from "antd";
 import i18next from "i18next";
 
 import {
+  clearCookie,
+  clearLocalStorage,
+  clearSessionStorage,
   deleteCookie,
   getLocalStorage,
   removeLocalStorage,
@@ -46,33 +49,22 @@ const baseQuery = async (
   const errorData: IRowResultData =
     rawResult.error?.data || rawResult.data || {};
 
-  if (errorData.status !== 401 && errorData.status !== 403) {
-    if (errorData.error) {
-      notification.error({
-        message: `${
-          errorData.status
-        }: ${errorData.error.message.toUpperCase()}`,
-        placement: "bottomRight",
-      });
-    }
-  }
-
-  // Check for 401 and 403 Unauthorized error
   if (
     [RESPONSE_STATUS.UNAUTHENTICATED, RESPONSE_STATUS.UNAUTHORIZED].includes(
       errorData.status as number,
     )
   ) {
-    // Redirect to the login page
-    deleteCookie("access_token");
-    removeLocalStorage("access_token");
     if (window.location.pathname !== "/login") {
+      clearLocalStorage();
+      clearSessionStorage();
+      clearCookie();
+      notification.error({
+        message: errorData.error?.message || i18next.t("unauthorized"),
+        placement: "bottomRight",
+      });
+
       window.location.href = "/login";
     }
-    notification.error({
-      message: i18next.t("unauthorized"),
-      placement: "bottomRight",
-    });
   }
 
   return rawResult;

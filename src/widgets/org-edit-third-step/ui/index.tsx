@@ -177,13 +177,15 @@ export const OrgEditThirdStepUI: FC = () => {
         {t("phone")}
       </Typography.Title>
       <Row gutter={16} align={"middle"}>
-        <Col span={11}>
+        <Col span={8}>
           <Flex align="center" gap={8}>
             <label htmlFor="phone-type">{t("phone-type")}</label>
             <SearchableSelect
               loading={phoneTypesLoading}
               id="phone-type"
               value={selectedPhoneType[0]?.phoneTypeId}
+              allowClear
+              onClear={() => setSelectedPhoneType([])}
               onSelect={onSelectType}
               options={phoneTypesData?.data?.map(
                 (item: Record<string, string | number>) => ({
@@ -197,7 +199,7 @@ export const OrgEditThirdStepUI: FC = () => {
             />
           </Flex>
         </Col>
-        <Col span={11}>
+        <Col span={8}>
           <Flex align="center" gap={8}>
             <label htmlFor="phone">{t("phone")}</label>
             <Input
@@ -210,7 +212,7 @@ export const OrgEditThirdStepUI: FC = () => {
             />
           </Flex>
         </Col>
-        <Col span={2}>
+        <Col span={8}>
           <Button
             disabled={phone?.length < 3}
             type="primary"

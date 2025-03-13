@@ -11,6 +11,10 @@ type searchColType = ColumnsType<AnyObject> | undefined;
 
 export type statusType = 0 | 1 | 2 | -1;
 
+function existanceOfDate(text: string) {
+  return text ? dayjs(text).format("DD.MM.YYYY HH:mm:ss") : "-";
+}
+
 export const columnsForMyOrganizations = [
   {
     title: i18next.t("code"),
@@ -107,13 +111,13 @@ export const columnsForAddress = [
     title: i18next.t("createdAt"),
     dataIndex: "created_at",
     key: "created_at",
-    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+    render: (text: string) => existanceOfDate(text),
   },
   {
     title: i18next.t("update_date"),
     dataIndex: "updated_at",
     key: "updated_at",
-    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+    render: (text: string) => existanceOfDate(text),
   },
   {
     title: i18next.t("employee"),
@@ -133,19 +137,19 @@ export const columnsForForBasicTable = [
     title: i18next.t("createdAt"),
     dataIndex: "created_at",
     key: "created_at",
-    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+    render: (text: string) => existanceOfDate(text),
   },
   {
     title: i18next.t("update_date"),
     dataIndex: "updated_at",
     key: "updated_at",
-    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+    render: (text: string) => existanceOfDate(text),
   },
   {
     title: i18next.t("deletedAt"),
     dataIndex: "deleted_at",
     key: "deleted_at",
-    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+    render: (text: string) => existanceOfDate(text),
   },
   {
     title: i18next.t("status"),
@@ -163,21 +167,21 @@ export const columnsWithSingleName = [
   },
   {
     title: i18next.t("createdAt"),
-    dataIndex: "created_at",
-    key: "created_at",
-    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+    dataIndex: "createdAt",
+    key: "createdAt",
+    render: (text: string) => existanceOfDate(text),
   },
   {
     title: i18next.t("update_date"),
-    dataIndex: "updated_at",
-    key: "updated_at",
-    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+    dataIndex: "updatedAt",
+    key: "updatedAt",
+    render: (text: string) => existanceOfDate(text),
   },
   {
     title: i18next.t("deletedAt"),
-    dataIndex: "deleted_at",
-    key: "deleted_at",
-    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+    dataIndex: "deletedAt",
+    key: "deletedAt",
+    render: (text: string) => existanceOfDate(text),
   },
   {
     title: i18next.t("status"),
@@ -197,19 +201,19 @@ export const columnsForPhoneTypeTable = [
     title: i18next.t("createdAt"),
     dataIndex: "created_at",
     key: "created_at",
-    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+    render: (text: string) => existanceOfDate(text),
   },
   {
     title: i18next.t("update_date"),
     dataIndex: "updated_at",
     key: "updated_at",
-    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+    render: (text: string) => existanceOfDate(text),
   },
   {
     title: i18next.t("deletedAt"),
     dataIndex: "deleted_at",
     key: "deleted_at",
-    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+    render: (text: string) => existanceOfDate(text),
   },
   {
     title: i18next.t("status"),
@@ -261,13 +265,13 @@ export const columnsWithRegions = [
     title: i18next.t("createdAt"),
     dataIndex: "created_at",
     key: "created_at",
-    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+    render: (text: string) => existanceOfDate(text),
   },
   {
     title: i18next.t("update_date"),
     dataIndex: "updated_at",
     key: "updated_at",
-    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+    render: (text: string) => existanceOfDate(text),
   },
   {
     title: i18next.t("employee"),
@@ -322,13 +326,13 @@ export const columnsWithAddressAndNamings = [
     title: i18next.t("createdAt"),
     dataIndex: "created_at",
     key: "created_at",
-    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+    render: (text: string) => existanceOfDate(text),
   },
   {
     title: i18next.t("update_date"),
     dataIndex: "updated_at",
     key: "updated_at",
-    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+    render: (text: string) => existanceOfDate(text),
   },
   {
     title: i18next.t("employee"),
@@ -368,13 +372,13 @@ export const columnsForCategories = [
     title: i18next.t("createdAt"),
     dataIndex: "created_at",
     key: "created_at",
-    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+    render: (text: string) => existanceOfDate(text),
   },
   {
     title: i18next.t("update_date"),
     dataIndex: "updated_at",
     key: "updated_at",
-    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+    render: (text: string) => existanceOfDate(text),
   },
   {
     title: i18next.t("employee"),
@@ -399,13 +403,13 @@ export const columnsForSubcategories = [
     title: i18next.t("createdAt"),
     dataIndex: "created_at",
     key: "created_at",
-    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+    render: (text: string) => existanceOfDate(text),
   },
   {
     title: i18next.t("update_date"),
     dataIndex: "updated_at",
     key: "updated_at",
-    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+    render: (text: string) => existanceOfDate(text),
   },
   {
     title: i18next.t("employee"),
@@ -430,13 +434,13 @@ export const columnsForCategoriesTu = [
     title: i18next.t("createdAt"),
     dataIndex: "created_at",
     key: "created_at",
-    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+    render: (text: string) => existanceOfDate(text),
   },
   {
     title: i18next.t("update_date"),
     dataIndex: "updated_at",
     key: "updated_at",
-    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+    render: (text: string) => existanceOfDate(text),
   },
   {
     title: i18next.t("employee"),
@@ -600,19 +604,19 @@ export const usersTableColumns = [
     title: i18next.t("createdAt"),
     dataIndex: "created_at",
     key: "created_at",
-    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+    render: (text: string) => existanceOfDate(text),
   },
   {
     title: i18next.t("updatedAt"),
     dataIndex: "updated_at",
     key: "updated_at",
-    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+    render: (text: string) => existanceOfDate(text),
   },
   {
     title: i18next.t("deletedAt"),
     dataIndex: "deleted_at",
     key: "deleted_at",
-    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+    render: (text: string) => existanceOfDate(text),
   },
 ];
 
@@ -633,19 +637,19 @@ export const rolesTableColumns = [
     title: i18next.t("createdAt"),
     dataIndex: "created_at",
     key: "created_at",
-    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+    render: (text: string) => existanceOfDate(text),
   },
   {
     title: i18next.t("updatedAt"),
     dataIndex: "updated_at",
     key: "updated_at",
-    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+    render: (text: string) => existanceOfDate(text),
   },
   {
     title: i18next.t("deletedAt"),
     dataIndex: "deleted_at",
     key: "deleted_at",
-    render: (text: string) => dayjs(text).format("DD.MM.YYYY HH:mm:ss"),
+    render: (text: string) => existanceOfDate(text),
   },
 ];
 

@@ -19,11 +19,15 @@ import { setPhoneData } from "@widgets/org-add-third-step";
 import { useCreateOrganizationMutation } from "@entities/organization";
 
 import {
+  ERROR_STEPS,
   getDayOffsCheckbox,
+  getLocalStorage,
   notificationResponse,
   omitUndefinedValues,
   removeLocalStorage,
   SEND_BODY,
+  setLocalStorage,
+  STEPS_ADD_KEYS,
   STEPS_DATA,
   STEPS_ENUM,
 } from "@shared/lib/helpers";
@@ -67,6 +71,18 @@ export const OrgAddPage: FC = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [firstErrorStep, setFirstErrorStep] = useState<number | null>(
+    getLocalStorage(ERROR_STEPS.FIRST) ?? null,
+  );
+  const [secondErrorStep, setSecondErrorStep] = useState<number | null>(
+    getLocalStorage(ERROR_STEPS.SECOND) ?? null,
+  );
+  const [thirdErrorStep, setThirdErrorStep] = useState<number | null>(
+    getLocalStorage(ERROR_STEPS.THIRD) ?? null,
+  );
+  const [fourErrorStep, setFourErrorStep] = useState<number | null>(
+    getLocalStorage(ERROR_STEPS.FOURTH) ?? null,
+  );
   const [createOrganization, { isLoading }] = useCreateOrganizationMutation();
   const [form] = Form.useForm();
   const { data: categoryTu } = useSelector(
@@ -82,7 +98,7 @@ export const OrgAddPage: FC = () => {
     ({ useAddOrgFourthStepSlice }: RootState) => useAddOrgFourthStepSlice,
   );
   const [current, setCurrent] = useState(
-    Number(localStorage.getItem("currentStep")) || 0,
+    Number(localStorage.getItem(STEPS_ADD_KEYS.CURRENT)) || 0,
   );
 
   // STEPS
@@ -90,18 +106,23 @@ export const OrgAddPage: FC = () => {
     {
       title: i18next.t("personal"),
       description: i18next.t("personal_description"),
+      status:
+        firstErrorStep == STEPS_ENUM.firstStep ? ("error" as const) : undefined,
     },
     {
       title: i18next.t("address"),
       description: i18next.t("address_description"),
+      status: secondErrorStep ? ("error" as const) : undefined,
     },
     {
       title: i18next.t("contacts"),
       description: i18next.t("contacts_description"),
+      status: thirdErrorStep ? ("error" as const) : undefined,
     },
     {
       title: i18next.t("additional"),
       description: i18next.t("additional_description"),
+      status: fourErrorStep ? ("error" as const) : undefined,
     },
   ];
 
@@ -111,86 +132,134 @@ export const OrgAddPage: FC = () => {
         ...form.getFieldsValue(STEPS_DATA.FIRST_FORMDATA),
         categoryTu: categoryTu,
       };
-      localStorage.setItem("firstStepData", JSON.stringify(firstStepData));
+      localStorage.setItem(STEPS_ADD_KEYS.FIRST, JSON.stringify(firstStepData));
     } else if (current === STEPS_ENUM.secondStep) {
       const secondStepData = {
         ...form.getFieldsValue(STEPS_DATA.SECOND_FORMDATA),
         nearbees: orientirData,
       };
-      localStorage.setItem("secondStepData", JSON.stringify(secondStepData));
+      localStorage.setItem(
+        STEPS_ADD_KEYS.SECOND,
+        JSON.stringify(secondStepData),
+      );
     } else if (current === STEPS_ENUM.thirdStep) {
       const thirdStepData = {
         ...form.getFieldsValue(STEPS_DATA.THIRD_FORMDATA),
         phone: phoneData,
       };
-      localStorage.setItem("thirdStepData", JSON.stringify(thirdStepData));
+      localStorage.setItem(STEPS_ADD_KEYS.THIRD, JSON.stringify(thirdStepData));
+    }
+  };
+
+  const handleErrorStep = (isNull: boolean) => {
+    switch (current) {
+      case STEPS_ENUM.firstStep:
+        return (
+          setFirstErrorStep(isNull ? null : current),
+          setLocalStorage(ERROR_STEPS.FIRST, isNull ? null : current)
+        );
+      case STEPS_ENUM.secondStep:
+        return (
+          setSecondErrorStep(isNull ? null : current),
+          setLocalStorage(ERROR_STEPS.SECOND, isNull ? null : current)
+        );
+      case STEPS_ENUM.thirdStep:
+        return (
+          setThirdErrorStep(isNull ? null : current),
+          setLocalStorage(ERROR_STEPS.THIRD, isNull ? null : current)
+        );
+      case STEPS_ENUM.fourthStep:
+        return (
+          setFourErrorStep(isNull ? null : current),
+          setLocalStorage(ERROR_STEPS.FOURTH, isNull ? null : current)
+        );
+    }
+  };
+
+  const handleStepChange = async (step: number, isNext: boolean) => {
+    try {
+      await form.validateFields();
+      handleErrorStep(true);
+    } catch (e) {
+      handleErrorStep(false);
+    } finally {
+      setCurrent(isNext ? step + 1 : step);
+      localStorage.setItem(
+        STEPS_ADD_KEYS.CURRENT,
+        JSON.stringify(isNext ? step + 1 : step),
+      );
+      STORE_STEPS_DATA(step);
     }
   };
 
   const next = async () => {
-    await form.validateFields();
-    setCurrent(current + 1);
-    localStorage.setItem("currentStep", JSON.stringify(current + 1));
-    STORE_STEPS_DATA(current);
+    handleStepChange(current, true);
   };
 
   const prev = () => {
     setCurrent(current - 1);
-    localStorage.setItem("currentStep", JSON.stringify(current - 1));
+    localStorage.setItem(STEPS_ADD_KEYS.CURRENT, JSON.stringify(current - 1));
   };
 
   const onSubmit = async () => {
-    const formData = new FormData();
-
-    const paymentTypes: IPaymentTypes = [
-      "cash",
-      "terminal",
-      "transfer",
-      "allType",
-    ].reduce((acc, key) => {
-      acc[key as keyof typeof acc] = form.getFieldValue(key) ?? false;
-      return acc;
-    }, {} as IPaymentTypes);
-
-    const body: IOrganizationBody = {
-      ...omitUndefinedValues(form.getFieldsValue(SEND_BODY)),
-      paymentTypes,
-      workTime: {
-        dayoffs: getDayOffsCheckbox(form),
-        worktimeFrom: form.getFieldValue("worktimeFrom"),
-        worktimeTo: form.getFieldValue("worktimeTo"),
-        workTimeDescription: form.getFieldValue("workTimeDescription"),
-        allDayDescription: form.getFieldValue("allDayDescription"),
-        allDay: form.getFieldValue("allDay"),
-        noDayoffs: form.getFieldValue("noDayoffs"),
-        withoutLunch: form.getFieldValue("withoutLunch"),
-        lunchFrom: form.getFieldValue("lunchFrom"),
-        lunchTo: form.getFieldValue("lunchTo"),
-      },
-      transport: {
-        bus: form.getFieldValue("bus"),
-        microBus: form.getFieldValue("microBus"),
-        metroStation: form.getFieldValue("metroStation"),
-      },
-      productService: { productServices: categoryTu },
-      nearby: {
-        nearbees: orientirData,
-      },
-      phone: { phones: phoneData },
-    };
-    for (const key in body) {
-      formData.append(key, JSON.stringify(body[key]));
+    if (
+      firstErrorStep !== null ||
+      secondErrorStep !== null ||
+      thirdErrorStep !== null ||
+      fourErrorStep !== null
+    ) {
+      return notification.warning({
+        placement: "bottomRight",
+        message: t("you_have_not_filled_the_required_fields"),
+      });
+    } else {
+      const formData = new FormData();
+      const paymentTypes: IPaymentTypes = [
+        "cash",
+        "terminal",
+        "transfer",
+        "allType",
+      ].reduce((acc, key) => {
+        acc[key as keyof typeof acc] = form.getFieldValue(key) ?? false;
+        return acc;
+      }, {} as IPaymentTypes);
+      const body: IOrganizationBody = {
+        ...omitUndefinedValues(form.getFieldsValue(SEND_BODY)),
+        paymentTypes,
+        workTime: {
+          dayoffs: getDayOffsCheckbox(form),
+          worktimeFrom: form.getFieldValue("worktimeFrom"),
+          worktimeTo: form.getFieldValue("worktimeTo"),
+          workTimeDescription: form.getFieldValue("workTimeDescription"),
+          allDayDescription: form.getFieldValue("allDayDescription"),
+          allDay: form.getFieldValue("allDay"),
+          noDayoffs: form.getFieldValue("noDayoffs"),
+          withoutLunch: form.getFieldValue("withoutLunch"),
+          lunchFrom: form.getFieldValue("lunchFrom"),
+          lunchTo: form.getFieldValue("lunchTo"),
+        },
+        transport: {
+          bus: form.getFieldValue("bus"),
+          microBus: form.getFieldValue("microBus"),
+          metroStation: form.getFieldValue("metroStation"),
+        },
+        productService: { productServices: categoryTu },
+        nearby: {
+          nearbees: orientirData,
+        },
+        phone: { phones: phoneData },
+      };
+      for (const key in body) {
+        formData.append(key, JSON.stringify(body[key]));
+      }
+      for (let i = 0; i < images.length; i++) {
+        formData.append("photos", images[i]);
+      }
+      const response = await createOrganization(formData);
+      notificationResponse(response);
+      response?.data.status === 201 &&
+        (onClearAllData({ fromSubmit: true }), navigate("/orgs/all"));
     }
-    for (let i = 0; i < images.length; i++) {
-      formData.append("photos", images[i]);
-    }
-
-    const response = await createOrganization(formData);
-
-    notificationResponse(response);
-
-    response?.data.status === 201 &&
-      (onClearAllData({ fromSubmit: true }), navigate("/orgs/all"));
   };
 
   const onValuesChange = (
@@ -230,11 +299,30 @@ export const OrgAddPage: FC = () => {
     }
   };
 
+  const clearErrorSteps = ({ withState }: { withState: boolean }) => {
+    if (withState) {
+      removeLocalStorage(ERROR_STEPS.FIRST);
+      removeLocalStorage(ERROR_STEPS.SECOND);
+      removeLocalStorage(ERROR_STEPS.THIRD);
+      removeLocalStorage(ERROR_STEPS.FOURTH);
+      setFirstErrorStep(null);
+      setSecondErrorStep(null);
+      setThirdErrorStep(null);
+      setFourErrorStep(null);
+    } else {
+      removeLocalStorage(ERROR_STEPS.FIRST);
+      removeLocalStorage(ERROR_STEPS.SECOND);
+      removeLocalStorage(ERROR_STEPS.THIRD);
+      removeLocalStorage(ERROR_STEPS.FOURTH);
+    }
+  };
+
   const onClearAllData = ({ fromSubmit = false }: { fromSubmit?: boolean }) => {
-    removeLocalStorage("firstStepData");
-    removeLocalStorage("secondStepData");
-    removeLocalStorage("thirdStepData");
-    removeLocalStorage("currentStep");
+    removeLocalStorage(STEPS_ADD_KEYS.FIRST);
+    removeLocalStorage(STEPS_ADD_KEYS.SECOND);
+    removeLocalStorage(STEPS_ADD_KEYS.THIRD);
+    removeLocalStorage(STEPS_ADD_KEYS.CURRENT);
+    clearErrorSteps({ withState: true });
     form.resetFields();
     dispatch(setCategoryData([]));
     dispatch(setOrientirData([]));
@@ -257,12 +345,18 @@ export const OrgAddPage: FC = () => {
     if (current === STEPS_ENUM.firstStep) {
       form.resetFields(STEPS_DATA.FIRST_FORMDATA);
       dispatch(setCategoryData([]));
+      removeLocalStorage(ERROR_STEPS.FIRST);
+      setFirstErrorStep(null);
     } else if (current === STEPS_ENUM.secondStep) {
       form.resetFields(STEPS_DATA.SECOND_FORMDATA);
       dispatch(setOrientirData([]));
+      removeLocalStorage(ERROR_STEPS.SECOND);
+      setSecondErrorStep(null);
     } else if (current === STEPS_ENUM.thirdStep) {
       form.resetFields(STEPS_DATA.THIRD_FORMDATA);
       dispatch(setPhoneData([]));
+      removeLocalStorage(ERROR_STEPS.THIRD);
+      setThirdErrorStep(null);
     } else if (current === STEPS_ENUM.fourthStep) {
       form.resetFields([
         ...STEPS_DATA.FOURTH_FORMDATA,
@@ -282,14 +376,16 @@ export const OrgAddPage: FC = () => {
       dispatch(setNoDayoffs(false));
       dispatch(setWithoutLunch(false));
       dispatch(setImages([]));
+      removeLocalStorage(ERROR_STEPS.FOURTH);
+      setFourErrorStep(null);
     }
   };
 
   useEffect(() => {
     // SET-STORED-DATA-FROM-LOCAL-STORAGE
-    const firstStepData = localStorage.getItem("firstStepData");
-    const secondStepData = localStorage.getItem("secondStepData");
-    const thirdStepData = localStorage.getItem("thirdStepData");
+    const firstStepData = localStorage.getItem(STEPS_ADD_KEYS.FIRST);
+    const secondStepData = localStorage.getItem(STEPS_ADD_KEYS.SECOND);
+    const thirdStepData = localStorage.getItem(STEPS_ADD_KEYS.THIRD);
     if (firstStepData) {
       form.setFieldsValue(JSON.parse(firstStepData)),
         dispatch(setCategoryData(JSON.parse(firstStepData)?.categoryTu));
@@ -309,16 +405,21 @@ export const OrgAddPage: FC = () => {
   // SAVE-VALUES-UNMOUNT
   useEffect(() => {
     return () => {
-      const currentStep = Number(localStorage.getItem("currentStep"));
+      const currentStep = Number(localStorage.getItem(STEPS_ADD_KEYS.CURRENT));
 
       STORE_STEPS_DATA(currentStep);
+      clearErrorSteps({ withState: false });
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <>
-      <Steps current={current} items={items} />
+      <Steps
+        current={current}
+        items={items}
+        onChange={(step) => handleStepChange(step, false)}
+      />
       <Divider />
       <div className="step-content" style={contentStyle}>
         <Form

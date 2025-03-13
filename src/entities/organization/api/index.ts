@@ -3,10 +3,11 @@ import { API_MAP, API_METHODS } from "@shared/lib/helpers";
 
 import {
   setMyOrganization,
+  setOneOrganization,
   setOrganization,
   setUnconfirmedOrganization,
 } from "../model/Slicer";
-import { getOrganizationType } from "../model/types";
+import { getOneOrganizationType, getOrganizationType } from "../model/types";
 
 export const organizationApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
@@ -33,6 +34,38 @@ export const organizationApi = baseApi.injectEndpoints({
         dispatch(
           setOrganization(
             data?.data?.map((item: { id: string }) => ({
+              ...item,
+              key: item.id,
+            })),
+          ),
+        );
+      },
+    }),
+
+    // GET-ONE-ORGANIZATION
+    getOneOrganization: build.query({
+      query: (id) => ({
+        url: `${API_MAP.ORGANIZATION_ONE}/${id}`,
+        method: API_METHODS.GET,
+      }),
+      transformResponse: (response: getOneOrganizationType) => {
+        const data = [response?.result];
+        return {
+          data: data.map((item) => ({
+            ...item,
+            id: Number(item.id),
+            organizationId: Number(item.organizationId),
+            key: item.id,
+          })),
+          total: response?.result?.totalDocs,
+        };
+      },
+      async onQueryStarted(args, { dispatch, queryFulfilled }) {
+        const { data } = await queryFulfilled;
+
+        dispatch(
+          setOneOrganization(
+            data?.data?.map((item: { id: number }) => ({
               ...item,
               key: item.id,
             })),
@@ -156,6 +189,7 @@ export const {
   useGetUnconfirmedOrganizationsQuery,
   useGetOrganizationsQuery,
   useLazyGetOrganizationsQuery,
+  useLazyGetOneOrganizationQuery,
   useGetMyOrganizationsQuery,
   useCreateOrganizationMutation,
   useUpdateOrganizationMutation,

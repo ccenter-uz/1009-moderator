@@ -106,6 +106,7 @@ export const API_MAP = {
   DELETE_PHONE: "phone-type",
   RESTORE_PHONE: "phone-type",
   ORGANIZATION_ALL: "organization",
+  ORGANIZATION_ONE: "organization",
   CREATE_ORGANIZATION: "organization",
   UPDATE_ORGANIZATION: "organization",
   DELETE_ORGANIZATION: "organization",

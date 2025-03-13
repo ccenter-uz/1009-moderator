@@ -119,15 +119,14 @@ export const TableCategoryServices: FC<Props> = (props) => {
         {t("product-services")}
       </Typography.Title>
       <Row gutter={16} align={"middle"}>
-        <Col span={11}>
+        <Col span={8}>
           <Flex align="center" gap={8}>
             <label htmlFor="productServiceCategoryId">{t("category-tu")}</label>
             <SearchableSelect
-              showSearch
               id="productServiceCategoryId"
               value={selectedCategory[0]?.productServiceCategoryId}
               onSelect={onSelectCategory}
-              allowClear
+              onClear={() => setSelectedCategory([])}
               disabled={isLoadingCategoryTu}
               options={
                 categoryTuOptions?.data.map((item: AnyObject) => ({
@@ -139,17 +138,16 @@ export const TableCategoryServices: FC<Props> = (props) => {
             />
           </Flex>
         </Col>
-        <Col span={11}>
+        <Col span={8}>
           <Flex align="center" gap={8}>
             <label htmlFor="productServiceSubCategoryId">
               {t("sub-category-tu")}
             </label>
             <SearchableSelect
-              showSearch
               id="productServiceSubCategoryId"
               value={selectedSubCategory[0]?.productServiceSubCategoryId}
               onSelect={onSelectSubCategory}
-              allowClear
+              onClear={() => setSelectedSubCategory([])}
               disabled={isLoadingSubcategoryTu}
               options={
                 subcategoryTuOptions?.data.map((item: AnyObject) => ({
@@ -161,7 +159,7 @@ export const TableCategoryServices: FC<Props> = (props) => {
             />
           </Flex>
         </Col>
-        <Col span={2}>
+        <Col span={8}>
           <Button
             disabled={selectedSubCategory.length === 0}
             type="primary"

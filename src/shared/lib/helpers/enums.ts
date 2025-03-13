@@ -50,8 +50,22 @@ export const enum STATUS {
   INACTIVE = 0,
   ALL = 2,
 }
+export const enum ERROR_STEPS {
+  FIRST = "firstStepError",
+  SECOND = "secondStepError",
+  THIRD = "thirdStepError",
+  FOURTH = "fourthStepError",
+}
 
-export const enum STEPS_EDIT_DATA {
+export const enum STEPS_ADD_KEYS {
+  FIRST = "firstStepData",
+  SECOND = "secondStepData",
+  THIRD = "thirdStepData",
+  FOURTH = "fourthStepData",
+  CURRENT = "currentStep",
+}
+
+export const enum STEPS_EDIT_KEYS {
   FIRST = "firstStepDataEdit",
   SECOND = "secondStepDataEdit",
   THIRD = "thirdStepDataEdit",

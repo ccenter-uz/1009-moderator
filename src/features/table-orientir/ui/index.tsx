@@ -96,6 +96,7 @@ export const TableOrientirUI: FC<Props> = (props) => {
         ...selectedNearby[0],
         description: description !== "" ? description : "-",
         colId: Date.now(),
+        key: Date.now(),
       },
     ];
     dispatch(setData(newData));
@@ -131,7 +132,7 @@ export const TableOrientirUI: FC<Props> = (props) => {
         {t("nearby")}
       </Typography.Title>
       <Row gutter={[16, 16]} align={"middle"}>
-        <Col flex={1}>
+        <Col span={8}>
           <Flex align="center" gap={8}>
             <label htmlFor="nearbyCategory">{t("nearby-category")}</label>
             <SearchableSelect
@@ -140,6 +141,7 @@ export const TableOrientirUI: FC<Props> = (props) => {
               value={selectedNearbyCategory[0]?.nearbyCategoryId}
               onSelect={onSelectNearbyCategory}
               allowClear
+              onClear={() => setSelectedNearbyCategory([])}
               disabled={isLoadingNearbyCategory}
               options={
                 nearbyCategoryOptions?.data.map((item: AnyObject) => ({
@@ -151,16 +153,17 @@ export const TableOrientirUI: FC<Props> = (props) => {
             />
           </Flex>
         </Col>
-        <Col flex={1}>
+        <Col span={8}>
           <Flex align="center" gap={8}>
             <label htmlFor="nearby">{t("nearby")}</label>
             <SearchableSelect
               disabled={isLoadingNearby}
               showSearch
               id="nearby"
-              value={selectedNearby[0]?.nearby}
+              value={selectedNearby[0]?.nearbyId}
               onSelect={onSelectSubCategory}
               allowClear
+              onClear={() => setSelectedNearby([])}
               options={
                 nearbyOptions?.data.map((item: AnyObject) => ({
                   value: item.id,
@@ -171,7 +174,7 @@ export const TableOrientirUI: FC<Props> = (props) => {
             />
           </Flex>
         </Col>
-        <Col flex={1}>
+        <Col span={6}>
           <Flex align="center" gap={8}>
             <label htmlFor="description">{t("description")}</label>
             <Input.TextArea
