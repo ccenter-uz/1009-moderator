@@ -10,7 +10,7 @@ import {
 } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import i18next, { t } from "i18next";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { FaTrashAlt } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 
@@ -83,6 +83,7 @@ export const TableCategoryServices: FC<Props> = (props) => {
     const newData = [
       ...data,
       {
+        key: Date.now(),
         ...selectedCategory[0],
         ...selectedSubCategory[0],
         colId: Date.now(),
@@ -91,6 +92,7 @@ export const TableCategoryServices: FC<Props> = (props) => {
     dispatch(setData(newData));
     setSelectedSubCategory([]);
     setSelectedCategory([]);
+    triggerSubcategoryTu({ ...allActives });
   };
 
   const onSelectCategory: SelectProps["onSelect"] = (value, option) => {
@@ -100,7 +102,7 @@ export const TableCategoryServices: FC<Props> = (props) => {
         productServiceCategoryName: option.label,
       },
     ]);
-
+    setSelectedSubCategory([]);
     triggerSubcategoryTu({ categoryId: value, ...allActives });
   };
 
@@ -111,7 +113,18 @@ export const TableCategoryServices: FC<Props> = (props) => {
         productServiceSubCategoryName: option.label,
       },
     ]);
+    setSelectedCategory([
+      {
+        productServiceCategoryId: option.productCategoryValue,
+        productServiceCategoryName: option.productCategoryLabel,
+      },
+    ]);
   };
+
+  useEffect(() => {
+    triggerSubcategoryTu({ ...allActives });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Flex vertical gap={16} className="org-add-table-category-and-sub-category">
@@ -126,10 +139,14 @@ export const TableCategoryServices: FC<Props> = (props) => {
               id="productServiceCategoryId"
               value={selectedCategory[0]?.productServiceCategoryId}
               onSelect={onSelectCategory}
-              onClear={() => setSelectedCategory([])}
+              onClear={() => {
+                setSelectedCategory([]);
+                triggerSubcategoryTu({ ...allActives });
+              }}
               disabled={isLoadingCategoryTu}
               options={
                 categoryTuOptions?.data.map((item: AnyObject) => ({
+                  key: item.id,
                   value: item.id,
                   label: item.name[i18next.language],
                 })) || []
@@ -151,6 +168,10 @@ export const TableCategoryServices: FC<Props> = (props) => {
               disabled={isLoadingSubcategoryTu}
               options={
                 subcategoryTuOptions?.data.map((item: AnyObject) => ({
+                  key: item.id,
+                  productCategoryValue: item.ProductServiceCategory?.id,
+                  productCategoryLabel:
+                    item.ProductServiceCategory?.name[i18next.language],
                   value: item.id,
                   label: item.name[i18next.language],
                 })) || []
