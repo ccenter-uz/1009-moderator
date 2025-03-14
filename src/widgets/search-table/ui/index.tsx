@@ -27,6 +27,7 @@ export const SearchTableUI: FC<Props> = (props) => {
     if (attrData.length) {
       setPhonesData(
         attrData[0].Phone.map((item) => ({
+          key: item?.phone,
           phone: item?.phone,
           isSecret: item?.isSecret,
           phoneType: item?.PhoneTypes?.name[i18next.language],
@@ -34,9 +35,13 @@ export const SearchTableUI: FC<Props> = (props) => {
       );
       setSubCategoryData(
         attrData[0].ProductServices.map(
-          (item: {
-            ProductServiceSubCategory: { name: { [key: string]: string } };
-          }) => ({
+          (
+            item: {
+              ProductServiceSubCategory: { name: { [key: string]: string } };
+            },
+            index: number,
+          ) => ({
+            key: index,
             ProductServiceSubCategory:
               item.ProductServiceSubCategory?.name[i18next.language],
           }),

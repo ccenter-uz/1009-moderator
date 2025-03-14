@@ -477,6 +477,10 @@ export const OrgEditPage: FC = () => {
   useEffect(() => {
     initializeFormValues();
 
+    return () => {
+      STORE_STEPS_DATA(current);
+    };
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

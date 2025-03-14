@@ -8,7 +8,7 @@ export const SearchableSelect: FC<SelectProps> = ({ ...props }) => {
     <Select
       {...props}
       labelRender={renderLabelSelect}
-      style={{ maxWidth: "25rem", width: "100%" }}
+      style={{ width: "100%", overflow: "hidden", textOverflow: "ellipsis" }}
       showSearch
       allowClear
       filterOption={(input, option) =>
