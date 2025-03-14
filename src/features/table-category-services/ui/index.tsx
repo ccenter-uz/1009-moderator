@@ -151,11 +151,10 @@ export const TableCategoryServices: FC<Props> = (props) => {
                   label: item.name[i18next.language],
                 })) || []
               }
-              style={{ flex: 1 }}
             />
           </Flex>
         </Col>
-        <Col span={8}>
+        <Col span={14}>
           <Flex align="center" gap={8}>
             <label htmlFor="productServiceSubCategoryId">
               {t("sub-category-tu")}
@@ -176,11 +175,10 @@ export const TableCategoryServices: FC<Props> = (props) => {
                   label: item.name[i18next.language],
                 })) || []
               }
-              style={{ flex: 1 }}
             />
           </Flex>
         </Col>
-        <Col span={8}>
+        <Col span={2}>
           <Button
             disabled={selectedSubCategory.length === 0}
             type="primary"
